@@ -22,7 +22,7 @@ import {
   type PromptInputMessage,
   type ReferencedSourcesContext,
   useOptionalPromptInputController,
-} from "./context";
+} from "./hooks";
 
 export type PromptInputProps = Omit<
   HTMLAttributes<HTMLFormElement>,

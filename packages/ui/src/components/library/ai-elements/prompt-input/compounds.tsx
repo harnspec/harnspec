@@ -43,7 +43,6 @@ import {
 } from "lucide-react";
 import {
   type ChangeEvent,
-  type ChangeEventHandler,
   Children,
   type ClipboardEventHandler,
   type ComponentProps,
@@ -51,7 +50,7 @@ import {
   type KeyboardEventHandler,
   useState,
 } from "react";
-import { useOptionalPromptInputController, usePromptInputAttachments } from "./context";
+import { useOptionalPromptInputController, usePromptInputAttachments } from "./hooks";
 
 // ============================================================================
 // Body
