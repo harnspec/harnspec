@@ -127,7 +127,7 @@ function handleApiError(error: ApiError): string {
 - [ ] Add i18n error message keys (en + zh)
 - [ ] Update MCP error responses to include error codes
 - [x] `cargo test` — all pass
-- [ ] `pnpm test` — all pass
+- [x] `pnpm test` — all pass
 
 ## Test
 
@@ -148,6 +148,10 @@ cargo test --workspace
 
 
 - Checklist progress: **1/11 complete (9%)**.
+
+
+- `pnpm test` passes at workspace level.
+- Checklist progress: **2/11 complete (18%)**.
 
 ## Notes
 

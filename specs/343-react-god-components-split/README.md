@@ -91,7 +91,7 @@ Extract into:
 - [ ] All extracted components have proper TypeScript props interfaces
 - [ ] No prop drilling deeper than 2 levels (use context if needed)
 - [ ] `pnpm build` — compiles without errors
-- [ ] `pnpm test` — all tests pass
+- [x] `pnpm test` — all tests pass
 - [ ] No visual regressions (manual UI walkthrough)
 
 ## Test
@@ -110,3 +110,6 @@ cd packages/ui && pnpm build && pnpm test
 - This phase remains in-progress.
 
 - Checklist progress: **0/10 complete (0%)**.
+
+- `pnpm test` passes at workspace level (`turbo run test`, including `@leanspec/ui`).
+- Checklist progress: **1/10 complete (10%)**.

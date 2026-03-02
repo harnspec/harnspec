@@ -121,3 +121,5 @@ cargo test export_bindings
 - Full rollout remains open: broad derive coverage, UI migration to generated types, CI stale-type guard, and contributor docs.
 
 - Checklist progress: **3/8 complete (38%)**.
+
+- `cargo test export_bindings -p leanspec-http` passes.
