@@ -122,9 +122,9 @@ function handleApiError(error: ApiError): string {
 - [ ] Implement `From<CoreError>` → `StructuredError` mapping
 - [ ] Update `leanspec-http` error handler to use `StructuredError`
 - [ ] Ensure all HTTP responses use consistent error format
-- [ ] Create TypeScript `ApiError` type matching Rust `StructuredError`
-- [ ] Add centralized error handler in UI
-- [ ] Add i18n error message keys (en + zh)
+- [x] Create TypeScript `ApiError` type matching Rust `StructuredError`
+- [x] Add centralized error handler in UI
+- [x] Add i18n error message keys (en + zh)
 - [ ] Update MCP error responses to include error codes
 - [x] `cargo test` — all pass
 - [x] `pnpm test` — all pass
@@ -152,6 +152,12 @@ cargo test --workspace
 
 - `pnpm test` passes at workspace level.
 - Checklist progress: **2/11 complete (18%)**.
+
+
+- Added centralized UI error mapper: `packages/ui/src/lib/api-error.ts`.
+- Added structured UI error type aligned with server contract in `packages/ui/src/lib/backend-adapter/core.ts` (`StructuredApiError` + `APIError.toStructured()`).
+- Added bilingual API error-code i18n entries in `packages/ui/src/locales/en/errors.json` and `packages/ui/src/locales/zh-CN/errors.json`.
+- Checklist progress: **5/11 complete (45%)**.
 
 ## Notes
 

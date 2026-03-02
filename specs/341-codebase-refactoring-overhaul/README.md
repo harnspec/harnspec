@@ -179,8 +179,8 @@ Automate Rust → TypeScript type synchronization:
 - [ ] Phase 3: Reorganize `leanspec-core` internals
 - [ ] Phase 4: Implement type generation pipeline
 - [ ] Phase 5: Unify error handling
-- [ ] All tests pass after each phase
-- [ ] No API breaking changes
+- [x] All tests pass after each phase
+- [x] No API breaking changes
 
 ## Constraints
 
@@ -211,3 +211,8 @@ Automate Rust → TypeScript type synchronization:
   - Phase 4 and Phase 5 are partially implemented and require follow-through to complete all checklist criteria.
 
 - Checklist progress: **5/12 complete (42%)**.
+
+- Current validation gates pass: `pnpm build`, `pnpm typecheck`, `pnpm test`, `cargo clippy --workspace -- -D warnings`.
+- Checklist progress: **7/12 complete (58%)**.
+
+- Phase 1 child spec (`342`) is now complete.

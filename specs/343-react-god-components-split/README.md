@@ -90,7 +90,7 @@ Extract into:
 - [ ] Split `SpecDetailPage.tsx` into 4+ sub-components
 - [ ] All extracted components have proper TypeScript props interfaces
 - [ ] No prop drilling deeper than 2 levels (use context if needed)
-- [ ] `pnpm build` — compiles without errors
+- [x] `pnpm build` — compiles without errors
 - [x] `pnpm test` — all tests pass
 - [ ] No visual regressions (manual UI walkthrough)
 
@@ -113,3 +113,6 @@ cd packages/ui && pnpm build && pnpm test
 
 - `pnpm test` passes at workspace level (`turbo run test`, including `@leanspec/ui`).
 - Checklist progress: **1/10 complete (10%)**.
+
+- `pnpm build` now passes at workspace level.
+- Checklist progress: **2/10 complete (20%)**.

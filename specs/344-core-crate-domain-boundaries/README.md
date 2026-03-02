@@ -118,11 +118,11 @@ leanspec-core/src/
 - [x] Create `spec_ops/` module with loader, writer, archiver, content, graph
 - [x] Create `io/` module with templates, discovery, hash
 - [x] Create `compute/` module with tokens, insights
-- [ ] Update `lib.rs` re-exports to include both old and new paths
+- [x] Update `lib.rs` re-exports to include both old and new paths
 - [ ] Update all internal references within `leanspec-core`
-- [ ] Update `leanspec-cli` imports
-- [ ] Update `leanspec-http` imports
-- [ ] Update `leanspec-mcp` imports
+- [x] Update `leanspec-cli` imports
+- [x] Update `leanspec-http` imports
+- [x] Update `leanspec-mcp` imports
 - [x] `cargo build --workspace` — compiles
 - [x] `cargo test --workspace` — all pass
 - [ ] Remove deprecated `utils/` re-exports after dependents are updated
@@ -147,6 +147,11 @@ cargo clippy --workspace -- -D warnings
 
 
 - Checklist progress: **5/11 complete (45%)**.
+
+
+- Migrated active imports in CLI/HTTP/core call sites away from `utils` to `io/spec_ops/compute` where applicable.
+- `leanspec-mcp` has no direct `leanspec_core::utils` imports remaining.
+- Checklist progress: **9/11 complete (82%)**.
 
 ## Notes
 

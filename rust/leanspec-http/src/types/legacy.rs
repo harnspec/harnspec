@@ -3,7 +3,7 @@
 //! These types match the existing Next.js API responses for compatibility.
 
 use chrono::{DateTime, Utc};
-use leanspec_core::utils::hash_content;
+use leanspec_core::io::hash_content;
 use leanspec_core::{
     global_frontmatter_validator, global_structure_validator, global_token_count_validator,
     global_token_counter, SpecInfo, SpecPriority, SpecStats, SpecStatus, TokenStatus,

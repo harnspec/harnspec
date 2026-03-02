@@ -258,6 +258,25 @@ End-to-end tests live in `packages/cli/src/__e2e__/` and test real CLI commands 
 E2E tests use helpers from `e2e-helpers.ts` to:
 - Create isolated temp directories
 - Execute real CLI commands
+
+## Rust -> TypeScript Type Bindings
+
+LeanSpec exports selected Rust types into `packages/ui/src/types/generated/`.
+
+When you change exported Rust API structs, regenerate bindings:
+
+```bash
+cd rust
+cargo test export_bindings -p leanspec-http
+```
+
+Then verify generated files are committed:
+
+```bash
+git diff -- packages/ui/src/types/generated
+```
+
+CI enforces this with a stale-binding check.
 - Verify filesystem state
 
 ### Regression Tests

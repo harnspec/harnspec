@@ -94,8 +94,8 @@ cargo test export_bindings  # dedicated test for type export
 - [x] Create `export_bindings` test target
 - [x] Generate initial `types/generated/` directory
 - [ ] Update UI imports to use generated types (gradual)
-- [ ] Add CI step to detect stale types
-- [ ] Document type generation workflow in CONTRIBUTING.md
+- [x] Add CI step to detect stale types
+- [x] Document type generation workflow in CONTRIBUTING.md
 
 ## Constraints
 
@@ -123,3 +123,9 @@ cargo test export_bindings
 - Checklist progress: **3/8 complete (38%)**.
 
 - `cargo test export_bindings -p leanspec-http` passes.
+
+- Added CI stale-binding guard in `.github/workflows/ci.yml` (`cargo test export_bindings -p leanspec-http` + `git diff --exit-code -- packages/ui/src/types/generated`).
+- Documented contributor workflow in `CONTRIBUTING.md` under "Rust -> TypeScript Type Bindings".
+- Checklist progress: **5/8 complete (62%)**.
+
+- Generated binding files now emit exported type aliases to avoid UI compile errors.

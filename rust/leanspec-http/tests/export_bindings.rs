@@ -19,7 +19,15 @@ fn write_binding<T: TS>() {
     let dir = generated_dir();
     fs::create_dir_all(&dir).expect("failed to create generated types directory");
     let file_path = dir.join(format!("{}.ts", T::name()));
-    fs::write(&file_path, T::decl()).expect("failed to write generated type file");
+    let decl = T::decl();
+    let exported =
+        if decl.starts_with("type ") || decl.starts_with("interface ") || decl.starts_with("enum ")
+        {
+            format!("export {decl}")
+        } else {
+            decl
+        };
+    fs::write(&file_path, exported).expect("failed to write generated type file");
 }
 
 #[test]

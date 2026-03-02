@@ -1,7 +1,7 @@
 //! Token count validation for specs
 
+use crate::compute::global_token_counter;
 use crate::types::{SpecInfo, ValidationResult};
-use crate::utils::global_token_counter;
 
 /// Options for token count validation
 #[derive(Debug, Clone)]

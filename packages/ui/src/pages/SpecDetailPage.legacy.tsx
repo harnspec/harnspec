@@ -29,7 +29,8 @@ import {
   PriorityBadge,
 } from '@/library';
 import { UmbrellaBadge } from '../components/umbrella-badge';
-import { api, APIError } from '../lib/api';
+import { api } from '../lib/api';
+import { describeApiError } from '../lib/api-error';
 import { getBackend } from '../lib/backend-adapter';
 import { StatusEditor } from '../components/metadata-editors/status-editor';
 import { PriorityEditor } from '../components/metadata-editors/priority-editor';
@@ -154,26 +155,7 @@ export function SpecDetailPage() {
     };
   }, []);
 
-  const describeError = useCallback((err: unknown) => {
-    if (err instanceof APIError) {
-      switch (err.status) {
-        case 404:
-          return t('specNotFound', { ns: 'errors' });
-        case 400:
-          return t('invalidInput', { ns: 'errors' });
-        case 500:
-          return t('unknownError', { ns: 'errors' });
-        default:
-          return t('loadingError', { ns: 'errors' });
-      }
-    }
-
-    if (err instanceof Error && err.message.includes('Failed to fetch')) {
-      return t('networkError', { ns: 'errors' });
-    }
-
-    return err instanceof Error ? err.message : t('unknownError', { ns: 'errors' });
-  }, [t]);
+  const describeError = useCallback((err: unknown) => describeApiError(err, t), [t]);
 
   const loadSpec = useCallback(async () => {
     setLoading(true);

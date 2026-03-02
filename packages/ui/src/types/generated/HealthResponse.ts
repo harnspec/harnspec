@@ -1,1 +1,1 @@
-type HealthResponse = { status: string, version: string, };
+export type HealthResponse = { status: string, version: string, };

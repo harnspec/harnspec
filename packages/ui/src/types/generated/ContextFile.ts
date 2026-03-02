@@ -1,1 +1,1 @@
-type ContextFile = { name: string, path: string, content: string, tokenCount: number, lastModified: string, };
+export type ContextFile = { name: string, path: string, content: string, tokenCount: number, lastModified: string, };

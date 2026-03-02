@@ -2,8 +2,8 @@
 
 use chrono::Utc;
 use colored::Colorize;
+use leanspec_core::io::TemplateLoader;
 use leanspec_core::types::LeanSpecConfig;
-use leanspec_core::utils::TemplateLoader;
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::error::Error;

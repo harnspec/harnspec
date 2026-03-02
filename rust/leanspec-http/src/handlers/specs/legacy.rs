@@ -1,5 +1,7 @@
 //! Spec operation handlers
 
+#![allow(clippy::result_large_err)]
+
 use axum::extract::{Path, Query, State};
 use axum::http::{HeaderMap, StatusCode};
 use axum::Json;
@@ -8,8 +10,9 @@ use std::collections::HashMap;
 use std::fs;
 use std::path::Path as FsPath;
 
-use leanspec_core::utils::{
-    apply_checklist_toggles, hash_content, rebuild_content, split_frontmatter, ChecklistToggle,
+use leanspec_core::io::hash_content;
+use leanspec_core::spec_ops::{
+    apply_checklist_toggles, rebuild_content, split_frontmatter, ChecklistToggle,
 };
 use leanspec_core::{
     global_frontmatter_validator, global_structure_validator, global_token_count_validator,

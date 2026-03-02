@@ -115,6 +115,13 @@ jobs:
       - name: Run tests
         working-directory: rust
         run: cargo test -- --test-threads=1
+
+      - name: Export TypeScript bindings
+        working-directory: rust
+        run: cargo test export_bindings -p leanspec-http
+
+      - name: Verify generated TypeScript bindings are committed
+        run: git diff --exit-code -- packages/ui/src/types/generated
       
       - name: Copy Rust binaries (includes UI dist)
         run: node scripts/copy-rust-binaries.mjs

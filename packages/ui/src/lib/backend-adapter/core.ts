@@ -42,6 +42,12 @@ export interface ChatStorageInfo {
   sizeBytes: number;
 }
 
+export interface StructuredApiError {
+  code: string;
+  message: string;
+  details?: unknown;
+}
+
 export class APIError extends Error {
   status: number;
   code?: string;
@@ -53,6 +59,14 @@ export class APIError extends Error {
     this.code = options?.code;
     this.details = options?.details;
     this.name = 'APIError';
+  }
+
+  toStructured(): StructuredApiError {
+    return {
+      code: this.code ?? 'INTERNAL_ERROR',
+      message: this.message,
+      details: this.details,
+    };
   }
 }
 

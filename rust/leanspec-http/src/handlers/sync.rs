@@ -1,5 +1,7 @@
 //! Cloud sync handlers
 
+#![allow(clippy::result_large_err)]
+
 use axum::extract::{
     ws::{Message, WebSocket, WebSocketUpgrade},
     Path, State,
