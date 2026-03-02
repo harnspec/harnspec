@@ -156,15 +156,29 @@ export function SpecsFilters({
   return (
     <div className="space-y-4">
       {/* Search Bar */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-        <Input
-          type="text"
-          placeholder={t('specsPage.searchPlaceholder')}
-          value={localSearchQuery}
-          onChange={(e) => setLocalSearchQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-2"
-        />
+      <div className="space-y-1">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            type="text"
+            placeholder={t('specsPage.searchPlaceholder')}
+            value={localSearchQuery}
+            onChange={(e) => setLocalSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-10 py-2"
+          />
+          {localSearchQuery && (
+            <button
+              type="button"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              onClick={() => { setLocalSearchQuery(''); onSearchChange(''); }}
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+        {localSearchQuery && (
+          <p className="text-xs text-muted-foreground pl-1">{t('specsPage.searchHint')}</p>
+        )}
       </div>
 
       {/* Filters Row */}

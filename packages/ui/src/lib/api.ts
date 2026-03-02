@@ -13,6 +13,8 @@ import type {
   Session,
   SessionLog,
   SessionMode,
+  SpecSearchFilters,
+  SpecSearchResponse,
   RunnerDefinition,
   RunnerListResponse,
   RunnerScope,
@@ -255,6 +257,10 @@ class ProjectAPI {
 
   async searchFiles(query: string, limit?: number): Promise<FileSearchResponse> {
     return this.backend.searchProjectFiles(this.getCurrentProjectId(), query, limit);
+  }
+
+  async searchSpecs(query: string, filters?: SpecSearchFilters): Promise<SpecSearchResponse> {
+    return this.backend.searchSpecs(this.getCurrentProjectId(), query, filters);
   }
 }
 

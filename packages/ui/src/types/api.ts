@@ -454,3 +454,17 @@ export interface FileSearchResponse {
   query: string;
   results: FileSearchEntry[];
 }
+
+// Spec search types (backend search API)
+export interface SpecSearchFilters {
+  status?: string;
+  priority?: string;
+  tags?: string[];
+}
+
+export interface SpecSearchResponse {
+  results: Spec[];
+  total: number;
+  query: string;
+  projectId?: string;
+}

@@ -16,7 +16,7 @@ import { PageHeader } from '../components/shared/page-header';
 import { EmptyState } from '../components/shared/empty-state';
 import { PageContainer } from '../components/shared/page-container';
 import { useCurrentProject } from '../hooks/useProjectQuery';
-import { specKeys, useSpecsWithHierarchy } from '../hooks/useSpecsQuery';
+import { specKeys, useSpecsWithHierarchy, useSearchSpecs } from '../hooks/useSpecsQuery';
 import { useMachineStore } from '../stores/machine';
 import { useSpecsPreferencesStore, type SpecsSortOption } from '../stores/specs-preferences';
 import { useSpecActionDialogs } from '../hooks/useSpecActionDialogs';
@@ -108,6 +108,9 @@ export function SpecsPage() {
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   // Defer expensive filtering so the input stays responsive while typing
   const deferredSearchQuery = useDeferredValue(searchQuery);
+
+  // Backend search for content-aware, relevance-ranked results
+  const searchResults = useSearchSpecs(resolvedProjectId ?? null, deferredSearchQuery);
 
   // Compute effective values considering URL overrides
   const statusFilter = useMemo(() => storedStatusFilter.filter(s => s !== 'archived'), [storedStatusFilter]);
@@ -321,7 +324,7 @@ export function SpecsPage() {
     setTagFilter([]);
     setShowValidationIssuesOnly(false);
     // Note: settings (groupByParent, showArchived) and view preferences are not cleared
-  }, []);
+  }, [setStatusFilter, setPriorityFilter, setTagFilter, setShowValidationIssuesOnly]);
 
   // Helper: expand filtered specs to include all descendants (for groupByParent mode)
   // This ensures umbrella progress visibility even when children have different statuses
@@ -365,13 +368,25 @@ export function SpecsPage() {
 
   // Filter specs based on search and filters
   const filteredSpecs = useMemo(() => {
-    let filtered = specs.filter(spec => {
+    // When searching with backend results, use search API matches as the base set.
+    // This enables content search and relevance ranking from the server.
+    // Falls back to client-side substring matching while search is loading.
+    let baseSpecs = specs;
+    const hasBackendResults = deferredSearchQuery && searchResults.data;
+
+    if (hasBackendResults) {
+      const matchingNames = new Set(searchResults.data.results.map((r: Spec) => r.specName));
+      baseSpecs = specs.filter(s => matchingNames.has(s.specName));
+    }
+
+    let filtered = baseSpecs.filter(spec => {
       // Hide archived specs by default unless showArchived is true
       if (!showArchived && spec.status === 'archived') {
         return false;
       }
 
-      if (deferredSearchQuery) {
+      // Client-side fallback while backend search is loading
+      if (deferredSearchQuery && !hasBackendResults) {
         const query = deferredSearchQuery.toLowerCase();
         const matchesSearch =
           spec.specName.toLowerCase().includes(query) ||
@@ -410,64 +425,71 @@ export function SpecsPage() {
     }
 
     const sorted = [...filtered];
-    switch (sortBy) {
-      case 'id-asc':
-        sorted.sort((a, b) => (a.specNumber || 0) - (b.specNumber || 0));
-        break;
-      case 'priority-desc':
-        sorted.sort((a, b) => {
-          const priorityOrder: Record<string, number> = {
-            'critical': 4,
-            'high': 3,
-            'medium': 2,
-            'low': 1,
-          };
-          const scoreA = priorityOrder[a.priority || ''] || 0;
-          const scoreB = priorityOrder[b.priority || ''] || 0;
-          const cmp = scoreB - scoreA;
-          return cmp !== 0 ? cmp : (b.specNumber || 0) - (a.specNumber || 0);
-        });
-        break;
-      case 'priority-asc':
-        sorted.sort((a, b) => {
-          const priorityOrder: Record<string, number> = {
-            'critical': 4,
-            'high': 3,
-            'medium': 2,
-            'low': 1,
-          };
-          const scoreA = priorityOrder[a.priority || ''] || 0;
-          const scoreB = priorityOrder[b.priority || ''] || 0;
-          const cmp = scoreA - scoreB;
-          return cmp !== 0 ? cmp : (b.specNumber || 0) - (a.specNumber || 0);
-        });
-        break;
-      case 'updated-desc':
-        sorted.sort((a, b) => {
-          if (!a.updatedAt) return 1;
-          if (!b.updatedAt) return -1;
-          const aTime = new Date(a.updatedAt).getTime();
-          const bTime = new Date(b.updatedAt).getTime();
-          const timeDiff = bTime - aTime;
-          return timeDiff !== 0 ? timeDiff : (b.specNumber || 0) - (a.specNumber || 0);
-        });
-        break;
-      case 'title-asc':
-        sorted.sort((a, b) => {
-          const titleA = (a.title || a.specName).toLowerCase();
-          const titleB = (b.title || b.specName).toLowerCase();
-          const cmp = titleA.localeCompare(titleB);
-          return cmp !== 0 ? cmp : (b.specNumber || 0) - (a.specNumber || 0);
-        });
-        break;
-      case 'id-desc':
-      default:
-        sorted.sort((a, b) => (b.specNumber || 0) - (a.specNumber || 0));
-        break;
+
+    // When searching with backend results, preserve relevance ordering
+    if (hasBackendResults) {
+      const orderMap = new Map(searchResults.data.results.map((r: Spec, i: number) => [r.specName, i]));
+      sorted.sort((a, b) => (orderMap.get(a.specName) ?? 9999) - (orderMap.get(b.specName) ?? 9999));
+    } else {
+      switch (sortBy) {
+        case 'id-asc':
+          sorted.sort((a, b) => (a.specNumber || 0) - (b.specNumber || 0));
+          break;
+        case 'priority-desc':
+          sorted.sort((a, b) => {
+            const priorityOrder: Record<string, number> = {
+              'critical': 4,
+              'high': 3,
+              'medium': 2,
+              'low': 1,
+            };
+            const scoreA = priorityOrder[a.priority || ''] || 0;
+            const scoreB = priorityOrder[b.priority || ''] || 0;
+            const cmp = scoreB - scoreA;
+            return cmp !== 0 ? cmp : (b.specNumber || 0) - (a.specNumber || 0);
+          });
+          break;
+        case 'priority-asc':
+          sorted.sort((a, b) => {
+            const priorityOrder: Record<string, number> = {
+              'critical': 4,
+              'high': 3,
+              'medium': 2,
+              'low': 1,
+            };
+            const scoreA = priorityOrder[a.priority || ''] || 0;
+            const scoreB = priorityOrder[b.priority || ''] || 0;
+            const cmp = scoreA - scoreB;
+            return cmp !== 0 ? cmp : (b.specNumber || 0) - (a.specNumber || 0);
+          });
+          break;
+        case 'updated-desc':
+          sorted.sort((a, b) => {
+            if (!a.updatedAt) return 1;
+            if (!b.updatedAt) return -1;
+            const aTime = new Date(a.updatedAt).getTime();
+            const bTime = new Date(b.updatedAt).getTime();
+            const timeDiff = bTime - aTime;
+            return timeDiff !== 0 ? timeDiff : (b.specNumber || 0) - (a.specNumber || 0);
+          });
+          break;
+        case 'title-asc':
+          sorted.sort((a, b) => {
+            const titleA = (a.title || a.specName).toLowerCase();
+            const titleB = (b.title || b.specName).toLowerCase();
+            const cmp = titleA.localeCompare(titleB);
+            return cmp !== 0 ? cmp : (b.specNumber || 0) - (a.specNumber || 0);
+          });
+          break;
+        case 'id-desc':
+        default:
+          sorted.sort((a, b) => (b.specNumber || 0) - (a.specNumber || 0));
+          break;
+      }
     }
 
     return sorted;
-  }, [priorityFilter, deferredSearchQuery, sortBy, specs, statusFilter, tagFilter, groupByParent, expandWithDescendants, showValidationIssuesOnly, showArchived, validationStatuses]);
+  }, [priorityFilter, deferredSearchQuery, sortBy, specs, statusFilter, tagFilter, groupByParent, expandWithDescendants, showValidationIssuesOnly, showArchived, validationStatuses, searchResults.data]);
 
   if (isInitialLoading) {
     return (

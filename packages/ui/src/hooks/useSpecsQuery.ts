@@ -9,9 +9,9 @@
  * - Optimistic updates support
  * - Request deduplication (same query = 1 request)
  */
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { api } from '../lib/api';
-import type { Spec, ListParams } from '../types/api';
+import type { Spec, ListParams, SpecSearchFilters } from '../types/api';
 
 // Query key factory for consistent cache management
 export const specKeys = {
@@ -59,6 +59,25 @@ export function useSpecsWithHierarchy(projectId: string | null, params?: ListPar
     },
     enabled: !!projectId,
     staleTime: 10 * 1000,
+  });
+}
+
+/**
+ * Hook to search specs using the backend search API.
+ * Only fires when query is non-empty. Uses keepPreviousData for smooth typing UX.
+ */
+export function useSearchSpecs(projectId: string | null, query: string, filters?: SpecSearchFilters) {
+  return useQuery({
+    queryKey: [...specKeys.all, 'search', projectId ?? '', query, filters],
+    queryFn: () => {
+      if (projectId) {
+        api.setCurrentProjectId(projectId);
+      }
+      return api.searchSpecs(query, filters);
+    },
+    enabled: !!projectId && query.length > 0,
+    placeholderData: keepPreviousData,
+    staleTime: 5 * 1000,
   });
 }
 

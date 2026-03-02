@@ -28,6 +28,8 @@ import type {
   SessionMode,
   SpecTokenResponse,
   SpecValidationResponse,
+  SpecSearchFilters,
+  SpecSearchResponse,
   RunnerDefinition,
   RunnerListResponse,
   RunnerScope,
@@ -621,6 +623,16 @@ export class HttpBackendAdapter implements BackendAdapter {
       method: 'PUT',
       body: JSON.stringify({ apiKey, baseUrl }),
     });
+  }
+
+  async searchSpecs(projectId: string, query: string, filters?: SpecSearchFilters): Promise<SpecSearchResponse> {
+    return this.fetchAPI<SpecSearchResponse>(
+      `/api/projects/${encodeURIComponent(projectId)}/search`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ query, filters }),
+      }
+    );
   }
 
   // Codebase file browsing (spec 246)

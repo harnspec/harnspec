@@ -345,3 +345,369 @@ fn format_line_list(lines: &[usize]) -> String {
         .collect::<Vec<_>>()
         .join(", ")
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ── split_frontmatter / rebuild_content ──────────────────────────
+
+    #[test]
+    fn test_split_frontmatter_with_frontmatter() {
+        let content = "---\nstatus: planned\n---\n# Title\n\nBody text.\n";
+        let (fm, body) = split_frontmatter(content);
+        assert!(fm.is_some());
+        assert!(fm.unwrap().contains("status: planned"));
+        assert!(body.contains("# Title"));
+        assert!(body.contains("Body text."));
+    }
+
+    #[test]
+    fn test_split_frontmatter_without_frontmatter() {
+        let content = "# Title\n\nBody text.\n";
+        let (fm, body) = split_frontmatter(content);
+        assert!(fm.is_none());
+        assert_eq!(body, content);
+    }
+
+    #[test]
+    fn test_rebuild_content_with_frontmatter() {
+        let fm = Some("---\nstatus: planned\n---".to_string());
+        let body = "\n# Title\n\nBody.\n";
+        let result = rebuild_content(fm, body);
+        assert!(result.starts_with("---\nstatus: planned\n---\n"));
+        assert!(result.contains("# Title"));
+    }
+
+    #[test]
+    fn test_rebuild_content_without_frontmatter() {
+        let body = "# Title\n\nBody.\n";
+        let result = rebuild_content(None, body);
+        assert_eq!(result, body);
+    }
+
+    // ── apply_replacements ───────────────────────────────────────────
+
+    #[test]
+    fn test_replacement_unique_mode_single_match() {
+        let body = "Hello world.\nGoodbye world.\n";
+        let replacements = vec![Replacement {
+            old_string: "Hello world.".to_string(),
+            new_string: "Hi world.".to_string(),
+            match_mode: MatchMode::Unique,
+        }];
+        let (result, infos) = apply_replacements(body, &replacements).unwrap();
+        assert_eq!(result, "Hi world.\nGoodbye world.\n");
+        assert_eq!(infos.len(), 1);
+        assert_eq!(infos[0].lines, vec![1]);
+    }
+
+    #[test]
+    fn test_replacement_unique_mode_multiple_matches_errors() {
+        let body = "foo bar\nfoo baz\n";
+        let replacements = vec![Replacement {
+            old_string: "foo".to_string(),
+            new_string: "qux".to_string(),
+            match_mode: MatchMode::Unique,
+        }];
+        let err = apply_replacements(body, &replacements).unwrap_err();
+        assert!(err.contains("Found 2 matches"));
+    }
+
+    #[test]
+    fn test_replacement_first_mode() {
+        let body = "foo bar\nfoo baz\n";
+        let replacements = vec![Replacement {
+            old_string: "foo".to_string(),
+            new_string: "qux".to_string(),
+            match_mode: MatchMode::First,
+        }];
+        let (result, _) = apply_replacements(body, &replacements).unwrap();
+        assert_eq!(result, "qux bar\nfoo baz\n");
+    }
+
+    #[test]
+    fn test_replacement_all_mode() {
+        let body = "foo bar\nfoo baz\n";
+        let replacements = vec![Replacement {
+            old_string: "foo".to_string(),
+            new_string: "qux".to_string(),
+            match_mode: MatchMode::All,
+        }];
+        let (result, infos) = apply_replacements(body, &replacements).unwrap();
+        assert_eq!(result, "qux bar\nqux baz\n");
+        assert_eq!(infos[0].lines, vec![1, 2]);
+    }
+
+    #[test]
+    fn test_replacement_empty_old_string_errors() {
+        let body = "Hello.";
+        let replacements = vec![Replacement {
+            old_string: "".to_string(),
+            new_string: "x".to_string(),
+            match_mode: MatchMode::Unique,
+        }];
+        let err = apply_replacements(body, &replacements).unwrap_err();
+        assert!(err.contains("cannot be empty"));
+    }
+
+    #[test]
+    fn test_replacement_not_found_errors() {
+        let body = "Hello world.";
+        let replacements = vec![Replacement {
+            old_string: "Goodbye".to_string(),
+            new_string: "x".to_string(),
+            match_mode: MatchMode::Unique,
+        }];
+        let err = apply_replacements(body, &replacements).unwrap_err();
+        assert!(err.contains("Found 0 matches"));
+    }
+
+    #[test]
+    fn test_multiple_replacements_sequential() {
+        let body = "Alpha\nBeta\nGamma\n";
+        let replacements = vec![
+            Replacement {
+                old_string: "Alpha".to_string(),
+                new_string: "One".to_string(),
+                match_mode: MatchMode::Unique,
+            },
+            Replacement {
+                old_string: "Beta".to_string(),
+                new_string: "Two".to_string(),
+                match_mode: MatchMode::Unique,
+            },
+        ];
+        let (result, infos) = apply_replacements(body, &replacements).unwrap();
+        assert_eq!(result, "One\nTwo\nGamma\n");
+        assert_eq!(infos.len(), 2);
+    }
+
+    // ── apply_section_updates ────────────────────────────────────────
+
+    fn sample_body_with_sections() -> String {
+        "# Title\n\n## Overview\n\nOriginal overview.\n\n## Design\n\nOriginal design.\n\n## Notes\n\nSome notes.\n".to_string()
+    }
+
+    #[test]
+    fn test_section_replace() {
+        let body = sample_body_with_sections();
+        let updates = vec![SectionUpdate {
+            section: "Overview".to_string(),
+            content: "New overview content.".to_string(),
+            mode: SectionMode::Replace,
+        }];
+        let result = apply_section_updates(&body, &updates).unwrap();
+        assert!(result.contains("New overview content."));
+        assert!(!result.contains("Original overview."));
+        assert!(result.contains("Original design."));
+    }
+
+    #[test]
+    fn test_section_append() {
+        let body = sample_body_with_sections();
+        let updates = vec![SectionUpdate {
+            section: "Overview".to_string(),
+            content: "Appended text.".to_string(),
+            mode: SectionMode::Append,
+        }];
+        let result = apply_section_updates(&body, &updates).unwrap();
+        assert!(result.contains("Original overview."));
+        assert!(result.contains("Appended text."));
+        // The appended text should come after the original
+        let orig_pos = result.find("Original overview.").unwrap();
+        let append_pos = result.find("Appended text.").unwrap();
+        assert!(append_pos > orig_pos);
+    }
+
+    #[test]
+    fn test_section_prepend() {
+        let body = sample_body_with_sections();
+        let updates = vec![SectionUpdate {
+            section: "Overview".to_string(),
+            content: "Prepended text.".to_string(),
+            mode: SectionMode::Prepend,
+        }];
+        let result = apply_section_updates(&body, &updates).unwrap();
+        assert!(result.contains("Original overview."));
+        assert!(result.contains("Prepended text."));
+        let prepend_pos = result.find("Prepended text.").unwrap();
+        let orig_pos = result.find("Original overview.").unwrap();
+        assert!(prepend_pos < orig_pos);
+    }
+
+    #[test]
+    fn test_section_not_found_errors() {
+        let body = sample_body_with_sections();
+        let updates = vec![SectionUpdate {
+            section: "NonExistent".to_string(),
+            content: "Content.".to_string(),
+            mode: SectionMode::Replace,
+        }];
+        let err = apply_section_updates(&body, &updates).unwrap_err();
+        assert!(err.contains("Section not found"));
+    }
+
+    #[test]
+    fn test_section_replace_last_section() {
+        let body = sample_body_with_sections();
+        let updates = vec![SectionUpdate {
+            section: "Notes".to_string(),
+            content: "New notes.".to_string(),
+            mode: SectionMode::Replace,
+        }];
+        let result = apply_section_updates(&body, &updates).unwrap();
+        assert!(result.contains("New notes."));
+        assert!(!result.contains("Some notes."));
+    }
+
+    #[test]
+    fn test_multiple_section_updates() {
+        let body = sample_body_with_sections();
+        let updates = vec![
+            SectionUpdate {
+                section: "Overview".to_string(),
+                content: "Updated overview.".to_string(),
+                mode: SectionMode::Replace,
+            },
+            SectionUpdate {
+                section: "Notes".to_string(),
+                content: "Extra note.".to_string(),
+                mode: SectionMode::Append,
+            },
+        ];
+        let result = apply_section_updates(&body, &updates).unwrap();
+        assert!(result.contains("Updated overview."));
+        assert!(result.contains("Some notes."));
+        assert!(result.contains("Extra note."));
+    }
+
+    // ── apply_checklist_toggles ──────────────────────────────────────
+
+    #[test]
+    fn test_checklist_toggle_check() {
+        let body = "## Plan\n\n- [ ] Task A\n- [ ] Task B\n";
+        let toggles = vec![ChecklistToggle {
+            item_text: "Task A".to_string(),
+            checked: true,
+        }];
+        let (result, infos) = apply_checklist_toggles(body, &toggles).unwrap();
+        assert!(result.contains("- [x] Task A"));
+        assert!(result.contains("- [ ] Task B"));
+        assert_eq!(infos.len(), 1);
+        assert!(infos[0].checked);
+    }
+
+    #[test]
+    fn test_checklist_toggle_uncheck() {
+        let body = "## Plan\n\n- [x] Task A\n- [ ] Task B\n";
+        let toggles = vec![ChecklistToggle {
+            item_text: "Task A".to_string(),
+            checked: false,
+        }];
+        let (result, _) = apply_checklist_toggles(body, &toggles).unwrap();
+        assert!(result.contains("- [ ] Task A"));
+    }
+
+    #[test]
+    fn test_checklist_toggle_not_found_errors() {
+        let body = "## Plan\n\n- [ ] Task A\n";
+        let toggles = vec![ChecklistToggle {
+            item_text: "NonExistent".to_string(),
+            checked: true,
+        }];
+        let err = apply_checklist_toggles(body, &toggles).unwrap_err();
+        assert!(err.contains("Checklist item not found"));
+    }
+
+    #[test]
+    fn test_checklist_toggle_with_inline_markdown() {
+        let body = "- [ ] **Bold task**\n- [ ] `code task`\n";
+        let toggles = vec![ChecklistToggle {
+            item_text: "Bold task".to_string(),
+            checked: true,
+        }];
+        let (result, _) = apply_checklist_toggles(body, &toggles).unwrap();
+        assert!(result.contains("- [x] **Bold task**"));
+    }
+
+    #[test]
+    fn test_checklist_toggle_multiple() {
+        let body = "- [ ] Task A\n- [ ] Task B\n- [ ] Task C\n";
+        let toggles = vec![
+            ChecklistToggle {
+                item_text: "Task A".to_string(),
+                checked: true,
+            },
+            ChecklistToggle {
+                item_text: "Task C".to_string(),
+                checked: true,
+            },
+        ];
+        let (result, infos) = apply_checklist_toggles(body, &toggles).unwrap();
+        assert!(result.contains("- [x] Task A"));
+        assert!(result.contains("- [ ] Task B"));
+        assert!(result.contains("- [x] Task C"));
+        assert_eq!(infos.len(), 2);
+    }
+
+    #[test]
+    fn test_checklist_case_insensitive_match() {
+        let body = "- [ ] Build the Widget\n";
+        let toggles = vec![ChecklistToggle {
+            item_text: "build the widget".to_string(),
+            checked: true,
+        }];
+        let (result, _) = apply_checklist_toggles(body, &toggles).unwrap();
+        assert!(result.contains("- [x] Build the Widget"));
+    }
+
+    // ── preserve_title_heading ───────────────────────────────────────
+
+    #[test]
+    fn test_preserve_title_when_new_body_lacks_title() {
+        let original = "# My Spec\n\n## Overview\n\nOld content.\n";
+        let new_body = "## Overview\n\nNew content.\n";
+        let result = preserve_title_heading(original, new_body);
+        assert!(result.contains("# My Spec"));
+        assert!(result.contains("New content."));
+        // Title should appear exactly once
+        assert_eq!(result.matches("# My Spec").count(), 1);
+    }
+
+    #[test]
+    fn test_preserve_title_when_new_body_has_same_title() {
+        let original = "# My Spec\n\n## Overview\n\nOld.\n";
+        let new_body = "# My Spec\n\n## Overview\n\nNew.\n";
+        let result = preserve_title_heading(original, new_body);
+        assert_eq!(result, new_body);
+    }
+
+    #[test]
+    fn test_preserve_title_when_original_has_no_title() {
+        let original = "## Overview\n\nOld.\n";
+        let new_body = "## Overview\n\nNew.\n";
+        let result = preserve_title_heading(original, new_body);
+        assert_eq!(result, new_body);
+    }
+
+    // ── helper functions ─────────────────────────────────────────────
+
+    #[test]
+    fn test_line_number_at() {
+        let body = "line1\nline2\nline3\n";
+        assert_eq!(line_number_at(body, 0), 1); // start of line1
+        assert_eq!(line_number_at(body, 6), 2); // start of line2
+        assert_eq!(line_number_at(body, 12), 3); // start of line3
+    }
+
+    #[test]
+    fn test_find_matches() {
+        let body = "foo bar\nfoo baz\nqux foo\n";
+        let matches = find_matches(body, "foo");
+        assert_eq!(matches.len(), 3);
+        assert_eq!(matches[0].line, 1);
+        assert_eq!(matches[1].line, 2);
+        assert_eq!(matches[2].line, 3);
+    }
+}

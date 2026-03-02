@@ -25,6 +25,8 @@ import type {
   SessionMode,
   SpecTokenResponse,
   SpecValidationResponse,
+  SpecSearchFilters,
+  SpecSearchResponse,
   RunnerDefinition,
   RunnerListResponse,
   RunnerScope,
@@ -183,6 +185,9 @@ export interface BackendAdapter {
   refreshModelsRegistry(): Promise<void>;
   setProviderApiKey(providerId: string, apiKey: string, baseUrl?: string): Promise<void>;
 
+  // Spec search
+  searchSpecs(projectId: string, query: string, filters?: SpecSearchFilters): Promise<SpecSearchResponse>;
+
   // Codebase file browsing (spec 246)
   getProjectFiles(projectId: string, path?: string): Promise<FileListResponse>;
   getProjectFile(projectId: string, path: string): Promise<FileContentResponse>;
@@ -223,4 +228,6 @@ export type {
   FileListResponse,
   FileContentResponse,
   FileSearchResponse,
+  SpecSearchFilters,
+  SpecSearchResponse,
 };

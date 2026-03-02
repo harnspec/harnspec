@@ -958,7 +958,8 @@
       "enter": "Enter wide mode",
       "exit": "Exit wide mode"
     },
-    "searchPlaceholder": "Search specs...",
+    "searchPlaceholder": "Search titles, content, tags...",
+    "searchHint": "Searches across spec titles, content, and tags",
     "filters": {
       "status": "Status",
       "priority": "Priority",

@@ -28,6 +28,8 @@ import type {
   ModelsRegistryResponse,
   SpecTokenResponse,
   SpecValidationResponse,
+  SpecSearchFilters,
+  SpecSearchResponse,
   RunnerDefinition,
   RunnerListResponse,
   RunnerScope,
@@ -446,5 +448,9 @@ export class TauriBackendAdapter implements BackendAdapter {
 
   async searchProjectFiles(projectId: string, query: string, limit?: number): Promise<FileSearchResponse> {
     return this.invoke<FileSearchResponse>('desktop_search_project_files', { projectId, query, limit });
+  }
+
+  async searchSpecs(projectId: string, query: string, filters?: SpecSearchFilters): Promise<SpecSearchResponse> {
+    return this.invoke<SpecSearchResponse>('desktop_search_specs', { projectId, query, filters });
   }
 }

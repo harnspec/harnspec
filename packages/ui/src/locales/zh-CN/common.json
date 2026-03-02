@@ -931,7 +931,8 @@
       "enter": "进入宽屏模式",
       "exit": "退出宽屏模式"
     },
-    "searchPlaceholder": "搜索规范...",
+    "searchPlaceholder": "搜索标题、内容、标签...",
+    "searchHint": "在规范标题、内容和标签中搜索",
     "filters": {
       "status": "状态",
       "priority": "优先级",
