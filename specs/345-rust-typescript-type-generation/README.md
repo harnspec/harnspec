@@ -16,7 +16,6 @@ transitions:
 - status: in-progress
   at: 2026-03-02T03:02:29.439336378Z
 ---
-
 # Phase 4: Rust → TypeScript Type Generation
 
 > **Parent**: 341-codebase-refactoring-overhaul · **Priority**: Medium
@@ -89,11 +88,11 @@ cargo test export_bindings  # dedicated test for type export
 
 ## Checklist
 
-- [ ] Add `ts-rs` to `leanspec-http` and `leanspec-core` dependencies
+- [x] Add `ts-rs` to `leanspec-http` and `leanspec-core` dependencies
 - [ ] Add `#[derive(TS)]` to all HTTP request/response structs
 - [ ] Add `#[derive(TS)]` to core spec/session types
-- [ ] Create `export_bindings` test target
-- [ ] Generate initial `types/generated/` directory
+- [x] Create `export_bindings` test target
+- [x] Generate initial `types/generated/` directory
 - [ ] Update UI imports to use generated types (gradual)
 - [ ] Add CI step to detect stale types
 - [ ] Document type generation workflow in CONTRIBUTING.md
@@ -113,3 +112,12 @@ cargo test export_bindings
 # Verify: pnpm build still passes with generated imports
 # Verify: CI catches stale types
 ```
+
+## Verification Update (2026-03-02)
+
+- `ts-rs` dependency is present in both `rust/leanspec-http/Cargo.toml` and `rust/leanspec-core/Cargo.toml`.
+- Export test exists at `rust/leanspec-http/tests/export_bindings.rs`.
+- Initial generated UI type files exist in `packages/ui/src/types/generated/`.
+- Full rollout remains open: broad derive coverage, UI migration to generated types, CI stale-type guard, and contributor docs.
+
+- Checklist progress: **3/8 complete (38%)**.

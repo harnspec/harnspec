@@ -16,7 +16,6 @@ transitions:
 - status: in-progress
   at: 2026-03-02T03:02:29.433016985Z
 ---
-
 # Phase 3: Reorganize leanspec-core Internals
 
 > **Parent**: 341-codebase-refactoring-overhaul · **Priority**: Medium
@@ -116,16 +115,16 @@ leanspec-core/src/
 
 ## Checklist
 
-- [ ] Create `spec_ops/` module with loader, writer, archiver, content, graph
-- [ ] Create `io/` module with templates, discovery, hash
-- [ ] Create `compute/` module with tokens, insights
+- [x] Create `spec_ops/` module with loader, writer, archiver, content, graph
+- [x] Create `io/` module with templates, discovery, hash
+- [x] Create `compute/` module with tokens, insights
 - [ ] Update `lib.rs` re-exports to include both old and new paths
 - [ ] Update all internal references within `leanspec-core`
 - [ ] Update `leanspec-cli` imports
 - [ ] Update `leanspec-http` imports
 - [ ] Update `leanspec-mcp` imports
-- [ ] `cargo build --workspace` — compiles
-- [ ] `cargo test --workspace` — all pass
+- [x] `cargo build --workspace` — compiles
+- [x] `cargo test --workspace` — all pass
 - [ ] Remove deprecated `utils/` re-exports after dependents are updated
 
 ## Test
@@ -137,6 +136,17 @@ cargo clippy --workspace -- -D warnings
 # Verify: no unused import warnings
 # Verify: no circular dependency issues
 ```
+
+
+## Verification Update (2026-03-02)
+
+- New module trees exist: `spec_ops/`, `io/`, and `compute/`.
+- `leanspec-core/src/lib.rs` exports new modules while retaining `utils` compatibility.
+- Rust workspace build and tests pass (`cargo build --workspace`, `cargo test --workspace`).
+- Remaining migration items (imports/re-exports cleanup and `utils` deprecation removal) are still open.
+
+
+- Checklist progress: **5/11 complete (45%)**.
 
 ## Notes
 

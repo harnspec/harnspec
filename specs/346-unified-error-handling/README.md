@@ -15,7 +15,6 @@ transitions:
 - status: in-progress
   at: 2026-03-02T03:02:29.446486134Z
 ---
-
 # Phase 5: Unified Error Handling
 
 > **Parent**: 341-codebase-refactoring-overhaul · **Priority**: Low
@@ -127,7 +126,7 @@ function handleApiError(error: ApiError): string {
 - [ ] Add centralized error handler in UI
 - [ ] Add i18n error message keys (en + zh)
 - [ ] Update MCP error responses to include error codes
-- [ ] `cargo test` — all pass
+- [x] `cargo test` — all pass
 - [ ] `pnpm test` — all pass
 
 ## Test
@@ -138,6 +137,17 @@ cargo test --workspace
 # Verify: validation errors include field-level details
 # Verify: UI shows localized error messages
 ```
+
+
+## Verification Update (2026-03-02)
+
+- HTTP layer already has structured error payload shape (`code`, `message`, optional `details`) and status mapping in `rust/leanspec-http/src/error.rs`.
+- UI `APIError` carries `code` and `details` (`packages/ui/src/lib/backend-adapter/core.ts`).
+- Core-level unified `ErrorCode` contract in `leanspec-core` and i18n key mapping for error codes are not fully implemented yet.
+- This phase remains in-progress.
+
+
+- Checklist progress: **1/11 complete (9%)**.
 
 ## Notes
 

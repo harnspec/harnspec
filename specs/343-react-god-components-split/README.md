@@ -14,7 +14,6 @@ transitions:
 - status: in-progress
   at: 2026-03-02T03:05:14.531940611Z
 ---
-
 # Phase 2: Split React God Components
 
 > **Parent**: 341-codebase-refactoring-overhaul · **Priority**: High
@@ -102,3 +101,12 @@ cd packages/ui && pnpm build && pnpm test
 # Manual: walkthrough all affected pages in browser
 # Verify: hotkeys, voice input, graph interactions still work
 ```
+
+## Verification Update (2026-03-02)
+
+- Refactor scaffolding files exist, but current top-level components still delegate to `.legacy` implementations.
+- Extracted subcomponent files are present for several targets, but many are placeholder pass-through wrappers (`PropsWithChildren`), so decomposition work is not functionally complete yet.
+- `pnpm build` currently fails in `@leanspec/ui` due to unused generated type aliases (`src/types/generated/ContextFile.ts`, `src/types/generated/HealthResponse.ts`).
+- This phase remains in-progress.
+
+- Checklist progress: **0/10 complete (0%)**.

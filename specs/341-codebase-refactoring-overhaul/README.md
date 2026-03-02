@@ -14,7 +14,6 @@ transitions:
 - status: in-progress
   at: 2026-03-02T03:02:29.411550525Z
 ---
-
 # Codebase Refactoring Overhaul
 
 > **Priority**: High · **Type**: Umbrella
@@ -170,11 +169,11 @@ Automate Rust → TypeScript type synchronization:
 
 ## Checklist
 
-- [ ] Phase 1a: Split `handlers/specs.rs`
-- [ ] Phase 1b: Split `sessions/manager.rs`
-- [ ] Phase 1c: Split `handlers/sessions.rs`
-- [ ] Phase 1d: Split `http/types.rs`
-- [ ] Phase 1e: Modularize `cli/main.rs`
+- [x] Phase 1a: Split `handlers/specs.rs`
+- [x] Phase 1b: Split `sessions/manager.rs`
+- [x] Phase 1c: Split `handlers/sessions.rs`
+- [x] Phase 1d: Split `http/types.rs`
+- [x] Phase 1e: Modularize `cli/main.rs`
 - [ ] Phase 2a: Extract page sub-components
 - [ ] Phase 2b: Extract complex component compositions
 - [ ] Phase 3: Reorganize `leanspec-core` internals
@@ -196,3 +195,19 @@ Automate Rust → TypeScript type synchronization:
 - Spec 067 (Monorepo Core Extraction) established the initial crate structure; this builds on that foundation
 - The `leanspec-sync-bridge` crate is excluded from workspace and can be ignored
 - Feature flags in `leanspec-core` already provide some modularity — this refactoring leverages and strengthens that pattern
+
+## Verification Update (2026-03-02)
+
+- Child specs are now updated with verified progress notes based on current codebase state and command results.
+- Rust verification:
+  - `cargo build --workspace` (from `rust/`) passes.
+  - `cargo test --workspace` (from `rust/`) passes.
+  - `cargo clippy --workspace -- -D warnings` fails on existing warnings in `leanspec-http` (not yet resolved under this umbrella).
+- UI verification:
+  - `pnpm build` currently fails in `@leanspec/ui` due to unused generated type aliases in `packages/ui/src/types/generated/*`.
+- Net state:
+  - Phase 1 and Phase 3 have substantial structural progress and validated build/test baseline.
+  - Phase 2 remains largely scaffolded (legacy delegation/placeholders).
+  - Phase 4 and Phase 5 are partially implemented and require follow-through to complete all checklist criteria.
+
+- Checklist progress: **5/12 complete (42%)**.

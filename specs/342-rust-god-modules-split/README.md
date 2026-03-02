@@ -14,7 +14,6 @@ transitions:
 - status: in-progress
   at: 2026-03-02T03:02:29.424091567Z
 ---
-
 # Phase 1: Split Rust God Modules
 
 > **Parent**: 341-codebase-refactoring-overhaul · **Priority**: Critical
@@ -98,14 +97,14 @@ Current: Single `Commands` enum with 30 variants + `SessionSubcommand` + `Runner
 
 ## Checklist
 
-- [ ] 1a: Split `handlers/specs.rs` into `specs/{mod,read,write,compute}.rs`
-- [ ] 1b: Split `sessions/manager.rs` into `manager/{mod,lifecycle,control,queries}.rs`
-- [ ] 1c: Split `handlers/sessions.rs` into `sessions/{mod,sessions,runners}.rs`
-- [ ] 1d: Split `types.rs` into `types/{mod,specs,sessions,runners,common}.rs`
-- [ ] 1e: Extract clap `Args` structs from `main.rs` into command modules
-- [ ] Update `routes.rs` imports to match new handler module structure
-- [ ] `cargo build` — compiles without errors
-- [ ] `cargo test` — all tests pass
+- [x] 1a: Split `handlers/specs.rs` into `specs/{mod,read,write,compute}.rs`
+- [x] 1b: Split `sessions/manager.rs` into `manager/{mod,lifecycle,control,queries}.rs`
+- [x] 1c: Split `handlers/sessions.rs` into `sessions/{mod,sessions,runners}.rs`
+- [x] 1d: Split `types.rs` into `types/{mod,specs,sessions,runners,common}.rs`
+- [x] 1e: Extract clap `Args` structs from `main.rs` into command modules
+- [x] Update `routes.rs` imports to match new handler module structure
+- [x] `cargo build` — compiles without errors
+- [x] `cargo test` — all tests pass
 - [ ] `cargo clippy` — no new warnings
 - [ ] No public API changes (routes, MCP tools, CLI commands identical)
 
@@ -126,3 +125,13 @@ cargo clippy --workspace -- -D warnings
 # Manual: verify HTTP endpoints still work via UI
 # Manual: verify CLI commands still work
 ```
+
+## Verification Update (2026-03-02)
+
+- Verified module splits exist with compatibility `legacy` modules retained.
+- Verified CLI modularization: `rust/leanspec-cli/src/main.rs` reduced to 366 LOC with command args moved to `cli_args.rs`.
+- `cargo build --workspace` from `rust/` passes.
+- `cargo test --workspace` from `rust/` passes.
+- `cargo clippy --workspace -- -D warnings` currently fails on existing warnings (including `clippy::result_large_err` and `clippy::module_inception`), so clippy/no-warning completion remains open.
+
+- Checklist progress: **8/10 complete (80%)**.
