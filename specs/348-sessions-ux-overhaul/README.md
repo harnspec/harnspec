@@ -9,7 +9,7 @@ tags:
 - frontend
 - navigation
 created_at: 2026-03-03T02:01:58.130385Z
-updated_at: 2026-03-03T03:03:53.238492Z
+updated_at: 2026-03-03T07:38:40.207025Z
 transitions:
 - status: in-progress
   at: 2026-03-03T03:03:53.238492Z
@@ -154,7 +154,7 @@ Option A's hub as home base, plus a compact inline panel on spec detail pages:
 
 ---
 
-### Option C: Persistent Bottom Bar
+### Option C: Persistent Bottom Bar (Superseded by Top Popover Pivot)
 
 Global active session bar at the bottom of the app, visible on every page:
 
@@ -201,9 +201,9 @@ Global active session bar at the bottom of the app, visible on every page:
 
 1. **Phase 1 — Option A (Hub)**: Redesign the sessions page as a smart dashboard. This is the foundation — it fixes the flat list problem and makes spec-less/multi-spec sessions first-class.
 
-2. **Phase 2 — Option C (Bottom Bar)**: Replace the floating "New Session" button with a persistent status bar. This gives always-visible session awareness without navigation.
+2. **Phase 2 — Top Sessions Popover (Pivot from Option C)**: Replace the floating "New Session" button with a top navigation sessions popover. This keeps session awareness and quick actions without introducing a bottom bar.
 
-3. **Phase 3 — Option B (Spec Quick Panel)**: Add the inline panel to spec detail. This is a refinement that only makes sense once the hub and bar exist.
+3. **Phase 3 — Option B (Spec Quick Panel)**: Dropped after pivot. Top sessions popover with spec filter covers the quick-access use case.
 
 ## Shared UX Improvements (All Phases)
 
@@ -230,7 +230,7 @@ Toast when session completes, fails, or needs HITL attention.
 
 ### 5. Keyboard Shortcuts
 - `Cmd+Shift+S` — Start new session (from current spec context if applicable)
-- `Cmd+Shift+L` — Toggle bottom bar / session logs
+- `Cmd+Shift+L` — Toggle sessions popover / session logs
 - `Escape` — Close expanded panels
 
 ## Non-Goals
@@ -252,14 +252,13 @@ Toast when session completes, fails, or needs HITL attention.
 - [x] Phase 1: Redesign sessions page as chronological hub with inline logs
 - [x] Phase 1: Add spec chip tags on session cards (0/1/N specs)
 - [x] Phase 1: Pre-filter hub from spec detail "Sessions" button
-- [x] Phase 2: Replace floating button with persistent bottom status bar
-- [x] Phase 2: Implement expandable bottom panel with active sessions + logs
-- [ ] Phase 3: Add collapsible sessions panel to spec detail page
+- [x] Phase 2: Replace floating button with top navigation sessions popover
+- [x] Phase 2: Implement expanded sessions popover with active sessions + logs
 - [ ] Add session status indicators to specs nav sidebar
-- [ ] Upgrade session creation to prompt-first with multi-spec support
+- [x] Upgrade session creation to prompt-first with multi-spec support
 - [ ] Add keyboard shortcuts
 - [ ] Add session notifications
-- [ ] Update translations (en + zh-CN)
+- [x] Update translations (en + zh-CN)
 
 ## Test
 
@@ -267,12 +266,39 @@ Toast when session completes, fails, or needs HITL attention.
 - [ ] Chronological grouping (Active, Today, Yesterday, Older) works
 - [ ] Spec filter from spec detail → hub navigation works
 - [ ] Inline log expansion works with live streaming
-- [ ] Bottom bar shows correct counts and costs
-- [ ] Bottom bar expand/collapse works on all pages
-- [ ] Spec quick panel toggles correctly from header button
+- [ ] Sessions popover shows correct active counts and status
+- [ ] Sessions popover open/close works on all pages
 - [ ] One-click launch starts session with correct defaults
 - [ ] Multi-spec attachment works in session creation
 - [ ] Session status indicators update in real-time on specs sidebar
 - [ ] Keyboard shortcuts work as documented
 - [ ] No regression in ACP conversation view
 - [ ] Mobile layout works correctly
+
+## Progress Check
+
+### 2026-03-03 Verification
+
+Verified against actual implementation in `packages/ui/src` and current test/typecheck results.
+
+Completed and verified:
+- Phase 1 sessions hub with chronological grouping (`active/today/yesterday/older`) and grouped rendering on Sessions page.
+- Session cards show 0/1/N spec chips and support inline log expansion.
+- Spec-context prefilter flow exists via spec detail Sessions button -> sessions popover with spec filter -> "View all" opens hub with `?spec=` prefilter.
+- Phase 2 pivot implemented as top navigation sessions popover (replacing bottom bar direction).
+- Session creation upgraded to prompt-first flow with optional multi-spec attachments (`selectedSpecIds`) and auto-start.
+- i18n updates present for implemented sessions UX labels in both `en` and `zh-CN` locales.
+
+Still pending:
+- Session status indicators in specs nav sidebar.
+- Session-specific keyboard shortcuts (`Cmd+Shift+S`, `Cmd+Shift+L`).
+- Session lifecycle notifications (complete/fail/HITL).
+- End-to-end/manual validation checklist remains open.
+
+Pivot note:
+- Product direction changed from bottom status bar to top navigation sessions popover; checklist and phase wording were updated to reflect this.
+- Phase 3 spec-detail collapsible panel was removed from the active roadmap because popover + filter satisfies quick access.
+
+Validation evidence:
+- `pnpm --filter @leanspec/ui test` -> 10 files passed, 76 tests passed.
+- `pnpm --filter @leanspec/ui typecheck` -> passed.
