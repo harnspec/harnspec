@@ -1,12 +1,13 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Pause, Play, Square, TerminalSquare, Plus } from 'lucide-react';
+import { Pause, Play, Square, TerminalSquare, Plus, X, Filter } from 'lucide-react';
 import { Badge, Button, Popover, PopoverTrigger, PopoverContent, Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/library';
 import { useCurrentProject } from '../../hooks/useProjectQuery';
 import { useSessions, useSessionMutations } from '../../hooks/useSessionsQuery';
 import type { Session } from '../../types/api';
 import { sessionStatusConfig } from '../../lib/session-utils';
+import { useSessionsUiStore } from '../../stores/sessions-ui';
 import { SessionCreateDialog } from './session-create-dialog';
 import { SessionLogsPanel } from './session-logs-panel';
 
@@ -20,10 +21,36 @@ export function SessionsPopover() {
   const { currentProject } = useCurrentProject();
   const { data: sessions = [] } = useSessions(currentProject?.id ?? null);
   const { startSession, pauseSession, resumeSession, stopSession } = useSessionMutations(currentProject?.id ?? null);
+  const { isDrawerOpen, specFilter, openDrawer, closeDrawer, setSpecFilter } = useSessionsUiStore();
 
   const [open, setOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
   const [activeLogSessionId, setActiveLogSessionId] = useState<string | null>(null);
+
+  // Sync store-driven open state with local popover state
+  useEffect(() => {
+    if (isDrawerOpen && !open) {
+      setOpen(true);
+    }
+  }, [isDrawerOpen]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleOpenChange = useCallback((nextOpen: boolean) => {
+    setOpen(nextOpen);
+    if (!nextOpen) {
+      closeDrawer();
+      setSpecFilter(null);
+    } else {
+      openDrawer();
+    }
+  }, [closeDrawer, openDrawer, setSpecFilter]);
+
+  // When filtering by spec, show all sessions for that spec; otherwise show active only
+  const displayedSessions = useMemo(() => {
+    const filtered = specFilter
+      ? sessions.filter(s => s.specIds?.some(id => id === specFilter || id.includes(specFilter)) ?? false)
+      : sessions.filter(isActiveSession);
+    return filtered.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());
+  }, [sessions, specFilter]);
 
   const activeSessions = useMemo(
     () => sessions.filter(isActiveSession).sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()),
@@ -36,12 +63,15 @@ export function SessionsPopover() {
 
   const openHub = () => {
     if (!currentProject?.id) return;
-    setOpen(false);
-    navigate(`/projects/${currentProject.id}/sessions`);
+    handleOpenChange(false);
+    const url = specFilter
+      ? `/projects/${currentProject.id}/sessions?spec=${specFilter}`
+      : `/projects/${currentProject.id}/sessions`;
+    navigate(url);
   };
 
   const handleCreateOpen = () => {
-    setOpen(false);
+    handleOpenChange(false);
     setTimeout(() => {
       setCreateOpen(true);
     }, 200);
@@ -49,7 +79,7 @@ export function SessionsPopover() {
 
   return (
     <>
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={handleOpenChange}>
         <Tooltip>
           <TooltipTrigger asChild>
             <PopoverTrigger asChild>
@@ -114,11 +144,28 @@ export function SessionsPopover() {
                 </div>
               </div>
 
+              {specFilter && (
+                <div className="flex items-center gap-2 px-3 py-2 border-b bg-muted/30">
+                  <Filter className="h-3 w-3 text-muted-foreground shrink-0" />
+                  <span className="text-xs text-muted-foreground">{t('sessionsPage.filters.spec')}:</span>
+                  <Badge variant="secondary" className="text-xs px-2 py-0 h-5 gap-1 max-w-[200px]">
+                    <span className="truncate">{specFilter}</span>
+                    <button
+                      type="button"
+                      onClick={() => setSpecFilter(null)}
+                      className="ml-0.5 rounded-full hover:bg-muted-foreground/20 cursor-pointer"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </Badge>
+                </div>
+              )}
+
               <div className="flex-1 space-y-2 overflow-y-auto p-3">
-                {activeSessions.length === 0 ? (
+                {displayedSessions.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full text-center p-4">
                     <TerminalSquare className="h-8 w-8 text-muted-foreground/50 mb-3" />
-                    <p className="text-sm font-medium">{t('sessions.empty')}</p>
+                    <p className="text-sm font-medium">{specFilter ? t('sessions.emptyForSpec') : t('sessions.empty')}</p>
                     <p className="text-xs text-muted-foreground mt-1">
                       {t('sessions.labels.emptyHint', 'Start a new session to run specs')}
                     </p>
@@ -127,7 +174,7 @@ export function SessionsPopover() {
                     </Button>
                   </div>
                 ) : (
-                  activeSessions.map((session) => {
+                  displayedSessions.map((session) => {
                     const statusMeta = sessionStatusConfig[session.status];
                     const StatusIcon = statusMeta.icon;
                     const selected = activeLogSessionId === session.id;

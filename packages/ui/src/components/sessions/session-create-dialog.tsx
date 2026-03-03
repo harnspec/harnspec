@@ -19,25 +19,11 @@ import type { Session, SessionMode, Spec, RunnerDefinition } from '../../types/a
 import { api } from '../../lib/api';
 import { SpecContextTrigger, SpecContextChips } from '../spec-context-attachments';
 import { RunnerLogo } from '../library/ai-elements/runner-logo';
+import { InlineModelSelector } from '../chat/inline-model-selector';
 import { sessionModeConfig } from '../../lib/session-utils';
 import { X } from 'lucide-react';
 
 const MODES: SessionMode[] = ['guided', 'autonomous']; // 'ralph' is deprecated
-
-/** Well-known models available per runner for quick selection */
-const RUNNER_MODELS: Record<string, string[]> = {
-  claude: ['claude-sonnet-4-20250514', 'claude-opus-4-20250514', 'claude-haiku-3-5-20241022'],
-  copilot: ['gpt-4o', 'claude-sonnet-4-20250514', 'o3-mini'],
-  codex: ['codex-mini-latest', 'o4-mini', 'o3'],
-  gemini: ['gemini-2.5-pro', 'gemini-2.5-flash', 'gemini-2.0-flash'],
-  aider: ['claude-sonnet-4-20250514', 'gpt-4o', 'deepseek-chat'],
-  cline: ['claude-sonnet-4-20250514', 'gpt-4o', 'deepseek-chat'],
-  opencode: ['claude-sonnet-4-20250514', 'gpt-4o', 'gemini-2.5-pro'],
-  cursor: ['claude-sonnet-4-20250514', 'gpt-4o', 'cursor-small'],
-  windsurf: ['claude-sonnet-4-20250514', 'gpt-4o'],
-  amp: ['claude-sonnet-4-20250514'],
-  kiro: ['claude-sonnet-4-20250514'],
-};
 
 interface SessionCreateDialogProps {
   open: boolean;
@@ -57,7 +43,7 @@ export function SessionCreateDialog({
   const { t } = useTranslation('common');
   const [runnerDefs, setRunnerDefs] = useState<RunnerDefinition[]>([]);
   const [runner, setRunner] = useState('');
-  const [model, setModel] = useState('');
+  const [modelSelection, setModelSelection] = useState<{ providerId: string; modelId: string } | undefined>();
   const [mode, setMode] = useState<SessionMode>('autonomous');
   const [selectedSpecIds, setSelectedSpecIds] = useState<string[]>(defaultSpecId ? [defaultSpecId] : []);
   const [promptTemplate, setPromptTemplate] = useState('');
@@ -67,9 +53,6 @@ export function SessionCreateDialog({
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const canCreate = Boolean(projectPath);
-
-  /** Available model suggestions for the currently selected runner */
-  const modelSuggestions = RUNNER_MODELS[runner] ?? [];
 
   /** Get display label for a runner */
   const getRunnerLabel = useCallback(
@@ -99,8 +82,8 @@ export function SessionCreateDialog({
         const defs = resp.runners.length
           ? resp.runners
           : (['claude', 'copilot', 'codex', 'opencode', 'aider', 'cline'] as const).map(
-              (id) => ({ id, args: [], env: {}, source: 'builtin' as const }),
-            );
+            (id) => ({ id, args: [], env: {}, source: 'builtin' as const }),
+          );
         setRunnerDefs(defs);
         // Set the default runner: prefer server-configured default, else first available
         const defaultId = resp.default ?? defs[0]?.id ?? 'claude';
@@ -133,11 +116,6 @@ export function SessionCreateDialog({
     setTimeout(() => inputRef.current?.focus(), 50);
   }, [open]);
 
-  // Reset model when runner changes
-  useEffect(() => {
-    setModel('');
-  }, [runner]);
-
   const runCreate = useCallback(async () => {
     if (!projectPath) return;
     setCreating(true);
@@ -149,7 +127,7 @@ export function SessionCreateDialog({
         prompt: promptTemplate.trim() || null,
         runner,
         mode,
-        model: model || undefined,
+        model: modelSelection?.modelId || undefined,
       });
       // Start the runtime in the background — the server returns immediately
       // and the session transitions from Pending to Running asynchronously.
@@ -162,7 +140,7 @@ export function SessionCreateDialog({
     } finally {
       setCreating(false);
     }
-  }, [projectPath, selectedSpecIds, promptTemplate, runner, mode, model, onCreated, onOpenChange, t]);
+  }, [projectPath, selectedSpecIds, promptTemplate, runner, mode, modelSelection, onCreated, onOpenChange, t]);
 
   if (!open) {
     return null;
@@ -246,20 +224,11 @@ export function SessionCreateDialog({
                   </PromptInputSelectContent>
                 </PromptInputSelect>
 
-                {modelSuggestions.length > 0 && (
-                  <PromptInputSelect value={model} onValueChange={setModel}>
-                    <PromptInputSelectTrigger className="h-8 w-auto rounded-full border border-border/70 px-3 py-1.5 text-xs">
-                      <PromptInputSelectValue placeholder={t('sessions.labels.model')} />
-                    </PromptInputSelectTrigger>
-                    <PromptInputSelectContent>
-                      {modelSuggestions.map((m) => (
-                        <PromptInputSelectItem key={m} value={m}>
-                          {m}
-                        </PromptInputSelectItem>
-                      ))}
-                    </PromptInputSelectContent>
-                  </PromptInputSelect>
-                )}
+                <InlineModelSelector
+                  value={modelSelection}
+                  onChange={setModelSelection}
+                  disabled={creating}
+                />
 
                 <PromptInputSelect value={mode} onValueChange={(value) => setMode(value as SessionMode)}>
                   <PromptInputSelectTrigger className="h-8 w-auto rounded-full border border-border/70 px-3 py-1.5 text-xs">
