@@ -80,8 +80,6 @@ export function SpecDetailHeader({
   onOpenMobile,
   timelineDialogOpen,
   setTimelineDialogOpen,
-  activeSessionsCount,
-  totalSessionsCount,
   currentTokenCount,
   currentValidationStatus,
   asyncMetadata,
@@ -319,12 +317,6 @@ export function SpecDetailHeader({
               >
                 <Terminal className="mr-1.5 h-3.5 w-3.5" />
                 {t('navigation.sessions')}
-                <span className={cn(
-                  "ml-2 rounded-full px-2 py-0.5 text-[10px]",
-                  activeSessionsCount > 0 ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"
-                )}>
-                  {activeSessionsCount > 0 ? `● ${activeSessionsCount}` : totalSessionsCount}
-                </span>
               </Button>
 
               {/* Focus Mode Toggle */}
