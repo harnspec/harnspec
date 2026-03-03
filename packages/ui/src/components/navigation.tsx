@@ -11,6 +11,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tool
 // import { useMediaQuery } from '../hooks/use-media-query';
 import { useChat } from '../contexts';
 import { useCurrentProject } from '../hooks/useProjectQuery';
+import { SessionsPopover } from './sessions/sessions-popover';
 
 // Injected by Vite at build time
 declare const __DEV_BUILD__: string;
@@ -275,6 +276,8 @@ export function Navigation({ onToggleSidebar, rightSlot, onHeaderDoubleClick }: 
                 <p>{t('navigation.githubTooltip')}</p>
               </TooltipContent>
             </Tooltip>
+
+            <SessionsPopover />
 
             <Tooltip>
               <TooltipTrigger asChild>

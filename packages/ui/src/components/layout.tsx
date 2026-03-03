@@ -5,7 +5,6 @@ import { Navigation } from './navigation';
 import { MainSidebar } from './main-sidebar';
 import { MachineSwitcher } from './machine-switcher';
 import { ChatSidebar } from './chat/chat-sidebar';
-import { SessionsBottomBar } from './sessions/bottom-bar/sessions-bottom-bar';
 import { useGlobalShortcuts } from '../hooks/useKeyboardShortcuts';
 import { ErrorBoundary } from './shared/error-boundary';
 import { BackToTop } from './shared/back-to-top';
@@ -60,7 +59,7 @@ function LayoutContent({
         rightSlot={resolvedRightSlot}
         onHeaderDoubleClick={onNavigationDoubleClick}
       />
-      <div className="flex w-full min-w-0 h-[calc(100vh-3.5rem-3rem)] overflow-hidden">
+      <div className="flex w-full min-w-0 h-[calc(100vh-3.5rem)] overflow-hidden">
         <MainSidebar mobileOpen={isSidebarOpen} onMobileClose={toggleSidebar} />
         <div id="app-main-scroll" className="flex-1 min-w-0 overflow-y-auto overflow-x-auto">
           <main
@@ -76,7 +75,6 @@ function LayoutContent({
         <ChatSidebar />
       </div>
       <BackToTop targetId="app-main-scroll" />
-      <SessionsBottomBar />
     </div>
   );
 }
