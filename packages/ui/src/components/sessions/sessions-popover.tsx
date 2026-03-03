@@ -42,29 +42,38 @@ export function SessionsPopover() {
 
   const handleCreateOpen = () => {
     setOpen(false);
-    setCreateOpen(true);
+    setTimeout(() => {
+      setCreateOpen(true);
+    }, 200);
   };
 
   return (
     <>
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative h-9 w-9 sm:h-10 sm:w-10"
-            data-tauri-drag-region="false"
-          >
-            <TerminalSquare className="h-5 w-5" />
-            {hasActive && (
-              <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
-              </span>
-            )}
-            <span className="sr-only">{t('sessions.title')}</span>
-          </Button>
-        </PopoverTrigger>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <PopoverTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative h-9 w-9 sm:h-10 sm:w-10"
+                data-tauri-drag-region="false"
+              >
+                <TerminalSquare className="h-5 w-5" />
+                {hasActive && (
+                  <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                  </span>
+                )}
+                <span className="sr-only">{t('sessions.title')}</span>
+              </Button>
+            </PopoverTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{t('sessions.title')}</p>
+          </TooltipContent>
+        </Tooltip>
         <PopoverContent className="w-[800px] max-w-[90vw] p-0" align="end" alignOffset={-8}>
           <div className="flex h-[500px] max-h-[85vh] w-full flex-col md:flex-row">
             <div className="w-full border-b flex flex-col md:w-[380px] shrink-0 md:border-b-0 md:border-r">

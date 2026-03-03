@@ -115,7 +115,14 @@ export function SessionCreateDialog({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-background/60 px-4 pt-20 backdrop-blur-sm">
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center bg-background/60 px-4 pt-20 backdrop-blur-sm"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onOpenChange(false);
+        }
+      }}
+    >
       <div className="w-[min(860px,96vw)] rounded-xl border bg-background shadow-2xl">
         <div className="flex items-center justify-between border-b px-4 py-3">
           <div>
