@@ -9,6 +9,17 @@ use chrono::Utc;
 use leanspec_core::TemplateLoader;
 use serde_json::{json, Value};
 
+/// Strip a leading numeric prefix like "006-" from a spec name.
+/// AI agents often pass names already prefixed (e.g., "006-cli-mvp") despite instructions not to.
+fn strip_numeric_prefix(name: &str) -> &str {
+    if name.len() > 4 && name.as_bytes()[3] == b'-' && name[..3].bytes().all(|b| b.is_ascii_digit())
+    {
+        &name[4..]
+    } else {
+        name
+    }
+}
+
 pub(crate) fn tool_create(specs_dir: &str, args: Value) -> Result<String, String> {
     let name = args
         .get("name")
@@ -44,11 +55,14 @@ pub(crate) fn tool_create(specs_dir: &str, args: Value) -> Result<String, String
         .unwrap_or_default();
 
     let next_number = get_next_spec_number(specs_dir)?;
-    let spec_name = format!("{:03}-{}", next_number, name);
+    // Strip leading numeric prefix (e.g., "006-cli-mvp" → "cli-mvp") since AI agents
+    // often pass the name already prefixed despite the schema description saying not to.
+    let stripped_name = strip_numeric_prefix(name);
+    let spec_name = format!("{:03}-{}", next_number, stripped_name);
 
     let title = title_input
         .map(String::from)
-        .unwrap_or_else(|| to_title_case(name));
+        .unwrap_or_else(|| to_title_case(stripped_name));
     let now = Utc::now();
     let created_date = now.format("%Y-%m-%d").to_string();
 

@@ -34,6 +34,16 @@ pub struct CreateParams {
     pub depends_on: Vec<String>,
 }
 
+/// Strip a leading numeric prefix like "006-" from a spec name.
+fn strip_numeric_prefix(name: &str) -> &str {
+    if name.len() > 4 && name.as_bytes()[3] == b'-' && name[..3].bytes().all(|b| b.is_ascii_digit())
+    {
+        &name[4..]
+    } else {
+        name
+    }
+}
+
 pub fn run(params: CreateParams) -> Result<(), Box<dyn Error>> {
     let specs_dir = &params.specs_dir;
     let name = &params.name;
@@ -65,6 +75,7 @@ pub fn run(params: CreateParams) -> Result<(), Box<dyn Error>> {
 
     // 4. Generate spec number
     let next_number = get_next_spec_number(specs_dir)?;
+    let name = strip_numeric_prefix(name);
     let spec_name = format!("{:03}-{}", next_number, name);
     let spec_dir = Path::new(specs_dir).join(&spec_name);
 

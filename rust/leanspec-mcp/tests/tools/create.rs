@@ -282,3 +282,29 @@ fn test_create_tool_description_includes_template_body() {
         "frontmatter should be stripped from template body"
     );
 }
+
+#[tokio::test]
+async fn test_create_spec_strips_numeric_prefix_from_name() {
+    let temp = create_test_project(&[
+        ("001-existing", "planned", None),
+        ("002-another", "planned", None),
+    ]);
+    set_specs_dir_env(&temp);
+
+    // Simulate AI agent passing name with numeric prefix already included
+    let result = call_tool("create", json!({ "name": "003-cli-mvp" })).await;
+    assert!(result.is_ok());
+
+    let output = result.unwrap();
+    // Should create "003-cli-mvp", NOT "003-003-cli-mvp"
+    assert!(
+        output.contains("003-cli-mvp"),
+        "Should strip duplicate prefix: {}",
+        output
+    );
+    assert!(
+        !output.contains("003-003"),
+        "Should not have double prefix: {}",
+        output
+    );
+}
