@@ -530,15 +530,25 @@ export class HttpBackendAdapter implements BackendAdapter {
     return this.fetchAPI<RunnerVersionResponse>(`/api/runners/${encodeURIComponent(runnerId)}/version${query}`);
   }
 
+  async getRunnerModels(runnerId: string, projectPath?: string): Promise<{ models: string[] }> {
+    const params = new URLSearchParams();
+    if (projectPath) params.set('project_path', projectPath);
+    const query = params.toString() ? `?${params.toString()}` : '';
+    return this.fetchAPI<{ models: string[] }>(`/api/runners/${encodeURIComponent(runnerId)}/models${query}`);
+  }
+
   async createRunner(payload: {
     projectPath: string;
-    runner: {
-      id: string;
-      name?: string | null;
-      command?: string | null;
-      args?: string[];
-      env?: Record<string, string>;
-    };
+      runner: {
+        id: string;
+        name?: string | null;
+        command?: string | null;
+        args?: string[];
+        env?: Record<string, string>;
+        model?: string | null;
+        availableModels?: string[];
+        modelListCommand?: string | null;
+      };
     scope?: RunnerScope;
   }): Promise<RunnerListResponse> {
     return this.fetchAPI<RunnerListResponse>('/api/runners', {
@@ -560,6 +570,9 @@ export class HttpBackendAdapter implements BackendAdapter {
         command?: string | null;
         args?: string[];
         env?: Record<string, string>;
+        model?: string | null;
+        availableModels?: string[];
+        modelListCommand?: string | null;
       };
       scope?: RunnerScope;
     }

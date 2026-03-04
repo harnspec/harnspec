@@ -159,6 +159,7 @@ export interface BackendAdapter {
   listRunners(projectPath?: string, options?: { skipValidation?: boolean }): Promise<RunnerListResponse>;
   getRunner(runnerId: string, projectPath?: string): Promise<RunnerDefinition>;
   getRunnerVersion(runnerId: string, projectPath?: string): Promise<RunnerVersionResponse>;
+  getRunnerModels(runnerId: string, projectPath?: string): Promise<{ models: string[] }>;
   createRunner(payload: {
     projectPath: string;
     runner: {
@@ -167,6 +168,9 @@ export interface BackendAdapter {
       command?: string | null;
       args?: string[];
       env?: Record<string, string>;
+      model?: string | null;
+      availableModels?: string[];
+      modelListCommand?: string | null;
     };
     scope?: RunnerScope;
   }): Promise<RunnerListResponse>;
@@ -179,6 +183,9 @@ export interface BackendAdapter {
         command?: string | null;
         args?: string[];
         env?: Record<string, string>;
+        model?: string | null;
+        availableModels?: string[];
+        modelListCommand?: string | null;
       };
       scope?: RunnerScope;
     }

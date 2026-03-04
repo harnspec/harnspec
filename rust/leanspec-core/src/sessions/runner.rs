@@ -24,6 +24,9 @@ pub struct RunnerConfig {
     pub command: Option<String>,
     pub args: Option<Vec<String>>,
     pub env: Option<HashMap<String, String>>,
+    pub model: Option<String>,
+    pub available_models: Option<Vec<String>>,
+    pub model_list_command: Option<String>,
     #[serde(default)]
     pub detection: Option<DetectionConfig>,
     #[serde(default)]
@@ -53,6 +56,9 @@ pub struct RunnerDefinition {
     pub command: Option<String>,
     pub args: Vec<String>,
     pub env: HashMap<String, String>,
+    pub model: Option<String>,
+    pub available_models: Option<Vec<String>>,
+    pub model_list_command: Option<String>,
     pub detection: Option<DetectionConfig>,
     pub symlink_file: Option<String>,
     /// Controls how the session prompt is passed to the runner CLI.
@@ -213,6 +219,9 @@ impl RunnerRegistry {
                     "ANTHROPIC_API_KEY".to_string(),
                     "${ANTHROPIC_API_KEY}".to_string(),
                 )]),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["claude".to_string()],
                     config_dirs: vec![".claude".to_string()],
@@ -231,6 +240,9 @@ impl RunnerRegistry {
                 command: Some("copilot".to_string()),
                 args: vec!["--allow-all".to_string()],
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["copilot".to_string()],
                     config_dirs: vec![".copilot".to_string()],
@@ -249,6 +261,9 @@ impl RunnerRegistry {
                 command: Some("codex".to_string()),
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["codex".to_string()],
                     config_dirs: vec![".codex".to_string()],
@@ -267,6 +282,9 @@ impl RunnerRegistry {
                 command: Some("opencode".to_string()),
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: Some("opencode models".to_string()),
                 detection: Some(DetectionConfig {
                     commands: vec!["opencode".to_string()],
                     config_dirs: Vec::new(),
@@ -288,6 +306,9 @@ impl RunnerRegistry {
                     "OPENAI_API_KEY".to_string(),
                     "${OPENAI_API_KEY}".to_string(),
                 )]),
+                model: None,
+                available_models: None,
+                model_list_command: Some("aider --list-models".to_string()),
                 detection: Some(DetectionConfig {
                     commands: vec!["aider".to_string()],
                     config_dirs: vec![".aider".to_string()],
@@ -306,6 +327,9 @@ impl RunnerRegistry {
                 command: Some("cline".to_string()),
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["cline".to_string()],
                     config_dirs: Vec::new(),
@@ -324,6 +348,9 @@ impl RunnerRegistry {
                 command: Some("gemini".to_string()),
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["gemini".to_string()],
                     config_dirs: vec![".gemini".to_string()],
@@ -342,6 +369,9 @@ impl RunnerRegistry {
                 command: None,
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["cursor".to_string()],
                     config_dirs: vec![".cursor".to_string(), ".cursorules".to_string()],
@@ -360,6 +390,9 @@ impl RunnerRegistry {
                 command: None,
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["windsurf".to_string()],
                     config_dirs: vec![".windsurf".to_string(), ".windsurfrules".to_string()],
@@ -378,6 +411,9 @@ impl RunnerRegistry {
                 command: None,
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["antigravity".to_string()],
                     config_dirs: vec![".antigravity".to_string()],
@@ -396,6 +432,9 @@ impl RunnerRegistry {
                 command: Some("droid".to_string()),
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["droid".to_string()],
                     config_dirs: vec![".droid".to_string()],
@@ -414,6 +453,9 @@ impl RunnerRegistry {
                 command: Some("kiro-cli".to_string()),
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["kiro-cli".to_string()],
                     config_dirs: vec![".kiro".to_string()],
@@ -435,6 +477,9 @@ impl RunnerRegistry {
                     "MOONSHOT_API_KEY".to_string(),
                     "${MOONSHOT_API_KEY}".to_string(),
                 )]),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["kimi".to_string()],
                     config_dirs: vec![".kimi".to_string()],
@@ -453,6 +498,9 @@ impl RunnerRegistry {
                 command: Some("qodo".to_string()),
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["qodo".to_string()],
                     config_dirs: vec![".qodo".to_string()],
@@ -471,6 +519,9 @@ impl RunnerRegistry {
                 command: Some("amp".to_string()),
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["amp".to_string()],
                     config_dirs: vec![".amp".to_string()],
@@ -489,6 +540,9 @@ impl RunnerRegistry {
                 command: Some("trae".to_string()),
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["trae".to_string()],
                     config_dirs: vec![".trae".to_string()],
@@ -510,6 +564,9 @@ impl RunnerRegistry {
                     "DASHSCOPE_API_KEY".to_string(),
                     "${DASHSCOPE_API_KEY}".to_string(),
                 )]),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["qwen-code".to_string()],
                     config_dirs: vec![".qwen-code".to_string()],
@@ -528,6 +585,9 @@ impl RunnerRegistry {
                 command: Some("goose".to_string()),
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["goose".to_string()],
                     config_dirs: vec![".goose".to_string()],
@@ -546,6 +606,9 @@ impl RunnerRegistry {
                 command: Some("openhands".to_string()),
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["openhands".to_string()],
                     config_dirs: vec![".openhands".to_string()],
@@ -564,6 +627,9 @@ impl RunnerRegistry {
                 command: Some("continue".to_string()),
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["continue".to_string()],
                     config_dirs: vec![".continue".to_string()],
@@ -582,6 +648,9 @@ impl RunnerRegistry {
                 command: Some("crush".to_string()),
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["crush".to_string()],
                     config_dirs: vec![".crush".to_string()],
@@ -600,6 +669,9 @@ impl RunnerRegistry {
                 command: None,
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: Vec::new(),
                     config_dirs: vec![".roo".to_string()],
@@ -618,6 +690,9 @@ impl RunnerRegistry {
                 command: None,
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: Vec::new(),
                     config_dirs: vec![".codebuddy".to_string()],
@@ -636,6 +711,9 @@ impl RunnerRegistry {
                 command: None,
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: Vec::new(),
                     config_dirs: vec![".kilocode".to_string()],
@@ -654,6 +732,9 @@ impl RunnerRegistry {
                 command: None,
                 args: Vec::new(),
                 env: HashMap::new(),
+                model: None,
+                available_models: None,
+                model_list_command: None,
                 detection: Some(DetectionConfig {
                     commands: Vec::new(),
                     config_dirs: vec![".augment".to_string()],
@@ -794,6 +875,9 @@ impl RunnerRegistry {
                     command: override_config.command,
                     args: override_config.args.unwrap_or_default(),
                     env: override_config.env.unwrap_or_default(),
+                    model: override_config.model,
+                    available_models: override_config.available_models,
+                    model_list_command: override_config.model_list_command,
                     detection: override_config.detection,
                     symlink_file: override_config.symlink_file,
                     prompt_flag: override_config.prompt_flag,
@@ -822,6 +906,15 @@ fn merge_runner(mut base: RunnerDefinition, override_config: RunnerConfig) -> Ru
     }
     if let Some(env) = override_config.env {
         base.env = env;
+    }
+    if let Some(model) = override_config.model {
+        base.model = Some(model);
+    }
+    if let Some(available_models) = override_config.available_models {
+        base.available_models = Some(available_models);
+    }
+    if let Some(model_list_command) = override_config.model_list_command {
+        base.model_list_command = Some(model_list_command);
     }
     if let Some(detection) = override_config.detection {
         base.detection = Some(detection);
@@ -1009,6 +1102,9 @@ mod tests {
             command: Some("claude".to_string()),
             args: vec!["--print".to_string()],
             env: HashMap::new(),
+            model: None,
+            available_models: None,
+            model_list_command: None,
             detection: None,
             symlink_file: None,
             prompt_flag: None,
@@ -1019,6 +1115,9 @@ mod tests {
             command: None,
             args: Some(vec!["--model".to_string(), "sonnet".to_string()]),
             env: None,
+            model: None,
+            available_models: None,
+            model_list_command: None,
             detection: None,
             symlink_file: None,
             prompt_flag: None,

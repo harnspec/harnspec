@@ -81,6 +81,9 @@ export interface RunnerDefinition {
   command?: string | null;
   args: string[];
   env: Record<string, string>;
+  model?: string | null;
+  availableModels?: string[] | null;
+  modelListCommand?: string | null;
   /** 
    * True if command is available, false if not, undefined if validation pending.
    * When skipValidation=true on list request, this will be undefined.
@@ -102,6 +105,10 @@ export interface RunnerValidateResponse {
 
 export interface RunnerVersionResponse {
   version?: string | null;
+}
+
+export interface RunnerModelsResponse {
+  models: string[];
 }
 
 export type RunnerScope = 'project' | 'global';

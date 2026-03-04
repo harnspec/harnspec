@@ -5,13 +5,16 @@ use axum::extract::State;
 use axum::Json;
 use std::collections::HashSet;
 use std::path::PathBuf;
+use std::time::Duration;
+use tokio::process::Command;
+use tokio::time::timeout;
 
 use crate::error::{internal_error, ApiError, ApiResult};
 use crate::state::AppState;
 use crate::types::{
     ListRunnersRequest, RunnerCreateRequest, RunnerDefaultRequest, RunnerDeleteRequest,
-    RunnerInfoResponse, RunnerListResponse, RunnerPatchQuery, RunnerScope, RunnerUpdateRequest,
-    RunnerValidateResponse, RunnerVersionResponse,
+    RunnerInfoResponse, RunnerListResponse, RunnerModelsResponse, RunnerPatchQuery, RunnerScope,
+    RunnerUpdateRequest, RunnerValidateResponse, RunnerVersionResponse,
 };
 use leanspec_core::sessions::runner::{
     default_runners_file, global_runners_path, project_runners_path, read_runners_file,
@@ -37,7 +40,8 @@ pub async fn list_runners(
 ) -> ApiResult<Json<RunnerListResponse>> {
     let project_path = req.project_path.unwrap_or_else(|| ".".to_string());
 
-    let response = build_runner_list_response(&project_path).map_err(internal_error)?;
+    let response =
+        build_runner_list_response(&project_path, req.skip_validation).map_err(internal_error)?;
 
     Ok(Json(response))
 }
@@ -69,11 +73,11 @@ pub async fn get_runner(
         )
     })?;
 
-    Ok(Json(build_runner_info(runner, &sources)))
+    Ok(Json(build_runner_info(runner, &sources, false)))
 }
 
 pub async fn create_runner(
-    State(_state): State<AppState>,
+    State(state): State<AppState>,
     Json(req): Json<RunnerCreateRequest>,
 ) -> ApiResult<Json<RunnerListResponse>> {
     if let Some(command) = &req.runner.command {
@@ -101,6 +105,9 @@ pub async fn create_runner(
             command: req.runner.command,
             args: req.runner.args,
             env: req.runner.env,
+            model: req.runner.model,
+            available_models: req.runner.available_models,
+            model_list_command: req.runner.model_list_command,
             detection: None,
             symlink_file: None,
             prompt_flag: None,
@@ -113,8 +120,9 @@ pub async fn create_runner(
             Json(ApiError::internal_error(&e.to_string())),
         )
     })?;
+    clear_runner_models_cache(&state).await;
 
-    let response = build_runner_list_response(&req.project_path).map_err(|e| {
+    let response = build_runner_list_response(&req.project_path, false).map_err(|e| {
         (
             axum::http::StatusCode::INTERNAL_SERVER_ERROR,
             Json(ApiError::internal_error(&e.to_string())),
@@ -125,7 +133,7 @@ pub async fn create_runner(
 }
 
 pub async fn update_runner(
-    State(_state): State<AppState>,
+    State(state): State<AppState>,
     Path(runner_id): Path<String>,
     Json(req): Json<RunnerUpdateRequest>,
 ) -> ApiResult<Json<RunnerListResponse>> {
@@ -154,6 +162,9 @@ pub async fn update_runner(
             command: req.runner.command,
             args: req.runner.args,
             env: req.runner.env,
+            model: req.runner.model,
+            available_models: req.runner.available_models,
+            model_list_command: req.runner.model_list_command,
             detection: None,
             symlink_file: None,
             prompt_flag: None,
@@ -166,8 +177,9 @@ pub async fn update_runner(
             Json(ApiError::internal_error(&e.to_string())),
         )
     })?;
+    clear_runner_models_cache(&state).await;
 
-    let response = build_runner_list_response(&req.project_path).map_err(|e| {
+    let response = build_runner_list_response(&req.project_path, false).map_err(|e| {
         (
             axum::http::StatusCode::INTERNAL_SERVER_ERROR,
             Json(ApiError::internal_error(&e.to_string())),
@@ -178,7 +190,7 @@ pub async fn update_runner(
 }
 
 pub async fn patch_runner(
-    State(_state): State<AppState>,
+    State(state): State<AppState>,
     Path(runner_id): Path<String>,
     axum::extract::Query(query): axum::extract::Query<RunnerPatchQuery>,
     Json(req): Json<RunnerUpdateRequest>,
@@ -210,6 +222,12 @@ pub async fn patch_runner(
             command: req.runner.command.or(existing.command),
             args: req.runner.args.or(existing.args),
             env: req.runner.env.or(existing.env),
+            model: req.runner.model.or(existing.model),
+            available_models: req.runner.available_models.or(existing.available_models),
+            model_list_command: req
+                .runner
+                .model_list_command
+                .or(existing.model_list_command),
             detection: existing.detection,
             symlink_file: existing.symlink_file,
             prompt_flag: existing.prompt_flag,
@@ -222,6 +240,7 @@ pub async fn patch_runner(
             Json(ApiError::internal_error(&e.to_string())),
         )
     })?;
+    clear_runner_models_cache(&state).await;
 
     let registry =
         RunnerRegistry::load(PathBuf::from(&req.project_path).as_path()).map_err(|e| {
@@ -245,7 +264,7 @@ pub async fn patch_runner(
         )
     })?;
 
-    let mut response = build_runner_info(runner, &sources);
+    let mut response = build_runner_info(runner, &sources, false);
     if query.minimal {
         response.available = None;
     }
@@ -254,7 +273,7 @@ pub async fn patch_runner(
 }
 
 pub async fn delete_runner(
-    State(_state): State<AppState>,
+    State(state): State<AppState>,
     Path(runner_id): Path<String>,
     Json(req): Json<RunnerDeleteRequest>,
 ) -> ApiResult<Json<RunnerListResponse>> {
@@ -280,8 +299,9 @@ pub async fn delete_runner(
             Json(ApiError::internal_error(&e.to_string())),
         )
     })?;
+    clear_runner_models_cache(&state).await;
 
-    let response = build_runner_list_response(&req.project_path).map_err(|e| {
+    let response = build_runner_list_response(&req.project_path, false).map_err(|e| {
         (
             axum::http::StatusCode::INTERNAL_SERVER_ERROR,
             Json(ApiError::internal_error(&e.to_string())),
@@ -345,7 +365,7 @@ pub async fn validate_runner(
 }
 
 pub async fn set_default_runner(
-    State(_state): State<AppState>,
+    State(state): State<AppState>,
     Json(req): Json<RunnerDefaultRequest>,
 ) -> ApiResult<Json<RunnerListResponse>> {
     if req.runner_id.trim().is_empty() {
@@ -387,8 +407,9 @@ pub async fn set_default_runner(
             Json(ApiError::internal_error(&e.to_string())),
         )
     })?;
+    clear_runner_models_cache(&state).await;
 
-    let response = build_runner_list_response(&req.project_path).map_err(|e| {
+    let response = build_runner_list_response(&req.project_path, false).map_err(|e| {
         (
             axum::http::StatusCode::INTERNAL_SERVER_ERROR,
             Json(ApiError::internal_error(&e.to_string())),
@@ -396,6 +417,79 @@ pub async fn set_default_runner(
     })?;
 
     Ok(Json(response))
+}
+
+pub async fn get_runner_models(
+    State(state): State<AppState>,
+    Path(runner_id): Path<String>,
+    axum::extract::Query(req): axum::extract::Query<ListRunnersRequest>,
+) -> ApiResult<Json<RunnerModelsResponse>> {
+    let project_path = req.project_path.unwrap_or_else(|| ".".to_string());
+    let cache_key = format!("{}:{}", project_path, runner_id);
+    let ttl = Duration::from_secs(300);
+
+    if let Some((cached_at, cached_models)) = state.runner_models_cache.read().await.get(&cache_key)
+    {
+        if cached_at.elapsed() < ttl {
+            return Ok(Json(RunnerModelsResponse {
+                models: cached_models.clone(),
+            }));
+        }
+    }
+
+    let registry = RunnerRegistry::load(PathBuf::from(&project_path).as_path()).map_err(|e| {
+        (
+            axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+            Json(ApiError::internal_error(&e.to_string())),
+        )
+    })?;
+    let runner = registry.get(&runner_id).ok_or_else(|| {
+        (
+            axum::http::StatusCode::NOT_FOUND,
+            Json(ApiError::not_found("Runner")),
+        )
+    })?;
+
+    let mut command = parse_and_validate_model_list_command(runner).ok_or_else(|| {
+        (
+            axum::http::StatusCode::BAD_REQUEST,
+            Json(ApiError::invalid_request(
+                "Runner does not support model discovery",
+            )),
+        )
+    })?;
+
+    let output = timeout(Duration::from_secs(10), command.output())
+        .await
+        .map_err(|_| {
+            (
+                axum::http::StatusCode::REQUEST_TIMEOUT,
+                Json(ApiError::new(
+                    "TIMEOUT",
+                    "Runner model discovery timed out after 10 seconds",
+                )),
+            )
+        })?
+        .map_err(|e| {
+            (
+                axum::http::StatusCode::BAD_REQUEST,
+                Json(ApiError::new("RUNNER_EXECUTION_ERROR", e.to_string())),
+            )
+        })?;
+
+    let models = if output.status.success() {
+        parse_model_list_output(&String::from_utf8_lossy(&output.stdout))
+    } else {
+        Vec::new()
+    };
+
+    state
+        .runner_models_cache
+        .write()
+        .await
+        .insert(cache_key, (std::time::Instant::now(), models.clone()));
+
+    Ok(Json(RunnerModelsResponse { models }))
 }
 
 fn resolve_scope_path(project_path: &str, scope: RunnerScope) -> PathBuf {
@@ -430,6 +524,7 @@ fn load_runner_sources(
 fn build_runner_info(
     runner: &RunnerDefinition,
     sources: &(HashSet<String>, HashSet<String>),
+    skip_validation: bool,
 ) -> RunnerInfoResponse {
     let (global_sources, project_sources) = sources;
     let source = if project_sources.contains(&runner.id) {
@@ -442,10 +537,14 @@ fn build_runner_info(
 
     // Check availability (fast PATH lookup), but never detect version here.
     // Version detection spawns child processes and is done via a separate API.
-    let available = runner
-        .command
-        .as_ref()
-        .map(|_| runner.validate_command().is_ok());
+    let available = if skip_validation {
+        None
+    } else {
+        runner
+            .command
+            .as_ref()
+            .map(|_| runner.validate_command().is_ok())
+    };
 
     RunnerInfoResponse {
         id: runner.id.clone(),
@@ -453,23 +552,78 @@ fn build_runner_info(
         command: runner.command.clone(),
         args: runner.args.clone(),
         env: runner.env.clone(),
+        model: runner.model.clone(),
+        available_models: runner.available_models.clone(),
+        model_list_command: runner.model_list_command.clone(),
         available,
         version: None,
         source: source.to_string(),
     }
 }
 
-fn build_runner_list_response(project_path: &str) -> leanspec_core::CoreResult<RunnerListResponse> {
+fn build_runner_list_response(
+    project_path: &str,
+    skip_validation: bool,
+) -> leanspec_core::CoreResult<RunnerListResponse> {
     let registry = RunnerRegistry::load(PathBuf::from(project_path).as_path())?;
     let sources = load_runner_sources(project_path)?;
     let runners = registry
         .list()
         .into_iter()
-        .map(|runner| build_runner_info(runner, &sources))
+        .map(|runner| build_runner_info(runner, &sources, skip_validation))
         .collect::<Vec<_>>();
 
     Ok(RunnerListResponse {
         default: registry.default().map(|value| value.to_string()),
         runners,
     })
+}
+
+fn parse_and_validate_model_list_command(runner: &RunnerDefinition) -> Option<Command> {
+    let runner_command = runner.command.as_ref()?;
+    let model_list_command = runner.model_list_command.as_ref()?;
+    let mut parts = model_list_command.split_whitespace();
+    let first = parts.next()?;
+
+    if first != runner_command {
+        return None;
+    }
+
+    let mut command = Command::new(first);
+    for part in parts {
+        command.arg(part);
+    }
+    command.stdin(std::process::Stdio::null());
+    Some(command)
+}
+
+fn parse_model_list_output(output: &str) -> Vec<String> {
+    let mut models = Vec::new();
+    for raw_line in output.lines() {
+        let line = raw_line.trim();
+        if line.is_empty() {
+            continue;
+        }
+
+        let cleaned = line
+            .trim_start_matches(|c| matches!(c, '-' | '*' | '•' | '|' | ' '))
+            .trim();
+        let candidate = cleaned.split_whitespace().next().unwrap_or_default();
+        if candidate.is_empty() {
+            continue;
+        }
+        if candidate
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || ['-', '_', '.', '/', ':'].contains(&c))
+        {
+            models.push(candidate.to_string());
+        }
+    }
+    models.sort();
+    models.dedup();
+    models
+}
+
+async fn clear_runner_models_cache(state: &AppState) {
+    state.runner_models_cache.write().await.clear();
 }

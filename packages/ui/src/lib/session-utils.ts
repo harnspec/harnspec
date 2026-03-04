@@ -75,12 +75,7 @@ export const sessionModeConfig: Record<SessionMode, SessionModeConfig> = {
     label: 'Guided',
     labelKey: 'sessions.modes.guided',
   },
-  ralph: {
-    icon: Bot,
-    label: 'Ralph',
-    labelKey: 'sessions.modes.ralph',
-  },
-};
+} as Record<SessionMode, SessionModeConfig>;
 
 // Legacy exports for backward compatibility
 export const SESSION_STATUS_STYLES: Record<SessionStatus, string> = Object.fromEntries(

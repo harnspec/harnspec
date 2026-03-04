@@ -73,6 +73,21 @@
               "additionalProperties": {
                 "type": "string"
               }
+            },
+            "model": {
+              "type": "string",
+              "description": "Default model to use for this runner."
+            },
+            "available_models": {
+              "type": "array",
+              "description": "Configured model IDs available for this runner.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "model_list_command": {
+              "type": "string",
+              "description": "Optional command used to discover models. Must start with the same binary as 'command'."
             }
           }
         }

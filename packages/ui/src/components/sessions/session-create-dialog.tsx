@@ -19,11 +19,10 @@ import type { Session, SessionMode, Spec, RunnerDefinition } from '../../types/a
 import { api } from '../../lib/api';
 import { SpecContextTrigger, SpecContextChips } from '../spec-context-attachments';
 import { RunnerLogo } from '../library/ai-elements/runner-logo';
-import { InlineModelSelector } from '../chat/inline-model-selector';
 import { sessionModeConfig } from '../../lib/session-utils';
 import { X } from 'lucide-react';
 
-const MODES: SessionMode[] = ['guided', 'autonomous']; // 'ralph' is deprecated
+const MODES: SessionMode[] = ['guided', 'autonomous'];
 
 interface SessionCreateDialogProps {
   open: boolean;
@@ -43,7 +42,8 @@ export function SessionCreateDialog({
   const { t } = useTranslation('common');
   const [runnerDefs, setRunnerDefs] = useState<RunnerDefinition[]>([]);
   const [runner, setRunner] = useState('');
-  const [modelSelection, setModelSelection] = useState<{ providerId: string; modelId: string } | undefined>();
+  const [runnerLoading, setRunnerLoading] = useState(false);
+  const [model, setModel] = useState('');
   const [mode, setMode] = useState<SessionMode>('autonomous');
   const [selectedSpecIds, setSelectedSpecIds] = useState<string[]>(defaultSpecId ? [defaultSpecId] : []);
   const [promptTemplate, setPromptTemplate] = useState('');
@@ -78,22 +78,25 @@ export function SessionCreateDialog({
     setError(null);
     const loadRunners = async () => {
       try {
-        const resp = await api.listRunners(projectPath ?? undefined, { skipValidation: true });
-        const defs = resp.runners.length
-          ? resp.runners
-          : (['claude', 'copilot', 'codex', 'opencode', 'aider', 'cline'] as const).map(
-            (id) => ({ id, args: [], env: {}, source: 'builtin' as const }),
-          );
+        setRunnerLoading(true);
+        const resp = await api.listRunners(projectPath ?? undefined);
+        const available = (resp.runners ?? []).filter((r) => r.available === true);
+        const defs = available.sort((a, b) => {
+          if (resp.default && a.id === resp.default) return -1;
+          if (resp.default && b.id === resp.default) return 1;
+          const left = a.name ?? a.id;
+          const right = b.name ?? b.id;
+          return left.localeCompare(right);
+        });
         setRunnerDefs(defs);
-        // Set the default runner: prefer server-configured default, else first available
-        const defaultId = resp.default ?? defs[0]?.id ?? 'claude';
+        const defaultId =
+          defs.find((def) => def.id === resp.default)?.id ?? defs[0]?.id ?? '';
         setRunner((prev) => (prev && defs.some((d) => d.id === prev) ? prev : defaultId));
-      } catch {
-        const fallback: RunnerDefinition[] = (['claude', 'copilot', 'codex', 'opencode', 'aider', 'cline'] as const).map(
-          (id) => ({ id, args: [], env: {}, source: 'builtin' as const }),
-        );
-        setRunnerDefs(fallback);
-        setRunner((prev) => prev || 'claude');
+      } catch (err) {
+        setError(err instanceof Error ? err.message : t('settings.runners.errors.loadFailed'));
+        setRunnerDefs([]);
+      } finally {
+        setRunnerLoading(false);
       }
     };
     const loadSpecs = async () => {
@@ -107,6 +110,17 @@ export function SessionCreateDialog({
     void loadRunners();
     void loadSpecs();
   }, [open, projectPath]);
+
+  useEffect(() => {
+    const selected = runnerDefs.find((def) => def.id === runner);
+    const models = selected?.availableModels ?? [];
+    if (!models.length) {
+      setModel('');
+      return;
+    }
+    const preferred = selected?.model ?? models[0] ?? '';
+    setModel((prev) => (prev && models.includes(prev) ? prev : preferred));
+  }, [runner, runnerDefs]);
 
   useEffect(() => {
     if (!open) {
@@ -127,7 +141,7 @@ export function SessionCreateDialog({
         prompt: promptTemplate.trim() || null,
         runner,
         mode,
-        model: modelSelection?.modelId || undefined,
+        model: model || undefined,
       });
       // Start the runtime in the background — the server returns immediately
       // and the session transitions from Pending to Running asynchronously.
@@ -140,7 +154,10 @@ export function SessionCreateDialog({
     } finally {
       setCreating(false);
     }
-  }, [projectPath, selectedSpecIds, promptTemplate, runner, mode, modelSelection, onCreated, onOpenChange, t]);
+  }, [projectPath, selectedSpecIds, promptTemplate, runner, mode, model, onCreated, onOpenChange, t]);
+
+  const selectedRunner = runnerDefs.find((def) => def.id === runner);
+  const runnerModels = selectedRunner?.availableModels ?? [];
 
   if (!open) {
     return null;
@@ -224,11 +241,24 @@ export function SessionCreateDialog({
                   </PromptInputSelectContent>
                 </PromptInputSelect>
 
-                <InlineModelSelector
-                  value={modelSelection}
-                  onChange={setModelSelection}
-                  disabled={creating}
-                />
+                {runnerModels.length > 0 && (
+                  <PromptInputSelect value={model} onValueChange={setModel}>
+                    <PromptInputSelectTrigger className="h-8 w-auto rounded-full border border-border/70 px-3 py-1.5 text-xs">
+                      <PromptInputSelectValue placeholder={t('sessions.labels.model')} />
+                    </PromptInputSelectTrigger>
+                    <PromptInputSelectContent>
+                      {runnerModels.map((modelId) => (
+                        <PromptInputSelectItem key={modelId} value={modelId}>
+                          {modelId}
+                        </PromptInputSelectItem>
+                      ))}
+                    </PromptInputSelectContent>
+                  </PromptInputSelect>
+                )}
+
+                {runnerLoading && (
+                  <span className="text-xs text-muted-foreground">{t('settings.runners.validation.checking')}</span>
+                )}
 
                 <PromptInputSelect value={mode} onValueChange={(value) => setMode(value as SessionMode)}>
                   <PromptInputSelectTrigger className="h-8 w-auto rounded-full border border-border/70 px-3 py-1.5 text-xs">
@@ -257,7 +287,7 @@ export function SessionCreateDialog({
               </div>
 
               <PromptInputSubmit
-                disabled={!canCreate || creating || (!promptTemplate.trim() && selectedSpecIds.length === 0)}
+                disabled={!canCreate || !runner || creating || (!promptTemplate.trim() && selectedSpecIds.length === 0)}
                 status={creating ? 'submitted' : undefined}
               />
             </PromptInputFooter>

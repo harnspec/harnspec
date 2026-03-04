@@ -10,9 +10,11 @@ use crate::project_registry::{Project, ProjectRegistry};
 use crate::sessions::{SessionDatabase, SessionManager};
 use crate::sync_state::SyncState;
 use crate::watcher::{sse_connection_limit, watch_debounce, watch_enabled, FileWatcher};
+use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
 use std::sync::Arc;
+use std::time::Instant;
 use tokio::sync::{RwLock, Semaphore};
 
 /// Shared application state
@@ -41,6 +43,9 @@ pub struct AppState {
 
     /// SSE connection limiter
     pub sse_connections: Arc<Semaphore>,
+
+    /// Runner model discovery cache (keyed by "<project_path>:<runner_id>")
+    pub runner_models_cache: Arc<RwLock<HashMap<String, (Instant, Vec<String>)>>>,
 }
 
 impl AppState {
@@ -108,6 +113,7 @@ impl AppState {
             session_manager,
             file_watcher,
             sse_connections,
+            runner_models_cache: Arc::new(RwLock::new(HashMap::new())),
         })
     }
 
@@ -134,6 +140,7 @@ impl AppState {
             session_manager,
             file_watcher,
             sse_connections,
+            runner_models_cache: Arc::new(RwLock::new(HashMap::new())),
         }
     }
 }

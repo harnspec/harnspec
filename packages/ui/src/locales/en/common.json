@@ -154,8 +154,7 @@
     },
     "modes": {
       "autonomous": "Autonomous",
-      "guided": "Guided",
-      "ralph": "Ralph (deprecated)"
+      "guided": "Guided"
     },
     "runners": {
       "claude": "Claude",
@@ -525,6 +524,7 @@
       "configure": "Configure",
       "setUp": "Set Up",
       "setDefault": "Set default",
+      "discoverModels": "Discover models",
       "saveAndSetDefault": "Save & Set Default",
       "defaults": "Default Settings",
       "defaultsDescription": "Configure default provider, model, and behavior",
@@ -697,6 +697,11 @@
         "command": "Command",
         "args": "Arguments",
         "argsHelp": "One argument per line",
+        "defaultModel": "Default Model",
+        "availableModels": "Available Models",
+        "availableModelsHelp": "One model ID per line",
+        "modelListCommand": "Model List Command",
+        "modelListCommandHelp": "Must start with the same binary as the runner command",
         "env": "Environment Variables",
         "envHelp": "One KEY=VALUE per line"
       },
@@ -705,6 +710,9 @@
         "name": "Claude Code",
         "command": "claude",
         "args": "--dangerously-skip-permissions\n--print",
+        "defaultModel": "claude-3-7-sonnet",
+        "availableModels": "claude-3-7-sonnet\nclaude-3-5-haiku",
+        "modelListCommand": "aider --list-models",
         "env": "ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}"
       },
       "errors": {

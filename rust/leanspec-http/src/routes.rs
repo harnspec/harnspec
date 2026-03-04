@@ -240,7 +240,8 @@ pub fn create_router(state: AppState) -> Router {
         .route(
             "/api/runners/{id}/version",
             get(handlers::get_runner_version),
-        );
+        )
+        .route("/api/runners/{id}/models", get(handlers::get_runner_models));
 
     // AI chat route (only when ai feature is enabled)
     #[cfg(feature = "ai")]

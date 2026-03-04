@@ -19,6 +19,7 @@ import type {
   RunnerListResponse,
   RunnerScope,
   RunnerValidateResponse,
+  RunnerModelsResponse,
   RunnerVersionResponse,
 } from "../types/api";
 import type { ChatConfig } from "../types/chat-config";
@@ -188,16 +189,23 @@ class ProjectAPI {
     return this.backend.getRunnerVersion(runnerId, projectPath);
   }
 
+  getRunnerModels(runnerId: string, projectPath?: string): Promise<RunnerModelsResponse> {
+    return this.backend.getRunnerModels(runnerId, projectPath);
+  }
+
   createRunner(payload: {
     projectPath: string;
-    runner: {
-      id: string;
-      name?: string | null;
-      command?: string | null;
-      args?: string[];
-      env?: Record<string, string>;
-    };
-    scope?: RunnerScope;
+      runner: {
+        id: string;
+        name?: string | null;
+        command?: string | null;
+        args?: string[];
+        env?: Record<string, string>;
+        model?: string | null;
+        availableModels?: string[];
+        modelListCommand?: string | null;
+      };
+      scope?: RunnerScope;
   }): Promise<RunnerListResponse> {
     return this.backend.createRunner(payload);
   }
@@ -211,6 +219,9 @@ class ProjectAPI {
         command?: string | null;
         args?: string[];
         env?: Record<string, string>;
+        model?: string | null;
+        availableModels?: string[];
+        modelListCommand?: string | null;
       };
       scope?: RunnerScope;
     }

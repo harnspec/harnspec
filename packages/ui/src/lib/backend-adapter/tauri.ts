@@ -320,15 +320,22 @@ export class TauriBackendAdapter implements BackendAdapter {
     });
   }
 
+  async getRunnerModels(_runnerId: string, _projectPath?: string): Promise<{ models: string[] }> {
+    throw new Error('getRunnerModels is not implemented for the Tauri backend yet');
+  }
+
   async createRunner(payload: {
     projectPath: string;
-    runner: {
-      id: string;
-      name?: string | null;
-      command?: string | null;
-      args?: string[];
-      env?: Record<string, string>;
-    };
+      runner: {
+        id: string;
+        name?: string | null;
+        command?: string | null;
+        args?: string[];
+        env?: Record<string, string>;
+        model?: string | null;
+        availableModels?: string[];
+        modelListCommand?: string | null;
+      };
     scope?: RunnerScope;
   }): Promise<RunnerListResponse> {
     return this.invoke<RunnerListResponse>('desktop_create_runner', {
@@ -347,6 +354,9 @@ export class TauriBackendAdapter implements BackendAdapter {
         command?: string | null;
         args?: string[];
         env?: Record<string, string>;
+        model?: string | null;
+        availableModels?: string[];
+        modelListCommand?: string | null;
       };
       scope?: RunnerScope;
     }
