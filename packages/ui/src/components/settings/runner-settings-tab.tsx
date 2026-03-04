@@ -173,8 +173,7 @@ export function RunnerSettingsTab() {
     args: string[];
     env?: Record<string, string>;
     model?: string | null;
-    availableModels?: string[];
-    modelListCommand?: string | null;
+    modelProviders?: string[];
   }) => {
     if (!projectPath) return;
 
@@ -191,8 +190,7 @@ export function RunnerSettingsTab() {
             args: payload.args,
             env: payload.env,
             model: payload.model ?? undefined,
-            availableModels: payload.availableModels,
-            modelListCommand: payload.modelListCommand ?? undefined,
+            modelProviders: payload.modelProviders,
           },
           scope: DEFAULT_SCOPE,
         });
@@ -220,19 +218,20 @@ export function RunnerSettingsTab() {
   };
 
   const handleDiscoverModels = async (runner: RunnerDefinition) => {
-    if (!projectPath || !runner.command || !runner.modelListCommand) return;
+    if (!projectPath || !runner.command || !runner.modelProviders?.length) return;
     setDiscoveringModels((prev) => new Set(prev).add(runner.id));
     try {
       const { models } = await api.getRunnerModels(runner.id, projectPath);
-      const updatedRunner = await api.updateRunner(runner.id, {
-        projectPath,
-        runner: {
-          availableModels: models,
-          model: runner.model && models.includes(runner.model) ? runner.model : models[0],
-        },
-        scope: DEFAULT_SCOPE,
-      });
-      setRunners((previous) => previous.map((item) => (item.id === updatedRunner.id ? updatedRunner : item)));
+      if (models.length > 0) {
+        const updatedRunner = await api.updateRunner(runner.id, {
+          projectPath,
+          runner: {
+            model: runner.model && models.includes(runner.model) ? runner.model : models[0],
+          },
+          scope: DEFAULT_SCOPE,
+        });
+        setRunners((previous) => previous.map((item) => (item.id === updatedRunner.id ? updatedRunner : item)));
+      }
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : t('settings.runners.errors.loadFailed'));
@@ -537,9 +536,9 @@ export function RunnerSettingsTab() {
                               {t('settings.runners.fields.defaultModel')}: <span className="font-mono">{runner.model}</span>
                             </p>
                           )}
-                          {runner.availableModels && runner.availableModels.length > 0 && (
+                          {runner.modelProviders && runner.modelProviders.length > 0 && (
                             <p className="text-xs text-muted-foreground">
-                              {t('settings.runners.fields.availableModels')}: {runner.availableModels.length}
+                              {t('settings.runners.fields.modelProviders')}: {runner.modelProviders.join(', ')}
                             </p>
                           )}
                         </div>
@@ -613,7 +612,7 @@ export function RunnerSettingsTab() {
 
                         <DropdownMenuItem
                           onClick={() => handleDiscoverModels(runner)}
-                          disabled={!runner.command || !runner.modelListCommand || discoveringModels.has(runner.id)}
+                          disabled={!runner.command || !runner.modelProviders?.length || discoveringModels.has(runner.id)}
                         >
                           <RefreshCw className={cn("h-4 w-4 mr-2", discoveringModels.has(runner.id) && "animate-spin")} />
                           {t('settings.runners.discoverModels')}
@@ -664,8 +663,7 @@ interface RunnerDialogProps {
     args: string[];
     env?: Record<string, string>;
     model?: string | null;
-    availableModels?: string[];
-    modelListCommand?: string | null;
+    modelProviders?: string[];
   }) => void;
   onCancel: () => void;
 }
@@ -679,8 +677,7 @@ function RunnerDialog({ runner, existingIds, onSave, onCancel }: RunnerDialogPro
     command: runner?.command ?? '',
     args: runner?.args?.join('\n') ?? '',
     model: runner?.model ?? '',
-    availableModels: runner?.availableModels?.join('\n') ?? '',
-    modelListCommand: runner?.modelListCommand ?? '',
+    modelProviders: runner?.modelProviders?.join('\n') ?? '',
     env: runner?.env
       ? Object.entries(runner.env)
         .map(([key, value]) => `${key}=${value}`)
@@ -741,11 +738,10 @@ function RunnerDialog({ runner, existingIds, onSave, onCancel }: RunnerDialogPro
       command: formData.command.trim() || undefined,
       args,
       model: formData.model.trim() || undefined,
-      availableModels: formData.availableModels
+      modelProviders: formData.modelProviders
         .split('\n')
         .map((value) => value.trim())
         .filter(Boolean),
-      modelListCommand: formData.modelListCommand.trim() || undefined,
       env: Object.keys(env).length ? env : undefined,
     });
   };
@@ -819,25 +815,14 @@ function RunnerDialog({ runner, existingIds, onSave, onCancel }: RunnerDialogPro
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="runner-available-models">{t('settings.runners.fields.availableModels')}</Label>
+            <Label htmlFor="runner-model-providers">{t('settings.runners.fields.modelProviders')}</Label>
             <Textarea
-              id="runner-available-models"
-              value={formData.availableModels}
-              onChange={(event) => setFormData({ ...formData, availableModels: event.target.value })}
-              placeholder={t('settings.runners.placeholders.availableModels')}
+              id="runner-model-providers"
+              value={formData.modelProviders}
+              onChange={(event) => setFormData({ ...formData, modelProviders: event.target.value })}
+              placeholder={t('settings.runners.placeholders.modelProviders')}
             />
-            <p className="text-xs text-muted-foreground">{t('settings.runners.fields.availableModelsHelp')}</p>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="runner-model-list-command">{t('settings.runners.fields.modelListCommand')}</Label>
-            <Input
-              id="runner-model-list-command"
-              value={formData.modelListCommand}
-              onChange={(event) => setFormData({ ...formData, modelListCommand: event.target.value })}
-              placeholder={t('settings.runners.placeholders.modelListCommand')}
-            />
-            <p className="text-xs text-muted-foreground">{t('settings.runners.fields.modelListCommandHelp')}</p>
+            <p className="text-xs text-muted-foreground">{t('settings.runners.fields.modelProvidersHelp')}</p>
           </div>
 
           <div className="space-y-2">

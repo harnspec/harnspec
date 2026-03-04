@@ -25,8 +25,8 @@ pub struct RunnerConfig {
     pub args: Option<Vec<String>>,
     pub env: Option<HashMap<String, String>>,
     pub model: Option<String>,
-    pub available_models: Option<Vec<String>>,
-    pub model_list_command: Option<String>,
+    /// models.dev provider IDs whose models this runner can use.
+    pub model_providers: Option<Vec<String>>,
     #[serde(default)]
     pub detection: Option<DetectionConfig>,
     #[serde(default)]
@@ -57,8 +57,9 @@ pub struct RunnerDefinition {
     pub args: Vec<String>,
     pub env: HashMap<String, String>,
     pub model: Option<String>,
-    pub available_models: Option<Vec<String>>,
-    pub model_list_command: Option<String>,
+    /// models.dev provider IDs whose models this runner can use.
+    /// Models are resolved dynamically from the registry.
+    pub model_providers: Option<Vec<String>>,
     pub detection: Option<DetectionConfig>,
     pub symlink_file: Option<String>,
     /// Controls how the session prompt is passed to the runner CLI.
@@ -220,8 +221,7 @@ impl RunnerRegistry {
                     "${ANTHROPIC_API_KEY}".to_string(),
                 )]),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: Some(vec!["anthropic".to_string()]),
                 detection: Some(DetectionConfig {
                     commands: vec!["claude".to_string()],
                     config_dirs: vec![".claude".to_string()],
@@ -241,8 +241,7 @@ impl RunnerRegistry {
                 args: vec!["--allow-all".to_string()],
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: Some(vec!["github-copilot".to_string()]),
                 detection: Some(DetectionConfig {
                     commands: vec!["copilot".to_string()],
                     config_dirs: vec![".copilot".to_string()],
@@ -262,8 +261,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: Some(vec!["openai".to_string()]),
                 detection: Some(DetectionConfig {
                     commands: vec!["codex".to_string()],
                     config_dirs: vec![".codex".to_string()],
@@ -283,8 +281,11 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: Some("opencode models".to_string()),
+                model_providers: Some(vec![
+                    "openai".to_string(),
+                    "anthropic".to_string(),
+                    "google".to_string(),
+                ]),
                 detection: Some(DetectionConfig {
                     commands: vec!["opencode".to_string()],
                     config_dirs: Vec::new(),
@@ -307,8 +308,11 @@ impl RunnerRegistry {
                     "${OPENAI_API_KEY}".to_string(),
                 )]),
                 model: None,
-                available_models: None,
-                model_list_command: Some("aider --list-models".to_string()),
+                model_providers: Some(vec![
+                    "openai".to_string(),
+                    "anthropic".to_string(),
+                    "google".to_string(),
+                ]),
                 detection: Some(DetectionConfig {
                     commands: vec!["aider".to_string()],
                     config_dirs: vec![".aider".to_string()],
@@ -328,8 +332,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["cline".to_string()],
                     config_dirs: Vec::new(),
@@ -349,8 +352,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: Some(vec!["google".to_string()]),
                 detection: Some(DetectionConfig {
                     commands: vec!["gemini".to_string()],
                     config_dirs: vec![".gemini".to_string()],
@@ -370,8 +372,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["cursor".to_string()],
                     config_dirs: vec![".cursor".to_string(), ".cursorules".to_string()],
@@ -391,8 +392,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["windsurf".to_string()],
                     config_dirs: vec![".windsurf".to_string(), ".windsurfrules".to_string()],
@@ -412,8 +412,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["antigravity".to_string()],
                     config_dirs: vec![".antigravity".to_string()],
@@ -433,8 +432,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["droid".to_string()],
                     config_dirs: vec![".droid".to_string()],
@@ -454,8 +452,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["kiro-cli".to_string()],
                     config_dirs: vec![".kiro".to_string()],
@@ -478,8 +475,7 @@ impl RunnerRegistry {
                     "${MOONSHOT_API_KEY}".to_string(),
                 )]),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["kimi".to_string()],
                     config_dirs: vec![".kimi".to_string()],
@@ -499,8 +495,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["qodo".to_string()],
                     config_dirs: vec![".qodo".to_string()],
@@ -520,8 +515,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["amp".to_string()],
                     config_dirs: vec![".amp".to_string()],
@@ -541,8 +535,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["trae".to_string()],
                     config_dirs: vec![".trae".to_string()],
@@ -565,8 +558,7 @@ impl RunnerRegistry {
                     "${DASHSCOPE_API_KEY}".to_string(),
                 )]),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["qwen-code".to_string()],
                     config_dirs: vec![".qwen-code".to_string()],
@@ -586,8 +578,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["goose".to_string()],
                     config_dirs: vec![".goose".to_string()],
@@ -607,8 +598,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["openhands".to_string()],
                     config_dirs: vec![".openhands".to_string()],
@@ -628,8 +618,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["continue".to_string()],
                     config_dirs: vec![".continue".to_string()],
@@ -649,8 +638,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: vec!["crush".to_string()],
                     config_dirs: vec![".crush".to_string()],
@@ -670,8 +658,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: Vec::new(),
                     config_dirs: vec![".roo".to_string()],
@@ -691,8 +678,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: Vec::new(),
                     config_dirs: vec![".codebuddy".to_string()],
@@ -712,8 +698,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: Vec::new(),
                     config_dirs: vec![".kilocode".to_string()],
@@ -733,8 +718,7 @@ impl RunnerRegistry {
                 args: Vec::new(),
                 env: HashMap::new(),
                 model: None,
-                available_models: None,
-                model_list_command: None,
+                model_providers: None,
                 detection: Some(DetectionConfig {
                     commands: Vec::new(),
                     config_dirs: vec![".augment".to_string()],
@@ -876,8 +860,7 @@ impl RunnerRegistry {
                     args: override_config.args.unwrap_or_default(),
                     env: override_config.env.unwrap_or_default(),
                     model: override_config.model,
-                    available_models: override_config.available_models,
-                    model_list_command: override_config.model_list_command,
+                    model_providers: override_config.model_providers,
                     detection: override_config.detection,
                     symlink_file: override_config.symlink_file,
                     prompt_flag: override_config.prompt_flag,
@@ -910,11 +893,8 @@ fn merge_runner(mut base: RunnerDefinition, override_config: RunnerConfig) -> Ru
     if let Some(model) = override_config.model {
         base.model = Some(model);
     }
-    if let Some(available_models) = override_config.available_models {
-        base.available_models = Some(available_models);
-    }
-    if let Some(model_list_command) = override_config.model_list_command {
-        base.model_list_command = Some(model_list_command);
+    if let Some(model_providers) = override_config.model_providers {
+        base.model_providers = Some(model_providers);
     }
     if let Some(detection) = override_config.detection {
         base.detection = Some(detection);
@@ -977,6 +957,53 @@ pub fn global_runners_path() -> PathBuf {
 
 pub fn project_runners_path(project_path: &Path) -> PathBuf {
     project_path.join(".lean-spec").join("runners.json")
+}
+
+/// Resolve available models for a runner by looking up its `model_providers`
+/// in the models.dev registry.
+///
+/// Returns model IDs filtered to agentic-capable models (tool_call=true)
+/// and excludes embedding-only or audio-only models.
+#[cfg(feature = "ai")]
+pub fn resolve_runner_models(
+    runner: &RunnerDefinition,
+    registry: &crate::models_registry::ModelRegistry,
+) -> Vec<String> {
+    let providers = match &runner.model_providers {
+        Some(p) if !p.is_empty() => p,
+        _ => return Vec::new(),
+    };
+
+    let mut models = Vec::new();
+    for provider_id in providers {
+        if let Some(provider) = registry.providers.get(provider_id) {
+            for model in provider.models.values() {
+                if !model.tool_call.unwrap_or(false) {
+                    continue;
+                }
+                // Exclude embedding-only or audio-only models
+                if let Some(ref modalities) = model.modalities {
+                    let has_text_output = modalities.output.iter().any(|m| m == "text");
+                    let has_text_input = modalities.input.iter().any(|m| m == "text");
+                    if !has_text_output || !has_text_input {
+                        continue;
+                    }
+                }
+                models.push(model.id.clone());
+            }
+        }
+    }
+
+    models.sort();
+    models.dedup();
+    models
+}
+
+/// Resolve runner models using the bundled registry (sync, for offline use).
+#[cfg(feature = "ai")]
+pub fn resolve_runner_models_bundled(runner: &RunnerDefinition) -> CoreResult<Vec<String>> {
+    let registry = crate::models_registry::load_bundled_registry()?;
+    Ok(resolve_runner_models(runner, &registry))
 }
 
 fn home_dir(override_path: Option<&Path>) -> Option<PathBuf> {
@@ -1103,8 +1130,7 @@ mod tests {
             args: vec!["--print".to_string()],
             env: HashMap::new(),
             model: None,
-            available_models: None,
-            model_list_command: None,
+            model_providers: None,
             detection: None,
             symlink_file: None,
             prompt_flag: None,
@@ -1116,8 +1142,7 @@ mod tests {
             args: Some(vec!["--model".to_string(), "sonnet".to_string()]),
             env: None,
             model: None,
-            available_models: None,
-            model_list_command: None,
+            model_providers: None,
             detection: None,
             symlink_file: None,
             prompt_flag: None,
@@ -1170,5 +1195,176 @@ mod tests {
             .reasons
             .iter()
             .any(|reason| reason.contains(".claude")));
+    }
+
+    #[cfg(feature = "ai")]
+    #[test]
+    fn test_resolve_runner_models_with_bundled_registry() {
+        let registry = crate::models_registry::load_bundled_registry().expect("bundled registry");
+
+        // Test copilot runner resolves github-copilot models
+        let copilot = RunnerDefinition {
+            id: "copilot".to_string(),
+            name: None,
+            command: None,
+            args: Vec::new(),
+            env: HashMap::new(),
+            model: None,
+            model_providers: Some(vec!["github-copilot".to_string()]),
+            detection: None,
+            symlink_file: None,
+            prompt_flag: None,
+        };
+        let models = resolve_runner_models(&copilot, &registry);
+        // github-copilot provider should have tool-call capable models
+        if registry.providers.contains_key("github-copilot") {
+            assert!(
+                !models.is_empty(),
+                "copilot should have models from github-copilot provider"
+            );
+        }
+    }
+
+    #[cfg(feature = "ai")]
+    #[test]
+    fn test_resolve_runner_models_no_providers() {
+        let registry = crate::models_registry::load_bundled_registry().expect("bundled registry");
+
+        let runner = RunnerDefinition {
+            id: "test".to_string(),
+            name: None,
+            command: None,
+            args: Vec::new(),
+            env: HashMap::new(),
+            model: None,
+            model_providers: None,
+            detection: None,
+            symlink_file: None,
+            prompt_flag: None,
+        };
+        let models = resolve_runner_models(&runner, &registry);
+        assert!(
+            models.is_empty(),
+            "runner with no providers should return empty models"
+        );
+    }
+
+    #[cfg(feature = "ai")]
+    #[test]
+    fn test_resolve_runner_models_empty_providers() {
+        let registry = crate::models_registry::load_bundled_registry().expect("bundled registry");
+
+        let runner = RunnerDefinition {
+            id: "test".to_string(),
+            name: None,
+            command: None,
+            args: Vec::new(),
+            env: HashMap::new(),
+            model: None,
+            model_providers: Some(vec![]),
+            detection: None,
+            symlink_file: None,
+            prompt_flag: None,
+        };
+        let models = resolve_runner_models(&runner, &registry);
+        assert!(
+            models.is_empty(),
+            "runner with empty providers should return empty models"
+        );
+    }
+
+    #[cfg(feature = "ai")]
+    #[test]
+    fn test_resolve_runner_models_multi_provider() {
+        let registry = crate::models_registry::load_bundled_registry().expect("bundled registry");
+
+        let runner = RunnerDefinition {
+            id: "aider".to_string(),
+            name: None,
+            command: None,
+            args: Vec::new(),
+            env: HashMap::new(),
+            model: None,
+            model_providers: Some(vec!["openai".to_string(), "anthropic".to_string()]),
+            detection: None,
+            symlink_file: None,
+            prompt_flag: None,
+        };
+        let models = resolve_runner_models(&runner, &registry);
+        assert!(
+            !models.is_empty(),
+            "multi-provider runner should have models"
+        );
+        // Should be sorted and deduplicated
+        let mut sorted = models.clone();
+        sorted.sort();
+        sorted.dedup();
+        assert_eq!(models, sorted, "models should be sorted and deduplicated");
+    }
+
+    #[cfg(feature = "ai")]
+    #[test]
+    fn test_resolve_runner_models_unknown_provider() {
+        let registry = crate::models_registry::load_bundled_registry().expect("bundled registry");
+
+        let runner = RunnerDefinition {
+            id: "test".to_string(),
+            name: None,
+            command: None,
+            args: Vec::new(),
+            env: HashMap::new(),
+            model: None,
+            model_providers: Some(vec!["nonexistent-provider".to_string()]),
+            detection: None,
+            symlink_file: None,
+            prompt_flag: None,
+        };
+        let models = resolve_runner_models(&runner, &registry);
+        assert!(
+            models.is_empty(),
+            "unknown provider should return empty models"
+        );
+    }
+
+    #[test]
+    fn test_builtin_runners_have_model_providers() {
+        let registry = RunnerRegistry::builtins();
+
+        // Runners that should have model_providers
+        let expected_providers: Vec<(&str, Vec<&str>)> = vec![
+            ("copilot", vec!["github-copilot"]),
+            ("claude", vec!["anthropic"]),
+            ("codex", vec!["openai"]),
+            ("gemini", vec!["google"]),
+            ("aider", vec!["openai", "anthropic", "google"]),
+            ("opencode", vec!["openai", "anthropic", "google"]),
+        ];
+
+        for (runner_id, expected) in expected_providers {
+            let runner = registry
+                .get(runner_id)
+                .unwrap_or_else(|| panic!("missing runner: {}", runner_id));
+            let providers = runner
+                .model_providers
+                .as_ref()
+                .unwrap_or_else(|| panic!("{} should have model_providers", runner_id));
+            let expected_strings: Vec<String> = expected.iter().map(|s| s.to_string()).collect();
+            assert_eq!(
+                providers, &expected_strings,
+                "wrong providers for {}",
+                runner_id
+            );
+        }
+
+        // Runners that should NOT have model_providers (IDE-only)
+        let no_providers = ["cursor", "windsurf", "cline"];
+        for runner_id in no_providers {
+            let runner = registry.get(runner_id).expect(runner_id);
+            assert!(
+                runner.model_providers.is_none(),
+                "{} should not have model_providers",
+                runner_id
+            );
+        }
     }
 }

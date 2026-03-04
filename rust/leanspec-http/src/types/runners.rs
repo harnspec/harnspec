@@ -61,8 +61,7 @@ pub struct RunnerConfigPayload {
     pub args: Option<Vec<String>>,
     pub env: Option<HashMap<String, String>>,
     pub model: Option<String>,
-    pub available_models: Option<Vec<String>>,
-    pub model_list_command: Option<String>,
+    pub model_providers: Option<Vec<String>>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -73,8 +72,7 @@ pub struct RunnerUpdatePayload {
     pub args: Option<Vec<String>>,
     pub env: Option<HashMap<String, String>>,
     pub model: Option<String>,
-    pub available_models: Option<Vec<String>>,
-    pub model_list_command: Option<String>,
+    pub model_providers: Option<Vec<String>>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -92,8 +90,7 @@ pub struct RunnerInfoResponse {
     pub args: Vec<String>,
     pub env: HashMap<String, String>,
     pub model: Option<String>,
-    pub available_models: Option<Vec<String>>,
-    pub model_list_command: Option<String>,
+    pub model_providers: Option<Vec<String>>,
     /// None means validation hasn't been performed yet (pending state)
     pub available: Option<bool>,
     pub version: Option<String>,

@@ -115,16 +115,8 @@ export function SessionCreateDialog({
 
   useEffect(() => {
     const selected = runnerDefs.find((def) => def.id === runner);
-    // Use statically configured models if available
-    const staticModels = selected?.availableModels ?? [];
-    if (staticModels.length) {
-      setFetchedModels(staticModels);
-      const preferred = selected?.model ?? staticModels[0] ?? '';
-      setModel((prev) => (prev && staticModels.includes(prev) ? prev : preferred));
-      return;
-    }
-    // If the runner supports dynamic model discovery, fetch models
-    if (selected?.modelListCommand && selected.id) {
+    // If the runner has model providers configured, fetch models from registry
+    if (selected?.modelProviders?.length && selected.id) {
       let cancelled = false;
       setFetchedModels([]);
       setModel('');

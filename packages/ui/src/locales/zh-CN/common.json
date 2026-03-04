@@ -698,10 +698,8 @@
         "args": "参数",
         "argsHelp": "每行一个参数",
         "defaultModel": "默认模型",
-        "availableModels": "可用模型",
-        "availableModelsHelp": "每行一个模型 ID",
-        "modelListCommand": "模型列表命令",
-        "modelListCommandHelp": "必须与运行器命令使用同一可执行文件",
+        "modelProviders": "模型提供商",
+        "modelProvidersHelp": "每行一个 models.dev 提供商 ID（例如 openai、anthropic、google）",
         "env": "环境变量",
         "envHelp": "每行一个 KEY=VALUE"
       },
@@ -711,8 +709,7 @@
         "command": "claude",
         "args": "--dangerously-skip-permissions\n--print",
         "defaultModel": "claude-3-7-sonnet",
-        "availableModels": "claude-3-7-sonnet\nclaude-3-5-haiku",
-        "modelListCommand": "aider --list-models",
+        "modelProviders": "anthropic\nopenai",
         "env": "ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}"
       },
       "errors": {

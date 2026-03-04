@@ -81,8 +81,7 @@ export interface RunnerDefinition {
   args: string[];
   env: Record<string, string>;
   model?: string | null;
-  availableModels?: string[] | null;
-  modelListCommand?: string | null;
+  modelProviders?: string[] | null;
   /** 
    * True if command is available, false if not, undefined if validation pending.
    * When skipValidation=true on list request, this will be undefined.

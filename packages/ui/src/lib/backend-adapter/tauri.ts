@@ -333,8 +333,7 @@ export class TauriBackendAdapter implements BackendAdapter {
         args?: string[];
         env?: Record<string, string>;
         model?: string | null;
-        availableModels?: string[];
-        modelListCommand?: string | null;
+        modelProviders?: string[];
       };
     scope?: RunnerScope;
   }): Promise<RunnerListResponse> {
@@ -355,8 +354,7 @@ export class TauriBackendAdapter implements BackendAdapter {
         args?: string[];
         env?: Record<string, string>;
         model?: string | null;
-        availableModels?: string[];
-        modelListCommand?: string | null;
+        modelProviders?: string[];
       };
       scope?: RunnerScope;
     }

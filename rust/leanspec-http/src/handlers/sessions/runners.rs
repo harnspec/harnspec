@@ -6,8 +6,6 @@ use axum::Json;
 use std::collections::HashSet;
 use std::path::PathBuf;
 use std::time::Duration;
-use tokio::process::Command;
-use tokio::time::timeout;
 
 use crate::error::{internal_error, ApiError, ApiResult};
 use crate::state::AppState;
@@ -18,7 +16,8 @@ use crate::types::{
 };
 use leanspec_core::sessions::runner::{
     default_runners_file, global_runners_path, project_runners_path, read_runners_file,
-    write_runners_file, RunnerConfig, RunnerDefinition, RunnerRegistry,
+    resolve_runner_models, resolve_runner_models_bundled, write_runners_file, RunnerConfig,
+    RunnerDefinition, RunnerRegistry,
 };
 
 pub async fn list_available_runners(
@@ -106,8 +105,7 @@ pub async fn create_runner(
             args: req.runner.args,
             env: req.runner.env,
             model: req.runner.model,
-            available_models: req.runner.available_models,
-            model_list_command: req.runner.model_list_command,
+            model_providers: req.runner.model_providers,
             detection: None,
             symlink_file: None,
             prompt_flag: None,
@@ -163,8 +161,7 @@ pub async fn update_runner(
             args: req.runner.args,
             env: req.runner.env,
             model: req.runner.model,
-            available_models: req.runner.available_models,
-            model_list_command: req.runner.model_list_command,
+            model_providers: req.runner.model_providers,
             detection: None,
             symlink_file: None,
             prompt_flag: None,
@@ -223,11 +220,7 @@ pub async fn patch_runner(
             args: req.runner.args.or(existing.args),
             env: req.runner.env.or(existing.env),
             model: req.runner.model.or(existing.model),
-            available_models: req.runner.available_models.or(existing.available_models),
-            model_list_command: req
-                .runner
-                .model_list_command
-                .or(existing.model_list_command),
+            model_providers: req.runner.model_providers.or(existing.model_providers),
             detection: existing.detection,
             symlink_file: existing.symlink_file,
             prompt_flag: existing.prompt_flag,
@@ -450,46 +443,48 @@ pub async fn get_runner_models(
         )
     })?;
 
-    let mut command = parse_and_validate_model_list_command(runner).ok_or_else(|| {
-        (
+    if runner
+        .model_providers
+        .as_ref()
+        .map_or(true, |p| p.is_empty())
+    {
+        return Err((
             axum::http::StatusCode::BAD_REQUEST,
             Json(ApiError::invalid_request(
-                "Runner does not support model discovery",
+                "Runner does not have model providers configured",
             )),
-        )
-    })?;
+        ));
+    }
 
-    let output = timeout(Duration::from_secs(10), command.output())
-        .await
-        .map_err(|_| {
-            (
-                axum::http::StatusCode::REQUEST_TIMEOUT,
-                Json(ApiError::new(
-                    "TIMEOUT",
-                    "Runner model discovery timed out after 10 seconds",
-                )),
-            )
-        })?
-        .map_err(|e| {
-            (
-                axum::http::StatusCode::BAD_REQUEST,
-                Json(ApiError::new("RUNNER_EXECUTION_ERROR", e.to_string())),
-            )
-        })?;
+    let runner = runner.clone();
+    let models = tokio::task::spawn_blocking(move || {
+        resolve_runner_models_bundled(&runner).unwrap_or_default()
+    })
+    .await
+    .unwrap_or_default();
 
-    let models = if output.status.success() {
-        parse_model_list_output(&String::from_utf8_lossy(&output.stdout))
+    // Try async registry fetch for fresher data
+    let runner_for_async = registry.get(&runner_id).unwrap().clone();
+    let fresh_models = match leanspec_core::models_registry::load_registry().await {
+        Ok(model_registry) => resolve_runner_models(&runner_for_async, &model_registry),
+        Err(_) => models.clone(),
+    };
+
+    let final_models = if fresh_models.is_empty() {
+        models
     } else {
-        Vec::new()
+        fresh_models
     };
 
     state
         .runner_models_cache
         .write()
         .await
-        .insert(cache_key, (std::time::Instant::now(), models.clone()));
+        .insert(cache_key, (std::time::Instant::now(), final_models.clone()));
 
-    Ok(Json(RunnerModelsResponse { models }))
+    Ok(Json(RunnerModelsResponse {
+        models: final_models,
+    }))
 }
 
 fn resolve_scope_path(project_path: &str, scope: RunnerScope) -> PathBuf {
@@ -553,8 +548,7 @@ fn build_runner_info(
         args: runner.args.clone(),
         env: runner.env.clone(),
         model: runner.model.clone(),
-        available_models: runner.available_models.clone(),
-        model_list_command: runner.model_list_command.clone(),
+        model_providers: runner.model_providers.clone(),
         available,
         version: None,
         source: source.to_string(),
@@ -577,49 +571,6 @@ fn build_runner_list_response(
         default: registry.default().map(|value| value.to_string()),
         runners,
     })
-}
-
-fn parse_and_validate_model_list_command(runner: &RunnerDefinition) -> Option<Command> {
-    let runner_command = runner.command.as_ref()?;
-    let model_list_command = runner.model_list_command.as_ref()?;
-    let mut parts = model_list_command.split_whitespace();
-    let first = parts.next()?;
-
-    if first != runner_command {
-        return None;
-    }
-
-    let mut command = Command::new(first);
-    for part in parts {
-        command.arg(part);
-    }
-    command.stdin(std::process::Stdio::null());
-    Some(command)
-}
-
-fn parse_model_list_output(output: &str) -> Vec<String> {
-    let mut models = Vec::new();
-    for raw_line in output.lines() {
-        let line = raw_line.trim();
-        if line.is_empty() {
-            continue;
-        }
-
-        let cleaned = line.trim_start_matches(['-', '*', '•', '|', ' ']).trim();
-        let candidate = cleaned.split_whitespace().next().unwrap_or_default();
-        if candidate.is_empty() {
-            continue;
-        }
-        if candidate
-            .chars()
-            .all(|c| c.is_ascii_alphanumeric() || ['-', '_', '.', '/', ':'].contains(&c))
-        {
-            models.push(candidate.to_string());
-        }
-    }
-    models.sort();
-    models.dedup();
-    models
 }
 
 async fn clear_runner_models_cache(state: &AppState) {
