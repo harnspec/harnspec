@@ -49,6 +49,7 @@ export function SessionCreateDialog({
   const [selectedSpecIds, setSelectedSpecIds] = useState<string[]>(defaultSpecId ? [defaultSpecId] : []);
   const [promptTemplate, setPromptTemplate] = useState('');
   const [specs, setSpecs] = useState<Spec[]>([]);
+  const [fetchedModels, setFetchedModels] = useState<string[]>([]);
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -110,18 +111,39 @@ export function SessionCreateDialog({
     };
     void loadRunners();
     void loadSpecs();
-  }, [open, projectPath]);
+  }, [open, projectPath, t]);
 
   useEffect(() => {
     const selected = runnerDefs.find((def) => def.id === runner);
-    const models = selected?.availableModels ?? [];
-    if (!models.length) {
-      setModel('');
+    // Use statically configured models if available
+    const staticModels = selected?.availableModels ?? [];
+    if (staticModels.length) {
+      setFetchedModels(staticModels);
+      const preferred = selected?.model ?? staticModels[0] ?? '';
+      setModel((prev) => (prev && staticModels.includes(prev) ? prev : preferred));
       return;
     }
-    const preferred = selected?.model ?? models[0] ?? '';
-    setModel((prev) => (prev && models.includes(prev) ? prev : preferred));
-  }, [runner, runnerDefs]);
+    // If the runner supports dynamic model discovery, fetch models
+    if (selected?.modelListCommand && selected.id) {
+      let cancelled = false;
+      setFetchedModels([]);
+      setModel('');
+      api.getRunnerModels(selected.id, projectPath ?? undefined).then((resp) => {
+        if (cancelled) return;
+        const models = resp.models ?? [];
+        setFetchedModels(models);
+        if (models.length) {
+          const preferred = selected?.model ?? models[0] ?? '';
+          setModel((prev) => (prev && models.includes(prev) ? prev : preferred));
+        }
+      }).catch(() => {
+        // Best-effort; model selector will be hidden
+      });
+      return () => { cancelled = true; };
+    }
+    setFetchedModels([]);
+    setModel('');
+  }, [runner, runnerDefs, projectPath]);
 
   useEffect(() => {
     if (!open) {
@@ -157,8 +179,7 @@ export function SessionCreateDialog({
     }
   }, [projectPath, selectedSpecIds, promptTemplate, runner, mode, model, onCreated, onOpenChange, t]);
 
-  const selectedRunner = runnerDefs.find((def) => def.id === runner);
-  const runnerModels = selectedRunner?.availableModels ?? [];
+  const runnerModels = fetchedModels;
 
   if (!open) {
     return null;
@@ -226,7 +247,6 @@ export function SessionCreateDialog({
                 <PromptInputSelect value={runner} onValueChange={setRunner}>
                   <PromptInputSelectTrigger className="h-8 w-auto rounded-full border border-border/70 px-3 py-1.5 text-xs">
                     <span className="flex items-center gap-1.5">
-                      <RunnerLogo runnerId={runner} size={16} className="rounded-sm" />
                       <PromptInputSelectValue placeholder={t('sessions.labels.runner')} />
                     </span>
                   </PromptInputSelectTrigger>
@@ -269,10 +289,10 @@ export function SessionCreateDialog({
                 <PromptInputSelect value={mode} onValueChange={(value) => setMode(value as SessionMode)}>
                   <PromptInputSelectTrigger className="h-8 w-auto rounded-full border border-border/70 px-3 py-1.5 text-xs">
                     <span className="flex items-center gap-1.5">
-                      {(() => {
+                      {/* {(() => {
                         const ModeIcon = sessionModeConfig[mode]?.icon;
                         return ModeIcon ? <ModeIcon className="h-3.5 w-3.5" /> : null;
-                      })()}
+                      })()} */}
                       <PromptInputSelectValue placeholder={t('sessions.labels.mode')} />
                     </span>
                   </PromptInputSelectTrigger>
