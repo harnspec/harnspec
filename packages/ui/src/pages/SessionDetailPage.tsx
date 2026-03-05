@@ -184,12 +184,6 @@ export function SessionDetailPage() {
 
 
 
-  const handleStart = async () => {
-    if (!session) return;
-    await api.startSession(session.id);
-    await loadSession();
-  };
-
   const handleStop = async () => {
     if (!session) return;
     await api.stopSession(session.id);
@@ -419,18 +413,6 @@ export function SessionDetailPage() {
                     {t('sessions.actions.stop')}
                   </Button>
                 </>
-              )}
-              {session.status === 'pending' && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => void handleStart()}
-                  className="h-8 rounded-full border px-3 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <Play className="mr-1.5 h-3.5 w-3.5" />
-                  {t('sessions.actions.start')}
-                </Button>
               )}
               {session.status === 'paused' && (
                 <>

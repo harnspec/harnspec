@@ -68,7 +68,7 @@ export function SessionsPage() {
   const basePath = resolvedProjectId ? `/projects/${resolvedProjectId}` : '/projects';
   const sessionsQuery = useSessions(resolvedProjectId ?? null);
   const specsQuery = useSpecsList(resolvedProjectId ?? null);
-  const { startSession, stopSession, pauseSession, resumeSession } = useSessionMutations(resolvedProjectId ?? null);
+  const { stopSession, pauseSession, resumeSession } = useSessionMutations(resolvedProjectId ?? null);
   const sessions = useMemo(() => (sessionsQuery.data as Session[] | undefined) ?? [], [sessionsQuery.data]);
   const specs = useMemo(() => (specsQuery.data as Spec[] | undefined) ?? [], [specsQuery.data]);
   const loading = projectLoading || sessionsQuery.isLoading;
@@ -189,10 +189,6 @@ export function SessionsPage() {
   }, [modeFilter, searchQuery, sessions, sortBy, specFilter, statusFilter, runnerFilter]);
 
   const visibleSessions = filteredSessions.slice(0, visibleCount);
-
-  const handleStart = useCallback(async (sessionId: string) => {
-    await startSession(sessionId);
-  }, [startSession]);
 
   const handleStop = useCallback(async (sessionId: string) => {
     await stopSession(sessionId);
@@ -415,7 +411,6 @@ export function SessionsPage() {
                           key={session.id}
                           session={session}
                           basePath={basePath}
-                          onStart={handleStart}
                           onStop={handleStop}
                           onPause={handlePause}
                           onResume={handleResume}
@@ -453,7 +448,6 @@ export function SessionsPage() {
 interface SessionListItemProps {
   session: Session;
   basePath: string;
-  onStart: (id: string) => Promise<void>;
   onStop: (id: string) => Promise<void>;
   onPause: (id: string) => Promise<void>;
   onResume: (id: string) => Promise<void>;
@@ -462,7 +456,6 @@ interface SessionListItemProps {
 const SessionListItem = memo(function SessionListItem({
   session,
   basePath,
-  onStart,
   onStop,
   onPause,
   onResume,
@@ -478,7 +471,7 @@ const SessionListItem = memo(function SessionListItem({
   const sessionTitle = session.prompt
     || session.id.slice(0, 8);
 
-  const hasActionButtons = session.status === 'pending' || session.status === 'running' || session.status === 'paused';
+  const hasActionButtons = session.status === 'running' || session.status === 'paused';
 
   const handleClick = (e: React.MouseEvent) => {
     // Don't navigate if clicking on a button or link inside the item
@@ -571,12 +564,6 @@ const SessionListItem = memo(function SessionListItem({
 
             {hasActionButtons && (
               <div className="flex gap-2 items-center flex-shrink-0">
-                {session.status === 'pending' && (
-                  <Button size="sm" variant="secondary" className="gap-1 h-6 text-xs px-2" onClick={(e) => { e.stopPropagation(); onStart(session.id); }}>
-                    <Play className="h-3 w-3" />
-                    {t('sessions.actions.start')}
-                  </Button>
-                )}
                 {session.status === 'running' && (
                   <>
                     <Button size="sm" variant="secondary" className="gap-1 h-6 text-xs px-2" onClick={(e) => { e.stopPropagation(); onPause(session.id); }}>

@@ -12,7 +12,7 @@ import { SessionCreateDialog } from './session-create-dialog';
 import { SessionLogsPanel } from './session-logs-panel';
 
 function isActiveSession(session: Session): boolean {
-  return session.status === 'running' || session.status === 'pending' || session.status === 'paused';
+  return session.status === 'running' || session.status === 'paused';
 }
 
 export function SessionsPopover() {
@@ -20,7 +20,7 @@ export function SessionsPopover() {
   const navigate = useNavigate();
   const { currentProject } = useCurrentProject();
   const { data: sessions = [] } = useSessions(currentProject?.id ?? null);
-  const { startSession, pauseSession, resumeSession, stopSession } = useSessionMutations(currentProject?.id ?? null);
+  const { pauseSession, resumeSession, stopSession } = useSessionMutations(currentProject?.id ?? null);
   const {
     isDrawerOpen,
     specFilter,
@@ -212,15 +212,6 @@ export function SessionsPopover() {
                           {session.specIds.length > 0 ? session.specIds.join(', ') : t('sessions.select.empty')}
                         </div>
                         <div className="flex items-center gap-1.5 mt-auto">
-                          {session.status === 'pending' && (
-                            <Button size="sm" variant="secondary" className="h-7 px-2.5 text-xs w-full" onClick={(event) => {
-                              event.stopPropagation();
-                              void startSession(session.id);
-                            }}>
-                              <Play className="mr-1.5 h-3.5 w-3.5" />
-                              {t('sessions.actions.start')}
-                            </Button>
-                          )}
                           {session.status === 'running' && (
                             <>
                               <Button size="sm" variant="secondary" className="h-7 px-2.5 text-xs flex-1" onClick={(event) => {

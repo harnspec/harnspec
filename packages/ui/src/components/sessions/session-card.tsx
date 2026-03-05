@@ -1,6 +1,6 @@
 import type { Session } from '../../types/api';
 import { Button, Card, cn, formatRelativeTime } from '@/library';
-import { Play, Square, Pause, RotateCcw, FileText, Check, X, Clock } from 'lucide-react';
+import { Square, Pause, RotateCcw, FileText, Check, X, Clock } from 'lucide-react';
 import { useSessionMutations } from '../../hooks/useSessionsQuery';
 import { useSessionsUiStore } from '../../stores/sessions-ui';
 import { useCurrentProject } from '../../hooks/useProjectQuery';
@@ -13,7 +13,7 @@ interface SessionCardProps {
 
 export function SessionCard({ session, compact }: SessionCardProps) {
     const { currentProject } = useCurrentProject();
-    const { startSession, stopSession, pauseSession } = useSessionMutations(currentProject?.id ?? null);
+    const { stopSession, pauseSession } = useSessionMutations(currentProject?.id ?? null);
     const { setActiveSessionId } = useSessionsUiStore();
     const { t, i18n } = useTranslation('common');
     const isAcp = (session.protocol ?? 'subprocess') === 'acp';
@@ -106,11 +106,6 @@ export function SessionCard({ session, compact }: SessionCardProps) {
                     </>
                 )}
 
-                {session.status === 'pending' && (
-                    <Button variant="secondary" size="sm" className="h-7 text-xs px-2 gap-1" onClick={(e) => handleAction(e, () => startSession(session.id))}>
-                        <Play className="h-3 w-3" /> {t('sessions.actions.start')}
-                    </Button>
-                )}
             </div>
         </Card>
     );
