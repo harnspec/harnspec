@@ -219,6 +219,11 @@ export function useInvalidateSpecs() {
   const queryClient = useQueryClient();
 
   return () => {
-    queryClient.invalidateQueries({ queryKey: specKeys.all });
+    // Keep realtime updates focused on active list/detail/stats queries.
+    // Avoid invalidating every specs sub-query (e.g. batch-metadata/search)
+    // on each SSE/poll event, which can negate cache benefits.
+    queryClient.invalidateQueries({ queryKey: specKeys.lists(), refetchType: 'active' });
+    queryClient.invalidateQueries({ queryKey: specKeys.details(), refetchType: 'active' });
+    queryClient.invalidateQueries({ queryKey: ['specs', 'stats'], refetchType: 'active' });
   };
 }

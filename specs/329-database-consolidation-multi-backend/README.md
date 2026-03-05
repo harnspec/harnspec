@@ -1,5 +1,5 @@
 ---
-status: planned
+status: in-progress
 created: 2026-02-24
 priority: high
 tags:
@@ -11,8 +11,12 @@ tags:
 - architecture
 - database
 created_at: 2026-02-24T14:10:14.774940Z
-updated_at: 2026-02-24T14:10:14.774940Z
+updated_at: 2026-03-05T05:41:31.990675515Z
+transitions:
+- status: in-progress
+  at: 2026-03-05T05:41:31.990675515Z
 ---
+
 # Database Consolidation and Multi-Backend Support
 
 ## Problem
@@ -186,9 +190,9 @@ This spec supersedes spec 329 (Runner Storage SQLite Migration). The `runners` t
 
 ## Checklist
 
-- [ ] Phase 1: Merge sessions.db + chat.db into leanspec.db (rusqlite)
-- [ ] Phase 1: Add runners table (replaces spec 329)
-- [ ] Phase 1: Data migration from old files on startup
+- [x] Phase 1: Merge sessions.db + chat.db into leanspec.db (rusqlite)
+- [x] Phase 1: Add runners table (replaces spec 329)
+- [x] Phase 1: Data migration from old files on startup
 - [ ] Phase 2: Add sqlx dependency (sqlite + postgres + mysql features)
 - [ ] Phase 2: Write SQL migration files under migrations/
 - [ ] Phase 2: Implement `Database` struct with `AnyPool`
@@ -196,7 +200,7 @@ This spec supersedes spec 329 (Runner Storage SQLite Migration). The `runners` t
 - [ ] Phase 2: Convert `ChatStore` → async sqlx
 - [ ] Phase 2: Convert `RunnerStore` → async sqlx
 - [ ] Phase 2: Update `AppState` to use single `Database`
-- [ ] Phase 3: Add `database_url` to `ServerConfig`
+- [x] Phase 3: Add `database_url` to `ServerConfig`
 - [ ] Phase 3: Test PostgreSQL backend end-to-end
 - [ ] Phase 3: Test MySQL backend end-to-end
 - [ ] Phase 3: Documentation for self-hosted database setup

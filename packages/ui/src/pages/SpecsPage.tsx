@@ -22,6 +22,7 @@ import { useSpecActionDialogs } from '../hooks/useSpecActionDialogs';
 import { useTranslation } from 'react-i18next';
 
 type ViewMode = 'list' | 'board';
+const INLINE_EDIT_MAX_ITEMS = 120;
 
 export function SpecsPage() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -439,6 +440,10 @@ export function SpecsPage() {
     return sorted;
   }, [priorityFilter, deferredSearchQuery, sortBy, specs, statusFilter, tagFilter, groupByParent, expandWithDescendants, showValidationIssuesOnly, showArchived, validationStatuses, searchResults.data]);
 
+  // Rendering hundreds of inline Select controls (status + priority) causes heavy mount cost.
+  // Keep inline badge editing for smaller result sets and fall back to read-only badges for large sets.
+  const allowInlineBadgeEditing = filteredSpecs.length <= INLINE_EDIT_MAX_ITEMS;
+
   if (isInitialLoading) {
     return (
       <PageContainer>
@@ -551,13 +556,13 @@ export function SpecsPage() {
             sortBy={sortBy}
             onTokenClick={handleTokenClick}
             onValidationClick={handleValidationClick}
-            onStatusChange={handleStatusChange}
-            onPriorityChange={handlePriorityChange}
+            onStatusChange={allowInlineBadgeEditing ? handleStatusChange : undefined}
+            onPriorityChange={allowInlineBadgeEditing ? handlePriorityChange : undefined}
           />) : (
           <BoardView
             specs={filteredSpecs}
             onStatusChange={handleStatusChange}
-            onPriorityChange={handlePriorityChange}
+            onPriorityChange={allowInlineBadgeEditing ? handlePriorityChange : undefined}
             canEdit={!machineModeEnabled || isMachineAvailable()}
             basePath={basePath}
             groupByParent={groupByParent}

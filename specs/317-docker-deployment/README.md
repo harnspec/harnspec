@@ -7,8 +7,10 @@ tags:
 - docker
 - production
 - infrastructure
+depends_on:
+- 355-cloud-deployment-readiness
 created_at: 2026-02-06T13:07:41.335047Z
-updated_at: 2026-02-06T13:07:41.335047Z
+updated_at: 2026-03-05T05:23:22.545595088Z
 ---
 
 # Docker Deployment for LeanSpec UI
