@@ -1828,7 +1828,6 @@ dependencies = [
  "flate2",
  "futures-util",
  "nix",
- "once_cell",
  "petgraph",
  "pretty_assertions",
  "regex",

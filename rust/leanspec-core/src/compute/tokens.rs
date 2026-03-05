@@ -1,9 +1,9 @@
 //! Token counting for context economy
 
-use once_cell::sync::Lazy;
+use std::sync::LazyLock;
 use tiktoken_rs::{cl100k_base, CoreBPE};
 
-static GLOBAL_TOKEN_COUNTER: Lazy<TokenCounter> = Lazy::new(TokenCounter::new);
+static GLOBAL_TOKEN_COUNTER: LazyLock<TokenCounter> = LazyLock::new(TokenCounter::new);
 
 /// Section token count (for h2 sections)
 #[derive(Debug, Clone, Default)]

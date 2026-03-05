@@ -196,7 +196,7 @@ impl SpecLoader {
                 .unwrap_or(4)
                 .min(readme_paths.len())
                 .max(1);
-            let chunk_size = (readme_paths.len() + workers - 1) / workers;
+            let chunk_size = readme_paths.len().div_ceil(workers);
 
             let specs_dir = self.specs_dir.clone();
             let config = self.config.clone();
