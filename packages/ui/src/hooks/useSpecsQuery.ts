@@ -9,8 +9,10 @@
  * - Optimistic updates support
  * - Request deduplication (same query = 1 request)
  */
+import { useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { api } from '../lib/api';
+import { getBackend } from '../lib/backend-adapter';
 import type { Spec, ListParams, SpecSearchFilters } from '../types/api';
 
 // Query key factory for consistent cache management
@@ -78,6 +80,28 @@ export function useSearchSpecs(projectId: string | null, query: string, filters?
     enabled: !!projectId && query.length > 0,
     placeholderData: keepPreviousData,
     staleTime: 5 * 1000,
+  });
+}
+
+/**
+ * Hook to fetch batch metadata (token counts, validation status) for a list of specs.
+ * Fires as soon as spec names are available. Results are cached by the sorted spec name list.
+ */
+export function useBatchMetadata(projectId: string | null, specNames: string[]) {
+  // Stable key: sort spec names so order doesn't affect cache hits
+  const stableKey = useMemo(() => [...specNames].sort(), [specNames]);
+
+  return useQuery({
+    queryKey: [...specKeys.all, 'batch-metadata', projectId ?? '', stableKey],
+    queryFn: () => {
+      if (projectId) {
+        api.setCurrentProjectId(projectId);
+      }
+      const backend = getBackend();
+      return backend.getBatchMetadata(projectId!, stableKey);
+    },
+    enabled: !!projectId && stableKey.length > 0,
+    staleTime: 30 * 1000,
   });
 }
 

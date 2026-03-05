@@ -58,7 +58,12 @@ pub struct ChatStore {
 
 impl ChatStore {
     pub fn new() -> CoreResult<Self> {
-        let db_path = resolve_db_path()?;
+        let db_path = super::config::default_database_path();
+        Self::new_with_db_path(db_path)
+    }
+
+    pub fn new_with_db_path<P: AsRef<Path>>(db_path: P) -> CoreResult<Self> {
+        let db_path = db_path.as_ref().to_path_buf();
         if let Some(parent) = db_path.parent() {
             std::fs::create_dir_all(parent).map_err(|e| CoreError::Other(e.to_string()))?;
         }
@@ -545,10 +550,6 @@ fn now_ms() -> i64 {
         .duration_since(UNIX_EPOCH)
         .map(|d| d.as_millis() as i64)
         .unwrap_or(0)
-}
-
-fn resolve_db_path() -> CoreResult<PathBuf> {
-    Ok(super::config::config_dir().join("leanspec.db"))
 }
 
 fn ensure_column(conn: &Connection, table: &str, column: &str, definition: &str) -> CoreResult<()> {

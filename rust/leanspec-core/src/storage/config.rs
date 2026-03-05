@@ -13,6 +13,10 @@ use std::path::PathBuf;
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct ServerConfig {
+    /// Database connection URL (currently sqlite:// only)
+    #[serde(default, alias = "database_url")]
+    pub database_url: Option<String>,
+
     /// Server-specific configuration
     #[serde(default)]
     pub server: ServerSettings,
@@ -250,6 +254,68 @@ pub fn config_path() -> PathBuf {
     config_dir().join("config.json")
 }
 
+/// Get the default unified SQLite database path.
+pub fn default_database_path() -> PathBuf {
+    config_dir().join("leanspec.db")
+}
+
+/// Resolve the configured database path.
+///
+/// Currently supported URL format:
+/// - sqlite:///absolute/path/to/db.db
+/// - sqlite://~/.lean-spec/leanspec.db
+/// - sqlite://relative/path.db (resolved under config_dir)
+pub fn resolve_database_path(database_url: Option<&str>) -> CoreResult<PathBuf> {
+    let Some(url) = database_url
+        .map(str::trim)
+        .filter(|value| !value.is_empty())
+    else {
+        return Ok(default_database_path());
+    };
+
+    let sqlite_prefix = "sqlite://";
+    if !url.starts_with(sqlite_prefix) {
+        return Err(CoreError::ConfigError(format!(
+            "Unsupported database URL '{}': only sqlite:// is currently supported",
+            url
+        )));
+    }
+
+    let raw_path = url.trim_start_matches(sqlite_prefix);
+    let path_without_query = raw_path.split('?').next().unwrap_or(raw_path);
+    if path_without_query.is_empty() {
+        return Err(CoreError::ConfigError(
+            "Invalid database URL: sqlite path is empty".to_string(),
+        ));
+    }
+
+    if path_without_query == "~" {
+        return dirs::home_dir()
+            .map(|home| home.join(".lean-spec").join("leanspec.db"))
+            .ok_or_else(|| {
+                CoreError::ConfigError(
+                    "Failed to resolve home directory for sqlite database URL".to_string(),
+                )
+            });
+    }
+
+    if let Some(relative_home) = path_without_query.strip_prefix("~/") {
+        return dirs::home_dir()
+            .map(|home| home.join(relative_home))
+            .ok_or_else(|| {
+                CoreError::ConfigError(
+                    "Failed to resolve home directory for sqlite database URL".to_string(),
+                )
+            });
+    }
+
+    if path_without_query.starts_with('/') {
+        return Ok(PathBuf::from(path_without_query));
+    }
+
+    Ok(config_dir().join(path_without_query))
+}
+
 /// Get the path to the projects registry file
 pub fn projects_path() -> PathBuf {
     config_dir().join("projects.json")
@@ -318,4 +384,29 @@ fn migrate_yaml_config(yaml_path: &PathBuf) -> CoreResult<ServerConfig> {
     }
 
     Ok(config)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn resolve_database_path_defaults_to_leanspec_db() {
+        let path = resolve_database_path(None).expect("default path should resolve");
+        assert!(path.ends_with(".lean-spec/leanspec.db"));
+    }
+
+    #[test]
+    fn resolve_database_path_expands_home_urls() {
+        let path = resolve_database_path(Some("sqlite://~/.lean-spec/custom.db"))
+            .expect("home-relative sqlite path should resolve");
+        assert!(path.ends_with(".lean-spec/custom.db"));
+    }
+
+    #[test]
+    fn resolve_database_path_rejects_non_sqlite_urls() {
+        let error = resolve_database_path(Some("postgres://localhost/leanspec"))
+            .expect_err("non-sqlite urls should be rejected");
+        assert!(matches!(error, CoreError::ConfigError(_)));
+    }
 }

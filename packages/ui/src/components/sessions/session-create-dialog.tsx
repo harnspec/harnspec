@@ -21,6 +21,7 @@ import { api } from '../../lib/api';
 import { SpecContextTrigger, SpecContextChips } from '../spec-context-attachments';
 import { RunnerLogo } from '../library/ai-elements/runner-logo';
 import { sessionModeConfig } from '../../lib/session-utils';
+import { useSessionCreatePreferencesStore } from '../../stores/session-create-preferences';
 import { X } from 'lucide-react';
 
 const MODES: SessionMode[] = ['guided', 'autonomous'];
@@ -53,6 +54,7 @@ export function SessionCreateDialog({
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const { getModelForRunner, setModelForRunner } = useSessionCreatePreferencesStore();
 
   const canCreate = Boolean(projectPath);
 
@@ -93,7 +95,7 @@ export function SessionCreateDialog({
         setRunnerDefs(defs);
         const defaultId =
           defs.find((def) => def.id === resp.default)?.id ?? defs[0]?.id ?? '';
-        setRunner((prev) => (prev && defs.some((d) => d.id === prev) ? prev : defaultId));
+        setRunner(defaultId);
       } catch (err) {
         setError(err instanceof Error ? err.message : t('settings.runners.errors.loadFailed'));
         setRunnerDefs([]);
@@ -125,8 +127,9 @@ export function SessionCreateDialog({
         const models = resp.models ?? [];
         setFetchedModels(models);
         if (models.length) {
-          const preferred = selected?.model ?? models[0] ?? '';
-          setModel((prev) => (prev && models.includes(prev) ? prev : preferred));
+          const stored = getModelForRunner(selected!.id);
+          const preferred = stored && models.includes(stored) ? stored : (selected?.model ?? models[0] ?? '');
+          setModel(preferred);
         }
       }).catch(() => {
         // Best-effort; model selector will be hidden
@@ -135,7 +138,7 @@ export function SessionCreateDialog({
     }
     setFetchedModels([]);
     setModel('');
-  }, [runner, runnerDefs, projectPath]);
+  }, [runner, runnerDefs, projectPath, getModelForRunner]);
 
   useEffect(() => {
     if (!open) {
@@ -144,6 +147,13 @@ export function SessionCreateDialog({
     setError(null);
     setTimeout(() => inputRef.current?.focus(), 50);
   }, [open]);
+
+  const handleModelChange = useCallback((newModel: string) => {
+    setModel(newModel);
+    if (runner && newModel) {
+      setModelForRunner(runner, newModel);
+    }
+  }, [runner, setModelForRunner]);
 
   const runCreate = useCallback(async () => {
     if (!projectPath) return;
@@ -260,7 +270,7 @@ export function SessionCreateDialog({
                 </PromptInputSelect>
 
                 {runnerModels.length > 0 && (
-                  <PromptInputSelect value={model} onValueChange={setModel}>
+                  <PromptInputSelect value={model} onValueChange={handleModelChange}>
                     <PromptInputSelectTrigger className="h-8 w-auto rounded-full border border-border/70 px-3 py-1.5 text-xs">
                       <PromptInputSelectValue placeholder={t('sessions.labels.model')} />
                     </PromptInputSelectTrigger>

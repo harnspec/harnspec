@@ -4,10 +4,10 @@
 
 use crate::chat_config::ChatConfigStore;
 use crate::chat_store::ChatStore;
-use crate::config::{config_dir, ServerConfig};
+use crate::config::{config_dir, resolve_database_path, ServerConfig};
 use crate::error::ServerError;
 use crate::project_registry::{Project, ProjectRegistry};
-use crate::sessions::{SessionDatabase, SessionManager};
+use crate::sessions::{global_runners_path, SessionDatabase, SessionManager};
 use crate::sync_state::SyncState;
 use crate::watcher::{sse_connection_limit, watch_debounce, watch_enabled, FileWatcher};
 use std::collections::HashMap;
@@ -67,13 +67,13 @@ impl AppState {
             }
         }
 
-        let chat_store = ChatStore::new()?;
+        let unified_db_path = resolve_database_path(config.database_url.as_deref())?;
+        let chat_store = ChatStore::new_with_db_path(&unified_db_path)?;
         let chat_config = ChatConfigStore::load_default()?;
         let sessions_dir = config_dir();
         fs::create_dir_all(&sessions_dir).map_err(|e| {
             ServerError::ConfigError(format!("Failed to create sessions dir: {}", e))
         })?;
-        let unified_db_path = sessions_dir.join("leanspec.db");
         let session_db = SessionDatabase::new(&unified_db_path)?;
 
         let legacy_sessions_path = sessions_dir.join("sessions.db");
@@ -84,6 +84,10 @@ impl AppState {
         let legacy_chat_path = sessions_dir.join("chat.db");
         if chat_store.migrate_from_legacy_db(&legacy_chat_path)? {
             mark_legacy_db_migrated(&legacy_chat_path);
+        }
+        let legacy_runners_path = global_runners_path();
+        if session_db.migrate_from_legacy_runners_json()? {
+            mark_legacy_json_migrated(&legacy_runners_path);
         }
 
         let session_manager = Arc::new(SessionManager::new(session_db));
@@ -153,6 +157,18 @@ fn mark_legacy_db_migrated(path: &PathBuf) {
     if let Err(err) = fs::rename(path, &migrated) {
         tracing::warn!(
             "Failed to rename legacy database '{}' to '{}': {}",
+            path.display(),
+            migrated.display(),
+            err
+        );
+    }
+}
+
+fn mark_legacy_json_migrated(path: &PathBuf) {
+    let migrated = path.with_extension("json.migrated");
+    if let Err(err) = fs::rename(path, &migrated) {
+        tracing::warn!(
+            "Failed to rename legacy file '{}' to '{}': {}",
             path.display(),
             migrated.display(),
             err

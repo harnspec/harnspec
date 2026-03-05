@@ -118,6 +118,12 @@ const HierarchyListItem = memo(function HierarchyListItem({
     setIsExpanded(prev => !prev);
   }, []);
 
+  // Memoize sorted children to avoid re-creating arrays on every render
+  const sortedChildren = useMemo(
+    () => hasChildren ? sortNodes(node.childNodes, sortBy) : [],
+    [hasChildren, node.childNodes, sortBy]
+  );
+
   return (
     <div className="space-y-1">
       <div className={cn(
@@ -197,7 +203,7 @@ const HierarchyListItem = memo(function HierarchyListItem({
         <Collapsible open={isExpanded}>
           <CollapsibleContent forceMount={isExpanded ? true : undefined}>
             <div className="ml-4 pl-4 border-l-2 border-border/40 space-y-2 mt-2 mb-4">
-              {sortNodes(node.childNodes, sortBy).map(child => (
+              {sortedChildren.map(child => (
                 <HierarchyListItem
                   key={child.specName}
                   node={child}

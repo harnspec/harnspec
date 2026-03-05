@@ -14,8 +14,8 @@ export const queryClient = new QueryClient({
       gcTime: 5 * 60 * 1000,
       // Retry failed requests once
       retry: 1,
-      // Refetch on window focus for fresh data
-      refetchOnWindowFocus: true,
+      // SSE handles real-time updates; avoid redundant refetches on tab switch
+      refetchOnWindowFocus: false,
       // Don't refetch on reconnect (SSE handles this)
       refetchOnReconnect: false,
     },

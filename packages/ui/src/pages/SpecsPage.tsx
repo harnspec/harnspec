@@ -1,11 +1,10 @@
-import { useState, useEffect, useMemo, useCallback, useRef, useDeferredValue } from 'react';
+import { useState, useEffect, useMemo, useCallback, useDeferredValue } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { AlertCircle, FileQuestion, FilterX, RefreshCcw } from 'lucide-react';
 import { Button, Card, CardContent, Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/library';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { api } from '../lib/api';
 import type { Spec, SpecStatus, ValidationStatus } from '../types/api';
-import { getBackend } from '../lib/backend-adapter';
 import { BoardView } from '../components/specs/board-view';
 import { ListView } from '../components/specs/list-view';
 import { SpecsFilters } from '../components/specs/specs-filters';
@@ -16,7 +15,7 @@ import { PageHeader } from '../components/shared/page-header';
 import { EmptyState } from '../components/shared/empty-state';
 import { PageContainer } from '../components/shared/page-container';
 import { useCurrentProject } from '../hooks/useProjectQuery';
-import { specKeys, useSpecsWithHierarchy, useSearchSpecs } from '../hooks/useSpecsQuery';
+import { specKeys, useSpecsWithHierarchy, useSearchSpecs, useBatchMetadata } from '../hooks/useSpecsQuery';
 import { useMachineStore } from '../stores/machine';
 import { useSpecsPreferencesStore, type SpecsSortOption } from '../stores/specs-preferences';
 import { useSpecActionDialogs } from '../hooks/useSpecActionDialogs';
@@ -128,95 +127,44 @@ export function SpecsPage() {
   const setGroupByParent = useCallback((value: boolean) => setHierarchyView(value), [setHierarchyView]);
   const setViewMode = useCallback((mode: ViewMode) => setPageViewMode(mode), [setPageViewMode]);
 
-  // Validation statuses fetched when showValidationIssuesOnly is enabled
-  const [validationStatuses, setValidationStatuses] = useState<Record<string, ValidationStatus>>({});
-  const [loadingValidation, setLoadingValidation] = useState(false);
-  const validationFetchedRef = useRef(false);
-  const metadataFetchedRef = useRef(false);
+  // Batch metadata query (tokens, validation) — fires as soon as specs are available.
+  // TanStack Query handles caching, deduplication, and prevents duplicate requests.
+  const specNames = useMemo(() => specs.map(s => s.specName), [specs]);
+  const batchMetadataQuery = useBatchMetadata(resolvedProjectId ?? null, specNames);
   const [draftGuard, setDraftGuard] = useState<{ spec: Spec; nextStatus: SpecStatus } | null>(null);
 
-  // Fetch batch metadata (tokens, validation) after specs load
+  // Merge metadata into specs cache when batch data arrives
   useEffect(() => {
-    if (metadataFetchedRef.current || specs.length === 0 || !resolvedProjectId || isInitialLoading) {
-      return;
-    }
+    if (!batchMetadataQuery.data) return;
+    const batchResult = batchMetadataQuery.data;
 
-    const fetchMetadata = async () => {
-      const backend = getBackend();
-
-      try {
-        const specNames = specs.map((spec) => spec.specName);
-        const batchResult = await backend.getBatchMetadata(resolvedProjectId, specNames);
-
-        // Update specs with metadata
-        updateSpecsCache((prevSpecs) =>
-          prevSpecs.map((spec) => {
-            const metadata = batchResult.specs[spec.specName];
-            if (metadata) {
-              return {
-                ...spec,
-                tokenCount: metadata.tokenCount,
-                tokenStatus: metadata.tokenStatus,
-                validationStatus: metadata.validationStatus,
-              };
-            }
-            return spec;
-          })
-        );
-
-        // Also update validation statuses for filter
-        const statuses: Record<string, ValidationStatus> = {};
-        for (const [specName, metadata] of Object.entries(batchResult.specs)) {
-          statuses[specName] = metadata.validationStatus as ValidationStatus;
+    updateSpecsCache((prevSpecs) =>
+      prevSpecs.map((spec) => {
+        const metadata = batchResult.specs[spec.specName];
+        if (metadata) {
+          return {
+            ...spec,
+            tokenCount: metadata.tokenCount,
+            tokenStatus: metadata.tokenStatus,
+            validationStatus: metadata.validationStatus,
+          };
         }
-        setValidationStatuses(statuses);
-        validationFetchedRef.current = true;
-      } catch {
-        // Silently fail - specs still work without metadata
-      }
+        return spec;
+      })
+    );
+  }, [batchMetadataQuery.data, updateSpecsCache]);
 
-      metadataFetchedRef.current = true;
-    };
-
-    void fetchMetadata();
-  }, [specs, resolvedProjectId, isInitialLoading, updateSpecsCache]);
-
-  // Reset metadata fetch flag when project changes
-  useEffect(() => {
-    metadataFetchedRef.current = false;
-    validationFetchedRef.current = false;
-  }, [resolvedProjectId]);
-
-  // Fetch validation statuses when filter is enabled (if not already fetched)
-  useEffect(() => {
-    if (!showValidationIssuesOnly || validationFetchedRef.current || specs.length === 0 || !resolvedProjectId) {
-      return;
+  // Derive validation statuses from batch metadata for the validation filter
+  const validationStatuses = useMemo<Record<string, ValidationStatus>>(() => {
+    if (!batchMetadataQuery.data) return {};
+    const statuses: Record<string, ValidationStatus> = {};
+    for (const [specName, metadata] of Object.entries(batchMetadataQuery.data.specs)) {
+      statuses[specName] = metadata.validationStatus as ValidationStatus;
     }
+    return statuses;
+  }, [batchMetadataQuery.data]);
 
-    const fetchValidation = async () => {
-      setLoadingValidation(true);
-      const backend = getBackend();
-      const statuses: Record<string, ValidationStatus> = {};
-
-      try {
-        // Fetch metadata for all specs in a single batch request
-        const specNames = specs.map((spec) => spec.specName);
-        const batchResult = await backend.getBatchMetadata(resolvedProjectId, specNames);
-
-        for (const [specName, metadata] of Object.entries(batchResult.specs)) {
-          statuses[specName] = metadata.validationStatus as ValidationStatus;
-        }
-      } catch {
-        // Fall back silently if batch fails
-      }
-
-      setValidationStatuses(statuses);
-      setLoadingValidation(false);
-      validationFetchedRef.current = true;
-    };
-
-    void fetchValidation();
-  }, [showValidationIssuesOnly, specs, resolvedProjectId]);
+  const loadingValidation = batchMetadataQuery.isLoading;
 
   const applyStatusChange = useCallback(async (spec: Spec, newStatus: SpecStatus, force = false) => {
     if (machineModeEnabled && !isMachineAvailable()) {

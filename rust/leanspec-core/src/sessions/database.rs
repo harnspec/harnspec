@@ -6,6 +6,7 @@
 #![cfg(feature = "sessions")]
 
 use crate::error::{CoreError, CoreResult};
+use crate::sessions::runner::{global_runners_path, read_runners_file};
 use crate::sessions::types::*;
 use chrono::{DateTime, Utc};
 use rusqlite::{params, params_from_iter, types::Value, Connection, OptionalExtension};
@@ -172,6 +173,30 @@ impl SessionDatabase {
         .ok();
         conn.execute(
             "CREATE INDEX IF NOT EXISTS idx_session_events_session ON session_events(session_id)",
+            [],
+        )
+        .ok();
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS runners (
+                    scope TEXT NOT NULL,
+                    project_path TEXT NOT NULL DEFAULT '',
+                    runner_id TEXT NOT NULL,
+                    config_json TEXT NOT NULL,
+                    is_default INTEGER NOT NULL DEFAULT 0,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    PRIMARY KEY (scope, project_path, runner_id)
+                )",
+            [],
+        )
+        .map_err(|e| CoreError::DatabaseError(e.to_string()))?;
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_runners_scope_project ON runners(scope, project_path)",
+            [],
+        )
+        .ok();
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_runners_default ON runners(scope, project_path, is_default)",
             [],
         )
         .ok();
@@ -369,6 +394,67 @@ impl SessionDatabase {
         let _ = conn.execute("DETACH DATABASE legacy_sessions", []);
         result?;
         Ok(imported)
+    }
+
+    /// Import global runners.json into the unified runners table.
+    pub fn migrate_from_legacy_runners_json(&self) -> CoreResult<bool> {
+        let legacy_path = global_runners_path();
+        let Some(file) = read_runners_file(&legacy_path)? else {
+            return Ok(false);
+        };
+
+        let now = Utc::now().to_rfc3339();
+        let default_runner = file.default.clone();
+        let conn = self.conn()?;
+
+        for (runner_id, config) in file.runners {
+            let config_json = serde_json::to_string(&config).map_err(|e| {
+                CoreError::DatabaseError(format!("Failed to serialize runner: {}", e))
+            })?;
+
+            conn.execute(
+                "INSERT INTO runners (scope, project_path, runner_id, config_json, is_default, created_at, updated_at)
+                 VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
+                 ON CONFLICT(scope, project_path, runner_id) DO UPDATE SET
+                    config_json = excluded.config_json,
+                    is_default = excluded.is_default,
+                    updated_at = excluded.updated_at",
+                params![
+                    "global",
+                    "",
+                    runner_id,
+                    config_json,
+                    0,
+                    now,
+                    now
+                ],
+            )
+            .map_err(|e| CoreError::DatabaseError(format!("Failed to import runner: {}", e)))?;
+        }
+
+        if let Some(default_runner_id) = default_runner {
+            conn.execute(
+                "UPDATE runners
+                 SET is_default = CASE WHEN runner_id = ?1 THEN 1 ELSE 0 END,
+                     updated_at = ?2
+                 WHERE scope = 'global' AND project_path = ''",
+                params![default_runner_id, now],
+            )
+            .map_err(|e| {
+                CoreError::DatabaseError(format!("Failed to set default runner: {}", e))
+            })?;
+        } else {
+            conn.execute(
+                "UPDATE runners
+                 SET is_default = 0,
+                     updated_at = ?1
+                 WHERE scope = 'global' AND project_path = ''",
+                params![now],
+            )
+            .ok();
+        }
+
+        Ok(true)
     }
 
     fn conn(&self) -> CoreResult<std::sync::MutexGuard<'_, Connection>> {

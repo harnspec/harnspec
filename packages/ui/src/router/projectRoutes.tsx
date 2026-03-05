@@ -1,17 +1,24 @@
+import { lazy, Suspense } from 'react';
 import type { RouteObject } from 'react-router-dom';
 
 import { SpecDetailLayout } from '../components/spec-detail-layout';
 import { SessionDetailLayout } from '../components/session-detail-layout';
-import { ContextPage } from '../pages/ContextPage';
-import { DashboardPage } from '../pages/DashboardPage';
-import { DependenciesPage } from '../pages/DependenciesPage';
-import { ChatSettingsPage } from '../pages/ChatSettingsPage';
-import { FilesPage } from '../pages/FilesPage';
-import { SessionDetailPage } from '../pages/SessionDetailPage';
-import { SessionsPage } from '../pages/SessionsPage';
-import { SpecDetailPage } from '../pages/SpecDetailPage';
-import { SpecsPage } from '../pages/SpecsPage';
-import { StatsPage } from '../pages/StatsPage';
+
+// Lazy-load page components to reduce initial bundle size
+const ContextPage = lazy(() => import('../pages/ContextPage').then(m => ({ default: m.ContextPage })));
+const DashboardPage = lazy(() => import('../pages/DashboardPage').then(m => ({ default: m.DashboardPage })));
+const DependenciesPage = lazy(() => import('../pages/DependenciesPage').then(m => ({ default: m.DependenciesPage })));
+const ChatSettingsPage = lazy(() => import('../pages/ChatSettingsPage').then(m => ({ default: m.ChatSettingsPage })));
+const FilesPage = lazy(() => import('../pages/FilesPage').then(m => ({ default: m.FilesPage })));
+const SessionDetailPage = lazy(() => import('../pages/SessionDetailPage').then(m => ({ default: m.SessionDetailPage })));
+const SessionsPage = lazy(() => import('../pages/SessionsPage').then(m => ({ default: m.SessionsPage })));
+const SpecDetailPage = lazy(() => import('../pages/SpecDetailPage').then(m => ({ default: m.SpecDetailPage })));
+const SpecsPage = lazy(() => import('../pages/SpecsPage').then(m => ({ default: m.SpecsPage })));
+const StatsPage = lazy(() => import('../pages/StatsPage').then(m => ({ default: m.StatsPage })));
+
+const lazy_ = (C: React.LazyExoticComponent<React.ComponentType>) => (
+  <Suspense fallback={null}><C /></Suspense>
+);
 
 /**
  * Shared project-scoped route definitions.
@@ -22,32 +29,32 @@ import { StatsPage } from '../pages/StatsPage';
  */
 export function createProjectRoutes(): RouteObject[] {
   return [
-    { index: true, element: <DashboardPage /> },
+    { index: true, element: lazy_(DashboardPage) },
     {
       path: 'specs',
       children: [
-        { index: true, element: <SpecsPage /> },
+        { index: true, element: lazy_(SpecsPage) },
         {
           element: <SpecDetailLayout />,
-          children: [{ path: ':specName', element: <SpecDetailPage /> }],
+          children: [{ path: ':specName', element: lazy_(SpecDetailPage) }],
         },
       ],
     },
     {
       path: 'sessions',
       children: [
-        { index: true, element: <SessionsPage /> },
+        { index: true, element: lazy_(SessionsPage) },
         {
           element: <SessionDetailLayout />,
-          children: [{ path: ':sessionId', element: <SessionDetailPage /> }],
+          children: [{ path: ':sessionId', element: lazy_(SessionDetailPage) }],
         },
       ],
     },
-    { path: 'stats', element: <StatsPage /> },
-    { path: 'dependencies', element: <DependenciesPage /> },
-    { path: 'dependencies/:specName', element: <DependenciesPage /> },
-    { path: 'context', element: <ContextPage /> },
-    { path: 'files', element: <FilesPage /> },
-    { path: 'chat/settings', element: <ChatSettingsPage /> },
+    { path: 'stats', element: lazy_(StatsPage) },
+    { path: 'dependencies', element: lazy_(DependenciesPage) },
+    { path: 'dependencies/:specName', element: lazy_(DependenciesPage) },
+    { path: 'context', element: lazy_(ContextPage) },
+    { path: 'files', element: lazy_(FilesPage) },
+    { path: 'chat/settings', element: lazy_(ChatSettingsPage) },
   ];
 }
