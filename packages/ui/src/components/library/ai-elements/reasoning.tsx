@@ -11,6 +11,7 @@ import { cjk } from "@streamdown/cjk";
 import { code } from "@streamdown/code";
 import { math } from "@streamdown/math";
 import { mermaid } from "@streamdown/mermaid";
+import remarkBreaks from "remark-breaks";
 import { BrainIcon, ChevronDownIcon } from "lucide-react";
 import type { ComponentProps, ReactNode } from "react";
 import { createContext, memo, useContext, useEffect, useState } from "react";
@@ -175,13 +176,13 @@ export const ReasoningContent = memo(
   ({ className, children, ...props }: ReasoningContentProps) => (
     <CollapsibleContent
       className={cn(
-        "mt-4 text-sm",
+        "mt-4 text-sm [&_p]:whitespace-pre-wrap [&_li]:whitespace-pre-wrap [&_blockquote]:whitespace-pre-wrap",
         "data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-top-2 data-[state=open]:slide-in-from-top-2 text-muted-foreground outline-none data-[state=closed]:animate-out data-[state=open]:animate-in",
         className
       )}
       {...props}
     >
-      <Streamdown plugins={{ code, mermaid, math, cjk }} {...props}>
+      <Streamdown plugins={{ code, mermaid, math, cjk }} remarkPlugins={[remarkBreaks]} {...props}>
         {children}
       </Streamdown>
     </CollapsibleContent>

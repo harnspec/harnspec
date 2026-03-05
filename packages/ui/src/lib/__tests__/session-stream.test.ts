@@ -10,7 +10,7 @@ function thought(content: string, done = false): SessionStreamEvent {
   return { type: 'acp_thought', content, done };
 }
 
-function toolCall(id: string, tool: string, status: 'running' | 'completed' = 'running'): SessionStreamEvent {
+function toolCall(id: string, tool: string, status: 'running' | 'completed' | 'failed' = 'running'): SessionStreamEvent {
   return { type: 'acp_tool_call', id, tool, args: {}, status, result: null };
 }
 
@@ -103,6 +103,29 @@ describe('appendStreamEvent', () => {
     expect(thoughts).toHaveLength(2);
   });
 
+  it('does NOT merge thoughts across a completed tool call', () => {
+    let events: SessionStreamEvent[] = [];
+    events = appendStreamEvent(events, thought('Thought 1'));
+    events = appendStreamEvent(events, toolCall('t1', 'read_file'));
+    events = appendStreamEvent(events, toolCall('t1', 'read_file', 'completed'));
+    events = appendStreamEvent(events, thought('Thought 2'));
+
+    const thoughts = events.filter((e) => e.type === 'acp_thought');
+    expect(thoughts).toHaveLength(2);
+    expect(thoughts[0]).toMatchObject({ content: 'Thought 1', done: true });
+    expect(thoughts[1]).toMatchObject({ content: 'Thought 2' });
+  });
+
+  it('does NOT merge thoughts across a failed tool call', () => {
+    let events: SessionStreamEvent[] = [];
+    events = appendStreamEvent(events, thought('Thought 1'));
+    events = appendStreamEvent(events, toolCall('t1', 'search', 'failed'));
+    events = appendStreamEvent(events, thought('Thought 2'));
+
+    const thoughts = events.filter((e) => e.type === 'acp_thought');
+    expect(thoughts).toHaveLength(2);
+  });
+
   it('auto-closes trailing open thought on different event type', () => {
     let events: SessionStreamEvent[] = [];
     events = appendStreamEvent(events, thought('open'));
@@ -157,6 +180,29 @@ describe('finalizeStreamEvents', () => {
 });
 
 describe('parseStreamEventPayload', () => {
+  it('preserves line breaks when acp thought content is an array of text blocks', () => {
+    const payload = {
+      __acp_method: 'session/update',
+      params: {
+        update: {
+          sessionUpdate: 'agent_thought_chunk',
+          content: [
+            { type: 'text', text: 'Line 1' },
+            { type: 'text', text: 'Line 2' },
+          ],
+          done: true,
+        },
+      },
+    };
+
+    const event = parseStreamEventPayload(payload);
+    expect(event).toMatchObject({
+      type: 'acp_thought',
+      content: 'Line 1\n\nLine 2',
+      done: true,
+    });
+  });
+
   it('extracts tool name from toolName field in session/update', () => {
     const payload = {
       __acp_method: 'session/update',

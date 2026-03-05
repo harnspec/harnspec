@@ -52,13 +52,16 @@ function asPlanStatus(value: unknown): 'pending' | 'running' | 'done' {
 
 function extractTextFromContent(value: unknown): string {
   if (typeof value === 'string') return value;
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => extractTextFromContent(item))
+      .filter((text) => text.length > 0)
+      .join('\n\n');
+  }
   if (isRecord(value)) {
     if (typeof value.text === 'string') return value.text;
     if (typeof value.content === 'string') return value.content;
     return '';
-  }
-  if (Array.isArray(value)) {
-    return value.map((item) => extractTextFromContent(item)).join('');
   }
   return '';
 }
@@ -383,9 +386,29 @@ export function appendStreamEvent(events: SessionStreamEvent[], next: SessionStr
     for (let i = current.length - 1; i >= 0; i--) {
       const ev = current[i];
       if (ev?.type === 'acp_thought' && (!ev.done || (ev as AutoCloseMarker)._autoClosed)) {
+        // If content is pushed in discrete bullet blocks without trailing newlines,
+        // and both chunks are non-empty, we add a newline gap UNLESS it looks like
+        // mid-markdown or mid-word chunking stream.
+        let joiner = '';
+        const prevText = ev.content || '';
+        const nextText = next.content || '';
+
+        // Safely check if we should join with a newline (handles discrete polling status chunks)
+        if (prevText && nextText && /[^\s\n]$/.test(prevText) && /^[^\s\n]/.test(nextText)) {
+          // Exclude exact formatting chunk follow-ups like "**"
+          if (!/^[*_`~]+$/.test(nextText)) {
+            // Next block starts with a capital letter, or is repeating identical polling phrase
+            if (/[a-zA-Z0-9.,*_"']$/.test(prevText) && /^[A-Z]/.test(nextText)) {
+              joiner = '\n\n';
+            } else if (prevText.endsWith(nextText)) {
+              joiner = '\n\n';
+            }
+          }
+        }
+
         const merged = {
           ...ev,
-          content: `${ev.content}${next.content}`,
+          content: `${prevText}${joiner}${nextText}`,
           done: next.done,
           timestamp: next.timestamp ?? ev.timestamp,
         };
@@ -395,6 +418,8 @@ export function appendStreamEvent(events: SessionStreamEvent[], next: SessionStr
       }
       // Stop at any message boundary (different conversation turn)
       if (ev?.type === 'acp_message') break;
+      // Stop at completed/failed tool calls (agent received new info → new reasoning phase)
+      if (ev?.type === 'acp_tool_call' && (ev.status === 'completed' || ev.status === 'failed')) break;
     }
   }
 
