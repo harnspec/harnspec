@@ -7,7 +7,10 @@ import { useTranslation } from 'react-i18next';
 import { HierarchyList } from './hierarchy-list';
 import { TokenBadge } from '../token-badge';
 import { ValidationBadge } from '../validation-badge';
-import { memo } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
+
+const INITIAL_VISIBLE_ROWS = 120;
+const ROW_CHUNK_SIZE = 120;
 
 interface SpecListItemProps {
   spec: Spec;
@@ -106,6 +109,62 @@ interface ListViewProps {
 export const ListView = memo(function ListView({ specs, hierarchy, basePath = '/projects', groupByParent = false, sortBy = 'id-desc', onTokenClick, onValidationClick, onStatusChange, onPriorityChange }: ListViewProps) {
   const { t } = useTranslation('common');
 
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_ROWS);
+
+  // Progressive render for large flat lists to avoid a long main-thread block.
+  useEffect(() => {
+    if (groupByParent) {
+      return;
+    }
+
+    const total = specs.length;
+    const initial = Math.min(INITIAL_VISIBLE_ROWS, total);
+
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    let rafId: number | null = null;
+    let cancelled = false;
+
+    const start = () => {
+      if (cancelled) return;
+
+      setVisibleCount(initial);
+
+      if (total <= INITIAL_VISIBLE_ROWS) {
+        return;
+      }
+
+      const pump = () => {
+        if (cancelled) return;
+        setVisibleCount((prev) => {
+          const next = Math.min(prev + ROW_CHUNK_SIZE, total);
+          if (next < total && !cancelled) {
+            rafId = window.requestAnimationFrame(pump);
+          }
+          return next;
+        });
+      };
+
+      rafId = window.requestAnimationFrame(pump);
+    };
+
+    rafId = window.requestAnimationFrame(start);
+
+    return () => {
+      cancelled = true;
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+      }
+    };
+  }, [groupByParent, specs.length]);
+
+  const visibleSpecs = useMemo(
+    () => (groupByParent ? specs : specs.slice(0, visibleCount)),
+    [groupByParent, specs, visibleCount]
+  );
+
   if (specs.length === 0) {
     return (
       <div className="text-center py-12 text-muted-foreground border rounded-lg bg-secondary/10">
@@ -131,7 +190,7 @@ export const ListView = memo(function ListView({ specs, hierarchy, basePath = '/
 
   return (
     <div className="h-full overflow-y-auto space-y-2">
-      {specs.map((spec) => (
+      {visibleSpecs.map((spec) => (
         <SpecListItem
           key={spec.specName}
           spec={spec}
@@ -142,6 +201,11 @@ export const ListView = memo(function ListView({ specs, hierarchy, basePath = '/
           onPriorityChange={onPriorityChange}
         />
       ))}
+      {!groupByParent && visibleCount < specs.length && (
+        <div className="py-3 text-center text-xs text-muted-foreground">
+          {t('specsPage.list.loadingMore', { visible: visibleCount, total: specs.length, defaultValue: 'Rendering {{visible}} / {{total}} specs...' })}
+        </div>
+      )}
     </div>
   );
 });

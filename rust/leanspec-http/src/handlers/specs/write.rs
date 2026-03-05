@@ -8,6 +8,7 @@ use axum::Json;
 use std::collections::HashMap;
 use std::fs;
 use std::path::Path as FsPath;
+use std::sync::{LazyLock, RwLock};
 
 use leanspec_core::io::hash_content;
 use leanspec_core::spec_ops::{
@@ -31,6 +32,11 @@ use crate::types::{
 };
 
 use super::helpers::{get_spec_loader, hash_raw_content, load_project_config};
+
+// In-process cache for expensive batch metadata computation.
+// Keyed by project/spec and invalidated implicitly when content hash changes.
+static BATCH_METADATA_CACHE: LazyLock<RwLock<HashMap<String, (String, SpecMetadata)>>> =
+    LazyLock::new(|| RwLock::new(HashMap::new()));
 
 fn render_template(template: &str, name: &str, status: &str, priority: &str, date: &str) -> String {
     template
@@ -836,6 +842,18 @@ pub async fn batch_spec_metadata(
 
     for spec_name in &request.spec_names {
         if let Some(spec) = spec_map.get(spec_name) {
+            let content_hash = hash_content(&spec.content);
+            let cache_key = format!("{}::{}", project_id, spec_name);
+
+            if let Ok(cache) = BATCH_METADATA_CACHE.read() {
+                if let Some((cached_hash, cached_metadata)) = cache.get(&cache_key) {
+                    if cached_hash == &content_hash {
+                        result.insert(spec_name.clone(), cached_metadata.clone());
+                        continue;
+                    }
+                }
+            }
+
             // Compute token count (simple version - no detailed breakdown)
             let (total, status) = counter.count_spec_simple(&spec.content);
             let token_status_str = match status {
@@ -863,14 +881,17 @@ pub async fn batch_spec_metadata(
                 "warn"
             };
 
-            result.insert(
-                spec_name.clone(),
-                SpecMetadata {
-                    token_count: total,
-                    token_status: token_status_str.to_string(),
-                    validation_status: validation_status_str.to_string(),
-                },
-            );
+            let metadata = SpecMetadata {
+                token_count: total,
+                token_status: token_status_str.to_string(),
+                validation_status: validation_status_str.to_string(),
+            };
+
+            result.insert(spec_name.clone(), metadata.clone());
+
+            if let Ok(mut cache) = BATCH_METADATA_CACHE.write() {
+                cache.insert(cache_key, (content_hash, metadata));
+            }
         }
     }
 

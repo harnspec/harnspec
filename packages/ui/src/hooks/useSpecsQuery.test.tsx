@@ -96,6 +96,9 @@ describe('useSpecsQuery', () => {
 
     result.current();
 
-    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: specKeys.all });
+    expect(invalidateSpy).toHaveBeenCalledTimes(3);
+    expect(invalidateSpy).toHaveBeenNthCalledWith(1, { queryKey: specKeys.lists(), refetchType: 'active' });
+    expect(invalidateSpy).toHaveBeenNthCalledWith(2, { queryKey: specKeys.details(), refetchType: 'active' });
+    expect(invalidateSpy).toHaveBeenNthCalledWith(3, { queryKey: ['specs', 'stats'], refetchType: 'active' });
   });
 });
