@@ -1,7 +1,7 @@
 use colored::Colorize;
 use leanspec_core::sessions::{
-    manager::build_context_prompt, ArchiveOptions, RunnerProtocol, RunnerRegistry, SessionConfig,
-    SessionDatabase, SessionManager, SessionMode, SessionStatus,
+    manager::build_context_prompt, ArchiveOptions, CreateSessionOptions, RunnerProtocol,
+    RunnerRegistry, SessionConfig, SessionDatabase, SessionManager, SessionMode, SessionStatus,
 };
 use leanspec_core::storage::config::config_dir;
 use std::collections::HashMap;
@@ -63,7 +63,16 @@ pub fn run(command: SessionCommand) -> Result<(), Box<dyn Error>> {
             model,
             acp,
             mode,
-        } => create_session(project_path, specs, prompt, runner, model, acp, mode, false),
+        } => create_session(CreateSessionRequest {
+            project_path,
+            specs,
+            prompt,
+            runner,
+            model,
+            acp,
+            mode,
+            start: false,
+        }),
         SessionCommand::Run {
             project_path,
             specs,
@@ -72,7 +81,16 @@ pub fn run(command: SessionCommand) -> Result<(), Box<dyn Error>> {
             model,
             acp,
             mode,
-        } => create_session(project_path, specs, prompt, runner, model, acp, mode, true),
+        } => create_session(CreateSessionRequest {
+            project_path,
+            specs,
+            prompt,
+            runner,
+            model,
+            acp,
+            mode,
+            start: true,
+        }),
         SessionCommand::Start { session_id } => start_session(&session_id),
         SessionCommand::Pause { session_id } => pause_session(&session_id),
         SessionCommand::Resume { session_id } => resume_session(&session_id),
@@ -150,7 +168,7 @@ pub enum SessionCommand {
     },
 }
 
-fn create_session(
+struct CreateSessionRequest {
     project_path: String,
     specs: Vec<String>,
     prompt: Option<String>,
@@ -159,7 +177,19 @@ fn create_session(
     acp: bool,
     mode: String,
     start: bool,
-) -> Result<(), Box<dyn Error>> {
+}
+
+fn create_session(request: CreateSessionRequest) -> Result<(), Box<dyn Error>> {
+    let CreateSessionRequest {
+        project_path,
+        specs,
+        prompt,
+        runner,
+        model,
+        acp,
+        mode,
+        start,
+    } = request;
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()?;
@@ -167,15 +197,15 @@ fn create_session(
         let manager = build_manager()?;
         let mode = parse_mode(&mode)?;
         let session = manager
-            .create_session_with_options(
+            .create_session_with_options(CreateSessionOptions {
                 project_path,
-                specs,
+                spec_ids: specs,
                 prompt,
                 runner,
                 mode,
-                model,
-                acp.then_some(RunnerProtocol::Acp),
-            )
+                model_override: model,
+                protocol_override: acp.then_some(RunnerProtocol::Acp),
+            })
             .await
             .map_err(|e| Box::<dyn Error>::from(e.to_string()))?;
 
@@ -203,11 +233,11 @@ pub fn run_direct(
     dry_run: bool,
     acp: bool,
 ) -> Result<(), Box<dyn Error>> {
-    if prompt
+    let missing_prompt = prompt
         .as_deref()
-        .is_none_or(|value| value.trim().is_empty())
-        && specs.is_empty()
-    {
+        .map(|value| value.trim().is_empty())
+        .unwrap_or(true);
+    if missing_prompt && specs.is_empty() {
         return Err(Box::<dyn Error>::from(
             "Provide a prompt with -p/--prompt or attach at least one --spec",
         ));
@@ -217,16 +247,16 @@ pub fn run_direct(
         return print_dry_run_command(project_path, specs, prompt, runner, model, acp);
     }
 
-    create_session(
+    create_session(CreateSessionRequest {
         project_path,
         specs,
         prompt,
         runner,
         model,
         acp,
-        "autonomous".to_string(),
-        true,
-    )
+        mode: "autonomous".to_string(),
+        start: true,
+    })
 }
 
 fn print_dry_run_command(

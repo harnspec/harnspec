@@ -9,7 +9,7 @@ pub mod types;
 pub mod manager;
 
 pub use database::SessionDatabase;
-pub use manager::{ArchiveOptions, SessionManager};
+pub use manager::{ArchiveOptions, CreateSessionOptions, SessionManager};
 pub use runner::{
     global_runners_path, project_runners_path, DetectionConfig, DetectionResult, RunnerDefinition,
     RunnerProtocol, RunnerRegistry, RunnersFile,

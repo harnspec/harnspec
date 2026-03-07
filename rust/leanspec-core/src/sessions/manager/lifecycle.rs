@@ -81,6 +81,17 @@ pub struct ArchiveOptions {
     pub compress: bool,
 }
 
+#[derive(Debug, Clone)]
+pub struct CreateSessionOptions {
+    pub project_path: String,
+    pub spec_ids: Vec<String>,
+    pub prompt: Option<String>,
+    pub runner: Option<String>,
+    pub mode: SessionMode,
+    pub model_override: Option<String>,
+    pub protocol_override: Option<RunnerProtocol>,
+}
+
 /// Build a context prompt for the AI runner by loading spec content and combining
 /// it with the user's explicit prompt. Returns `None` if there is neither spec
 /// content nor an explicit prompt.
@@ -165,21 +176,32 @@ impl SessionManager {
         runner: Option<String>,
         mode: SessionMode,
     ) -> CoreResult<Session> {
-        self.create_session_with_options(project_path, spec_ids, prompt, runner, mode, None, None)
-            .await
+        self.create_session_with_options(CreateSessionOptions {
+            project_path,
+            spec_ids,
+            prompt,
+            runner,
+            mode,
+            model_override: None,
+            protocol_override: None,
+        })
+        .await
     }
 
     /// Create a new session with execution overrides (does not start it)
     pub async fn create_session_with_options(
         &self,
-        project_path: String,
-        spec_ids: Vec<String>,
-        prompt: Option<String>,
-        runner: Option<String>,
-        mode: SessionMode,
-        model_override: Option<String>,
-        protocol_override: Option<RunnerProtocol>,
+        options: CreateSessionOptions,
     ) -> CoreResult<Session> {
+        let CreateSessionOptions {
+            project_path,
+            spec_ids,
+            prompt,
+            runner,
+            mode,
+            model_override,
+            protocol_override,
+        } = options;
         let registry = RunnerRegistry::load(PathBuf::from(&project_path).as_path())?;
 
         let runner_id = match runner {
@@ -1563,15 +1585,15 @@ mod tests {
         let manager = SessionManager::new(db);
 
         let session = manager
-            .create_session_with_options(
-                "/test/project".to_string(),
-                vec![],
-                Some("run it".to_string()),
-                Some("copilot".to_string()),
-                SessionMode::Autonomous,
-                Some("gpt-5".to_string()),
-                Some(RunnerProtocol::Acp),
-            )
+            .create_session_with_options(CreateSessionOptions {
+                project_path: "/test/project".to_string(),
+                spec_ids: vec![],
+                prompt: Some("run it".to_string()),
+                runner: Some("copilot".to_string()),
+                mode: SessionMode::Autonomous,
+                model_override: Some("gpt-5".to_string()),
+                protocol_override: Some(RunnerProtocol::Acp),
+            })
             .await
             .unwrap();
 

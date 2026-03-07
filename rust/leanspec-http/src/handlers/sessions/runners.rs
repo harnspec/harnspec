@@ -109,6 +109,7 @@ pub async fn create_runner(
             detection: None,
             symlink_file: None,
             prompt_flag: None,
+            protocol: None,
         },
     );
 
@@ -165,6 +166,7 @@ pub async fn update_runner(
             detection: None,
             symlink_file: None,
             prompt_flag: None,
+            protocol: None,
         },
     );
 
@@ -224,6 +226,7 @@ pub async fn patch_runner(
             detection: existing.detection,
             symlink_file: existing.symlink_file,
             prompt_flag: existing.prompt_flag,
+            protocol: existing.protocol,
         },
     );
 
