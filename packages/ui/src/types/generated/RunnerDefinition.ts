@@ -13,4 +13,8 @@ model_providers: Array<string> | null, detection: DetectionConfig | null, symlin
  * - `Some("-")` — suppress prompt injection (runner doesn't accept a prompt arg).
  * - `None` — append the prompt as a positional argument.
  */
-prompt_flag: string | null, };
+prompt_flag: string | null, 
+/**
+ * Optional execution protocol override (`acp` or `shell`). Defaults to shell.
+ */
+protocol: string | null, };

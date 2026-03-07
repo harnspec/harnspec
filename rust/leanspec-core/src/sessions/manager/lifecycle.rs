@@ -1551,6 +1551,38 @@ mod tests {
         assert_eq!(session.spec_ids, vec!["spec-001".to_string()]);
         assert_eq!(session.runner, "claude");
         assert!(matches!(session.status, SessionStatus::Pending));
+        assert_eq!(
+            session.metadata.get("protocol").map(String::as_str),
+            Some("shell")
+        );
+    }
+
+    #[tokio::test]
+    async fn test_create_session_with_acp_override() {
+        let db = SessionDatabase::new_in_memory().unwrap();
+        let manager = SessionManager::new(db);
+
+        let session = manager
+            .create_session_with_options(
+                "/test/project".to_string(),
+                vec![],
+                Some("run it".to_string()),
+                Some("copilot".to_string()),
+                SessionMode::Autonomous,
+                Some("gpt-5".to_string()),
+                Some(RunnerProtocol::Acp),
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(
+            session.metadata.get("protocol").map(String::as_str),
+            Some("acp")
+        );
+        assert_eq!(
+            session.metadata.get("model").map(String::as_str),
+            Some("gpt-5")
+        );
     }
 
     #[tokio::test]

@@ -37,7 +37,6 @@ pub struct RunnerConfig {
     /// `prompt_flag` to `"-"` to suppress prompt injection entirely.
     #[serde(default)]
     pub prompt_flag: Option<String>,
-    protocol: None,
     /// Optional execution protocol override. Defaults to shell when omitted.
     #[serde(default)]
     pub protocol: Option<String>,
@@ -71,7 +70,6 @@ pub struct RunnerDefinition {
     /// - `Some("-")` — suppress prompt injection (runner doesn't accept a prompt arg).
     /// - `None` — append the prompt as a positional argument.
     pub prompt_flag: Option<String>,
-    protocol: None,
     /// Optional execution protocol override (`acp` or `shell`). Defaults to shell.
     pub protocol: Option<String>,
 }
@@ -225,7 +223,7 @@ impl RunnerDefinition {
         }
 
         match self.protocol.as_deref() {
-            Some(value) => value.parse(),
+            Some(value) => value.parse::<RunnerProtocol>(),
             None => Ok(RunnerProtocol::Shell),
         }
     }
@@ -1311,6 +1309,99 @@ mod tests {
         let merged = merge_runner(base, override_config);
         assert_eq!(merged.command, Some("claude".to_string()));
         assert_eq!(merged.args, vec!["--model", "sonnet"]);
+    }
+
+    #[test]
+    fn test_resolve_protocol_defaults_to_shell() {
+        let runner = RunnerDefinition {
+            id: "test".to_string(),
+            name: None,
+            command: Some("echo".to_string()),
+            args: Vec::new(),
+            env: HashMap::new(),
+            model: None,
+            model_providers: None,
+            detection: None,
+            symlink_file: None,
+            prompt_flag: None,
+            protocol: None,
+        };
+
+        assert_eq!(
+            runner.resolve_protocol(None).expect("protocol"),
+            RunnerProtocol::Shell
+        );
+    }
+
+    #[test]
+    fn test_resolve_protocol_uses_configured_acp() {
+        let runner = RunnerDefinition {
+            id: "test".to_string(),
+            name: None,
+            command: Some("echo".to_string()),
+            args: Vec::new(),
+            env: HashMap::new(),
+            model: None,
+            model_providers: None,
+            detection: None,
+            symlink_file: None,
+            prompt_flag: None,
+            protocol: Some("acp".to_string()),
+        };
+
+        assert_eq!(
+            runner.resolve_protocol(None).expect("protocol"),
+            RunnerProtocol::Acp
+        );
+    }
+
+    #[test]
+    fn test_command_preview_includes_prompt_and_runner_args() {
+        let runner = RunnerDefinition {
+            id: "copilot".to_string(),
+            name: None,
+            command: Some("copilot".to_string()),
+            args: vec!["--allow-all".to_string()],
+            env: HashMap::new(),
+            model: None,
+            model_providers: Some(vec!["github-copilot".to_string()]),
+            detection: None,
+            symlink_file: None,
+            prompt_flag: Some("--prompt".to_string()),
+            protocol: None,
+        };
+        let config = SessionConfig {
+            prompt: Some("ship it".to_string()),
+            runner_args: vec!["--model".to_string(), "gpt-5".to_string()],
+            ..SessionConfig::default()
+        };
+
+        assert_eq!(
+            runner.command_preview(&config),
+            "copilot --allow-all --model gpt-5 --prompt 'ship it'"
+        );
+    }
+
+    #[test]
+    fn test_build_model_args_supports_common_runners() {
+        let runner = RunnerDefinition {
+            id: "codex".to_string(),
+            name: None,
+            command: Some("codex".to_string()),
+            args: Vec::new(),
+            env: HashMap::new(),
+            model: None,
+            model_providers: Some(vec!["openai".to_string()]),
+            detection: None,
+            symlink_file: None,
+            prompt_flag: None,
+            protocol: None,
+        };
+
+        assert_eq!(
+            runner.build_model_args("gpt-5").expect("model args"),
+            vec!["-m".to_string(), "gpt-5".to_string()]
+        );
     }
 
     #[test]

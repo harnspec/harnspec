@@ -237,6 +237,145 @@ fn test_session_run_creates_and_completes_with_spec() {
     );
 }
 
+#[test]
+fn test_run_command_completes_with_default_runner() {
+    let ctx = TestContext::new();
+    let cwd = ctx.path();
+    let home = isolated_home();
+
+    init_project(cwd, true);
+    write_test_runner(cwd, "test-echo");
+
+    let result = run_direct(
+        cwd,
+        home.path(),
+        None,
+        &[],
+        Some("ship it"),
+        None,
+        false,
+        false,
+    );
+    assert!(
+        result.success,
+        "run command should succeed\nstdout: {}\nstderr: {}",
+        result.stdout, result.stderr
+    );
+    assert!(
+        result.stdout.contains("Created session"),
+        "{}",
+        result.stdout
+    );
+    assert!(result.stdout.contains("completed"), "{}", result.stdout);
+}
+
+#[test]
+fn test_run_command_dry_run_prints_composed_command_with_model_override() {
+    let ctx = TestContext::new();
+    let cwd = ctx.path();
+    let home = isolated_home();
+
+    init_project(cwd, true);
+    write_runners_json(
+        cwd,
+        r#"{
+  "$schema": "https://leanspec.dev/schemas/runners.json",
+  "runners": {
+    "copilot": {
+      "command": "echo"
+    }
+  },
+  "default": "copilot"
+}"#,
+    );
+
+    let result = run_direct(
+        cwd,
+        home.path(),
+        Some("copilot"),
+        &[],
+        Some("ship it"),
+        Some("gpt-5"),
+        true,
+        false,
+    );
+    assert!(result.success, "{}", result.stderr);
+    assert!(
+        result.stdout.contains("Protocol: shell"),
+        "{}",
+        result.stdout
+    );
+    assert!(
+        result
+            .stdout
+            .contains("Command: echo --allow-all --model gpt-5 --prompt 'ship it'"),
+        "{}",
+        result.stdout
+    );
+}
+
+#[test]
+fn test_run_command_with_spec_dry_run_uses_spec_context_prompt() {
+    let ctx = TestContext::new();
+    let cwd = ctx.path();
+    let home = isolated_home();
+
+    init_project(cwd, true);
+    write_test_runner(cwd, "test-echo");
+    create_spec(cwd, "runner-context");
+
+    let result = run_direct(cwd, home.path(), None, &["001"], None, None, true, false);
+    assert!(result.success, "{}", result.stderr);
+    assert!(result.stdout.contains("Specs: 001"), "{}", result.stdout);
+    assert!(
+        result.stdout.contains("Implement the following specs:")
+            && result.stdout.contains("# Runner Context"),
+        "{}",
+        result.stdout
+    );
+}
+
+#[test]
+fn test_run_command_acp_dry_run_forces_acp_protocol() {
+    let ctx = TestContext::new();
+    let cwd = ctx.path();
+    let home = isolated_home();
+
+    init_project(cwd, true);
+    write_runners_json(
+        cwd,
+        r#"{
+  "$schema": "https://leanspec.dev/schemas/runners.json",
+  "runners": {
+    "copilot": {
+      "command": "echo"
+    }
+  },
+  "default": "copilot"
+}"#,
+    );
+
+    let result = run_direct(
+        cwd,
+        home.path(),
+        Some("copilot"),
+        &[],
+        Some("ship it"),
+        Some("gpt-5"),
+        true,
+        true,
+    );
+    assert!(result.success, "{}", result.stderr);
+    assert!(result.stdout.contains("Protocol: acp"), "{}", result.stdout);
+    assert!(
+        result
+            .stdout
+            .contains("Command: echo --allow-all --acp --model gpt-5"),
+        "{}",
+        result.stdout
+    );
+}
+
 // ─── session delete ───────────────────────────────────────────────────────────
 
 #[test]

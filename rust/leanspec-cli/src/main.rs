@@ -140,6 +140,29 @@ fn main() -> ExitCode {
             },
         ),
         Commands::Skill { action } => commands::skill::run(&action),
+        Commands::Run {
+            prompt,
+            spec,
+            runner,
+            model,
+            dry_run,
+            acp,
+        } => {
+            let project_path = std::env::current_dir()
+                .map_err(|e| Box::<dyn std::error::Error>::from(e.to_string()))
+                .and_then(|path| {
+                    commands::session::run_direct(
+                        path.to_string_lossy().into_owned(),
+                        spec,
+                        prompt,
+                        runner,
+                        model,
+                        dry_run,
+                        acp,
+                    )
+                });
+            project_path
+        }
         Commands::List {
             status,
             tag,
@@ -271,12 +294,16 @@ fn main() -> ExitCode {
                     spec,
                     prompt,
                     runner,
+                    model,
+                    acp,
                     mode,
                 } => Cmd::Create {
                     project_path,
                     specs: spec,
                     prompt,
                     runner,
+                    model,
+                    acp,
                     mode,
                 },
                 SessionSubcommand::Run {
@@ -284,12 +311,16 @@ fn main() -> ExitCode {
                     spec,
                     prompt,
                     runner,
+                    model,
+                    acp,
                     mode,
                 } => Cmd::Run {
                     project_path,
                     specs: spec,
                     prompt,
                     runner,
+                    model,
+                    acp,
                     mode,
                 },
                 SessionSubcommand::Start { session_id } => Cmd::Start { session_id },

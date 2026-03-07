@@ -1,5 +1,5 @@
 ---
-status: in-progress
+status: complete
 created: 2026-03-06
 priority: high
 tags:
@@ -9,10 +9,13 @@ tags:
 - shell-execution
 - ux
 created_at: 2026-03-06T14:44:05.798717Z
-updated_at: 2026-03-07T02:29:28.762655Z
+updated_at: 2026-03-07T02:46:12.579293Z
+completed_at: 2026-03-07T02:46:12.579293Z
 transitions:
 - status: in-progress
   at: 2026-03-07T02:29:28.762655Z
+- status: complete
+  at: 2026-03-07T02:46:12.579293Z
 ---
 
 # Shell-Based Runner Session Execution
@@ -121,15 +124,15 @@ Extend the existing `infer_runner_protocol()` to support a `shell` protocol:
 
 ## Requirements
 
-- [ ] `lean-spec run` CLI command with `-p` flag for inline prompts
-- [ ] `--runner` flag to select runner (falls back to default)
-- [ ] `--spec` flag to attach spec context (uses `build_context_prompt`)
-- [ ] `--dry-run` flag to display composed command without executing
-- [ ] Shell execution uses `prompt_flag` from runner definition
-- [ ] stdout/stderr captured and stored as session logs
-- [ ] Session lifecycle tracked (created → running → completed/failed)
-- [ ] Exit code determines session status (0 = completed, non-zero = failed)
-- [ ] Model override via `--model` flag passed to runner if supported
+- [x] `lean-spec run` CLI command with `-p` flag for inline prompts
+- [x] `--runner` flag to select runner (falls back to default)
+- [x] `--spec` flag to attach spec context (uses `build_context_prompt`)
+- [x] `--dry-run` flag to display composed command without executing
+- [x] Shell execution uses `prompt_flag` from runner definition
+- [x] stdout/stderr captured and stored as session logs
+- [x] Session lifecycle tracked (created → running → completed/failed)
+- [x] Exit code determines session status (0 = completed, non-zero = failed)
+- [x] Model override via `--model` flag passed to runner if supported
 
 ## Non-Goals
 
@@ -154,10 +157,26 @@ Extend the existing `infer_runner_protocol()` to support a `shell` protocol:
 
 ## Acceptance Criteria
 
-- [ ] `lean-spec run -p "prompt"` executes the default runner with the given prompt
-- [ ] `lean-spec run --runner copilot -p "prompt"` uses the specified runner
-- [ ] `lean-spec run --spec 337` resolves spec content as the prompt
-- [ ] `lean-spec run --dry-run` prints the composed command without executing
-- [ ] Session is created and tracked in the database with correct status
-- [ ] Runner output (stdout/stderr) is captured in session logs
-- [ ] Works with all built-in runners (copilot, claude, gemini, codex, opencode)
+- [x] `lean-spec run -p "prompt"` executes the default runner with the given prompt
+- [x] `lean-spec run --runner copilot -p "prompt"` uses the specified runner
+- [x] `lean-spec run --spec 337` resolves spec content as the prompt
+- [x] `lean-spec run --dry-run` prints the composed command without executing
+- [x] Session is created and tracked in the database with correct status
+- [x] Runner output (stdout/stderr) is captured in session logs
+- [x] Works with all built-in runners (copilot, claude, gemini, codex, opencode)
+
+## Progress Verification - 2026-03-07
+
+Verified against implementation and test execution.
+
+Completed:
+- Added top-level `lean-spec run` with `-p`, `--runner`, `--spec`, `--dry-run`, `--model`, and `--acp` support.
+- Default runner sessions now resolve to shell protocol unless a runner or invocation explicitly selects ACP.
+- Dry-run prints the composed command using runner `prompt_flag` and model override handling.
+- Session creation persists selected protocol/model metadata and execution continues to capture stdout/stderr logs with exit-code-based status.
+- Added Rust unit/integration coverage for protocol resolution, command previewing, model arg injection, top-level run flows, dry-run output, and spec-context prompts.
+
+Validation:
+- `cargo test --manifest-path rust/Cargo.toml -p leanspec-core --features 'sessions storage' --quiet`
+- `cargo test --manifest-path rust/Cargo.toml -p leanspec-cli --test session --quiet`
+- `pnpm typecheck`

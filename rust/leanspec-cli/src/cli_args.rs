@@ -277,6 +277,33 @@ pub(crate) enum Commands {
         action: String,
     },
 
+    /// Run a configured runner from the current project
+    Run {
+        /// Inline prompt to send to the runner
+        #[arg(short = 'p', long)]
+        prompt: Option<String>,
+
+        /// Spec IDs to attach as context (repeatable: --spec 028 --spec 320)
+        #[arg(long, action = clap::ArgAction::Append)]
+        spec: Vec<String>,
+
+        /// Runner ID to use (defaults to configured default runner)
+        #[arg(long)]
+        runner: Option<String>,
+
+        /// Override the runner model if supported
+        #[arg(long)]
+        model: Option<String>,
+
+        /// Show the composed command without executing it
+        #[arg(long)]
+        dry_run: bool,
+
+        /// Force ACP protocol for this invocation
+        #[arg(long)]
+        acp: bool,
+    },
+
     /// List all specs with optional filtering
     List {
         /// Filter by status: draft, planned, in-progress, complete, archived
@@ -587,6 +614,12 @@ pub(crate) enum SessionSubcommand {
         #[arg(long)]
         runner: Option<String>,
 
+        #[arg(long)]
+        model: Option<String>,
+
+        #[arg(long)]
+        acp: bool,
+
         #[arg(long, default_value = "autonomous")]
         mode: String,
     },
@@ -604,6 +637,12 @@ pub(crate) enum SessionSubcommand {
 
         #[arg(long)]
         runner: Option<String>,
+
+        #[arg(long)]
+        model: Option<String>,
+
+        #[arg(long)]
+        acp: bool,
 
         #[arg(long, default_value = "autonomous")]
         mode: String,

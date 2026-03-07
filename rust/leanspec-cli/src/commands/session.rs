@@ -1,8 +1,10 @@
 use colored::Colorize;
 use leanspec_core::sessions::{
-    ArchiveOptions, SessionDatabase, SessionManager, SessionMode, SessionStatus,
+    manager::build_context_prompt, ArchiveOptions, RunnerProtocol, RunnerRegistry, SessionConfig,
+    SessionDatabase, SessionManager, SessionMode, SessionStatus,
 };
 use leanspec_core::storage::config::config_dir;
+use std::collections::HashMap;
 use std::error::Error;
 use std::time::Duration;
 
@@ -58,15 +60,19 @@ pub fn run(command: SessionCommand) -> Result<(), Box<dyn Error>> {
             specs,
             prompt,
             runner,
+            model,
+            acp,
             mode,
-        } => create_session(project_path, specs, prompt, runner, mode, false),
+        } => create_session(project_path, specs, prompt, runner, model, acp, mode, false),
         SessionCommand::Run {
             project_path,
             specs,
             prompt,
             runner,
+            model,
+            acp,
             mode,
-        } => create_session(project_path, specs, prompt, runner, mode, true),
+        } => create_session(project_path, specs, prompt, runner, model, acp, mode, true),
         SessionCommand::Start { session_id } => start_session(&session_id),
         SessionCommand::Pause { session_id } => pause_session(&session_id),
         SessionCommand::Resume { session_id } => resume_session(&session_id),
@@ -94,6 +100,8 @@ pub enum SessionCommand {
         specs: Vec<String>,
         prompt: Option<String>,
         runner: Option<String>,
+        model: Option<String>,
+        acp: bool,
         mode: String,
     },
     Run {
@@ -101,6 +109,8 @@ pub enum SessionCommand {
         specs: Vec<String>,
         prompt: Option<String>,
         runner: Option<String>,
+        model: Option<String>,
+        acp: bool,
         mode: String,
     },
     Start {
@@ -145,6 +155,8 @@ fn create_session(
     specs: Vec<String>,
     prompt: Option<String>,
     runner: Option<String>,
+    model: Option<String>,
+    acp: bool,
     mode: String,
     start: bool,
 ) -> Result<(), Box<dyn Error>> {
@@ -155,7 +167,15 @@ fn create_session(
         let manager = build_manager()?;
         let mode = parse_mode(&mode)?;
         let session = manager
-            .create_session(project_path, specs, prompt, runner, mode)
+            .create_session_with_options(
+                project_path,
+                specs,
+                prompt,
+                runner,
+                mode,
+                model,
+                acp.then_some(RunnerProtocol::Acp),
+            )
             .await
             .map_err(|e| Box::<dyn Error>::from(e.to_string()))?;
 
@@ -172,6 +192,110 @@ fn create_session(
 
         Ok(())
     })
+}
+
+pub fn run_direct(
+    project_path: String,
+    specs: Vec<String>,
+    prompt: Option<String>,
+    runner: Option<String>,
+    model: Option<String>,
+    dry_run: bool,
+    acp: bool,
+) -> Result<(), Box<dyn Error>> {
+    if prompt
+        .as_deref()
+        .is_none_or(|value| value.trim().is_empty())
+        && specs.is_empty()
+    {
+        return Err(Box::<dyn Error>::from(
+            "Provide a prompt with -p/--prompt or attach at least one --spec",
+        ));
+    }
+
+    if dry_run {
+        return print_dry_run_command(project_path, specs, prompt, runner, model, acp);
+    }
+
+    create_session(
+        project_path,
+        specs,
+        prompt,
+        runner,
+        model,
+        acp,
+        "autonomous".to_string(),
+        true,
+    )
+}
+
+fn print_dry_run_command(
+    project_path: String,
+    specs: Vec<String>,
+    prompt: Option<String>,
+    runner: Option<String>,
+    model: Option<String>,
+    acp: bool,
+) -> Result<(), Box<dyn Error>> {
+    let project_path_buf = std::path::PathBuf::from(&project_path);
+    let registry = RunnerRegistry::load(project_path_buf.as_path())
+        .map_err(|e| Box::<dyn Error>::from(e.to_string()))?;
+    let runner_id = match runner {
+        Some(value) if !value.trim().is_empty() => value,
+        _ => registry
+            .default()
+            .map(|value| value.to_string())
+            .ok_or_else(|| Box::<dyn Error>::from("No default runner configured"))?,
+    };
+    let runner_definition = registry
+        .get(&runner_id)
+        .ok_or_else(|| Box::<dyn Error>::from(format!("Unknown runner: {}", runner_id)))?;
+    let protocol = runner_definition
+        .resolve_protocol(acp.then_some(RunnerProtocol::Acp))
+        .map_err(|e| Box::<dyn Error>::from(e.to_string()))?;
+    let resolved_prompt = build_context_prompt(&project_path, &specs, prompt.as_deref());
+    let mut runner_args = if protocol == RunnerProtocol::Acp {
+        vec!["--acp".to_string()]
+    } else {
+        Vec::new()
+    };
+    let selected_model = model
+        .filter(|value| !value.trim().is_empty())
+        .or_else(|| runner_definition.model.clone());
+    if let Some(model) = selected_model {
+        runner_args.extend(
+            runner_definition
+                .build_model_args(&model)
+                .map_err(|e| Box::<dyn Error>::from(e.to_string()))?,
+        );
+    }
+    let config = SessionConfig {
+        project_path: project_path.clone(),
+        spec_ids: specs.clone(),
+        prompt: if protocol == RunnerProtocol::Acp {
+            None
+        } else {
+            resolved_prompt.clone()
+        },
+        runner: runner_id.clone(),
+        mode: SessionMode::Autonomous,
+        max_iterations: None,
+        working_dir: Some(project_path.clone()),
+        env_vars: HashMap::new(),
+        runner_args,
+    };
+
+    println!("{}", "Dry run".bold());
+    println!("  Runner: {}", runner_id);
+    println!("  Protocol: {}", protocol);
+    if !specs.is_empty() {
+        println!("  Specs: {}", specs.join(", "));
+    }
+    if let Some(prompt) = resolved_prompt {
+        println!("  Prompt: {}", prompt);
+    }
+    println!("  Command: {}", runner_definition.command_preview(&config));
+    Ok(())
 }
 
 fn start_session(session_id: &str) -> Result<(), Box<dyn Error>> {

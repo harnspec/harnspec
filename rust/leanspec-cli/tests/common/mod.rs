@@ -252,6 +252,13 @@ pub fn write_test_runner(cwd: &Path, runner_id: &str) {
         .expect("Failed to write runners.json");
 }
 
+/// Write raw runners.json content into the project's .lean-spec directory.
+pub fn write_runners_json(cwd: &Path, content: &str) {
+    let lean_spec_dir = cwd.join(".lean-spec");
+    fs::create_dir_all(&lean_spec_dir).expect("Failed to create .lean-spec dir");
+    fs::write(lean_spec_dir.join("runners.json"), content).expect("Failed to write runners.json");
+}
+
 /// Create a session via the CLI; returns the ExecResult
 pub fn session_create(
     cwd: &Path,
@@ -292,6 +299,39 @@ pub fn session_run(
     }
     if let Some(p) = prompt {
         args.extend_from_slice(&["--prompt", p]);
+    }
+    exec_cli_env(&args, cwd, &[("HOME", home.to_str().unwrap())])
+}
+
+/// Run a runner directly via the top-level `lean-spec run` command.
+pub fn run_direct(
+    cwd: &Path,
+    home: &Path,
+    runner: Option<&str>,
+    specs: &[&str],
+    prompt: Option<&str>,
+    model: Option<&str>,
+    dry_run: bool,
+    acp: bool,
+) -> ExecResult {
+    let mut args = vec!["run"];
+    if let Some(r) = runner {
+        args.extend_from_slice(&["--runner", r]);
+    }
+    for spec in specs {
+        args.extend_from_slice(&["--spec", spec]);
+    }
+    if let Some(p) = prompt {
+        args.extend_from_slice(&["-p", p]);
+    }
+    if let Some(model) = model {
+        args.extend_from_slice(&["--model", model]);
+    }
+    if dry_run {
+        args.push("--dry-run");
+    }
+    if acp {
+        args.push("--acp");
     }
     exec_cli_env(&args, cwd, &[("HOME", home.to_str().unwrap())])
 }
