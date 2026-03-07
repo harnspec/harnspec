@@ -59,6 +59,7 @@ GEMINI.md
 
 # Sessions
 .leanspec/sessions/
+.leanspec-worktrees/
 
 # Aider
 .aider*

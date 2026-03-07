@@ -11,6 +11,7 @@
 use assert_cmd::cargo::cargo_bin_cmd;
 use std::fs;
 use std::path::Path;
+use std::process::Command;
 use tempfile::TempDir;
 
 /// Test context with temporary directory management
@@ -259,6 +260,28 @@ pub fn write_runners_json(cwd: &Path, content: &str) {
     fs::write(lean_spec_dir.join("runners.json"), content).expect("Failed to write runners.json");
 }
 
+pub fn init_git_repo(cwd: &Path) {
+    run_git(cwd, &["init"]);
+    run_git(cwd, &["config", "user.email", "leanspec-tests@example.com"]);
+    run_git(cwd, &["config", "user.name", "LeanSpec Tests"]);
+    run_git(cwd, &["add", "."]);
+    run_git(cwd, &["commit", "-m", "initial"]);
+}
+
+pub fn commit_all(cwd: &Path, message: &str) {
+    run_git(cwd, &["add", "."]);
+    run_git(cwd, &["commit", "-m", message]);
+}
+
+fn run_git(cwd: &Path, args: &[&str]) {
+    let status = Command::new("git")
+        .args(args)
+        .current_dir(cwd)
+        .status()
+        .expect("Failed to execute git command");
+    assert!(status.success(), "git {:?} failed", args);
+}
+
 /// Create a session via the CLI; returns the ExecResult
 pub fn session_create(
     cwd: &Path,
@@ -267,6 +290,7 @@ pub fn session_create(
     runner: Option<&str>,
     specs: &[&str],
     prompt: Option<&str>,
+    worktree: bool,
 ) -> ExecResult {
     let mut args = vec!["session", "create", "--project-path", project_path];
     if let Some(r) = runner {
@@ -277,6 +301,9 @@ pub fn session_create(
     }
     if let Some(p) = prompt {
         args.extend_from_slice(&["--prompt", p]);
+    }
+    if worktree {
+        args.push("--worktree");
     }
     exec_cli_env(&args, cwd, &[("HOME", home.to_str().unwrap())])
 }
@@ -289,6 +316,8 @@ pub fn session_run(
     runner: Option<&str>,
     specs: &[&str],
     prompt: Option<&str>,
+    worktree: bool,
+    parallel: bool,
 ) -> ExecResult {
     let mut args = vec!["session", "run", "--project-path", project_path];
     if let Some(r) = runner {
@@ -299,6 +328,12 @@ pub fn session_run(
     }
     if let Some(p) = prompt {
         args.extend_from_slice(&["--prompt", p]);
+    }
+    if worktree {
+        args.push("--worktree");
+    }
+    if parallel {
+        args.push("--parallel");
     }
     exec_cli_env(&args, cwd, &[("HOME", home.to_str().unwrap())])
 }
@@ -313,6 +348,8 @@ pub fn run_direct(
     model: Option<&str>,
     dry_run: bool,
     acp: bool,
+    worktree: bool,
+    parallel: bool,
 ) -> ExecResult {
     let mut args = vec!["run"];
     if let Some(r) = runner {
@@ -333,7 +370,37 @@ pub fn run_direct(
     if acp {
         args.push("--acp");
     }
+    if worktree {
+        args.push("--worktree");
+    }
+    if parallel {
+        args.push("--parallel");
+    }
     exec_cli_env(&args, cwd, &[("HOME", home.to_str().unwrap())])
+}
+
+pub fn session_worktrees(cwd: &Path, home: &Path) -> ExecResult {
+    exec_cli_env(
+        &["session", "worktrees"],
+        cwd,
+        &[("HOME", home.to_str().unwrap())],
+    )
+}
+
+pub fn session_merge(cwd: &Path, home: &Path, session_id: &str) -> ExecResult {
+    exec_cli_env(
+        &["session", "merge", session_id],
+        cwd,
+        &[("HOME", home.to_str().unwrap())],
+    )
+}
+
+pub fn session_cleanup(cwd: &Path, home: &Path, session_id: &str) -> ExecResult {
+    exec_cli_env(
+        &["session", "cleanup", session_id],
+        cwd,
+        &[("HOME", home.to_str().unwrap())],
+    )
 }
 
 /// List sessions via the CLI

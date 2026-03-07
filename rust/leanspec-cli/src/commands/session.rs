@@ -1,11 +1,14 @@
 use colored::Colorize;
 use leanspec_core::sessions::{
-    manager::build_context_prompt, ArchiveOptions, CreateSessionOptions, RunnerProtocol,
-    RunnerRegistry, SessionConfig, SessionDatabase, SessionManager, SessionMode, SessionStatus,
+    manager::build_context_prompt, worktree_enabled, ArchiveOptions, CreateSessionOptions,
+    GitWorktreeManager, MergeStrategy, RunnerProtocol, RunnerRegistry, SessionConfig,
+    SessionDatabase, SessionManager, SessionMode, SessionStatus, WorktreeStatus,
+    WORKTREE_CLEANED_AT_KEY, WORKTREE_CONFLICT_FILES_KEY, WORKTREE_STATUS_KEY,
 };
 use leanspec_core::storage::config::config_dir;
 use std::collections::HashMap;
 use std::error::Error;
+use std::path::PathBuf;
 use std::time::Duration;
 
 fn build_manager() -> Result<SessionManager, Box<dyn Error>> {
@@ -62,6 +65,8 @@ pub fn run(command: SessionCommand) -> Result<(), Box<dyn Error>> {
             runner,
             model,
             acp,
+            worktree,
+            merge_strategy,
             mode,
         } => create_session(CreateSessionRequest {
             project_path,
@@ -70,6 +75,9 @@ pub fn run(command: SessionCommand) -> Result<(), Box<dyn Error>> {
             runner,
             model,
             acp,
+            worktree,
+            parallel: false,
+            merge_strategy,
             mode,
             start: false,
         }),
@@ -80,6 +88,9 @@ pub fn run(command: SessionCommand) -> Result<(), Box<dyn Error>> {
             runner,
             model,
             acp,
+            worktree,
+            parallel,
+            merge_strategy,
             mode,
         } => create_session(CreateSessionRequest {
             project_path,
@@ -88,6 +99,9 @@ pub fn run(command: SessionCommand) -> Result<(), Box<dyn Error>> {
             runner,
             model,
             acp,
+            worktree,
+            parallel,
+            merge_strategy,
             mode,
             start: true,
         }),
@@ -109,6 +123,17 @@ pub fn run(command: SessionCommand) -> Result<(), Box<dyn Error>> {
             runner,
         } => list_sessions(spec, status, runner),
         SessionCommand::Logs { session_id } => show_logs(&session_id),
+        SessionCommand::Worktrees { all } => list_worktrees(all),
+        SessionCommand::Merge {
+            session_id,
+            strategy,
+            resolve,
+        } => merge_session_worktree(&session_id, strategy, resolve),
+        SessionCommand::Cleanup {
+            session_id,
+            keep_branch,
+        } => cleanup_session_worktree(&session_id, keep_branch),
+        SessionCommand::Gc => gc_worktrees(),
     }
 }
 
@@ -120,6 +145,8 @@ pub enum SessionCommand {
         runner: Option<String>,
         model: Option<String>,
         acp: bool,
+        worktree: bool,
+        merge_strategy: Option<String>,
         mode: String,
     },
     Run {
@@ -129,6 +156,9 @@ pub enum SessionCommand {
         runner: Option<String>,
         model: Option<String>,
         acp: bool,
+        worktree: bool,
+        parallel: bool,
+        merge_strategy: Option<String>,
         mode: String,
     },
     Start {
@@ -166,6 +196,19 @@ pub enum SessionCommand {
     Logs {
         session_id: String,
     },
+    Worktrees {
+        all: bool,
+    },
+    Merge {
+        session_id: String,
+        strategy: Option<String>,
+        resolve: bool,
+    },
+    Cleanup {
+        session_id: String,
+        keep_branch: bool,
+    },
+    Gc,
 }
 
 struct CreateSessionRequest {
@@ -175,6 +218,9 @@ struct CreateSessionRequest {
     runner: Option<String>,
     model: Option<String>,
     acp: bool,
+    worktree: bool,
+    parallel: bool,
+    merge_strategy: Option<String>,
     mode: String,
     start: bool,
 }
@@ -187,6 +233,9 @@ fn create_session(request: CreateSessionRequest) -> Result<(), Box<dyn Error>> {
         runner,
         model,
         acp,
+        worktree,
+        parallel,
+        merge_strategy,
         mode,
         start,
     } = request;
@@ -196,6 +245,24 @@ fn create_session(request: CreateSessionRequest) -> Result<(), Box<dyn Error>> {
     rt.block_on(async move {
         let manager = build_manager()?;
         let mode = parse_mode(&mode)?;
+        let merge_strategy = parse_merge_strategy(merge_strategy)?;
+
+        if parallel {
+            return run_parallel_sessions(
+                manager,
+                project_path,
+                specs,
+                prompt,
+                runner,
+                model,
+                acp,
+                worktree,
+                merge_strategy,
+                mode,
+            )
+            .await;
+        }
+
         let session = manager
             .create_session_with_options(CreateSessionOptions {
                 project_path,
@@ -205,6 +272,9 @@ fn create_session(request: CreateSessionRequest) -> Result<(), Box<dyn Error>> {
                 mode,
                 model_override: model,
                 protocol_override: acp.then_some(RunnerProtocol::Acp),
+                use_worktree: worktree,
+                merge_strategy,
+                auto_merge_on_completion: worktree,
             })
             .await
             .map_err(|e| Box::<dyn Error>::from(e.to_string()))?;
@@ -232,6 +302,9 @@ pub fn run_direct(
     model: Option<String>,
     dry_run: bool,
     acp: bool,
+    worktree: bool,
+    parallel: bool,
+    merge_strategy: Option<String>,
 ) -> Result<(), Box<dyn Error>> {
     let missing_prompt = prompt
         .as_deref()
@@ -244,7 +317,17 @@ pub fn run_direct(
     }
 
     if dry_run {
-        return print_dry_run_command(project_path, specs, prompt, runner, model, acp);
+        return print_dry_run_command(
+            project_path,
+            specs,
+            prompt,
+            runner,
+            model,
+            acp,
+            worktree,
+            parallel,
+            merge_strategy,
+        );
     }
 
     create_session(CreateSessionRequest {
@@ -254,6 +337,9 @@ pub fn run_direct(
         runner,
         model,
         acp,
+        worktree,
+        parallel,
+        merge_strategy,
         mode: "autonomous".to_string(),
         start: true,
     })
@@ -266,6 +352,9 @@ fn print_dry_run_command(
     runner: Option<String>,
     model: Option<String>,
     acp: bool,
+    worktree: bool,
+    parallel: bool,
+    merge_strategy: Option<String>,
 ) -> Result<(), Box<dyn Error>> {
     let project_path_buf = std::path::PathBuf::from(&project_path);
     let registry = RunnerRegistry::load(project_path_buf.as_path())
@@ -318,6 +407,20 @@ fn print_dry_run_command(
     println!("{}", "Dry run".bold());
     println!("  Runner: {}", runner_id);
     println!("  Protocol: {}", protocol);
+    println!(
+        "  Worktree: {}",
+        if worktree || parallel {
+            "enabled"
+        } else {
+            "disabled"
+        }
+    );
+    if parallel {
+        println!("  Parallel: enabled");
+    }
+    if let Some(strategy) = merge_strategy {
+        println!("  Merge Strategy: {}", strategy);
+    }
     if !specs.is_empty() {
         println!("  Specs: {}", specs.join(", "));
     }
@@ -613,6 +716,341 @@ fn show_logs(session_id: &str) -> Result<(), Box<dyn Error>> {
 
         Ok(())
     })
+}
+
+fn parse_merge_strategy(value: Option<String>) -> Result<Option<MergeStrategy>, Box<dyn Error>> {
+    value
+        .map(|strategy| strategy.parse::<MergeStrategy>())
+        .transpose()
+        .map_err(|e| Box::<dyn Error>::from(e.to_string()))
+}
+
+async fn run_parallel_sessions(
+    manager: SessionManager,
+    project_path: String,
+    specs: Vec<String>,
+    prompt: Option<String>,
+    runner: Option<String>,
+    model: Option<String>,
+    acp: bool,
+    _worktree: bool,
+    merge_strategy: Option<MergeStrategy>,
+    mode: SessionMode,
+) -> Result<(), Box<dyn Error>> {
+    if specs.len() < 2 {
+        return Err(Box::<dyn Error>::from(
+            "Parallel execution requires at least two --spec values",
+        ));
+    }
+
+    if acp {
+        return Err(Box::<dyn Error>::from(
+            "Parallel worktree sessions do not support --acp yet",
+        ));
+    }
+
+    let mut sessions = Vec::new();
+    for spec_id in &specs {
+        let session = manager
+            .create_session_with_options(CreateSessionOptions {
+                project_path: project_path.clone(),
+                spec_ids: vec![spec_id.clone()],
+                prompt: prompt.clone(),
+                runner: runner.clone(),
+                mode,
+                model_override: model.clone(),
+                protocol_override: None,
+                use_worktree: true,
+                merge_strategy,
+                auto_merge_on_completion: false,
+            })
+            .await
+            .map_err(|e| Box::<dyn Error>::from(e.to_string()))?;
+        println!(
+            "{} Created session {} ({}) for spec {}",
+            "✓".green(),
+            session.id.bold(),
+            session.runner,
+            spec_id
+        );
+        sessions.push(session);
+    }
+
+    for session in &sessions {
+        start_only(&manager, &session.id).await?;
+    }
+
+    loop {
+        let mut remaining = 0usize;
+        for session in &sessions {
+            let current = manager
+                .get_session(&session.id)
+                .await
+                .map_err(|e| Box::<dyn Error>::from(e.to_string()))?
+                .ok_or_else(|| Box::<dyn Error>::from("Session not found"))?;
+            if !current.is_completed() {
+                remaining += 1;
+            }
+        }
+
+        if remaining == 0 {
+            break;
+        }
+
+        tokio::time::sleep(Duration::from_millis(500)).await;
+    }
+
+    let mut failures = Vec::new();
+    for session in &sessions {
+        let mut current = manager
+            .get_session(&session.id)
+            .await
+            .map_err(|e| Box::<dyn Error>::from(e.to_string()))?
+            .ok_or_else(|| Box::<dyn Error>::from("Session not found"))?;
+
+        if matches!(current.status, SessionStatus::Completed) && worktree_enabled(&current) {
+            merge_worktree_record(&manager, &mut current, merge_strategy, false, true).await?;
+            current = manager
+                .get_session(&session.id)
+                .await
+                .map_err(|e| Box::<dyn Error>::from(e.to_string()))?
+                .ok_or_else(|| Box::<dyn Error>::from("Session not found"))?;
+        }
+
+        println!(
+            "{} Session {} finished with status {:?}",
+            if matches!(current.status, SessionStatus::Completed) {
+                "✓".green()
+            } else {
+                "✗".red()
+            },
+            current.id.bold(),
+            current.status
+        );
+
+        if !matches!(current.status, SessionStatus::Completed) {
+            failures.push(current.id.clone());
+        }
+    }
+
+    if failures.is_empty() {
+        Ok(())
+    } else {
+        Err(Box::<dyn Error>::from(format!(
+            "One or more parallel sessions failed: {}",
+            failures.join(", ")
+        )))
+    }
+}
+
+fn list_worktrees(all: bool) -> Result<(), Box<dyn Error>> {
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()?;
+    rt.block_on(async move {
+        let manager = build_manager()?;
+        let sessions = manager
+            .list_sessions(None, None, None, None)
+            .await
+            .map_err(|e| Box::<dyn Error>::from(e.to_string()))?;
+
+        println!();
+        println!("{}", "Worktree Sessions".bold());
+        for session in sessions {
+            if !worktree_enabled(&session) {
+                continue;
+            }
+            let worktree_status = session
+                .metadata
+                .get(WORKTREE_STATUS_KEY)
+                .cloned()
+                .unwrap_or_else(|| "unknown".to_string());
+            if !all && matches!(worktree_status.as_str(), "merged" | "abandoned") {
+                continue;
+            }
+            let branch = session
+                .metadata
+                .get("worktree_branch")
+                .cloned()
+                .unwrap_or_else(|| "-".to_string());
+            println!(
+                "  {} {} • session={:?} • worktree={} • {}",
+                session.id.bold(),
+                session.runner,
+                session.status,
+                worktree_status,
+                branch
+            );
+        }
+        println!();
+        Ok(())
+    })
+}
+
+fn merge_session_worktree(
+    session_id: &str,
+    strategy: Option<String>,
+    resolve: bool,
+) -> Result<(), Box<dyn Error>> {
+    let session_id = session_id.to_string();
+    let strategy = parse_merge_strategy(strategy)?;
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()?;
+    rt.block_on(async move {
+        let manager = build_manager()?;
+        let mut session = manager
+            .get_session(&session_id)
+            .await
+            .map_err(|e| Box::<dyn Error>::from(e.to_string()))?
+            .ok_or_else(|| Box::<dyn Error>::from("Session not found"))?;
+
+        merge_worktree_record(&manager, &mut session, strategy, resolve, true).await
+    })
+}
+
+fn cleanup_session_worktree(session_id: &str, keep_branch: bool) -> Result<(), Box<dyn Error>> {
+    let session_id = session_id.to_string();
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()?;
+    rt.block_on(async move {
+        let manager = build_manager()?;
+        let mut session = manager
+            .get_session(&session_id)
+            .await
+            .map_err(|e| Box::<dyn Error>::from(e.to_string()))?
+            .ok_or_else(|| Box::<dyn Error>::from("Session not found"))?;
+        let worktree_manager = GitWorktreeManager::for_project(&session.project_path)
+            .map_err(|e| Box::<dyn Error>::from(e.to_string()))?;
+        worktree_manager
+            .cleanup_session(&session_id, keep_branch)
+            .map_err(|e| Box::<dyn Error>::from(e.to_string()))?;
+        session.metadata.insert(
+            WORKTREE_STATUS_KEY.to_string(),
+            WorktreeStatus::Abandoned.to_string(),
+        );
+        session.metadata.insert(
+            WORKTREE_CLEANED_AT_KEY.to_string(),
+            chrono::Utc::now().to_rfc3339(),
+        );
+        session.touch();
+        manager
+            .update_session(&session)
+            .await
+            .map_err(|e| Box::<dyn Error>::from(e.to_string()))?;
+        println!(
+            "{} Cleaned worktree for session {}",
+            "✓".green(),
+            session.id.bold()
+        );
+        Ok(())
+    })
+}
+
+fn gc_worktrees() -> Result<(), Box<dyn Error>> {
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()?;
+    rt.block_on(async move {
+        let manager = build_manager()?;
+        let sessions = manager
+            .list_sessions(None, None, None, None)
+            .await
+            .map_err(|e| Box::<dyn Error>::from(e.to_string()))?;
+        let mut projects = std::collections::BTreeSet::<PathBuf>::new();
+        for session in sessions {
+            if worktree_enabled(&session) {
+                projects.insert(PathBuf::from(session.project_path));
+            }
+        }
+
+        let mut pruned_entries = 0usize;
+        let mut removed_worktrees = 0usize;
+        let mut removed_branches = 0usize;
+        for project in projects {
+            let gc = GitWorktreeManager::for_project(&project)
+                .map_err(|e| Box::<dyn Error>::from(e.to_string()))?
+                .gc()
+                .map_err(|e| Box::<dyn Error>::from(e.to_string()))?;
+            pruned_entries += gc.pruned_entries;
+            removed_worktrees += gc.removed_worktrees;
+            removed_branches += gc.removed_branches;
+        }
+
+        println!(
+            "{} GC pruned {} registry entries, removed {} worktrees, removed {} branches",
+            "✓".green(),
+            pruned_entries,
+            removed_worktrees,
+            removed_branches
+        );
+        Ok(())
+    })
+}
+
+async fn merge_worktree_record(
+    manager: &SessionManager,
+    session: &mut leanspec_core::sessions::Session,
+    strategy: Option<MergeStrategy>,
+    resolve: bool,
+    cleanup_on_success: bool,
+) -> Result<(), Box<dyn Error>> {
+    let worktree_manager = GitWorktreeManager::for_project(&session.project_path)
+        .map_err(|e| Box::<dyn Error>::from(e.to_string()))?;
+    let outcome = worktree_manager
+        .merge_session(&session.id, strategy, resolve)
+        .map_err(|e| Box::<dyn Error>::from(e.to_string()))?;
+
+    session
+        .metadata
+        .insert(WORKTREE_STATUS_KEY.to_string(), outcome.status.to_string());
+    session.metadata.remove(WORKTREE_CONFLICT_FILES_KEY);
+
+    if !outcome.conflicted_files.is_empty() {
+        session.metadata.insert(
+            WORKTREE_CONFLICT_FILES_KEY.to_string(),
+            serde_json::to_string(&outcome.conflicted_files)
+                .map_err(|e| Box::<dyn Error>::from(e.to_string()))?,
+        );
+        session.status = SessionStatus::Failed;
+        println!(
+            "{} Merge conflict for session {}: {}",
+            "✗".red(),
+            session.id.bold(),
+            outcome.conflicted_files.join(", ")
+        );
+    } else if outcome.merged {
+        if cleanup_on_success {
+            worktree_manager
+                .cleanup_session(&session.id, false)
+                .map_err(|e| Box::<dyn Error>::from(e.to_string()))?;
+            session.metadata.insert(
+                WORKTREE_CLEANED_AT_KEY.to_string(),
+                chrono::Utc::now().to_rfc3339(),
+            );
+        }
+        println!(
+            "{} Merged session {} back into {}",
+            "✓".green(),
+            session.id.bold(),
+            outcome.base_branch
+        );
+    } else {
+        println!(
+            "{} Session {} is ready on branch {}",
+            "✓".green(),
+            session.id.bold(),
+            outcome.branch_name
+        );
+    }
+
+    session.touch();
+    manager
+        .update_session(session)
+        .await
+        .map_err(|e| Box::<dyn Error>::from(e.to_string()))?;
+    Ok(())
 }
 
 async fn start_and_wait(manager: SessionManager, session_id: &str) -> Result<(), Box<dyn Error>> {

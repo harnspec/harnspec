@@ -34,6 +34,7 @@ fn test_session_create_pending() {
         Some("test-echo"),
         &[],
         None,
+        false,
     );
     assert!(
         result.success,
@@ -72,6 +73,7 @@ fn test_session_create_with_spec_and_prompt() {
         Some("test-echo"),
         &["001"],
         Some("implement the feature"),
+        false,
     );
     assert!(
         result.success,
@@ -103,6 +105,7 @@ fn test_session_list_shows_created_session() {
         Some("test-echo"),
         &[],
         None,
+        false,
     );
     assert!(create_result.success, "create: {}", create_result.stderr);
     let session_id = parse_session_id(&create_result.stdout).expect("session ID");
@@ -140,6 +143,7 @@ fn test_session_view_details() {
         Some("test-echo"),
         &[],
         Some("hello world"),
+        false,
     );
     assert!(create_result.success, "{}", create_result.stderr);
     let session_id = parse_session_id(&create_result.stdout).expect("session ID");
@@ -185,6 +189,8 @@ fn test_session_run_completes() {
         Some("test-echo"),
         &[],
         Some("say hello"),
+        false,
+        false,
     );
     assert!(
         result.success,
@@ -215,6 +221,8 @@ fn test_session_run_creates_and_completes_with_spec() {
         Some("test-echo"),
         &["001"],
         None,
+        false,
+        false,
     );
     assert!(
         result.success,
@@ -253,6 +261,8 @@ fn test_run_command_completes_with_default_runner() {
         &[],
         Some("ship it"),
         None,
+        false,
+        false,
         false,
         false,
     );
@@ -298,6 +308,8 @@ fn test_run_command_dry_run_prints_composed_command_with_model_override() {
         Some("gpt-5"),
         true,
         false,
+        false,
+        false,
     );
     assert!(result.success, "{}", result.stderr);
     assert!(
@@ -324,7 +336,18 @@ fn test_run_command_with_spec_dry_run_uses_spec_context_prompt() {
     write_test_runner(cwd, "test-echo");
     create_spec(cwd, "runner-context");
 
-    let result = run_direct(cwd, home.path(), None, &["001"], None, None, true, false);
+    let result = run_direct(
+        cwd,
+        home.path(),
+        None,
+        &["001"],
+        None,
+        None,
+        true,
+        false,
+        false,
+        false,
+    );
     assert!(result.success, "{}", result.stderr);
     assert!(result.stdout.contains("Specs: 001"), "{}", result.stdout);
     assert!(
@@ -364,6 +387,8 @@ fn test_run_command_acp_dry_run_forces_acp_protocol() {
         Some("gpt-5"),
         true,
         true,
+        false,
+        false,
     );
     assert!(result.success, "{}", result.stderr);
     assert!(result.stdout.contains("Protocol: acp"), "{}", result.stdout);
@@ -394,6 +419,7 @@ fn test_session_delete() {
         Some("test-echo"),
         &[],
         None,
+        false,
     );
     assert!(create_result.success, "{}", create_result.stderr);
     let session_id = parse_session_id(&create_result.stdout).expect("session ID");
@@ -431,6 +457,7 @@ fn test_session_create_unknown_runner_fails() {
         Some("nonexistent-runner-xyz"),
         &[],
         None,
+        false,
     );
     assert!(
         !result.success,
@@ -451,4 +478,163 @@ fn test_session_view_nonexistent_fails() {
         "view of nonexistent session should fail\n{}",
         result.stdout
     );
+}
+
+#[test]
+fn test_run_command_worktree_merges_and_cleans_up() {
+    let ctx = TestContext::new();
+    let cwd = ctx.path();
+    let home = isolated_home();
+
+    init_project(cwd, true);
+    write_runners_json(
+        cwd,
+        r#"{
+    "$schema": "https://leanspec.dev/schemas/runners.json",
+    "runners": {
+        "worktree-shell": {
+            "command": "sh",
+            "args": ["-c", "printf 'merged-from-worktree\\n' > worktree-output.txt"],
+            "prompt_flag": "-"
+        }
+    },
+    "default": "worktree-shell"
+}"#,
+    );
+    init_git_repo(cwd);
+
+    let result = run_direct(
+        cwd,
+        home.path(),
+        Some("worktree-shell"),
+        &[],
+        None,
+        None,
+        false,
+        false,
+        true,
+        false,
+    );
+    assert!(
+        result.success,
+        "stdout: {}\nstderr: {}",
+        result.stdout, result.stderr
+    );
+    assert!(cwd.join("worktree-output.txt").exists());
+
+    let session_id = parse_session_id(&result.stdout).expect("session ID");
+    let worktrees = session_worktrees(cwd, home.path());
+    assert!(
+        !worktrees.stdout.contains(&session_id),
+        "{}",
+        worktrees.stdout
+    );
+}
+
+#[test]
+fn test_failed_worktree_session_can_be_cleaned_up() {
+    let ctx = TestContext::new();
+    let cwd = ctx.path();
+    let home = isolated_home();
+
+    init_project(cwd, true);
+    write_runners_json(
+        cwd,
+        r#"{
+    "$schema": "https://leanspec.dev/schemas/runners.json",
+    "runners": {
+        "failing-worktree": {
+            "command": "sh",
+            "args": ["-c", "printf 'failed-run\\n' > failed-output.txt; exit 1"],
+            "prompt_flag": "-"
+        }
+    },
+    "default": "failing-worktree"
+}"#,
+    );
+    init_git_repo(cwd);
+
+    let result = session_run(
+        cwd,
+        home.path(),
+        cwd.to_str().unwrap(),
+        Some("failing-worktree"),
+        &[],
+        None,
+        true,
+        false,
+    );
+    assert!(
+        !result.success,
+        "stdout: {}\nstderr: {}",
+        result.stdout, result.stderr
+    );
+
+    let session_id = parse_session_id(&result.stdout).expect("session ID");
+    let worktrees = session_worktrees(cwd, home.path());
+    assert!(
+        worktrees.stdout.contains(&session_id),
+        "{}",
+        worktrees.stdout
+    );
+
+    let cleanup = session_cleanup(cwd, home.path(), &session_id);
+    assert!(
+        cleanup.success,
+        "stdout: {}\nstderr: {}",
+        cleanup.stdout, cleanup.stderr
+    );
+
+    let worktrees = session_worktrees(cwd, home.path());
+    assert!(
+        !worktrees.stdout.contains(&session_id),
+        "{}",
+        worktrees.stdout
+    );
+}
+
+#[test]
+fn test_parallel_run_uses_multiple_worktrees() {
+    let ctx = TestContext::new();
+    let cwd = ctx.path();
+    let home = isolated_home();
+
+    init_project(cwd, true);
+    create_spec(cwd, "parallel-one");
+    create_spec(cwd, "parallel-two");
+    write_runners_json(
+        cwd,
+        r#"{
+    "$schema": "https://leanspec.dev/schemas/runners.json",
+    "runners": {
+        "parallel-shell": {
+            "command": "sh",
+            "args": ["-c", "printf '%s\\n' \"$LEANSPEC_SPEC_ID\" > \"$LEANSPEC_SPEC_ID.txt\""],
+            "prompt_flag": "-"
+        }
+    },
+    "default": "parallel-shell"
+}"#,
+    );
+    init_git_repo(cwd);
+
+    let result = run_direct(
+        cwd,
+        home.path(),
+        Some("parallel-shell"),
+        &["001", "002"],
+        None,
+        None,
+        false,
+        false,
+        false,
+        true,
+    );
+    assert!(
+        result.success,
+        "stdout: {}\nstderr: {}",
+        result.stdout, result.stderr
+    );
+    assert!(cwd.join("001.txt").exists(), "001.txt missing");
+    assert!(cwd.join("002.txt").exists(), "002.txt missing");
 }

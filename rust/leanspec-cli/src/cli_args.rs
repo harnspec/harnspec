@@ -302,6 +302,18 @@ pub(crate) enum Commands {
         /// Force ACP protocol for this invocation
         #[arg(long)]
         acp: bool,
+
+        /// Run the session inside a dedicated git worktree
+        #[arg(long)]
+        worktree: bool,
+
+        /// Run each provided spec in parallel worktrees
+        #[arg(long)]
+        parallel: bool,
+
+        /// Merge strategy to use for worktree sessions
+        #[arg(long)]
+        merge_strategy: Option<String>,
     },
 
     /// List all specs with optional filtering
@@ -620,6 +632,12 @@ pub(crate) enum SessionSubcommand {
         #[arg(long)]
         acp: bool,
 
+        #[arg(long)]
+        worktree: bool,
+
+        #[arg(long)]
+        merge_strategy: Option<String>,
+
         #[arg(long, default_value = "autonomous")]
         mode: String,
     },
@@ -643,6 +661,15 @@ pub(crate) enum SessionSubcommand {
 
         #[arg(long)]
         acp: bool,
+
+        #[arg(long)]
+        worktree: bool,
+
+        #[arg(long)]
+        parallel: bool,
+
+        #[arg(long)]
+        merge_strategy: Option<String>,
 
         #[arg(long, default_value = "autonomous")]
         mode: String,
@@ -691,6 +718,26 @@ pub(crate) enum SessionSubcommand {
     Logs {
         session_id: String,
     },
+    Worktrees {
+        #[arg(long)]
+        all: bool,
+    },
+    Merge {
+        session_id: String,
+
+        #[arg(long)]
+        strategy: Option<String>,
+
+        #[arg(long)]
+        resolve: bool,
+    },
+    Cleanup {
+        session_id: String,
+
+        #[arg(long)]
+        keep_branch: bool,
+    },
+    Gc,
 }
 
 #[derive(Subcommand)]

@@ -147,6 +147,9 @@ fn main() -> ExitCode {
             model,
             dry_run,
             acp,
+            worktree,
+            parallel,
+            merge_strategy,
         } => {
             let project_path = std::env::current_dir()
                 .map_err(|e| Box::<dyn std::error::Error>::from(e.to_string()))
@@ -159,6 +162,9 @@ fn main() -> ExitCode {
                         model,
                         dry_run,
                         acp,
+                        worktree,
+                        parallel,
+                        merge_strategy,
                     )
                 });
             project_path
@@ -296,6 +302,8 @@ fn main() -> ExitCode {
                     runner,
                     model,
                     acp,
+                    worktree,
+                    merge_strategy,
                     mode,
                 } => Cmd::Create {
                     project_path,
@@ -304,6 +312,8 @@ fn main() -> ExitCode {
                     runner,
                     model,
                     acp,
+                    worktree,
+                    merge_strategy,
                     mode,
                 },
                 SessionSubcommand::Run {
@@ -313,6 +323,9 @@ fn main() -> ExitCode {
                     runner,
                     model,
                     acp,
+                    worktree,
+                    parallel,
+                    merge_strategy,
                     mode,
                 } => Cmd::Run {
                     project_path,
@@ -321,6 +334,9 @@ fn main() -> ExitCode {
                     runner,
                     model,
                     acp,
+                    worktree,
+                    parallel,
+                    merge_strategy,
                     mode,
                 },
                 SessionSubcommand::Start { session_id } => Cmd::Start { session_id },
@@ -351,6 +367,24 @@ fn main() -> ExitCode {
                     runner,
                 },
                 SessionSubcommand::Logs { session_id } => Cmd::Logs { session_id },
+                SessionSubcommand::Worktrees { all } => Cmd::Worktrees { all },
+                SessionSubcommand::Merge {
+                    session_id,
+                    strategy,
+                    resolve,
+                } => Cmd::Merge {
+                    session_id,
+                    strategy,
+                    resolve,
+                },
+                SessionSubcommand::Cleanup {
+                    session_id,
+                    keep_branch,
+                } => Cmd::Cleanup {
+                    session_id,
+                    keep_branch,
+                },
+                SessionSubcommand::Gc => Cmd::Gc,
             };
             commands::session::run(cmd)
         }

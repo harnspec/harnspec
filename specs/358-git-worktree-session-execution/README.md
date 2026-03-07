@@ -1,5 +1,5 @@
 ---
-status: planned
+status: in-progress
 created: 2026-03-06
 priority: high
 tags:
@@ -12,7 +12,10 @@ tags:
 depends_on:
 - 357-shell-based-runner-execution
 created_at: 2026-03-06T14:48:09.522503Z
-updated_at: 2026-03-06T14:48:15.700705Z
+updated_at: 2026-03-07T13:42:13.616514Z
+transitions:
+- status: in-progress
+  at: 2026-03-07T13:15:41.830484Z
 ---
 
 # Git Worktree-Based Agent Runner Session Execution
@@ -100,12 +103,12 @@ Branch naming: `leanspec/session/{session-id}-{spec-slug}`
 
 ### Merge-Back Strategies
 
-| Strategy | When to Use | Behavior |
-|----------|------------|----------|
-| `auto-merge` | Default. Clean changes | Fast-forward or automatic merge into target branch |
-| `squash` | Multiple small commits | Squash into single commit on target branch |
-| `pr` | Team workflows | Create a branch, don't merge (user creates PR) |
-| `manual` | Conflicts detected | Leave branch, notify user, provide resolution commands |
+| Strategy     | When to Use            | Behavior                                               |
+| ------------ | ---------------------- | ------------------------------------------------------ |
+| `auto-merge` | Default. Clean changes | Fast-forward or automatic merge into target branch     |
+| `squash`     | Multiple small commits | Squash into single commit on target branch             |
+| `pr`         | Team workflows         | Create a branch, don't merge (user creates PR)         |
+| `manual`     | Conflicts detected     | Leave branch, notify user, provide resolution commands |
 
 ### Conflict Handling
 
@@ -210,34 +213,36 @@ enum MergeStrategy {
 
 ## Requirements
 
+Checked items below reflect requirements that are implemented in the current codebase. Acceptance criteria remain open until the CLI worktree flows pass end-to-end.
+
 ### Worktree Lifecycle
-- [ ] Create git worktree for a session with auto-generated branch name
-- [ ] Worktree created outside the main repo (e.g., `/tmp/leanspec-worktrees/`)
-- [ ] Session metadata stored in worktree registry
-- [ ] Worktree removed on cleanup (branch optionally preserved)
-- [ ] Stale worktree detection and garbage collection (`session gc`)
+- [x] Create git worktree for a session with auto-generated branch name
+- [x] Worktree created outside the main repo (e.g., `/tmp/leanspec-worktrees/`)
+- [x] Session metadata stored in worktree registry
+- [x] Worktree removed on cleanup (branch optionally preserved)
+- [x] Stale worktree detection and garbage collection (`session gc`)
 
 ### Parallel Execution
-- [ ] `--worktree` flag on `lean-spec run` to enable worktree isolation
-- [ ] `--parallel` flag to run multiple specs concurrently in separate worktrees
-- [ ] Each parallel session gets its own runner process
-- [ ] Session orchestrator monitors all parallel sessions
-- [ ] Results aggregated and reported after all sessions complete
+- [x] `--worktree` flag on `lean-spec run` to enable worktree isolation
+- [x] `--parallel` flag to run multiple specs concurrently in separate worktrees
+- [x] Each parallel session gets its own runner process
+- [x] Session orchestrator monitors all parallel sessions
+- [x] Results aggregated and reported after all sessions complete
 
 ### Merge & Conflict Resolution
-- [ ] Pre-merge dry-run conflict detection
-- [ ] Auto-merge with fast-forward or 3-way merge
-- [ ] Squash merge option (`--strategy squash`)
-- [ ] PR mode: leave branch without merging (`--strategy pr`)
-- [ ] Conflict reporting with file-level detail
+- [x] Pre-merge dry-run conflict detection
+- [x] Auto-merge with fast-forward or 3-way merge
+- [x] Squash merge option (`--strategy squash`)
+- [x] PR mode: leave branch without merging (`--strategy pr`)
+- [x] Conflict reporting with file-level detail
 - [ ] `session merge --resolve` to retry after manual conflict resolution
 - [ ] Sequential merge ordering for parallel sessions (FIFO)
 
 ### Integration
-- [ ] Works with shell-based runner execution (spec 357)
-- [ ] Session status reflected in the existing session tracking system
-- [ ] Worktree path passed to runner as working directory
-- [ ] `lean-spec session worktrees` lists active worktree sessions
+- [x] Works with shell-based runner execution (spec 357)
+- [x] Session status reflected in the existing session tracking system
+- [x] Worktree path passed to runner as working directory
+- [x] `lean-spec session worktrees` lists active worktree sessions
 
 ## Non-Goals
 
@@ -276,3 +281,30 @@ enum MergeStrategy {
 - [ ] `lean-spec session worktrees` shows active worktree sessions with status
 - [ ] `lean-spec session gc` cleans up stale worktrees and branches
 - [ ] No interference between parallel sessions (verified with concurrent writes to same file)
+
+## Progress Check
+
+### 2026-03-07 Verification
+
+Verified against the current codebase and targeted test runs.
+
+Implemented and present in code:
+- `rust/leanspec-core/src/sessions/worktree.rs` exists and adds worktree registry, branch naming, merge, cleanup, and GC helpers.
+- `rust/leanspec-core/src/sessions/manager/lifecycle.rs` wires worktree metadata into session creation/start/completion and passes worktree paths as the runner working directory.
+- `rust/leanspec-cli/src/commands/session.rs` and `rust/leanspec-cli/src/cli_args.rs` add `--worktree`, `--parallel`, `--merge-strategy`, plus `session worktrees|merge|cleanup|gc` commands.
+- `.leanspec-worktrees/` is gitignored.
+
+Validation results:
+- `cargo test --manifest-path rust/Cargo.toml -p leanspec-core --features 'sessions storage' --quiet` passed.
+- `cargo test --manifest-path rust/Cargo.toml -p leanspec-cli --test session -- --nocapture` failed.
+- `pnpm typecheck` passed.
+
+Verified blockers still preventing completion:
+- The new single-worktree CLI path is not yet verified end-to-end. The added test currently fails before execution because `lean-spec run` still requires either `--prompt` or `--spec`.
+- Parallel worktree execution is not yet acceptance-ready. The current implementation fails during sequential merge-back with `Validation error: Merge requires a clean target branch worktree`.
+- Failed-session cleanup is not yet verified by passing tests. The current failing-worktree test shows the command completes and records a failed status, but the end-to-end expectation for preserved worktree cleanup is not yet passing.
+- `session merge --resolve` is exposed, but current verification did not show behavior distinct from a normal merge retry.
+
+Conclusion:
+- Keep status as `in-progress`.
+- Do not mark requirements or acceptance criteria complete until the CLI session test suite passes for the worktree flows and the merge/conflict path is verified end-to-end.

@@ -9,6 +9,11 @@ use crate::error::{CoreError, CoreResult};
 use crate::sessions::database::SessionDatabase;
 use crate::sessions::runner::{RunnerProtocol, RunnerRegistry};
 use crate::sessions::types::*;
+use crate::sessions::worktree::{
+    worktree_enabled, GitWorktreeManager, MergeStrategy, WorktreeStatus, WORKTREE_AUTO_MERGE_KEY,
+    WORKTREE_CLEANED_AT_KEY, WORKTREE_CONFLICT_FILES_KEY, WORKTREE_ENABLED_KEY,
+    WORKTREE_MERGE_STRATEGY_KEY, WORKTREE_PATH_KEY, WORKTREE_STATUS_KEY,
+};
 use crate::spec_ops::SpecLoader;
 use crate::types::LeanSpecConfig;
 use std::collections::HashMap;
@@ -90,6 +95,9 @@ pub struct CreateSessionOptions {
     pub mode: SessionMode,
     pub model_override: Option<String>,
     pub protocol_override: Option<RunnerProtocol>,
+    pub use_worktree: bool,
+    pub merge_strategy: Option<MergeStrategy>,
+    pub auto_merge_on_completion: bool,
 }
 
 /// Build a context prompt for the AI runner by loading spec content and combining
@@ -184,6 +192,9 @@ impl SessionManager {
             mode,
             model_override: None,
             protocol_override: None,
+            use_worktree: false,
+            merge_strategy: None,
+            auto_merge_on_completion: false,
         })
         .await
     }
@@ -201,6 +212,9 @@ impl SessionManager {
             mode,
             model_override,
             protocol_override,
+            use_worktree,
+            merge_strategy,
+            auto_merge_on_completion,
         } = options;
         let registry = RunnerRegistry::load(PathBuf::from(&project_path).as_path())?;
 
@@ -245,6 +259,21 @@ impl SessionManager {
         if let Some(model) = model_override.filter(|value| !value.trim().is_empty()) {
             session.metadata.insert("model".to_string(), model);
         }
+        if use_worktree {
+            session
+                .metadata
+                .insert(WORKTREE_ENABLED_KEY.to_string(), "true".to_string());
+            session.metadata.insert(
+                WORKTREE_AUTO_MERGE_KEY.to_string(),
+                auto_merge_on_completion.to_string(),
+            );
+            if let Some(strategy) = merge_strategy {
+                session.metadata.insert(
+                    crate::sessions::worktree::WORKTREE_MERGE_STRATEGY_KEY.to_string(),
+                    strategy.to_string(),
+                );
+            }
+        }
 
         self.db.insert_session(&session)?;
 
@@ -279,6 +308,23 @@ impl SessionManager {
             .transpose()?
             .unwrap_or(infer_runner_protocol(runner, None)?);
         let is_acp = protocol == RunnerProtocol::Acp;
+        let use_worktree = worktree_enabled(&session);
+        let worktree_manager = if use_worktree {
+            Some(GitWorktreeManager::for_project(&session.project_path)?)
+        } else {
+            None
+        };
+
+        if let Some(manager) = &worktree_manager {
+            let merge_strategy = session
+                .metadata
+                .get(WORKTREE_MERGE_STRATEGY_KEY)
+                .and_then(|value| value.parse::<MergeStrategy>().ok())
+                .unwrap_or(MergeStrategy::AutoMerge);
+            let worktree =
+                manager.create_for_session(session_id, &session.spec_ids, merge_strategy)?;
+            manager.sync_session_metadata(&mut session, &worktree);
+        }
 
         // Build config
         let mut env_vars = HashMap::new();
@@ -286,6 +332,30 @@ impl SessionManager {
             "LEANSPEC_PROJECT_PATH".to_string(),
             session.project_path.clone(),
         );
+        let working_dir = if use_worktree {
+            let path = session
+                .metadata
+                .get(WORKTREE_PATH_KEY)
+                .cloned()
+                .ok_or_else(|| {
+                    CoreError::ValidationError(
+                        "Worktree session metadata missing worktree_path".to_string(),
+                    )
+                })?;
+            env_vars.insert("LEANSPEC_WORKTREE_PATH".to_string(), path.clone());
+            if let Some(base_branch) = session
+                .metadata
+                .get(crate::sessions::WORKTREE_BASE_BRANCH_KEY)
+            {
+                env_vars.insert("LEANSPEC_TARGET_BRANCH".to_string(), base_branch.clone());
+            }
+            if let Some(branch) = session.metadata.get(crate::sessions::WORKTREE_BRANCH_KEY) {
+                env_vars.insert("LEANSPEC_WORKTREE_BRANCH".to_string(), branch.clone());
+            }
+            path
+        } else {
+            session.project_path.clone()
+        };
 
         // Build the context prompt: load spec content for attached specs and combine
         // with any explicit user prompt. This resolved prompt is what gets passed as
@@ -335,10 +405,11 @@ impl SessionManager {
             runner: session.runner.clone(),
             mode: session.mode,
             max_iterations: None,
-            working_dir: Some(session.project_path.clone()),
+            working_dir: Some(working_dir.clone()),
             env_vars,
             runner_args,
         };
+        let effective_working_dir = working_dir;
 
         // Build command
         let mut cmd = runner.build_command(&config)?;
@@ -594,7 +665,7 @@ impl SessionManager {
                         "session/load",
                         json!({
                             "sessionId": existing_session_id,
-                            "cwd": session.project_path,
+                            "cwd": effective_working_dir,
                         }),
                     )
                     .await;
@@ -603,12 +674,12 @@ impl SessionManager {
                         acp_runtime,
                         "session/new",
                         json!({
-                            "cwd": session.project_path,
+                            "cwd": effective_working_dir,
                             "mcpServers": [
                                 {
                                     "name": "leanspec",
                                     "command": "leanspec-mcp",
-                                    "args": ["--project", session.project_path],
+                                    "args": ["--project", effective_working_dir],
                                     "env": []
                                 }
                             ]
@@ -621,12 +692,12 @@ impl SessionManager {
                     acp_runtime,
                     "session/new",
                     json!({
-                        "cwd": session.project_path,
+                        "cwd": effective_working_dir,
                         "mcpServers": [
                             {
                                 "name": "leanspec",
                                 "command": "leanspec-mcp",
-                                "args": ["--project", session.project_path],
+                                "args": ["--project", effective_working_dir],
                                 "env": []
                             }
                         ]
@@ -700,6 +771,11 @@ impl SessionManager {
         // Update session status
         session.status = SessionStatus::Running;
         session.started_at = chrono::Utc::now();
+        if let Some(manager) = &worktree_manager {
+            if let Some(worktree) = manager.set_status(session_id, WorktreeStatus::Running)? {
+                manager.sync_session_metadata(&mut session, &worktree);
+            }
+        }
         session.touch();
         self.db.update_session(&session)?;
         self.db.insert_event(session_id, EventType::Started, None)?;
@@ -764,6 +840,7 @@ impl SessionManager {
                         let _ =
                             db_clone.insert_event(&session_id_owned, EventType::Completed, None);
                     }
+                    let _ = finalize_worktree_state(&db_clone, &session_id_owned, true);
                     let _ = db_clone.log_message(
                         &session_id_owned,
                         LogLevel::Info,
@@ -799,6 +876,7 @@ impl SessionManager {
                                 Some(timeout_message.clone()),
                             );
                         }
+                        let _ = finalize_worktree_state(&db_clone, &session_id_owned, false);
                         let _ = db_clone.log_message(
                             &session_id_owned,
                             LogLevel::Error,
@@ -860,6 +938,7 @@ impl SessionManager {
                                 &format!("Process wait error: {}", err),
                             );
                         }
+                        let _ = finalize_worktree_state(&db_clone, &session_id_owned, false);
                         cleanup_session(
                             &session_id_owned,
                             &active_sessions_clone,
@@ -913,6 +992,7 @@ impl SessionManager {
                         );
                     }
                 }
+                let _ = finalize_worktree_state(&db_clone, &session_id_owned, status.success());
 
                 cleanup_session(&session_id_owned, &active_sessions_clone, &broadcasts_clone).await;
                 break;
@@ -1547,6 +1627,86 @@ async fn cleanup_session(
     }
 }
 
+fn finalize_worktree_state(
+    db: &Arc<SessionDatabase>,
+    session_id: &str,
+    completed_successfully: bool,
+) -> CoreResult<()> {
+    let Some(mut session) = db.get_session(session_id)? else {
+        return Ok(());
+    };
+
+    if !worktree_enabled(&session) {
+        return Ok(());
+    }
+
+    let manager = GitWorktreeManager::for_project(&session.project_path)?;
+    if let Some(worktree) = manager.set_status(
+        session_id,
+        if completed_successfully {
+            WorktreeStatus::Completed
+        } else {
+            WorktreeStatus::Failed
+        },
+    )? {
+        manager.sync_session_metadata(&mut session, &worktree);
+    }
+
+    session.metadata.remove(WORKTREE_CONFLICT_FILES_KEY);
+
+    let auto_merge = session
+        .metadata
+        .get(WORKTREE_AUTO_MERGE_KEY)
+        .map(|value| value == "true")
+        .unwrap_or(false);
+    let merge_strategy = session
+        .metadata
+        .get(WORKTREE_MERGE_STRATEGY_KEY)
+        .and_then(|value| value.parse::<MergeStrategy>().ok());
+
+    if completed_successfully && auto_merge {
+        let outcome = manager.merge_session(session_id, merge_strategy, false)?;
+        session
+            .metadata
+            .insert(WORKTREE_STATUS_KEY.to_string(), outcome.status.to_string());
+
+        if !outcome.conflicted_files.is_empty() {
+            session.metadata.insert(
+                WORKTREE_CONFLICT_FILES_KEY.to_string(),
+                serde_json::to_string(&outcome.conflicted_files)?,
+            );
+            session.status = SessionStatus::Failed;
+            db.log_message(
+                session_id,
+                LogLevel::Error,
+                &format!(
+                    "Worktree merge conflict in: {}",
+                    outcome.conflicted_files.join(", ")
+                ),
+            )?;
+        } else if outcome.merged {
+            manager.cleanup_session(session_id, false)?;
+            session.metadata.insert(
+                WORKTREE_STATUS_KEY.to_string(),
+                WorktreeStatus::Merged.to_string(),
+            );
+            session.metadata.insert(
+                WORKTREE_CLEANED_AT_KEY.to_string(),
+                chrono::Utc::now().to_rfc3339(),
+            );
+            db.log_message(
+                session_id,
+                LogLevel::Info,
+                "Worktree merged back into target branch and cleaned up",
+            )?;
+        }
+    }
+
+    session.touch();
+    db.update_session(&session)?;
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1593,6 +1753,9 @@ mod tests {
                 mode: SessionMode::Autonomous,
                 model_override: Some("gpt-5".to_string()),
                 protocol_override: Some(RunnerProtocol::Acp),
+                use_worktree: false,
+                merge_strategy: None,
+                auto_merge_on_completion: false,
             })
             .await
             .unwrap();
