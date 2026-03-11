@@ -1,12 +1,15 @@
 name: Publish Docker Image
 
 on:
-  # Run only after npm packages are published — Docker build pulls from npm
-  workflow_run:
-    workflows: ["Publish to npm"]
-    types: [completed]
+  release:
+    types: [published]
   workflow_dispatch:
     inputs:
+      tag:
+        description: 'npm dist-tag to pull (latest or dev)'
+        required: false
+        default: 'dev'
+        type: string
       dry_run:
         description: 'Build without pushing'
         required: false
@@ -16,18 +19,27 @@ on:
 jobs:
   docker:
     name: Build and push Docker image
-    # Skip if triggered by a failed publish run
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Determine build config
+        id: config
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            echo "npm_tag=latest" >> "$GITHUB_OUTPUT"
+            echo "is_release=true" >> "$GITHUB_OUTPUT"
+          elif [ "${{ inputs.tag }}" = "latest" ]; then
+            echo "npm_tag=latest" >> "$GITHUB_OUTPUT"
+            echo "is_release=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "npm_tag=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+            echo "is_release=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Extract version from package.json
         id: version
@@ -35,25 +47,52 @@ jobs:
 
       - uses: docker/setup-buildx-action@v3
 
-      - uses: docker/login-action@v3
+      - name: Login to GHCR
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: docker/metadata-action@v5
-        id: meta
+      - name: Docker metadata (release)
+        if: steps.config.outputs.is_release == 'true'
+        uses: docker/metadata-action@v5
+        id: meta-release
         with:
           images: ghcr.io/codervisor/leanspec
           tags: |
             type=raw,value=${{ steps.version.outputs.value }}
             type=raw,value=latest
 
-      - uses: docker/build-push-action@v6
+      - name: Docker metadata (dev)
+        if: steps.config.outputs.is_release == 'false'
+        uses: docker/metadata-action@v5
+        id: meta-dev
+        with:
+          images: ghcr.io/codervisor/leanspec
+          tags: |
+            type=raw,value=${{ steps.config.outputs.npm_tag }}
+
+      - name: Build and push (release)
+        if: steps.config.outputs.is_release == 'true'
+        uses: docker/build-push-action@v6
         with:
           context: ./docker
-          push: ${{ github.event_name != 'workflow_dispatch' || !inputs.dry_run }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          push: ${{ github.event_name == 'release' || !inputs.dry_run }}
+          tags: ${{ steps.meta-release.outputs.tags }}
+          labels: ${{ steps.meta-release.outputs.labels }}
+          build-args: NPM_TAG=latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push (dev)
+        if: steps.config.outputs.is_release == 'false'
+        uses: docker/build-push-action@v6
+        with:
+          context: ./docker
+          push: ${{ !inputs.dry_run }}
+          tags: ${{ steps.meta-dev.outputs.tags }}
+          labels: ${{ steps.meta-dev.outputs.labels }}
+          build-args: NPM_TAG=${{ steps.config.outputs.npm_tag }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

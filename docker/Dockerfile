@@ -1,6 +1,7 @@
 # Stage 1: pull the linux-x64 binary and UI dist from npm
 FROM node:20-slim AS builder
-RUN npm install -g @leanspec/http-linux-x64 @leanspec/ui
+ARG NPM_TAG=latest
+RUN npm install -g @leanspec/http-linux-x64@${NPM_TAG} @leanspec/ui@${NPM_TAG}
 
 # Stage 2: minimal runtime — no Node, just the Rust binary + static files
 FROM debian:12-slim
