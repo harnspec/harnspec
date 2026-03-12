@@ -4,8 +4,9 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      # Replace with the path to your project directory
-      - /path/to/your/project:/specs
-    command: ["--project", "/specs"]
+      - leanspec-data:/root/.lean-spec
     environment:
       - PORT=3000
+
+volumes:
+  leanspec-data:

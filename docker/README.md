@@ -6,18 +6,11 @@ Run the LeanSpec UI in a Docker container — useful for CI/CD, team self-hostin
 
 ### Using Docker Compose (recommended)
 
-1. Edit `docker-compose.yml` and set the volume path to your project directory:
-   ```yaml
-   volumes:
-     - /path/to/your/project:/specs
-   ```
+```sh
+docker compose up
+```
 
-2. Start the container:
-   ```sh
-   docker compose up
-   ```
-
-3. Open http://localhost:3000 in your browser.
+Open http://localhost:3000 in your browser. Projects are managed through the UI — use the project discovery or add projects manually.
 
 ### Using Docker directly
 
@@ -25,35 +18,57 @@ Run the LeanSpec UI in a Docker container — useful for CI/CD, team self-hostin
 docker pull ghcr.io/codervisor/leanspec:latest
 
 docker run -p 3000:3000 \
-  -v $(pwd):/specs \
-  ghcr.io/codervisor/leanspec:latest \
-  --project /specs
+  -v leanspec-data:/root/.lean-spec \
+  ghcr.io/codervisor/leanspec:latest
 ```
 
-## Building Locally
+## Data Persistence
 
-```sh
-docker build -t leanspec docker/
-docker run -p 3000:3000 -v $(pwd):/specs leanspec --project /specs
-```
+LeanSpec stores its data in `~/.lean-spec/` inside the container:
+
+| File | Description |
+|------|-------------|
+| `config.json` | Server and UI configuration |
+| `projects.json` | Registered project registry |
+| `leanspec.db` | SQLite database (sessions, chat) |
+
+Mount a volume at `/root/.lean-spec` to persist data across container restarts.
 
 ## Configuration
 
 | Option | Description |
 |--------|-------------|
-| `--project /specs` | Auto-register the mounted directory as a project on startup |
-| `--host 0.0.0.0` | Bind all network interfaces (required for Docker port mapping — included by default) |
-| `--no-open` | Skip browser launch (included by default in the image entrypoint) |
+| `--project <path>` | Auto-register a mounted directory as a project on startup |
+| `--host 0.0.0.0` | Bind all network interfaces (included by default) |
+| `--no-open` | Skip browser launch (included by default) |
 | `PORT` env var | Override the port (default: `3000`) |
+
+### Mounting a project directory
+
+To auto-register a specific project on startup:
+
+```sh
+docker run -p 3000:3000 \
+  -v leanspec-data:/root/.lean-spec \
+  -v /path/to/your/project:/project \
+  ghcr.io/codervisor/leanspec:latest \
+  --project /project
+```
 
 ### Custom port example
 
 ```sh
 docker run -p 8080:8080 \
   -e PORT=8080 \
-  -v $(pwd):/specs \
-  ghcr.io/codervisor/leanspec:latest \
-  --project /specs
+  -v leanspec-data:/root/.lean-spec \
+  ghcr.io/codervisor/leanspec:latest
+```
+
+## Building Locally
+
+```sh
+docker build -t leanspec docker/
+docker run -p 3000:3000 -v leanspec-data:/root/.lean-spec leanspec
 ```
 
 ## Image

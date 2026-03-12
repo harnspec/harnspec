@@ -21,9 +21,6 @@ ENV LEANSPEC_UI_DIST=/app/ui-dist
 
 EXPOSE 3000
 
-# Mount your project specs directory here
-VOLUME ["/specs"]
-
 # --no-open: skip browser launch (not available in containers)
 # --host 0.0.0.0: bind all interfaces so Docker port mapping works
 ENTRYPOINT ["leanspec-http", "--no-open", "--host", "0.0.0.0"]
