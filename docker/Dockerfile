@@ -5,7 +5,7 @@ ARG PLATFORM_PKG=http-linux-x64
 RUN npm install -g @leanspec/${PLATFORM_PKG}@${NPM_TAG} @leanspec/ui@${NPM_TAG}
 
 # Stage 2: minimal runtime — no Node, just the Rust binary + static files
-FROM debian:12-slim
+FROM debian:13-slim
 
 ARG PLATFORM_PKG=http-linux-x64
 
