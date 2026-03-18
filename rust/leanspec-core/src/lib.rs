@@ -47,6 +47,9 @@ pub mod sessions;
 #[cfg(feature = "storage")]
 pub mod storage;
 
+#[cfg(feature = "github")]
+pub mod github;
+
 #[cfg(feature = "ai")]
 pub mod ai;
 

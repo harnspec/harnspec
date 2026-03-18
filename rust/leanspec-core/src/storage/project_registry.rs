@@ -51,6 +51,35 @@ fn slugify(name: &str) -> String {
     }
 }
 
+/// Project source type
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Default)]
+#[serde(rename_all = "lowercase")]
+pub enum ProjectSource {
+    /// Local filesystem project
+    #[default]
+    Local,
+    /// GitHub repository
+    GitHub,
+}
+
+/// GitHub configuration for a project
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct GitHubConfig {
+    /// Repository reference (owner/repo)
+    pub repo: String,
+
+    /// Branch to track
+    pub branch: String,
+
+    /// Path to specs directory within the repo
+    pub specs_path: String,
+
+    /// Last sync timestamp
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub last_synced: Option<DateTime<Utc>>,
+}
+
 /// A registered LeanSpec project
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -61,7 +90,7 @@ pub struct Project {
     /// Display name
     pub name: String,
 
-    /// Root path of the project
+    /// Root path of the project (local path or cache dir for GitHub projects)
     pub path: PathBuf,
 
     /// Specs directory within the project
@@ -82,6 +111,14 @@ pub struct Project {
     /// When the project was added
     #[serde(default = "default_timestamp")]
     pub added_at: DateTime<Utc>,
+
+    /// Project source type (local or github)
+    #[serde(default)]
+    pub source: ProjectSource,
+
+    /// GitHub configuration (only for GitHub-sourced projects)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub github: Option<GitHubConfig>,
 }
 
 impl Project {
@@ -133,6 +170,8 @@ impl Project {
             color: None,
             last_accessed: now,
             added_at: now,
+            source: ProjectSource::Local,
+            github: None,
         })
     }
 
@@ -361,6 +400,68 @@ impl ProjectRegistry {
         )?;
 
         Ok(Some(project))
+    }
+
+    /// Add a GitHub repository as a project.
+    ///
+    /// Creates a local cache directory under `~/.lean-spec/github/<owner>/<repo>/`
+    /// where synced specs will be stored.
+    pub fn add_github(
+        &mut self,
+        repo: &str,
+        branch: &str,
+        specs_path: &str,
+        name: Option<&str>,
+    ) -> CoreResult<Project> {
+        // Check for duplicate
+        for project in self.projects.values() {
+            if let Some(ref gh) = project.github {
+                if gh.repo == repo {
+                    return Err(CoreError::RegistryError(format!(
+                        "GitHub repo '{}' is already registered",
+                        repo
+                    )));
+                }
+            }
+        }
+
+        // Create local cache directory
+        let cache_dir = crate::storage::config::config_dir()
+            .join("github")
+            .join(repo.replace('/', "_"));
+        let specs_dir = cache_dir.join(specs_path);
+        fs::create_dir_all(&specs_dir)
+            .map_err(|e| CoreError::RegistryError(format!("Failed to create cache dir: {}", e)))?;
+
+        let display_name = name
+            .map(|s| s.to_string())
+            .unwrap_or_else(|| repo.to_string());
+
+        let now = Utc::now();
+        let preferred_id = slugify(&display_name);
+
+        let project = Project {
+            id: self.ensure_unique_id(&preferred_id),
+            name: display_name,
+            path: cache_dir,
+            specs_dir,
+            favorite: false,
+            color: None,
+            last_accessed: now,
+            added_at: now,
+            source: ProjectSource::GitHub,
+            github: Some(GitHubConfig {
+                repo: repo.to_string(),
+                branch: branch.to_string(),
+                specs_path: specs_path.to_string(),
+                last_synced: None,
+            }),
+        };
+
+        self.projects.insert(project.id.clone(), project.clone());
+        self.save()?;
+
+        Ok(project)
     }
 
     fn ensure_unique_id(&self, preferred: &str) -> String {

@@ -23,6 +23,7 @@ futures-util = {version = "0.3", optional = true}
 petgraph.workspace = true
 regex.workspace = true
 reqwest = {version = "0.12", default-features = false, features = ["json", "rustls-tls", "stream", "blocking"], optional = true}
+base64 = {version = "0.22", optional = true}
 schemars = {version = "0.8", optional = true}
 serde.workspace = true
 serde_json.workspace = true
@@ -49,7 +50,8 @@ nix = {version = "0.28", default-features = false, features = ["signal"]}
 [features]
 ai = ["tokio", "async-trait", "uuid", "async-openai", "anthropic", "schemars", "reqwest", "urlencoding", "futures-util"]
 default = []
-full = ["sessions", "storage", "ai"]
+full = ["sessions", "storage", "ai", "github"]
+github = ["reqwest", "base64"]
 sessions = ["rusqlite", "tokio", "uuid", "async-trait", "which", "flate2", "agent-client-protocol"]
 storage = ["rusqlite", "tokio", "dirs", "uuid"]
 
