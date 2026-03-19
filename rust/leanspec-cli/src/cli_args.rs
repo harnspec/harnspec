@@ -166,6 +166,22 @@ pub(crate) enum Commands {
         /// Spec(s) this new spec depends on
         #[arg(long = "depends-on", num_args = 1..)]
         depends_on: Vec<String>,
+
+        /// Full markdown content for the spec body (may include frontmatter)
+        #[arg(long, allow_hyphen_values = true)]
+        content: Option<String>,
+
+        /// Read spec content from a file path (takes precedence over --content)
+        #[arg(short, long)]
+        file: Option<String>,
+
+        /// Assignee for the spec
+        #[arg(short, long)]
+        assignee: Option<String>,
+
+        /// Short description (inserted into template body under the title)
+        #[arg(long)]
+        description: Option<String>,
     },
 
     /// List example projects
@@ -572,6 +588,10 @@ pub(crate) enum Commands {
         /// Skip completion verification or stage skipping guard (draft -> in-progress/complete)
         #[arg(short, long)]
         force: bool,
+
+        /// Expected content hash for optimistic concurrency (fails if content changed)
+        #[arg(long = "expected-hash")]
+        expected_hash: Option<String>,
     },
 
     /// Validate specs for issues

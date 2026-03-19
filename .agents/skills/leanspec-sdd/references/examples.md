@@ -14,8 +14,10 @@ Sections:
 ## Example: Dependency Link
 
 If spec 210 depends on spec 069 (independent blocker):
-- MCP: `relationships` with `specPath=210`, `action=add`, `type=depends_on`, `target=069`
-- CLI: `lean-spec rel add 210 --depends-on 069`
+
+```bash
+lean-spec rel add 210 --depends-on 069
+```
 
 ## Example: Umbrella with Children
 
@@ -36,11 +38,6 @@ lean-spec rel add 253 --parent 250
 # Verify structure
 lean-spec children 250
 ```
-
-With MCP tool (`relationships`):
-- add parent: `specPath=251`, `action=add`, `type=parent`, `target=250`
-- add parent: `specPath=252`, `action=add`, `type=parent`, `target=250`
-- list children: `children` with `specPath=250`
 
 ## Example: Choosing Between Parent and Depends-On
 

@@ -2,7 +2,7 @@
 
 ## Do
 
-- **Use MCP tools first**; fallback to CLI only when needed.
+- **Use `lean-spec` CLI** for all spec operations.
 - **Keep specs short**: target <2000 tokens.
 - **Write intent first**: problem, motivation, desired outcomes.
 - **Update status early**: `in-progress` before coding.
@@ -21,8 +21,8 @@
 - Skipping discovery steps.
 - Writing specs that are implementation-only.
 - Letting specs drift from actual work.
-- **Using `depends_on` for umbrella child specs** — use parent/child (`relationships` + `type=parent`) instead.
-- **Using parent/child for unrelated blockers** — use `depends_on` (`relationships` + `type=depends_on`) instead.
+- **Using `depends_on` for umbrella child specs** — use parent/child (`lean-spec rel add <child> --parent <parent>`) instead.
+- **Using parent/child for unrelated blockers** — use `depends_on` (`lean-spec rel add <spec> --depends-on <other>`) instead.
 - Trusting spec status without verifying actual implementation.
 - Marking specs complete without checking commits, tests, or code changes.
 

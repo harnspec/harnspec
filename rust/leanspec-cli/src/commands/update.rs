@@ -29,6 +29,7 @@ pub fn run(
     prepend: Option<String>,
     content_override: Option<String>,
     force: bool,
+    expected_hash: Option<String>,
 ) -> Result<(), Box<dyn Error>> {
     if specs.is_empty() {
         return Err("At least one spec path is required".into());
@@ -76,6 +77,25 @@ pub fn run(
                 continue;
             }
         };
+
+        // Validate expected content hash (optimistic concurrency)
+        if let Some(ref expected) = expected_hash {
+            let (_, body) = match parser.parse(&content) {
+                Ok(result) => result,
+                Err(e) => {
+                    errors.push(format!("Error parsing {}: {}", spec_info.path, e));
+                    continue;
+                }
+            };
+            let current_hash = leanspec_core::hash_content(&body);
+            if *expected != current_hash {
+                errors.push(format!(
+                    "Content hash mismatch for {} (expected {}, current {}). The spec has been modified since you last read it.",
+                    spec_info.path, expected, current_hash
+                ));
+                continue;
+            }
+        }
 
         // Build updates
         let mut updates: HashMap<String, serde_yaml::Value> = HashMap::new();

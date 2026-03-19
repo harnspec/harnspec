@@ -5,7 +5,7 @@ description: Spec-Driven Development methodology for AI-assisted development. Us
 
 # LeanSpec SDD Skill
 
-Teach agents how to run Spec-Driven Development (SDD) in LeanSpec projects. This skill is an addon: it **does not replace** MCP or CLI tools.
+Teach agents how to run Spec-Driven Development (SDD) in LeanSpec projects using the `lean-spec` CLI.
 
 ## Core Principles
 
@@ -29,7 +29,7 @@ Before creating or modifying anything:
 
 ### 2. Create Spec
 
-Use `create` tool (preferred) or `lean-spec create "spec-name"`.
+Use `lean-spec create "spec-name"`.
 
 **Always pass all known fields in the `create` call** — `title`, `content`, `priority`, `tags`, etc. Never create empty specs then populate with follow-up `update`.
 
@@ -90,9 +90,8 @@ Pre-implementation research to ensure the spec is implementation-ready. Use when
 
 **Before starting:**
 
-- Use `view <spec>` — includes parent, children, depends_on, required_by
-- Set status to `in-progress`: `update <spec> --status in-progress`
-- ⚠️ Do NOT call `list`, `list_children`, or `list_umbrellas` — `view` provides all relationships
+- Run `lean-spec view <spec>` — includes parent, children, depends_on, required_by
+- Set status to `in-progress`: `lean-spec update <spec> --status in-progress`
 - If `draft` is enabled, move `draft` → `planned` first (skipping requires `--force`)
 
 **For umbrella specs:** Implement children first; parent completes when all children complete.
@@ -165,9 +164,9 @@ Use during draft/revision phase when requirements are evolving.
 
 **Metadata updates** (use tools):
 
-- Status: `update <spec> --status <status>`
-- Dependencies: `relationships` with `action=add`, `type=depends_on`
-- Parent: `relationships` with `action=add`, `type=parent`
+- Status: `lean-spec update <spec> --status <status>`
+- Dependencies: `lean-spec rel add <spec> --depends-on <other>`
+- Parent: `lean-spec rel add <child> --parent <parent>`
 
 **Handling scope creep:**
 
@@ -230,26 +229,26 @@ Use when specs need structure, relationships are unclear, or project board is cl
 
 ## Tool Reference
 
-Use MCP tools when available. Use CLI as fallback.
+All operations use the `lean-spec` CLI. Run commands via shell/Bash.
 
-| Action | MCP Tool | CLI Command |
-| --- | --- | --- |
-| Project status | `board` | `lean-spec board` |
-| List specs | `list` | `lean-spec list` |
-| Search specs | `search` | `lean-spec search "query"` |
-| View spec | `view` | `lean-spec view <spec>` |
-| Create spec | `create` | `lean-spec create <name>` |
-| Update status | `update` | `lean-spec update <spec> --status <status>` |
-| View relationships | `relationships` | `lean-spec rel <spec>` |
-| Set parent | `relationships` (`action=add`, `type=parent`) | `lean-spec rel add <child> --parent <parent>` |
-| Add child | `relationships` (`action=add`, `type=child`) | `lean-spec rel add <parent> --child <child>` |
-| Add dependency | `relationships` (`action=add`, `type=depends_on`) | `lean-spec rel add <spec> --depends-on <other>` |
-| Remove dependency | `relationships` (`action=remove`, `type=depends_on`) | `lean-spec rel rm <spec> --depends-on <other>` |
-| Dependency graph | `deps` | `lean-spec deps <spec>` |
-| List children | `children` | `lean-spec children <parent>` |
-| Token count | `tokens` | `lean-spec tokens <spec>` |
-| Validate | `validate` | `lean-spec validate` |
-| Stats | `stats` | `lean-spec stats` |
+| Action | Command |
+| --- | --- |
+| Project status | `lean-spec board` |
+| List specs | `lean-spec list` |
+| Search specs | `lean-spec search "query"` |
+| View spec | `lean-spec view <spec>` |
+| Create spec | `lean-spec create <name>` |
+| Update status | `lean-spec update <spec> --status <status>` |
+| View relationships | `lean-spec rel <spec>` |
+| Set parent | `lean-spec rel add <child> --parent <parent>` |
+| Add child | `lean-spec rel add <parent> --child <child>` |
+| Add dependency | `lean-spec rel add <spec> --depends-on <other>` |
+| Remove dependency | `lean-spec rel rm <spec> --depends-on <other>` |
+| Dependency graph | `lean-spec deps <spec>` |
+| List children | `lean-spec children <parent>` |
+| Token count | `lean-spec tokens <spec>` |
+| Validate | `lean-spec validate` |
+| Stats | `lean-spec stats` |
 
 ## Choosing Relationship Type
 
@@ -263,7 +262,7 @@ Use when a large initiative is **broken into child specs** that together form th
 - Child spec doesn't make sense without parent context
 - Parent completes when **all children** complete
 
-**Tools**: `relationships` with `action=add`, `type=parent`, `target=<parent>` (MCP) / `lean-spec rel add <child> --parent <parent>` (CLI)
+**Command**: `lean-spec rel add <child> --parent <parent>`
 
 **Example**: "CLI UX Overhaul" umbrella → children: "Help System", "Error Messages", "Progress Indicators"
 
@@ -275,8 +274,8 @@ Use when a spec **cannot start** until another independent spec is done first.
 - Both specs are **independent work items** with separate goals
 - Removal of the dependency doesn't change the spec's scope
 
-**Tools**: `relationships` with `action=add`, `type=depends_on`, `target=<other>` (MCP) / `lean-spec rel add <spec> --depends-on <other>` (CLI)
-**Remove**: `relationships` with `action=remove`, `type=depends_on` (MCP) / `lean-spec rel rm <spec> --depends-on <other>` (CLI)
+**Command**: `lean-spec rel add <spec> --depends-on <other>`
+**Remove**: `lean-spec rel rm <spec> --depends-on <other>`
 
 **Example**: "Search API" depends on "Database Schema Migration"
 
@@ -292,17 +291,17 @@ Use when a spec **cannot start** until another independent spec is done first.
 
 ### Umbrella Workflow
 
-1. Create the umbrella spec: `create`
-2. Create each child spec: `create`
-3. Assign children: `relationships` (`action=add`, `type=parent`) for each child
-4. Verify structure: `children`
-5. Add cross-cutting deps if needed: `relationships` (`action=add`, `type=depends_on`)
+1. Create the umbrella spec: `lean-spec create <name>`
+2. Create each child spec: `lean-spec create <name>`
+3. Assign children: `lean-spec rel add <child> --parent <parent>` for each child
+4. Verify structure: `lean-spec children <parent>`
+5. Add cross-cutting deps if needed: `lean-spec rel add <spec> --depends-on <other>`
 
 ---
 
 ## Best Practices
 
-- Never create spec files manually; use `create`.
+- Never create spec files manually; use `lean-spec create`.
 - **Always pass all known fields in the `create` call** — never create empty then edit.
 - Keep specs short and focused; split when >2000 tokens.
 - **Search first** — never create duplicates; link related specs instead.
