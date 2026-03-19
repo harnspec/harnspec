@@ -174,7 +174,6 @@ fn main() -> ExitCode {
                 no_skill,
             },
         ),
-        Commands::Skill { action } => commands::skill::run(&action),
         Commands::Run {
             prompt,
             spec,

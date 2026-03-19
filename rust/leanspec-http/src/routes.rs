@@ -188,10 +188,7 @@ pub fn create_router(state: AppState) -> Router {
         .route("/api/github/repos", get(handlers::github_list_repos))
         .route("/api/github/detect", post(handlers::github_detect_specs))
         .route("/api/github/import", post(handlers::github_import_repo))
-        .route(
-            "/api/github/sync/{id}",
-            post(handlers::github_sync_project),
-        )
+        .route("/api/github/sync/{id}", post(handlers::github_sync_project))
         // Local project routes
         .route(
             "/api/local-projects/discover",

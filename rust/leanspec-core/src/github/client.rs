@@ -33,10 +33,7 @@ impl GitHubClient {
             reqwest::header::ACCEPT,
             "application/vnd.github.v3+json".parse().unwrap(),
         );
-        headers.insert(
-            reqwest::header::USER_AGENT,
-            USER_AGENT.parse().unwrap(),
-        );
+        headers.insert(reqwest::header::USER_AGENT, USER_AGENT.parse().unwrap());
         if let Some(ref token) = token {
             headers.insert(
                 reqwest::header::AUTHORIZATION,
@@ -51,7 +48,6 @@ impl GitHubClient {
 
         Self { client, token }
     }
-
 }
 
 impl Default for GitHubClient {
@@ -71,10 +67,7 @@ impl GitHubClient {
             reqwest::header::ACCEPT,
             "application/vnd.github.v3+json".parse().unwrap(),
         );
-        headers.insert(
-            reqwest::header::USER_AGENT,
-            USER_AGENT.parse().unwrap(),
-        );
+        headers.insert(reqwest::header::USER_AGENT, USER_AGENT.parse().unwrap());
         headers.insert(
             reqwest::header::AUTHORIZATION,
             format!("Bearer {}", token).parse().unwrap(),
@@ -233,11 +226,7 @@ impl GitHubClient {
                 .iter()
                 .filter(|item| {
                     item.item_type == "dir"
-                        && item
-                            .name
-                            .chars()
-                            .next()
-                            .is_some_and(|c| c.is_ascii_digit())
+                        && item.name.chars().next().is_some_and(|c| c.is_ascii_digit())
                 })
                 .collect();
 
@@ -252,8 +241,7 @@ impl GitHubClient {
                 let readme_path = format!("{}/{}/README.md", candidate, dir.name);
                 match self.get_file_content(repo_ref, &readme_path, Some(branch)) {
                     Ok(content) => {
-                        let (title, status, priority) =
-                            extract_spec_metadata(&parser, &content);
+                        let (title, status, priority) = extract_spec_metadata(&parser, &content);
                         specs.push(DetectedSpec {
                             path: dir.name.clone(),
                             title,
@@ -350,7 +338,9 @@ fn extract_spec_metadata(
     // Parse frontmatter (returns (SpecFrontmatter, body_content))
     if let Ok((fm, _body)) = parser.parse(content) {
         status = Some(fm.status.to_string());
-        priority = fm.priority.map(|p: crate::types::SpecPriority| p.to_string());
+        priority = fm
+            .priority
+            .map(|p: crate::types::SpecPriority| p.to_string());
     }
 
     (title, status, priority)

@@ -725,7 +725,10 @@ fn handle_skills_install(
 
     if let Err(err) = skill::install(agents_opt, true) {
         println!("{} Failed to install agent skills: {}", "⚠".yellow(), err);
-        println!("{} You can retry with: lean-spec skill install", "•".cyan());
+        println!(
+            "{} You can retry with: npx skills add codervisor/lean-spec --skill leanspec-sdd",
+            "•".cyan()
+        );
     }
 
     Ok(())

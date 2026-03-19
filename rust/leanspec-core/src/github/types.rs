@@ -12,10 +12,7 @@ pub struct RepoRef {
 impl RepoRef {
     pub fn parse(input: &str) -> Option<Self> {
         // Accept "owner/repo" or "https://github.com/owner/repo"
-        let stripped = input
-            .trim()
-            .trim_end_matches('/')
-            .trim_end_matches(".git");
+        let stripped = input.trim().trim_end_matches('/').trim_end_matches(".git");
 
         let parts: Vec<&str> = if stripped.contains("github.com") {
             stripped

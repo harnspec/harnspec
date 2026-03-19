@@ -292,13 +292,6 @@ pub(crate) enum Commands {
         no_skill: bool,
     },
 
-    /// Manage agent skills via skills.sh
-    Skill {
-        /// Action: install, update, list
-        #[arg(default_value = "help")]
-        action: String,
-    },
-
     /// Run a configured runner from the current project
     Run {
         /// Inline prompt to send to the runner

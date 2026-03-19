@@ -73,15 +73,13 @@ pub fn run(params: CreateParams) -> Result<(), Box<dyn Error>> {
     let project_root = find_project_root(specs_dir)?;
 
     // 2. Resolve status
-    let resolved_status = explicit_status
-        .clone()
-        .unwrap_or_else(|| {
-            if is_draft_status_enabled(&project_root) {
-                "draft".to_string()
-            } else {
-                "planned".to_string()
-            }
-        });
+    let resolved_status = explicit_status.clone().unwrap_or_else(|| {
+        if is_draft_status_enabled(&project_root) {
+            "draft".to_string()
+        } else {
+            "planned".to_string()
+        }
+    });
 
     // 3. Generate spec number
     let next_number = get_next_spec_number(specs_dir)?;
@@ -323,11 +321,8 @@ fn merge_frontmatter(input: &MergeFrontmatterInput<'_>) -> Result<String, Box<dy
 
     // If content has frontmatter but is missing required fields, inject defaults
     // so the parser doesn't reject it. This is common when users/AI pass partial frontmatter.
-    let content = ensure_required_frontmatter_fields(
-        input.content,
-        input.default_status,
-        input.created_date,
-    );
+    let content =
+        ensure_required_frontmatter_fields(input.content, input.default_status, input.created_date);
     let content = content.as_str();
 
     match parser.parse(content) {
@@ -337,10 +332,7 @@ fn merge_frontmatter(input: &MergeFrontmatterInput<'_>) -> Result<String, Box<dy
                 fm.status = s.parse().map_err(|_| format!("Invalid status: {}", s))?;
             }
             if let Some(p) = input.priority {
-                fm.priority = Some(
-                    p.parse()
-                        .map_err(|_| format!("Invalid priority: {}", p))?,
-                );
+                fm.priority = Some(p.parse().map_err(|_| format!("Invalid priority: {}", p))?);
             }
             if !input.tags.is_empty() {
                 fm.tags = input.tags.to_vec();
@@ -421,7 +413,6 @@ fn merge_frontmatter(input: &MergeFrontmatterInput<'_>) -> Result<String, Box<dy
         Err(e) => Err(format!("Failed to parse content frontmatter: {}", e).into()),
     }
 }
-
 
 fn get_next_spec_number(specs_dir: &str) -> Result<u32, Box<dyn Error>> {
     let specs_path = Path::new(specs_dir);
@@ -527,7 +518,6 @@ fn is_draft_status_enabled(project_root: &Path) -> bool {
     false
 }
 
-
 fn generate_title(name: &str) -> String {
     name.split('-')
         .map(|w| {
@@ -621,14 +611,35 @@ mod tests {
 
     #[test]
     fn test_merge_frontmatter_explicit_override() {
-        let content = "---\nstatus: draft\npriority: low\ntags: []\n---\n\n# My Feature\n\nBody text.\n";
-        let input = make_input(content, "My Feature", Some("planned"), Some("medium"), &[], None);
+        let content =
+            "---\nstatus: draft\npriority: low\ntags: []\n---\n\n# My Feature\n\nBody text.\n";
+        let input = make_input(
+            content,
+            "My Feature",
+            Some("planned"),
+            Some("medium"),
+            &[],
+            None,
+        );
         let result = merge_frontmatter(&input);
-        assert!(result.is_ok(), "should successfully merge: {:?}", result.err());
+        assert!(
+            result.is_ok(),
+            "should successfully merge: {:?}",
+            result.err()
+        );
         let output = result.unwrap();
-        assert!(output.contains("status: planned"), "explicit CLI status should override");
-        assert!(output.contains("priority: medium"), "explicit CLI priority should override");
-        assert!(output.contains("# My Feature"), "should preserve title heading");
+        assert!(
+            output.contains("status: planned"),
+            "explicit CLI status should override"
+        );
+        assert!(
+            output.contains("priority: medium"),
+            "explicit CLI priority should override"
+        );
+        assert!(
+            output.contains("# My Feature"),
+            "should preserve title heading"
+        );
         assert!(output.contains("Body text."), "should preserve body");
     }
 
@@ -640,8 +651,14 @@ mod tests {
         let result = merge_frontmatter(&input);
         assert!(result.is_ok(), "should merge: {:?}", result.err());
         let output = result.unwrap();
-        assert!(output.contains("status: in-progress"), "should preserve content status");
-        assert!(output.contains("priority: high"), "should preserve content priority");
+        assert!(
+            output.contains("status: in-progress"),
+            "should preserve content status"
+        );
+        assert!(
+            output.contains("priority: high"),
+            "should preserve content priority"
+        );
     }
 
     #[test]
@@ -652,8 +669,14 @@ mod tests {
         assert!(result.is_ok(), "should build frontmatter from scratch");
         let output = result.unwrap();
         assert!(output.starts_with("---\n"), "should start with frontmatter");
-        assert!(output.contains("status: planned"), "should have default status");
-        assert!(output.contains("# Simple Content"), "should preserve content");
+        assert!(
+            output.contains("status: planned"),
+            "should have default status"
+        );
+        assert!(
+            output.contains("# Simple Content"),
+            "should preserve content"
+        );
     }
 
     #[test]
@@ -675,7 +698,10 @@ mod tests {
         let result = merge_frontmatter(&input);
         assert!(result.is_ok());
         let output = result.unwrap();
-        assert!(output.contains("assignee: john.doe"), "should have assignee");
+        assert!(
+            output.contains("assignee: john.doe"),
+            "should have assignee"
+        );
     }
 
     #[test]

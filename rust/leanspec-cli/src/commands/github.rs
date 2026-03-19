@@ -19,9 +19,7 @@ pub enum GitHubCommand {
         token: Option<String>,
     },
     /// List user's GitHub repos
-    Repos {
-        token: Option<String>,
-    },
+    Repos { token: Option<String> },
 }
 
 pub fn run(cmd: GitHubCommand, output_format: &str) -> Result<(), Box<dyn Error>> {
@@ -74,27 +72,13 @@ fn detect(
                 repo_ref.repo,
                 detection.branch
             );
-            println!(
-                "  Specs directory: {}",
-                detection.specs_dir.bold()
-            );
+            println!("  Specs directory: {}", detection.specs_dir.bold());
             println!();
 
             for spec in &detection.specs {
-                let status = spec
-                    .status
-                    .as_deref()
-                    .unwrap_or("unknown");
-                let title = spec
-                    .title
-                    .as_deref()
-                    .unwrap_or("(no title)");
-                println!(
-                    "  {} {} [{}]",
-                    spec.path.bold(),
-                    title,
-                    status.dimmed()
-                );
+                let status = spec.status.as_deref().unwrap_or("unknown");
+                let title = spec.title.as_deref().unwrap_or("(no title)");
+                println!("  {} {} [{}]", spec.path.bold(), title, status.dimmed());
             }
 
             if detection.spec_count > detection.specs.len() {
@@ -107,11 +91,7 @@ fn detect(
             println!();
             println!(
                 "To import: {}",
-                format!(
-                    "lean-spec github import {}",
-                    repo_ref.full_name()
-                )
-                .cyan()
+                format!("lean-spec github import {}", repo_ref.full_name()).cyan()
             );
         }
         None => {
@@ -170,7 +150,8 @@ fn import(
         std::fs::create_dir_all(&local_dir)?;
 
         let readme_path = format!("{}/{}/README.md", detection.specs_dir, item.name);
-        if let Ok(content) = client.get_file_content(&repo_ref, &readme_path, Some(&detection.branch))
+        if let Ok(content) =
+            client.get_file_content(&repo_ref, &readme_path, Some(&detection.branch))
         {
             std::fs::write(local_dir.join("README.md"), &content)?;
             synced += 1;

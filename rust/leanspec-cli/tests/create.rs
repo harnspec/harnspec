@@ -43,7 +43,11 @@ Custom design section.
 Custom implementation notes."#;
 
     let result = create_spec_with_content(cwd, "my-feature", content);
-    assert!(result.success, "create with content should succeed: stdout={} stderr={}", result.stdout, result.stderr);
+    assert!(
+        result.success,
+        "create with content should succeed: stdout={} stderr={}",
+        result.stdout, result.stderr
+    );
 
     let spec_dir = cwd.join("specs").join("001-my-feature");
     assert!(dir_exists(&spec_dir), "spec directory should exist");
@@ -88,7 +92,8 @@ This spec has frontmatter included."#;
     let result = create_spec_with_content(cwd, "my-feature", content);
     assert!(
         result.success,
-        "create with frontmatter content should succeed: stdout={} stderr={}", result.stdout, result.stderr
+        "create with frontmatter content should succeed: stdout={} stderr={}",
+        result.stdout, result.stderr
     );
 
     let readme_path = cwd.join("specs").join("001-my-feature").join("README.md");
@@ -144,7 +149,8 @@ Content with frontmatter."#;
     );
     assert!(
         result.success,
-        "create with override options should succeed: stdout={} stderr={}", result.stdout, result.stderr
+        "create with override options should succeed: stdout={} stderr={}",
+        result.stdout, result.stderr
     );
 
     let readme_path = cwd.join("specs").join("001-my-feature").join("README.md");
@@ -176,7 +182,11 @@ fn test_create_content_without_frontmatter_uses_defaults() {
 Just body content, no frontmatter."#;
 
     let result = create_spec_with_content(cwd, "my-feature", content);
-    assert!(result.success, "create without frontmatter should succeed: stdout={} stderr={}", result.stdout, result.stderr);
+    assert!(
+        result.success,
+        "create without frontmatter should succeed: stdout={} stderr={}",
+        result.stdout, result.stderr
+    );
 
     let readme_path = cwd.join("specs").join("001-my-feature").join("README.md");
     let file_content = read_file(&readme_path);
@@ -214,7 +224,11 @@ File-based design."#;
     write_file(&content_file_path, content);
 
     let result = create_spec_from_file(cwd, "my-feature", "spec-content.md");
-    assert!(result.success, "create from file should succeed: stdout={} stderr={}", result.stdout, result.stderr);
+    assert!(
+        result.success,
+        "create from file should succeed: stdout={} stderr={}",
+        result.stdout, result.stderr
+    );
 
     let readme_path = cwd.join("specs").join("001-my-feature").join("README.md");
     let file_content = read_file(&readme_path);
@@ -244,7 +258,11 @@ Content from absolute path."#;
     write_file(&content_file_path, content);
 
     let result = create_spec_from_file(cwd, "my-feature", content_file_path.to_str().unwrap());
-    assert!(result.success, "create from absolute path should succeed: stdout={} stderr={}", result.stdout, result.stderr);
+    assert!(
+        result.success,
+        "create from absolute path should succeed: stdout={} stderr={}",
+        result.stdout, result.stderr
+    );
 
     let readme_path = cwd.join("specs").join("001-my-feature").join("README.md");
     let file_content = read_file(&readme_path);
@@ -312,7 +330,11 @@ fn test_create_file_takes_precedence_over_content() {
         ],
         cwd,
     );
-    assert!(result.success, "create with both options should succeed: stdout={} stderr={}", result.stdout, result.stderr);
+    assert!(
+        result.success,
+        "create with both options should succeed: stdout={} stderr={}",
+        result.stdout, result.stderr
+    );
 
     let readme_path = cwd.join("specs").join("001-my-feature").join("README.md");
     let spec_content = read_file(&readme_path);
@@ -400,7 +422,11 @@ fn test_create_with_large_content() {
     let large_content = format!("# Large Content\n\n{}", "A".repeat(15000));
 
     let result = create_spec_with_content(cwd, "my-feature", &large_content);
-    assert!(result.success, "create with large content should succeed: stdout={} stderr={}", result.stdout, result.stderr);
+    assert!(
+        result.success,
+        "create with large content should succeed: stdout={} stderr={}",
+        result.stdout, result.stderr
+    );
 
     let readme_path = cwd.join("specs").join("001-my-feature").join("README.md");
     let file_content = read_file(&readme_path);
@@ -437,7 +463,8 @@ const x = `template ${string}`;
     let result = create_spec_from_file(cwd, "my-feature", "special-content.md");
     assert!(
         result.success,
-        "create with special characters should succeed: stdout={} stderr={}", result.stdout, result.stderr
+        "create with special characters should succeed: stdout={} stderr={}",
+        result.stdout, result.stderr
     );
 
     let readme_path = cwd.join("specs").join("001-my-feature").join("README.md");
@@ -473,7 +500,8 @@ This is the content body."#;
     );
     assert!(
         result.success,
-        "create with title and content should succeed: stdout={} stderr={}", result.stdout, result.stderr
+        "create with title and content should succeed: stdout={} stderr={}",
+        result.stdout, result.stderr
     );
 
     let readme_path = cwd.join("specs").join("001-my-feature").join("README.md");
@@ -509,7 +537,8 @@ Content for the spec."#;
     );
     assert!(
         result.success,
-        "create with assignee and content should succeed: stdout={} stderr={}", result.stdout, result.stderr
+        "create with assignee and content should succeed: stdout={} stderr={}",
+        result.stdout, result.stderr
     );
 
     let readme_path = cwd.join("specs").join("001-my-feature").join("README.md");
@@ -539,7 +568,11 @@ fn test_create_with_minimal_content() {
     write_file(&content_file_path, content);
 
     let result = create_spec_from_file(cwd, "my-feature", "minimal-content.md");
-    assert!(result.success, "create with minimal content should succeed: stdout={} stderr={}", result.stdout, result.stderr);
+    assert!(
+        result.success,
+        "create with minimal content should succeed: stdout={} stderr={}",
+        result.stdout, result.stderr
+    );
 
     let spec_dir = cwd.join("specs").join("001-my-feature");
     assert!(dir_exists(&spec_dir), "spec directory should exist");

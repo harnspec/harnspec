@@ -17,18 +17,20 @@ pub async fn github_detect_specs(
     let repo_ref = RepoRef::parse(&body.repo).ok_or_else(|| {
         (
             StatusCode::BAD_REQUEST,
-            format!("Invalid repository reference: '{}'. Use 'owner/repo' or a GitHub URL.", body.repo),
+            format!(
+                "Invalid repository reference: '{}'. Use 'owner/repo' or a GitHub URL.",
+                body.repo
+            ),
         )
     })?;
 
     let client = make_client(body.token.as_deref());
 
-    let result = tokio::task::spawn_blocking(move || {
-        client.detect_specs(&repo_ref, body.branch.as_deref())
-    })
-    .await
-    .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?
-    .map_err(|e| (StatusCode::BAD_GATEWAY, e.to_string()))?;
+    let result =
+        tokio::task::spawn_blocking(move || client.detect_specs(&repo_ref, body.branch.as_deref()))
+            .await
+            .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?
+            .map_err(|e| (StatusCode::BAD_GATEWAY, e.to_string()))?;
 
     Ok(Json(DetectResponse { result }))
 }
@@ -62,30 +64,29 @@ pub async fn github_import_repo(
     let client = make_client(body.token.as_deref());
 
     // Detect specs first if no specs_path provided
-    let (branch, specs_path) = if let (Some(branch), Some(path)) =
-        (body.branch.as_deref(), body.specs_path.as_deref())
-    {
-        (branch.to_string(), path.to_string())
-    } else {
-        let repo_ref_clone = repo_ref.clone();
-        let branch_clone = body.branch.clone();
-        let detection = tokio::task::spawn_blocking(move || {
-            client.detect_specs(&repo_ref_clone, branch_clone.as_deref())
-        })
-        .await
-        .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?
-        .map_err(|e| (StatusCode::BAD_GATEWAY, e.to_string()))?;
+    let (branch, specs_path) =
+        if let (Some(branch), Some(path)) = (body.branch.as_deref(), body.specs_path.as_deref()) {
+            (branch.to_string(), path.to_string())
+        } else {
+            let repo_ref_clone = repo_ref.clone();
+            let branch_clone = body.branch.clone();
+            let detection = tokio::task::spawn_blocking(move || {
+                client.detect_specs(&repo_ref_clone, branch_clone.as_deref())
+            })
+            .await
+            .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))?
+            .map_err(|e| (StatusCode::BAD_GATEWAY, e.to_string()))?;
 
-        match detection {
-            Some(result) => (result.branch, result.specs_dir),
-            None => {
-                return Err((
-                    StatusCode::NOT_FOUND,
-                    format!("No specs found in repository '{}'", body.repo),
-                ))
+            match detection {
+                Some(result) => (result.branch, result.specs_dir),
+                None => {
+                    return Err((
+                        StatusCode::NOT_FOUND,
+                        format!("No specs found in repository '{}'", body.repo),
+                    ))
+                }
             }
-        }
-    };
+        };
 
     // Register in project registry
     let mut registry = state.registry.write().await;
@@ -187,9 +188,8 @@ fn sync_specs_to_cache(
         }
 
         let local_dir = local_specs_dir.join(&item.name);
-        std::fs::create_dir_all(&local_dir).map_err(|e| {
-            leanspec_core::CoreError::Other(format!("Failed to create dir: {}", e))
-        })?;
+        std::fs::create_dir_all(&local_dir)
+            .map_err(|e| leanspec_core::CoreError::Other(format!("Failed to create dir: {}", e)))?;
 
         let readme_path = format!("{}/{}/README.md", specs_path, item.name);
         match client.get_file_content(repo_ref, &readme_path, Some(branch)) {

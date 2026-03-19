@@ -116,11 +116,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     // LEANSPEC_LOG_FORMAT: "text" (default) or "json" for cloud log aggregators
-    let log_format = std::env::var("LEANSPEC_LOG_FORMAT")
-        .unwrap_or_else(|_| "text".to_string());
+    let log_format = std::env::var("LEANSPEC_LOG_FORMAT").unwrap_or_else(|_| "text".to_string());
 
-    let env_filter = tracing_subscriber::EnvFilter::try_from_default_env()
-        .unwrap_or_else(|_| filter.into());
+    let env_filter =
+        tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|_| filter.into());
 
     if log_format == "json" {
         // JSON structured logging for cloud environments (Datadog, CloudWatch, Grafana)
