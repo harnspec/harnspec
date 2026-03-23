@@ -251,10 +251,6 @@ pub(crate) enum Commands {
         #[arg(long)]
         no_ai_tools: bool,
 
-        /// Skip MCP server configuration
-        #[arg(long)]
-        no_mcp: bool,
-
         /// Install LeanSpec agent skills (project-level default)
         #[arg(long)]
         skill: bool,
@@ -375,9 +371,6 @@ pub(crate) enum Commands {
         #[arg(long)]
         downstream: bool,
     },
-
-    /// Start MCP server for AI assistants
-    Mcp,
 
     /// Migrate specs from other SDD tools
     Migrate {

@@ -9,17 +9,12 @@ use walkdir::WalkDir;
 use crate::commands::package_manager::detect_package_manager;
 
 mod ai_tools;
-mod mcp_config;
-
 use crate::commands::skill;
 use ai_tools::{
     create_symlinks, default_symlink_selection, detect_ai_tools, symlink_capable_runners,
     DetectionResult as AiDetection,
 };
 use leanspec_core::sessions::RunnerRegistry;
-use mcp_config::{
-    all_tools as all_mcp_tools, configure_mcp, default_mcp_selection, detect_mcp_tools,
-};
 
 // Embedded AGENTS.md templates
 const AGENTS_MD_TEMPLATE_DETAILED: &str = include_str!("../../templates/AGENTS.md");
@@ -32,7 +27,6 @@ pub struct InitOptions {
     pub yes: bool,
     pub example: Option<String>,
     pub no_ai_tools: bool,
-    pub no_mcp: bool,
     pub skill: bool,
     pub skill_github: bool,
     pub skill_claude: bool,
@@ -123,9 +117,8 @@ fn run_standard_init(specs_dir: &str, options: InitOptions) -> Result<(), Box<dy
     scaffold_templates(&config_dir)?;
     scaffold_agents(&root, &project_name, will_install_skills)?;
 
-    // New: AI tool + MCP onboarding
+    // AI tool onboarding
     handle_ai_symlinks(&root, &registry, &ai_detections, &options)?;
-    handle_mcp_configs(&root, &options)?;
     handle_skills_install(will_install_skills, &ai_detections)?;
 
     println!();
@@ -176,7 +169,6 @@ fn scaffold_example(
             yes: true,
             example: None,
             no_ai_tools: options.no_ai_tools,
-            no_mcp: options.no_mcp,
             skill: options.skill,
             skill_github: options.skill_github,
             skill_claude: options.skill_claude,
@@ -570,87 +562,6 @@ fn handle_ai_symlinks(
     Ok(())
 }
 
-fn handle_mcp_configs(root: &Path, options: &InitOptions) -> Result<(), Box<dyn Error>> {
-    if options.no_mcp {
-        return Ok(());
-    }
-
-    let detections = detect_mcp_tools(root);
-    let defaults = default_mcp_selection(&detections);
-    let available = all_mcp_tools();
-
-    let selected = if options.yes {
-        defaults
-    } else {
-        if detections.iter().any(|d| d.detected) {
-            println!("\n{}", "Detected MCP-compatible tools:".cyan());
-            for detection in detections.iter().filter(|d| d.detected) {
-                println!(
-                    "  • {}: {}",
-                    detection.tool.name(),
-                    detection
-                        .reasons
-                        .join(", ")
-                        .if_empty(|| "detected".to_string())
-                );
-            }
-        } else {
-            println!("\n{}", "No MCP-compatible tools detected".yellow());
-        }
-
-        let labels: Vec<String> = available
-            .iter()
-            .map(|tool| tool.name().to_string())
-            .collect();
-        let defaults_mask: Vec<bool> = available
-            .iter()
-            .map(|tool| defaults.contains(tool))
-            .collect();
-
-        let selected_indexes = MultiSelect::new()
-            .with_prompt("Configure MCP server entries for which tools?")
-            .items(&labels)
-            .defaults(&defaults_mask)
-            .interact()?;
-        selected_indexes.into_iter().map(|i| available[i]).collect()
-    };
-
-    if selected.is_empty() {
-        return Ok(());
-    }
-
-    let results = configure_mcp(root, &selected);
-    for result in results {
-        let path_display = result.config_path.display();
-        if result.created {
-            println!(
-                "{} {}: Created {}",
-                "✓".green(),
-                result.tool.name(),
-                path_display
-            );
-        } else if result.merged {
-            println!(
-                "{} {}: Added lean-spec to {}",
-                "✓".green(),
-                result.tool.name(),
-                path_display
-            );
-        } else if result.skipped {
-            println!(
-                "{} {}: Already configured in {}",
-                "•".cyan(),
-                result.tool.name(),
-                path_display
-            );
-        } else if let Some(err) = result.error {
-            println!("{} {}: {}", "✗".red(), result.tool.name(), err);
-        }
-    }
-
-    Ok(())
-}
-
 /// Determines if skills will be installed based on options and detections
 fn decide_skill_install(options: &InitOptions) -> Result<bool, Box<dyn Error>> {
     if options.no_skill {
@@ -751,20 +662,6 @@ fn print_ai_detection(detections: &[AiDetection]) {
         }
         for reason in &detection.reasons {
             println!("    └─ {}", reason);
-        }
-    }
-}
-
-trait IfEmpty {
-    fn if_empty(self, alt: impl FnOnce() -> Self) -> Self;
-}
-
-impl IfEmpty for String {
-    fn if_empty(self, alt: impl FnOnce() -> Self) -> Self {
-        if self.is_empty() {
-            alt()
-        } else {
-            self
         }
     }
 }

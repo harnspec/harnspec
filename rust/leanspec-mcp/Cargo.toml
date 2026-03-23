@@ -7,7 +7,7 @@ authors.workspace = true
 license.workspace = true
 repository.workspace = true
 homepage.workspace = true
-description = "MCP (Model Context Protocol) server for LeanSpec"
+description = "DEPRECATED: MCP (Model Context Protocol) server for LeanSpec"
 
 [lib]
 name = "leanspec_mcp"

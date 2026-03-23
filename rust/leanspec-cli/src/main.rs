@@ -146,7 +146,6 @@ fn main() -> ExitCode {
             yes,
             example,
             no_ai_tools,
-            no_mcp,
             skill,
             skill_github,
             skill_claude,
@@ -162,7 +161,6 @@ fn main() -> ExitCode {
                 yes,
                 example,
                 no_ai_tools,
-                no_mcp,
                 skill,
                 skill_github,
                 skill_claude,
@@ -220,7 +218,6 @@ fn main() -> ExitCode {
             hierarchy,
             output_format: cli.output.clone(),
         }),
-        Commands::Mcp => commands::mcp::run(&specs_dir),
         Commands::Migrate {
             input_path,
             auto,

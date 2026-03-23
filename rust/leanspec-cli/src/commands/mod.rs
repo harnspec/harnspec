@@ -34,7 +34,6 @@ pub mod timeline;
 pub mod agent;
 pub mod backfill;
 pub mod compact;
-pub mod mcp;
 pub mod migrate;
 pub mod migrate_archived;
 pub mod split;

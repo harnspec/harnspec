@@ -15,7 +15,6 @@ path = "src/lib.rs"
 
 [dependencies]
 # AI provider libraries (optional)
-agent-client-protocol = {version = "0.9.4", optional = true}
 anthropic = {version = "0.0.8", optional = true}
 async-openai = {version = "0.32", optional = true, features = ["chat-completion"]}
 chrono.workspace = true
@@ -52,7 +51,7 @@ ai = ["tokio", "async-trait", "uuid", "async-openai", "anthropic", "schemars", "
 default = []
 full = ["sessions", "storage", "ai", "github"]
 github = ["reqwest", "base64"]
-sessions = ["sqlx", "tokio", "uuid", "async-trait", "which", "flate2", "agent-client-protocol"]
+sessions = ["sqlx", "tokio", "uuid", "async-trait", "which", "flate2"]
 storage = ["sqlx", "tokio", "dirs", "uuid"]
 
 [dev-dependencies]
