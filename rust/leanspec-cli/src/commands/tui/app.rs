@@ -14,6 +14,7 @@ pub enum AppMode {
     Search,
     Help,
     Filter,
+    Toc,
 }
 
 /// Sort order for the spec list.
@@ -133,6 +134,7 @@ pub struct BoardGroup {
     pub status: SpecStatus,
     pub label: String,
     pub indices: Vec<usize>,
+    pub collapsed: bool,
 }
 
 /// Core application state.
@@ -189,6 +191,12 @@ pub struct App {
     pub tree_mode: bool,
     pub tree_collapsed: HashSet<String>,
     pub tree_rows: Vec<TreeRow>,
+
+    // TOC overlay
+    /// Headings extracted from the currently displayed spec: (line_idx, level, text)
+    pub detail_toc: Vec<(usize, u8, String)>,
+    /// Cursor position in the TOC overlay.
+    pub toc_selected: usize,
 }
 
 fn priority_sort_key(p: Option<SpecPriority>) -> u8 {
@@ -240,6 +248,8 @@ impl App {
             tree_mode: false,
             tree_collapsed: HashSet::new(),
             tree_rows: Vec::new(),
+            detail_toc: Vec::new(),
+            toc_selected: 0,
         };
 
         app.apply_filter_and_sort();
@@ -294,6 +304,13 @@ impl App {
     }
 
     fn rebuild_board_groups_from_filtered(&mut self) {
+        // Preserve existing collapsed state by status
+        let prev_collapsed: std::collections::HashMap<SpecStatus, bool> = self
+            .board_groups
+            .iter()
+            .map(|g| (g.status, g.collapsed))
+            .collect();
+
         let statuses = [
             (SpecStatus::InProgress, "In Progress"),
             (SpecStatus::Planned, "Planned"),
@@ -314,10 +331,12 @@ impl App {
                 if indices.is_empty() {
                     None
                 } else {
+                    let collapsed = prev_collapsed.get(status).copied().unwrap_or(false);
                     Some(BoardGroup {
                         status: *status,
                         label: label.to_string(),
                         indices,
+                        collapsed,
                     })
                 }
             })
@@ -518,6 +537,9 @@ impl App {
         match self.primary_view {
             PrimaryView::Board => {
                 let group = self.board_groups.get(self.board_group_idx)?;
+                if group.collapsed {
+                    return None;
+                }
                 group.indices.get(self.board_item_idx).copied()
             }
             PrimaryView::List => {
@@ -535,21 +557,66 @@ impl App {
         if let Some(idx) = self.selected_spec_index() {
             let Some(spec) = self.specs.get(idx) else {
                 self.selected_detail = None;
+                self.detail_toc = Vec::new();
                 return;
             };
             let path = &spec.path;
             if let Ok(Some(full)) = self.loader.load(path) {
                 self.detail_content_lines = full.content.lines().count() as u16;
+                self.detail_toc = Self::extract_headings_inner(&full.content);
                 self.selected_detail = Some(full);
             } else {
                 self.selected_detail = None;
                 self.detail_content_lines = u16::MAX;
+                self.detail_toc = Vec::new();
             }
         } else {
             self.selected_detail = None;
             self.detail_content_lines = u16::MAX;
+            self.detail_toc = Vec::new();
         }
         self.detail_scroll = 0;
+        self.toc_selected = 0;
+    }
+
+    /// Extract ## and ### headings from markdown content.
+    /// Returns (line_index, level, heading_text).
+    fn extract_headings_inner(content: &str) -> Vec<(usize, u8, String)> {
+        let mut headings: Vec<(usize, u8, String)> = Vec::new();
+        let mut line_idx: usize = 0;
+        let mut in_code_block = false;
+        let mut code_len: usize = 0;
+
+        for raw_line in content.lines() {
+            let trimmed = raw_line.trim_end();
+
+            if trimmed.starts_with("```") {
+                if in_code_block {
+                    // End of code block — count its rendered lines
+                    line_idx += code_len + 2;
+                    in_code_block = false;
+                    code_len = 0;
+                } else {
+                    in_code_block = true;
+                }
+                continue;
+            }
+
+            if in_code_block {
+                code_len += 1;
+                continue;
+            }
+
+            if let Some(rest) = trimmed.strip_prefix("## ") {
+                headings.push((line_idx, 2, rest.to_string()));
+            } else if let Some(rest) = trimmed.strip_prefix("### ") {
+                headings.push((line_idx, 3, rest.to_string()));
+            }
+
+            line_idx += 1;
+        }
+
+        headings
     }
 
     // -- Navigation --
@@ -557,10 +624,17 @@ impl App {
     pub fn move_down(&mut self) {
         match self.primary_view {
             PrimaryView::Board => {
-                if let Some(group) = self.board_groups.get(self.board_group_idx) {
-                    if self.board_item_idx + 1 < group.indices.len() {
-                        self.board_item_idx += 1;
-                    }
+                let group_len = self
+                    .board_groups
+                    .get(self.board_group_idx)
+                    .map(|g| if g.collapsed { 0 } else { g.indices.len() })
+                    .unwrap_or(0);
+                if self.board_item_idx + 1 < group_len {
+                    self.board_item_idx += 1;
+                } else if self.board_group_idx + 1 < self.board_groups.len() {
+                    // Move to next group
+                    self.board_group_idx += 1;
+                    self.board_item_idx = 0;
                 }
             }
             PrimaryView::List => {
@@ -576,7 +650,18 @@ impl App {
     pub fn move_up(&mut self) {
         match self.primary_view {
             PrimaryView::Board => {
-                self.board_item_idx = self.board_item_idx.saturating_sub(1);
+                if self.board_item_idx > 0 {
+                    self.board_item_idx -= 1;
+                } else if self.board_group_idx > 0 {
+                    // Move to previous group
+                    self.board_group_idx -= 1;
+                    let prev_len = self
+                        .board_groups
+                        .get(self.board_group_idx)
+                        .map(|g| if g.collapsed { 0 } else { g.indices.len() })
+                        .unwrap_or(0);
+                    self.board_item_idx = prev_len.saturating_sub(1);
+                }
             }
             PrimaryView::List => {
                 self.list_selected = self.list_selected.saturating_sub(1);
@@ -663,6 +748,32 @@ impl App {
         }
     }
 
+    /// Toggle collapse/expand of the current board group.
+    pub fn toggle_current_board_group(&mut self) {
+        if let Some(group) = self.board_groups.get_mut(self.board_group_idx) {
+            group.collapsed = !group.collapsed;
+            // If now collapsed, reset item cursor to 0 so it doesn't point past end
+            if group.collapsed {
+                self.board_item_idx = 0;
+            }
+        }
+    }
+
+    /// Collapse all board groups.
+    pub fn collapse_all_board_groups(&mut self) {
+        for group in &mut self.board_groups {
+            group.collapsed = true;
+        }
+        self.board_item_idx = 0;
+    }
+
+    /// Expand all board groups.
+    pub fn expand_all_board_groups(&mut self) {
+        for group in &mut self.board_groups {
+            group.collapsed = false;
+        }
+    }
+
     pub fn scroll_detail_down(&mut self) {
         if self.detail_scroll < self.detail_content_lines {
             self.detail_scroll = self.detail_scroll.saturating_add(1);
@@ -719,6 +830,49 @@ impl App {
 
     pub fn exit_overlay(&mut self) {
         self.mode = AppMode::Normal;
+    }
+
+    pub fn open_toc(&mut self) {
+        if !self.detail_toc.is_empty() {
+            // Position cursor at currently visible section
+            self.toc_selected = self.current_toc_section();
+            self.mode = AppMode::Toc;
+        }
+    }
+
+    pub fn close_toc(&mut self) {
+        self.mode = AppMode::Normal;
+    }
+
+    pub fn toc_move_down(&mut self) {
+        if self.toc_selected + 1 < self.detail_toc.len() {
+            self.toc_selected += 1;
+        }
+    }
+
+    pub fn toc_move_up(&mut self) {
+        self.toc_selected = self.toc_selected.saturating_sub(1);
+    }
+
+    /// Jump to the TOC entry at `toc_selected` and close the overlay.
+    pub fn toc_jump(&mut self) {
+        if let Some(&(line_idx, _, _)) = self.detail_toc.get(self.toc_selected) {
+            self.detail_scroll = line_idx as u16;
+        }
+        self.close_toc();
+    }
+
+    /// Return the index into `detail_toc` of the section currently visible
+    /// (last heading whose line_idx <= detail_scroll).
+    pub fn current_toc_section(&self) -> usize {
+        let scroll = self.detail_scroll as usize;
+        let mut best = 0;
+        for (i, &(line_idx, _, _)) in self.detail_toc.iter().enumerate() {
+            if line_idx <= scroll {
+                best = i;
+            }
+        }
+        best
     }
 
     // -- Search --
@@ -847,7 +1001,7 @@ impl App {
             stats: SpecStats::compute(&[]),
             loader: SpecLoader::new("/nonexistent"),
             mode: AppMode::Normal,
-            primary_view: PrimaryView::Board,
+            primary_view: PrimaryView::List,
             focus: FocusPane::Left,
             detail_mode: DetailMode::Content,
             should_quit: false,
@@ -870,6 +1024,8 @@ impl App {
             tree_mode: false,
             tree_collapsed: HashSet::new(),
             tree_rows: Vec::new(),
+            detail_toc: Vec::new(),
+            toc_selected: 0,
         }
     }
 }
@@ -903,14 +1059,15 @@ mod tests {
     #[test]
     fn test_view_switching() {
         let mut app = make_test_app();
-        assert_eq!(app.primary_view, PrimaryView::Board);
-
-        app.set_list_view();
+        // Default view is now List
         assert_eq!(app.primary_view, PrimaryView::List);
-        assert_eq!(app.focus, FocusPane::Left);
 
         app.set_board_view();
         assert_eq!(app.primary_view, PrimaryView::Board);
+        assert_eq!(app.focus, FocusPane::Left);
+
+        app.set_list_view();
+        assert_eq!(app.primary_view, PrimaryView::List);
         assert_eq!(app.focus, FocusPane::Left);
     }
 
@@ -963,16 +1120,19 @@ mod tests {
     #[test]
     fn test_board_navigation_wraps_groups() {
         let mut app = make_test_app();
+        app.primary_view = PrimaryView::Board;
         app.board_groups = vec![
             BoardGroup {
                 status: SpecStatus::InProgress,
                 label: "In Progress".to_string(),
                 indices: vec![0],
+                collapsed: false,
             },
             BoardGroup {
                 status: SpecStatus::Draft,
                 label: "Draft".to_string(),
                 indices: vec![1],
+                collapsed: false,
             },
         ];
 

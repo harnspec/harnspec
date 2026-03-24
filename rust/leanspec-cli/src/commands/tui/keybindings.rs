@@ -11,6 +11,7 @@ pub fn handle_key(app: &mut App, key: KeyEvent) {
         AppMode::Search => handle_search(app, key),
         AppMode::Help => handle_help(app, key),
         AppMode::Filter => handle_filter(app, key),
+        AppMode::Toc => handle_toc(app, key),
     }
 }
 
@@ -107,6 +108,26 @@ fn handle_normal(app: &mut App, key: KeyEvent) {
         KeyCode::Char('t') => app.toggle_tree(),
         KeyCode::Char('z') => app.collapse_all(),
         KeyCode::Char('Z') => app.expand_all(),
+        KeyCode::Char('c') => {
+            if app.primary_view == super::app::PrimaryView::Board {
+                app.toggle_current_board_group();
+            }
+        }
+        KeyCode::Char('C') => {
+            if app.primary_view == super::app::PrimaryView::Board {
+                app.collapse_all_board_groups();
+            }
+        }
+        KeyCode::Char('E') => {
+            if app.primary_view == super::app::PrimaryView::Board {
+                app.expand_all_board_groups();
+            }
+        }
+        KeyCode::Char('T') => {
+            if app.focus == FocusPane::Right {
+                app.open_toc();
+            }
+        }
         KeyCode::Esc => app.focus_left(),
         _ => {}
     }
@@ -118,14 +139,14 @@ pub fn handle_mouse(app: &mut App, mouse: MouseEvent) {
     // Always consume scroll events — never let them propagate to the outer terminal.
     match mouse.kind {
         MouseEventKind::ScrollDown => {
-            if app.focus == FocusPane::Right {
+            if app.sidebar_collapsed || mouse.column >= app.layout_right.x {
                 app.scroll_detail_down();
             } else {
                 app.move_down();
             }
         }
         MouseEventKind::ScrollUp => {
-            if app.focus == FocusPane::Right {
+            if app.sidebar_collapsed || mouse.column >= app.layout_right.x {
                 app.scroll_detail_up();
             } else {
                 app.move_up();
@@ -193,6 +214,16 @@ fn handle_filter(app: &mut App, key: KeyEvent) {
             app.clear_filters();
             app.mode = super::app::AppMode::Filter; // stay in filter popup
         }
+        _ => {}
+    }
+}
+
+fn handle_toc(app: &mut App, key: KeyEvent) {
+    match key.code {
+        KeyCode::Esc | KeyCode::Char('T') => app.close_toc(),
+        KeyCode::Char('j') | KeyCode::Down => app.toc_move_down(),
+        KeyCode::Char('k') | KeyCode::Up => app.toc_move_up(),
+        KeyCode::Enter => app.toc_jump(),
         _ => {}
     }
 }
