@@ -14,6 +14,7 @@ mod list;
 mod markdown;
 mod search;
 mod theme;
+mod toc;
 
 use std::error::Error;
 
@@ -30,8 +31,8 @@ use app::{App, AppMode, DetailMode, PrimaryView};
 /// Parse the --view CLI argument into a PrimaryView.
 fn parse_view(view: &str) -> PrimaryView {
     match view {
-        "list" => PrimaryView::List,
-        _ => PrimaryView::Board,
+        "board" => PrimaryView::Board,
+        _ => PrimaryView::List,
     }
 }
 
@@ -95,6 +96,7 @@ fn draw(frame: &mut Frame, app: &mut App) {
         AppMode::Search => search::render(area, frame.buffer_mut(), app),
         AppMode::Help => help::render(area, frame.buffer_mut()),
         AppMode::Filter => filter::render(area, frame.buffer_mut(), app),
+        AppMode::Toc => toc::render(area, frame.buffer_mut(), app),
         AppMode::Normal => {}
     }
 }
@@ -151,6 +153,7 @@ fn draw_status_bar(frame: &mut Frame, area: Rect, app: &App) {
         AppMode::Search => "SEARCH",
         AppMode::Help => "HELP",
         AppMode::Filter => "FILTER",
+        AppMode::Toc => "TOC",
     };
 
     let view_str = match app.primary_view {
