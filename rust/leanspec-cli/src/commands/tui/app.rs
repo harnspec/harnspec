@@ -15,6 +15,10 @@ pub enum AppMode {
     Help,
     Filter,
     Toc,
+    /// Project switcher popup (lowercase `p`)
+    ProjectSwitcher,
+    /// Full project management view (uppercase `P`)
+    ProjectManagement,
 }
 
 /// Sort order for the spec list.
@@ -137,6 +141,109 @@ pub struct BoardGroup {
     pub collapsed: bool,
 }
 
+/// State for the project switcher popup.
+#[derive(Debug, Clone, Default)]
+pub struct ProjectSwitcherState {
+    /// All projects loaded from registry, sorted favorites-first then last_accessed.
+    pub projects: Vec<leanspec_core::storage::Project>,
+    /// Currently highlighted row.
+    pub selected: usize,
+    /// Inline search query (activated by `/`).
+    pub search: String,
+    /// Indices into `projects` that match the current search.
+    pub filtered: Vec<usize>,
+    /// Whether the search input is active.
+    pub searching: bool,
+}
+
+impl ProjectSwitcherState {
+    pub fn new(projects: Vec<leanspec_core::storage::Project>) -> Self {
+        let filtered = (0..projects.len()).collect();
+        Self {
+            projects,
+            selected: 0,
+            search: String::new(),
+            filtered,
+            searching: false,
+        }
+    }
+
+    pub fn update_filter(&mut self) {
+        let q = self.search.to_lowercase();
+        if q.is_empty() {
+            self.filtered = (0..self.projects.len()).collect();
+        } else {
+            self.filtered = self
+                .projects
+                .iter()
+                .enumerate()
+                .filter(|(_, p)| {
+                    p.name.to_lowercase().contains(&q) || p.id.to_lowercase().contains(&q)
+                })
+                .map(|(i, _)| i)
+                .collect();
+        }
+        // Clamp selection
+        if !self.filtered.is_empty() && self.selected >= self.filtered.len() {
+            self.selected = self.filtered.len() - 1;
+        }
+    }
+
+    pub fn selected_project(&self) -> Option<&leanspec_core::storage::Project> {
+        self.filtered
+            .get(self.selected)
+            .and_then(|&i| self.projects.get(i))
+    }
+}
+
+/// Action requested from the project management view.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ProjectMgmtAction {
+    None,
+    /// Inline rename — holds the project id and current edit buffer.
+    Renaming {
+        id: String,
+        buffer: String,
+    },
+    /// Delete confirmation — holds project id.
+    ConfirmDelete {
+        id: String,
+    },
+    /// Add project — holds path input buffer.
+    AddingProject {
+        buffer: String,
+        message: Option<String>,
+    },
+}
+
+/// State for the project management view.
+#[derive(Debug, Clone)]
+pub struct ProjectMgmtState {
+    /// Projects loaded from registry.
+    pub projects: Vec<leanspec_core::storage::Project>,
+    /// Selected row.
+    pub selected: usize,
+    /// Current interactive action.
+    pub action: ProjectMgmtAction,
+    /// Status / feedback message.
+    pub message: Option<String>,
+}
+
+impl ProjectMgmtState {
+    pub fn new(projects: Vec<leanspec_core::storage::Project>) -> Self {
+        Self {
+            projects,
+            selected: 0,
+            action: ProjectMgmtAction::None,
+            message: None,
+        }
+    }
+
+    pub fn selected_project(&self) -> Option<&leanspec_core::storage::Project> {
+        self.projects.get(self.selected)
+    }
+}
+
 /// Core application state.
 pub struct App {
     // Data
@@ -197,6 +304,30 @@ pub struct App {
     pub detail_toc: Vec<(usize, u8, String)>,
     /// Cursor position in the TOC overlay.
     pub toc_selected: usize,
+
+    // Project management
+    /// The currently active project (if loaded from registry).
+    pub current_project: Option<leanspec_core::storage::Project>,
+    /// Project switcher popup state.
+    pub project_switcher: Option<ProjectSwitcherState>,
+    /// Project management view state.
+    pub project_mgmt: Option<ProjectMgmtState>,
+}
+
+/// Load projects from the registry sorted favorites-first, then by last_accessed desc.
+pub fn load_projects_sorted() -> Vec<leanspec_core::storage::Project> {
+    let Ok(registry) = leanspec_core::storage::ProjectRegistry::new() else {
+        return Vec::new();
+    };
+    let mut projects: Vec<leanspec_core::storage::Project> =
+        registry.all().into_iter().cloned().collect();
+    // Sort: favorites first, then by last_accessed descending
+    projects.sort_by(|a, b| {
+        b.favorite
+            .cmp(&a.favorite)
+            .then_with(|| b.last_accessed.cmp(&a.last_accessed))
+    });
+    projects
 }
 
 fn priority_sort_key(p: Option<SpecPriority>) -> u8 {
@@ -210,7 +341,11 @@ fn priority_sort_key(p: Option<SpecPriority>) -> u8 {
 }
 
 impl App {
-    pub fn new(specs_dir: &str, initial_view: PrimaryView) -> Result<Self, Box<dyn Error>> {
+    pub fn new(
+        specs_dir: &str,
+        initial_view: PrimaryView,
+        initial_project: Option<leanspec_core::storage::Project>,
+    ) -> Result<Self, Box<dyn Error>> {
         let loader = SpecLoader::new(specs_dir);
         let specs = loader.load_all_metadata()?;
         let dep_graph = DependencyGraph::new(&specs);
@@ -250,12 +385,71 @@ impl App {
             tree_rows: Vec::new(),
             detail_toc: Vec::new(),
             toc_selected: 0,
+            current_project: initial_project,
+            project_switcher: None,
+            project_mgmt: None,
         };
 
         app.apply_filter_and_sort();
         app.load_selected_detail();
 
         Ok(app)
+    }
+
+    /// Open the project switcher popup (loads projects from registry).
+    pub fn open_project_switcher(&mut self) {
+        let projects = load_projects_sorted();
+        self.project_switcher = Some(ProjectSwitcherState::new(projects));
+        self.mode = AppMode::ProjectSwitcher;
+    }
+
+    /// Open the project management view.
+    pub fn open_project_management(&mut self) {
+        let projects = load_projects_sorted();
+        self.project_mgmt = Some(ProjectMgmtState::new(projects));
+        self.mode = AppMode::ProjectManagement;
+    }
+
+    /// Close any overlay and return to Normal mode.
+    pub fn close_overlay(&mut self) {
+        self.mode = AppMode::Normal;
+        self.project_switcher = None;
+        // Keep project_mgmt around so state survives a re-open? No — clear it.
+        self.project_mgmt = None;
+    }
+
+    /// Switch to a project: reload specs from its specs_dir, update last_accessed.
+    pub fn switch_project(&mut self, project: leanspec_core::storage::Project) {
+        // Update last_accessed in registry.
+        if let Ok(mut registry) = leanspec_core::storage::ProjectRegistry::new() {
+            let _ = registry.touch_last_accessed(&project.id);
+        }
+
+        let specs_dir = project.specs_dir.to_string_lossy().into_owned();
+        self.current_project = Some(project);
+        self.reload_specs(&specs_dir);
+        self.close_overlay();
+    }
+
+    /// Reload specs from a new directory, resetting navigation state.
+    pub fn reload_specs(&mut self, specs_dir: &str) {
+        self.loader = SpecLoader::new(specs_dir);
+        self.specs = self.loader.load_all_metadata().unwrap_or_default();
+        self.dep_graph = DependencyGraph::new(&self.specs);
+        self.stats = SpecStats::compute(&self.specs);
+        self.filtered_specs = (0..self.specs.len()).collect();
+        self.board_group_idx = 0;
+        self.board_item_idx = 0;
+        self.list_selected = 0;
+        self.selected_detail = None;
+        self.detail_scroll = 0;
+        self.filter = FilterState::default();
+        self.sort_option = SortOption::default();
+        self.tree_mode = false;
+        self.tree_collapsed = HashSet::new();
+        self.tree_rows = Vec::new();
+        self.apply_filter_and_sort();
+        self.load_selected_detail();
     }
 
     /// Apply current filter + sort to rebuild `filtered_specs`, board groups, and tree rows.
@@ -1026,6 +1220,9 @@ impl App {
             tree_rows: Vec::new(),
             detail_toc: Vec::new(),
             toc_selected: 0,
+            current_project: None,
+            project_switcher: None,
+            project_mgmt: None,
         }
     }
 }

@@ -92,6 +92,36 @@ pub fn border_unfocused_style() -> Style {
     Style::default().fg(Color::Rgb(70, 70, 90))
 }
 
+pub fn project_name_style() -> Style {
+    Style::default()
+        .bg(Color::DarkGray)
+        .fg(Color::Cyan)
+        .add_modifier(Modifier::BOLD)
+}
+
+pub fn overlay_border_style() -> Style {
+    Style::default().fg(Color::Green)
+}
+
+pub fn overlay_selected_style() -> Style {
+    Style::default()
+        .bg(Color::Blue)
+        .fg(Color::White)
+        .add_modifier(Modifier::BOLD)
+}
+
+pub fn favorite_style() -> Style {
+    Style::default().fg(Color::Yellow)
+}
+
+pub fn error_style() -> Style {
+    Style::default().fg(Color::Red)
+}
+
+pub fn success_style() -> Style {
+    Style::default().fg(Color::Green)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

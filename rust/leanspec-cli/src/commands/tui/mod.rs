@@ -12,11 +12,14 @@ mod help;
 mod keybindings;
 mod list;
 mod markdown;
+mod project_switcher;
+mod projects;
 mod search;
 mod theme;
 mod toc;
 
 use std::error::Error;
+use std::path::PathBuf;
 
 use ratatui::{
     crossterm::event::{self, Event},
@@ -36,10 +39,64 @@ fn parse_view(view: &str) -> PrimaryView {
     }
 }
 
+/// Resolve the specs directory for the TUI:
+/// 1. If `--specs-dir` is given, use it directly (backward compat).
+/// 2. If `--project <name>` is given, look up in registry.
+/// 3. Otherwise, auto-load the most recently accessed project from registry.
+/// 4. If the registry is empty, fall back to "specs" (legacy behaviour).
+fn resolve_specs_dir(
+    specs_dir: Option<&str>,
+    project_name: Option<&str>,
+) -> Result<(PathBuf, Option<leanspec_core::storage::Project>), Box<dyn Error>> {
+    // Explicit --specs-dir always wins.
+    if let Some(dir) = specs_dir {
+        return Ok((PathBuf::from(dir), None));
+    }
+
+    // Try to load the project registry.
+    let registry = leanspec_core::storage::ProjectRegistry::new();
+    let registry = match registry {
+        Ok(r) => r,
+        Err(_) => {
+            // Registry unavailable — fall back to legacy "specs" dir.
+            return Ok((PathBuf::from("specs"), None));
+        }
+    };
+
+    // --project flag: look up by name or id.
+    if let Some(name) = project_name {
+        let name_lower = name.to_lowercase();
+        let projects = registry.all();
+        let found = projects
+            .into_iter()
+            .find(|p| p.id.to_lowercase() == name_lower || p.name.to_lowercase() == name_lower);
+        if let Some(p) = found {
+            return Ok((p.specs_dir.clone(), Some(p.clone())));
+        }
+        return Err(format!("No project named '{}' found in registry.", name).into());
+    }
+
+    // Auto-load most recently accessed project.
+    let projects = registry.all(); // sorted by last_accessed desc
+    if let Some(p) = projects.first() {
+        return Ok((p.specs_dir.clone(), Some((*p).clone())));
+    }
+
+    // Empty registry — fall back.
+    Ok((PathBuf::from("specs"), None))
+}
+
 /// Entry point for the TUI command.
-pub fn run(specs_dir: &str, view: &str) -> Result<(), Box<dyn Error>> {
+pub fn run(
+    specs_dir: Option<&str>,
+    view: &str,
+    project_name: Option<&str>,
+) -> Result<(), Box<dyn Error>> {
     let initial_view = parse_view(view);
-    let mut app = App::new(specs_dir, initial_view)?;
+
+    let (resolved_dir, initial_project) = resolve_specs_dir(specs_dir, project_name)?;
+    let dir_str = resolved_dir.to_string_lossy();
+    let mut app = App::new(&dir_str, initial_view, initial_project)?;
 
     // Install custom panic hook to restore terminal on panic
     let original_hook = std::panic::take_hook();
@@ -97,6 +154,8 @@ fn draw(frame: &mut Frame, app: &mut App) {
         AppMode::Help => help::render(area, frame.buffer_mut()),
         AppMode::Filter => filter::render(area, frame.buffer_mut(), app),
         AppMode::Toc => toc::render(area, frame.buffer_mut(), app),
+        AppMode::ProjectSwitcher => project_switcher::render(area, frame.buffer_mut(), app),
+        AppMode::ProjectManagement => projects::render(area, frame.buffer_mut(), app),
         AppMode::Normal => {}
     }
 }
@@ -154,6 +213,8 @@ fn draw_status_bar(frame: &mut Frame, area: Rect, app: &App) {
         AppMode::Help => "HELP",
         AppMode::Filter => "FILTER",
         AppMode::Toc => "TOC",
+        AppMode::ProjectSwitcher => "PROJECTS",
+        AppMode::ProjectManagement => "PROJECTS",
     };
 
     let view_str = match app.primary_view {
@@ -175,7 +236,15 @@ fn draw_status_bar(frame: &mut Frame, area: Rect, app: &App) {
         .map(|s| format!(" {} ", s.path))
         .unwrap_or_default();
 
+    // Project name indicator
+    let project_span = if let Some(ref p) = app.current_project {
+        Span::styled(format!(" {} │ ", p.name), theme::project_name_style())
+    } else {
+        Span::raw("")
+    };
+
     let status_line = Line::from(vec![
+        project_span,
         Span::styled(format!(" {} ", mode_str), theme::highlight_style()),
         Span::styled(
             format!(" {} | {} ", view_str, detail_str),
@@ -187,7 +256,7 @@ fn draw_status_bar(frame: &mut Frame, area: Rect, app: &App) {
         ),
         Span::styled(selected_path, theme::status_bar_style()),
         Span::styled(
-            " q:quit  /:search  ?:help  1/2:view  s:sort  f:filter  t:tree  d:deps  [/]:sidebar ",
+            " q:quit  /:search  ?:help  1/2:view  s:sort  f:filter  t:tree  d:deps  p:projects  [/]:sidebar ",
             theme::status_bar_style(),
         ),
     ]);

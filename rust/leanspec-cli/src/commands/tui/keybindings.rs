@@ -1,8 +1,19 @@
 //! Mode-based input dispatch for keybindings.
 
 use ratatui::crossterm::event::{KeyCode, KeyEvent, KeyModifiers, MouseEvent};
+use std::path::PathBuf;
 
 use super::app::{App, AppMode, FocusPane};
+
+/// Expand `~` in a path to the user's home directory.
+fn expand_tilde(path: &str) -> PathBuf {
+    if let Some(stripped) = path.strip_prefix("~/") {
+        if let Ok(home) = std::env::var("HOME") {
+            return PathBuf::from(home).join(stripped);
+        }
+    }
+    PathBuf::from(path)
+}
 
 /// Handle a key event based on the current app mode.
 pub fn handle_key(app: &mut App, key: KeyEvent) {
@@ -12,6 +23,8 @@ pub fn handle_key(app: &mut App, key: KeyEvent) {
         AppMode::Help => handle_help(app, key),
         AppMode::Filter => handle_filter(app, key),
         AppMode::Toc => handle_toc(app, key),
+        AppMode::ProjectSwitcher => handle_project_switcher(app, key),
+        AppMode::ProjectManagement => handle_project_management(app, key),
     }
 }
 
@@ -128,6 +141,8 @@ fn handle_normal(app: &mut App, key: KeyEvent) {
                 app.open_toc();
             }
         }
+        KeyCode::Char('p') => app.open_project_switcher(),
+        KeyCode::Char('P') => app.open_project_management(),
         KeyCode::Esc => app.focus_left(),
         _ => {}
     }
@@ -224,6 +239,357 @@ fn handle_toc(app: &mut App, key: KeyEvent) {
         KeyCode::Char('j') | KeyCode::Down => app.toc_move_down(),
         KeyCode::Char('k') | KeyCode::Up => app.toc_move_up(),
         KeyCode::Enter => app.toc_jump(),
+        _ => {}
+    }
+}
+
+fn handle_project_switcher(app: &mut App, key: KeyEvent) {
+    use super::app::ProjectMgmtAction;
+
+    // If search is active, route typing to search
+    let searching = app.project_switcher.as_ref().is_some_and(|s| s.searching);
+
+    if searching {
+        match key.code {
+            KeyCode::Esc => {
+                if let Some(ref mut sw) = app.project_switcher {
+                    sw.searching = false;
+                    sw.search.clear();
+                    sw.update_filter();
+                }
+            }
+            KeyCode::Backspace => {
+                if let Some(ref mut sw) = app.project_switcher {
+                    sw.search.pop();
+                    sw.update_filter();
+                }
+            }
+            KeyCode::Char(c) => {
+                if let Some(ref mut sw) = app.project_switcher {
+                    sw.search.push(c);
+                    sw.update_filter();
+                }
+            }
+            KeyCode::Enter => {
+                if let Some(ref mut sw) = app.project_switcher {
+                    sw.searching = false;
+                }
+            }
+            _ => {}
+        }
+        return;
+    }
+
+    match key.code {
+        KeyCode::Esc => app.close_overlay(),
+        KeyCode::Char('j') | KeyCode::Down => {
+            if let Some(ref mut sw) = app.project_switcher {
+                if !sw.filtered.is_empty() && sw.selected + 1 < sw.filtered.len() {
+                    sw.selected += 1;
+                }
+            }
+        }
+        KeyCode::Char('k') | KeyCode::Up => {
+            if let Some(ref mut sw) = app.project_switcher {
+                sw.selected = sw.selected.saturating_sub(1);
+            }
+        }
+        KeyCode::Enter => {
+            // Switch to selected project
+            let project = app
+                .project_switcher
+                .as_ref()
+                .and_then(|sw| sw.selected_project())
+                .cloned();
+            if let Some(p) = project {
+                app.switch_project(p);
+            } else {
+                app.close_overlay();
+            }
+        }
+        KeyCode::Char('/') => {
+            if let Some(ref mut sw) = app.project_switcher {
+                sw.searching = true;
+                sw.search.clear();
+                sw.update_filter();
+            }
+        }
+        KeyCode::Char('m') => {
+            // Open project management
+            app.open_project_management();
+        }
+        KeyCode::Char('a') => {
+            // Open project management in add mode
+            app.open_project_management();
+            if let Some(ref mut mgmt) = app.project_mgmt {
+                mgmt.action = ProjectMgmtAction::AddingProject {
+                    buffer: String::new(),
+                    message: None,
+                };
+            }
+        }
+        _ => {}
+    }
+}
+
+fn handle_project_management(app: &mut App, key: KeyEvent) {
+    use super::app::ProjectMgmtAction;
+    use leanspec_core::storage::{ProjectRegistry, ProjectUpdate};
+
+    // Handle active sub-actions first
+    let action = app
+        .project_mgmt
+        .as_ref()
+        .map(|m| m.action.clone())
+        .unwrap_or(ProjectMgmtAction::None);
+
+    match action {
+        ProjectMgmtAction::Renaming { id, buffer } => {
+            match key.code {
+                KeyCode::Esc => {
+                    if let Some(ref mut mgmt) = app.project_mgmt {
+                        mgmt.action = ProjectMgmtAction::None;
+                    }
+                }
+                KeyCode::Enter => {
+                    let new_name = buffer.trim().to_string();
+                    if !new_name.is_empty() {
+                        if let Ok(mut registry) = ProjectRegistry::new() {
+                            let result = registry.update(
+                                &id,
+                                ProjectUpdate {
+                                    name: Some(new_name),
+                                    favorite: None,
+                                    color: None,
+                                },
+                            );
+                            if let Some(ref mut mgmt) = app.project_mgmt {
+                                match result {
+                                    Ok(_) => {
+                                        mgmt.message = Some("Project renamed.".to_string());
+                                    }
+                                    Err(e) => {
+                                        mgmt.message = Some(format!("Error: {}", e));
+                                    }
+                                }
+                                mgmt.action = ProjectMgmtAction::None;
+                                // Reload project list
+                                mgmt.projects = super::app::load_projects_sorted();
+                            }
+                        }
+                    } else if let Some(ref mut mgmt) = app.project_mgmt {
+                        mgmt.action = ProjectMgmtAction::None;
+                    }
+                }
+                KeyCode::Backspace => {
+                    if let Some(ref mut mgmt) = app.project_mgmt {
+                        if let ProjectMgmtAction::Renaming { ref mut buffer, .. } = mgmt.action {
+                            buffer.pop();
+                        }
+                    }
+                }
+                KeyCode::Char(c) => {
+                    if let Some(ref mut mgmt) = app.project_mgmt {
+                        if let ProjectMgmtAction::Renaming { ref mut buffer, .. } = mgmt.action {
+                            buffer.push(c);
+                        }
+                    }
+                }
+                _ => {}
+            }
+            return;
+        }
+        ProjectMgmtAction::ConfirmDelete { id } => {
+            match key.code {
+                KeyCode::Char('y') | KeyCode::Char('Y') => {
+                    if let Ok(mut registry) = ProjectRegistry::new() {
+                        let result = registry.remove(&id);
+                        if let Some(ref mut mgmt) = app.project_mgmt {
+                            match result {
+                                Ok(_) => {
+                                    mgmt.message = Some("Project removed.".to_string());
+                                }
+                                Err(e) => {
+                                    mgmt.message = Some(format!("Error: {}", e));
+                                }
+                            }
+                            mgmt.action = ProjectMgmtAction::None;
+                            mgmt.projects = super::app::load_projects_sorted();
+                            mgmt.selected =
+                                mgmt.selected.min(mgmt.projects.len().saturating_sub(1));
+                        }
+                        // If the deleted project was current, clear it
+                        if let Some(ref p) = app.current_project.clone() {
+                            if p.id == id {
+                                app.current_project = None;
+                            }
+                        }
+                    }
+                }
+                _ => {
+                    if let Some(ref mut mgmt) = app.project_mgmt {
+                        mgmt.action = ProjectMgmtAction::None;
+                        mgmt.message = Some("Delete cancelled.".to_string());
+                    }
+                }
+            }
+            return;
+        }
+        ProjectMgmtAction::AddingProject { buffer, .. } => {
+            match key.code {
+                KeyCode::Esc => {
+                    if let Some(ref mut mgmt) = app.project_mgmt {
+                        mgmt.action = ProjectMgmtAction::None;
+                    }
+                }
+                KeyCode::Enter => {
+                    let path_str = buffer.trim().to_string();
+                    let expanded = expand_tilde(&path_str);
+
+                    if let Ok(mut registry) = ProjectRegistry::new() {
+                        match registry.add(&expanded) {
+                            Ok(p) => {
+                                if let Some(ref mut mgmt) = app.project_mgmt {
+                                    mgmt.message = Some(format!("Added project '{}'.", p.name));
+                                    mgmt.action = ProjectMgmtAction::None;
+                                    mgmt.projects = super::app::load_projects_sorted();
+                                }
+                            }
+                            Err(e) => {
+                                if let Some(ref mut mgmt) = app.project_mgmt {
+                                    mgmt.action = ProjectMgmtAction::AddingProject {
+                                        buffer: path_str,
+                                        message: Some(format!("Error: {}", e)),
+                                    };
+                                }
+                            }
+                        }
+                    }
+                }
+                KeyCode::Backspace => {
+                    if let Some(ref mut mgmt) = app.project_mgmt {
+                        if let ProjectMgmtAction::AddingProject { ref mut buffer, .. } = mgmt.action
+                        {
+                            buffer.pop();
+                        }
+                    }
+                }
+                KeyCode::Char(c) => {
+                    if let Some(ref mut mgmt) = app.project_mgmt {
+                        if let ProjectMgmtAction::AddingProject { ref mut buffer, .. } = mgmt.action
+                        {
+                            buffer.push(c);
+                        }
+                    }
+                }
+                _ => {}
+            }
+            return;
+        }
+        ProjectMgmtAction::None => {}
+    }
+
+    // Normal project management navigation
+    match key.code {
+        KeyCode::Esc => app.close_overlay(),
+        KeyCode::Char('j') | KeyCode::Down => {
+            if let Some(ref mut mgmt) = app.project_mgmt {
+                if !mgmt.projects.is_empty() && mgmt.selected + 1 < mgmt.projects.len() {
+                    mgmt.selected += 1;
+                }
+            }
+        }
+        KeyCode::Char('k') | KeyCode::Up => {
+            if let Some(ref mut mgmt) = app.project_mgmt {
+                mgmt.selected = mgmt.selected.saturating_sub(1);
+            }
+        }
+        KeyCode::Enter => {
+            // Open/switch to selected project
+            let project = app
+                .project_mgmt
+                .as_ref()
+                .and_then(|m| m.selected_project())
+                .cloned();
+            if let Some(p) = project {
+                app.switch_project(p);
+            }
+        }
+        KeyCode::Char('a') => {
+            if let Some(ref mut mgmt) = app.project_mgmt {
+                mgmt.action = ProjectMgmtAction::AddingProject {
+                    buffer: String::new(),
+                    message: None,
+                };
+            }
+        }
+        KeyCode::Char('r') => {
+            let info = app
+                .project_mgmt
+                .as_ref()
+                .and_then(|m| m.selected_project())
+                .map(|p| (p.id.clone(), p.name.clone()));
+            if let Some((id, name)) = info {
+                if let Some(ref mut mgmt) = app.project_mgmt {
+                    mgmt.action = ProjectMgmtAction::Renaming { id, buffer: name };
+                }
+            }
+        }
+        KeyCode::Char('f') => {
+            let id = app
+                .project_mgmt
+                .as_ref()
+                .and_then(|m| m.selected_project())
+                .map(|p| p.id.clone());
+            if let Some(id) = id {
+                if let Ok(mut registry) = ProjectRegistry::new() {
+                    let result = registry.toggle_favorite(&id);
+                    if let Some(ref mut mgmt) = app.project_mgmt {
+                        match result {
+                            Ok(is_fav) => {
+                                mgmt.message = Some(if is_fav {
+                                    "Marked as favorite.".to_string()
+                                } else {
+                                    "Removed from favorites.".to_string()
+                                });
+                            }
+                            Err(e) => {
+                                mgmt.message = Some(format!("Error: {}", e));
+                            }
+                        }
+                        mgmt.projects = super::app::load_projects_sorted();
+                    }
+                }
+            }
+        }
+        KeyCode::Char('d') => {
+            let id = app
+                .project_mgmt
+                .as_ref()
+                .and_then(|m| m.selected_project())
+                .map(|p| p.id.clone());
+            if let Some(id) = id {
+                if let Some(ref mut mgmt) = app.project_mgmt {
+                    mgmt.action = ProjectMgmtAction::ConfirmDelete { id };
+                }
+            }
+        }
+        KeyCode::Char('v') => {
+            // Validate project path
+            let (id, exists) = app
+                .project_mgmt
+                .as_ref()
+                .and_then(|m| m.selected_project())
+                .map(|p| (p.id.clone(), p.exists()))
+                .unwrap_or_default();
+            if let Some(ref mut mgmt) = app.project_mgmt {
+                mgmt.message = Some(if exists {
+                    format!("Project '{}' path is valid.", id)
+                } else {
+                    format!("Project '{}' path is INVALID.", id)
+                });
+            }
+        }
         _ => {}
     }
 }

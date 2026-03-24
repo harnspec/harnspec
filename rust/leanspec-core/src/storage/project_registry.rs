@@ -512,6 +512,17 @@ impl ProjectRegistry {
             .ok_or_else(|| CoreError::RegistryError("Project not found".to_string()))
     }
 
+    /// Update the `last_accessed` timestamp for a project to now.
+    pub fn touch_last_accessed(&mut self, id: &str) -> CoreResult<()> {
+        let project = self
+            .projects
+            .get_mut(id)
+            .ok_or_else(|| CoreError::RegistryError("Project not found".to_string()))?;
+
+        project.last_accessed = Utc::now();
+        self.save()
+    }
+
     /// Toggle favorite status
     pub fn toggle_favorite(&mut self, id: &str) -> CoreResult<bool> {
         let project = self

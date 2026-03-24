@@ -487,6 +487,10 @@ pub(crate) enum Commands {
         /// Initial view: board, list
         #[arg(long, default_value = "board")]
         view: String,
+
+        /// Load a named project from the registry
+        #[arg(long)]
+        project: Option<String>,
     },
 
     /// Start local web UI for spec management

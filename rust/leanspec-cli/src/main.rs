@@ -12,8 +12,9 @@ use crate::cli_args::{Cli, Commands, GitHubSubcommand, RunnerSubcommand, Session
 fn main() -> ExitCode {
     let cli = Cli::parse();
 
-    // Determine specs directory
-    let specs_dir = cli.specs_dir.unwrap_or_else(|| "specs".to_string());
+    // Determine specs directory (for non-TUI commands that use specs_dir directly).
+    // We keep `cli.specs_dir` intact so TUI can detect whether it was explicitly set.
+    let specs_dir = cli.specs_dir.clone().unwrap_or_else(|| "specs".to_string());
 
     let result = match cli.command {
         Commands::Agent {
@@ -265,7 +266,12 @@ fn main() -> ExitCode {
         Commands::Tokens { path, verbose } => {
             commands::tokens::run(&specs_dir, path.as_deref(), verbose, &cli.output)
         }
-        Commands::Tui { view } => commands::tui::run(&specs_dir, &view),
+        Commands::Tui { view, project } => commands::tui::run(
+            // Pass None when --specs-dir not provided so TUI can use the project registry.
+            cli.specs_dir.as_deref(),
+            &view,
+            project.as_deref(),
+        ),
         Commands::Ui {
             port,
             no_open,
