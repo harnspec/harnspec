@@ -9,7 +9,7 @@ Complete reference for `.lean-spec/config.json`.
 
 ## Configuration File
 
-LeanSpec configuration is stored in `.lean-spec/config.json` in your project root.
+HarnSpec configuration is stored in `.lean-spec/config.json` in your project root.
 
 ## Default Configuration
 
@@ -91,7 +91,7 @@ Enable/disable automatic sequence conflict checking.
 **Type:** `boolean`  
 **Default:** `true`
 
-When enabled, LeanSpec automatically checks for sequence number conflicts during spec creation and warns if duplicates exist.
+When enabled, HarnSpec automatically checks for sequence number conflicts during spec creation and warns if duplicates exist.
 
 ```json
 {
@@ -417,7 +417,7 @@ Variables can be used in templates using `{variable_name}` syntax.
 
 ## Validation
 
-LeanSpec validates configuration on load:
+HarnSpec validates configuration on load:
 
 - Required structure fields must be valid
 - Custom field types must be valid (`string`, `number`, `boolean`, `array`)

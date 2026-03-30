@@ -5,11 +5,11 @@ sidebar_position: 2
 ---
 # Agent Configuration
 
-Configure AI coding agents to work effectively with LeanSpec through AGENTS.md instructions and best practices.
+Configure AI coding agents to work effectively with HarnSpec through AGENTS.md instructions and best practices.
 
 ## AGENTS.md Overview
 
-`AGENTS.md` serves as permanent instructions for AI coding agents in your repository. When you run `lean-spec init`, this file is created with LeanSpec guidance.
+`AGENTS.md` serves as permanent instructions for AI coding agents in your repository. When you run `lean-spec init`, this file is created with HarnSpec guidance.
 
 **Purpose:**
 - Provide context about your project
@@ -19,11 +19,11 @@ Configure AI coding agents to work effectively with LeanSpec through AGENTS.md i
 
 ## Agent Skills (SKILL.md)
 
-LeanSpec now supports **Agent Skills** via a SKILL.md file. This is the preferred place to store **SDD methodology** so AGENTS.md can remain **project-specific only**.
+HarnSpec now supports **Agent Skills** via a SKILL.md file. This is the preferred place to store **SDD methodology** so AGENTS.md can remain **project-specific only**.
 
 **Project skill location:**
 
-- .github/skills/leanspec-sdd/SKILL.md (installed via `lean-spec skill install`)
+- .github/skills/HarnSpec-sdd/SKILL.md (installed via `lean-spec skill install`)
 
 **Why use a skill?**
 - Cross-platform: works with Claude, Cursor, Codex, and other skill-compatible tools
@@ -37,7 +37,7 @@ LeanSpec now supports **Agent Skills** via a SKILL.md file. This is the preferre
 
 ## Project: Example
 
-Core SDD workflow is defined in .github/skills/leanspec-sdd/SKILL.md.
+Core SDD workflow is defined in .github/skills/HarnSpec-sdd/SKILL.md.
 
 ## Project-Specific Rules
 - Use pnpm instead of npm
@@ -46,9 +46,9 @@ Core SDD workflow is defined in .github/skills/leanspec-sdd/SKILL.md.
 
 ## Multi-Tool Support
 
-Different AI tools expect different instruction file names. LeanSpec automatically creates symlinks to ensure all tools find instructions:
+Different AI tools expect different instruction file names. HarnSpec automatically creates symlinks to ensure all tools find instructions:
 
-| AI Tool | Expected File | How LeanSpec Handles It |
+| AI Tool | Expected File | How HarnSpec Handles It |
 |---------|--------------|------------------------|
 | Claude Code / Claude Desktop | `CLAUDE.md` | Symlink → AGENTS.md |
 | Gemini CLI | `GEMINI.md` | Symlink → AGENTS.md |
@@ -65,7 +65,7 @@ Different AI tools expect different instruction file names. LeanSpec automatical
 | Qwen Code | `AGENTS.md` | Primary file |
 | Warp Terminal | `AGENTS.md` | Primary file |
 
-## LeanSpec Support Matrix
+## HarnSpec Support Matrix
 
 | Tool | VibeKanban | OpenSpec Native | Agent Instructions File |
 |------|------------|-----------------|------------------------|
@@ -126,7 +126,7 @@ The generated AGENTS.md emphasizes **MCP tools as the primary method** for spec 
 
 ### Primary Method: MCP Tools (Recommended)
 
-If you have LeanSpec MCP tools available, **ALWAYS use them**:
+If you have HarnSpec MCP tools available, **ALWAYS use them**:
 
 | Action | MCP Tool | Description |
 |--------|----------|-------------|
@@ -192,13 +192,13 @@ If you have LeanSpec MCP tools available, **ALWAYS use them**:
 2. **Search for related work** → Use `search` tool before creating new specs
 3. **Never create files manually** → Always use `create` tool for new specs
 
-> **Why?** Skipping discovery creates duplicate work. Manual file creation breaks LeanSpec tooling.
+> **Why?** Skipping discovery creates duplicate work. Manual file creation breaks HarnSpec tooling.
 
 ## 🔧 How to Manage Specs
 
 ### Primary Method: MCP Tools (Recommended)
 
-If you have LeanSpec MCP tools available, **ALWAYS use them**:
+If you have HarnSpec MCP tools available, **ALWAYS use them**:
 
 | Action | MCP Tool | Description |
 |--------|----------|-------------|
@@ -227,7 +227,7 @@ If MCP tools are not available, use CLI commands:
     lean-spec update <spec> --status <status>  # Update status
     lean-spec deps <spec>        # Show dependencies
 
-**Tip:** Check if you have LeanSpec MCP tools available before using CLI.
+**Tip:** Check if you have HarnSpec MCP tools available before using CLI.
 
 ## ⚠️ SDD Workflow Checkpoints
 
@@ -262,7 +262,7 @@ If MCP tools are not available, use CLI commands:
 1. **Read README.md first** - Understand project context
 2. **Check specs/** - Review existing specs before starting
 3. **Use MCP tools** - Prefer MCP over CLI when available
-4. **Follow LeanSpec principles** - Clarity over documentation
+4. **Follow HarnSpec principles** - Clarity over documentation
 5. **Keep it minimal** - If it doesn't add clarity, cut it
 6. **NEVER manually edit frontmatter** - Use `update`, `link`, `unlink` tools
 7. **Track progress in specs** - Update status and document decisions
@@ -304,7 +304,7 @@ Use `tokens` tool to check spec size.
 
 ### Claude Code
 
-Claude Code reads `CLAUDE.md` by default. LeanSpec automatically creates this symlink:
+Claude Code reads `CLAUDE.md` by default. HarnSpec automatically creates this symlink:
 
 ```bash
 # After lean-spec init
@@ -312,7 +312,7 @@ ls -la CLAUDE.md
 # CLAUDE.md -> AGENTS.md
 ```
 
-**With MCP (Recommended):** Configure the LeanSpec MCP server for full functionality. See [MCP Integration](/docs/guide/usage/mcp-integration).
+**With MCP (Recommended):** Configure the HarnSpec MCP server for full functionality. See [MCP Integration](/docs/guide/usage/mcp-integration).
 
 ### Gemini CLI
 
@@ -349,14 +349,14 @@ Windsurf reads `AGENTS.md` by default. No additional setup needed.
 
 ### Claude Desktop / ChatGPT / Other Chat Interfaces
 
-These tools work best with MCP integration. Configure the LeanSpec MCP server:
+These tools work best with MCP integration. Configure the HarnSpec MCP server:
 
 ```json
 {
   "mcpServers": {
-    "leanspec": {
+    "HarnSpec": {
       "command": "npx",
-      "args": ["-y", "@leanspec/mcp"]
+      "args": ["-y", "@HarnSpec/mcp"]
     }
   }
 }
@@ -496,7 +496,7 @@ Specs in the repo (not external wiki):
 
 ### Test AI Understanding
 
-Ask your AI agent these questions to verify LeanSpec integration:
+Ask your AI agent these questions to verify HarnSpec integration:
 
 **Test 1: Can it discover the project?**
 ```
@@ -544,7 +544,7 @@ It's important to...
 ```markdown
 1. Read README.md first
 2. Check existing specs with `lean-spec list`
-3. Follow LeanSpec principles (see AGENTS.md)
+3. Follow HarnSpec principles (see AGENTS.md)
 ```
 
 ### 2. Ambiguous Success Criteria
@@ -558,7 +558,7 @@ It's important to...
 
 ✅ **Good:**
 ```markdown
-- [ ] API response <100ms (p95)
+- [ ] API response `<100`ms (p95)
 - [ ] Zero crashes in 1 week
 - [ ] NPS score >8
 ```

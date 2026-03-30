@@ -6,7 +6,7 @@ sidebar_position: 3
 
 # 项目管理
 
-使用 LeanSpec 的项目管理功能跟踪项目健康状况、管理依赖关系和验证Spec质量。
+使用 HarnSpec 的项目管理功能跟踪项目健康状况、管理依赖关系和验证Spec质量。
 
 ## 看板与统计 {#board-stats}
 
@@ -166,7 +166,7 @@ lean-spec board --status in-progress
 
 ### 关系类型
 
-LeanSpec 有两种类型的关系：
+HarnSpec 有两种类型的关系：
 
 #### `related` - 双向软引用
 - **含义**：信息关系（Spec是连接/相关的）
@@ -299,7 +299,7 @@ lean-spec link spec-a --depends-on spec-b
 lean-spec link spec-b --depends-on spec-a
 ```
 
-LeanSpec 会警告循环依赖。
+HarnSpec 会警告循环依赖。
 
 **4. 更新一次，到处显示**
 

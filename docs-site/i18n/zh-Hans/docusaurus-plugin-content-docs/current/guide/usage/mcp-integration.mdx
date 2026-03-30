@@ -5,11 +5,11 @@ sidebar_position: 3
 ---
 # MCP 集成
 
-了解如何使用模型上下文协议（MCP）将 LeanSpec 与 AI 助手集成，以实现无缝Spec访问和语义记忆检索。
+了解如何使用模型上下文协议（MCP）将 HarnSpec 与 AI 助手集成，以实现无缝Spec访问和语义记忆检索。
 
 ## 什么是 MCP？
 
-**模型上下文协议（MCP）** 是一个开放标准，使 AI 助手能够访问外部工具和数据源。LeanSpec 的 MCP 服务器让 AI 代理能够：
+**模型上下文协议（MCP）** 是一个开放标准，使 AI 助手能够访问外部工具和数据源。HarnSpec 的 MCP 服务器让 AI 代理能够：
 
 - **搜索**语义Spec（"查找认证决策"）
 - **检索**Spec内容直接到对话上下文中
@@ -47,7 +47,7 @@ AI：[通过 MCP 搜索Spec："authentication"]
 
 ## 快速设置
 
-### 1. 安装 LeanSpec
+### 1. 安装 HarnSpec
 
 ```bash
 npm install -g lean-spec
@@ -225,7 +225,7 @@ AI：[search_specs("authentication")]
 
 ## 可用的 MCP 工具
 
-LeanSpec MCP 服务器为 AI 助手提供这些工具：
+HarnSpec MCP 服务器为 AI 助手提供这些工具：
 
 **发现：**
 - `list` - 列出带过滤器的Spec（状态、标签、优先级）
@@ -298,7 +298,7 @@ lean-spec search "test query"
 
 MCP 服务器：
 - ✅ 仅访问在 `cwd` 中配置的项目目录
-- ✅ 仅公开 LeanSpec 命令（list、search、view 等）
+- ✅ 仅公开 HarnSpec 命令（list、search、view 等）
 - ✅ 无法执行任意 shell 命令
 - ✅ 无法访问项目外的文件
 

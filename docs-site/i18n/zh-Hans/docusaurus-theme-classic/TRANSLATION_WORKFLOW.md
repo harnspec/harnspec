@@ -1,6 +1,6 @@
 # 翻译工作流程
 
-本文档描述如何为 LeanSpec 文档站点贡献中文翻译。
+本文档描述如何为 HarnSpec 文档站点贡献中文翻译。
 
 ## 翻译文件组织
 
@@ -114,10 +114,10 @@ JSON 格式：
 - 核心概念页面：
   - 快速开始 (Getting Started)
   - 概述 (Overview)
-  - 理解 LeanSpec (Understanding)
+  - 理解 HarnSpec (Understanding)
   - 第一原则 (First Principles)
 - 博客文章：
-  - 欢迎使用 LeanSpec (Welcome to LeanSpec)
+  - 欢迎使用 HarnSpec (Welcome to HarnSpec)
   - 为什么大型规范会让你的 AI 代理变笨（以及如何解决）(AI Agent Performance)
 
 #### 🚧 待翻译（优先级高）
@@ -207,5 +207,5 @@ npm run build
 ## 资源
 
 - [Docusaurus i18n 文档](https://docusaurus.io/zh-CN/docs/i18n/introduction)
-- [LeanSpec 翻译风格指南](./TRANSLATION_STYLE_GUIDE.md)
+- [HarnSpec 翻译风格指南](./TRANSLATION_STYLE_GUIDE.md)
 - [MDX 语法指南](https://mdxjs.com/docs/)

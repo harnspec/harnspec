@@ -5,11 +5,11 @@ sidebar_position: 2
 ---
 # 代理配置
 
-通过 AGENTS.md 指令和最佳实践配置 AI 编码代理以有效使用 LeanSpec。
+通过 AGENTS.md 指令和最佳实践配置 AI 编码代理以有效使用 HarnSpec。
 
 ## AGENTS.md 概述
 
-`AGENTS.md` 作为您仓库中 AI 编码代理的永久指令。当您运行 `lean-spec init` 时，会创建此文件并包含 LeanSpec 指导。
+`AGENTS.md` 作为您仓库中 AI 编码代理的永久指令。当您运行 `lean-spec init` 时，会创建此文件并包含 HarnSpec 指导。
 
 **用途：**
 - 提供项目上下文
@@ -19,11 +19,11 @@ sidebar_position: 2
 
 ## Agent Skills（SKILL.md）
 
-LeanSpec 现在支持 **Agent Skills** 的 SKILL.md 文件。推荐将 **SDD 方法论** 放入 SKILL.md，让 AGENTS.md 只保留**项目特定规则**。
+HarnSpec 现在支持 **Agent Skills** 的 SKILL.md 文件。推荐将 **SDD 方法论** 放入 SKILL.md，让 AGENTS.md 只保留**项目特定规则**。
 
 **项目级 Skill 位置：**
 
-- .github/skills/leanspec-sdd/SKILL.md（通过 `lean-spec skill install` 安装）
+- .github/skills/HarnSpec-sdd/SKILL.md（通过 `lean-spec skill install` 安装）
 
 **为什么使用 Skill？**
 - 跨平台：可用于 Claude、Cursor、Codex 等支持 Skills 的工具
@@ -37,7 +37,7 @@ LeanSpec 现在支持 **Agent Skills** 的 SKILL.md 文件。推荐将 **SDD 方
 
 ## 项目：Example
 
-核心 SDD 工作流定义在 .github/skills/leanspec-sdd/SKILL.md。
+核心 SDD 工作流定义在 .github/skills/HarnSpec-sdd/SKILL.md。
 
 ## 项目特定规则
 - 使用 pnpm 而非 npm
@@ -46,9 +46,9 @@ LeanSpec 现在支持 **Agent Skills** 的 SKILL.md 文件。推荐将 **SDD 方
 
 ## 多工具支持
 
-不同的 AI 工具期望不同的指令文件名。LeanSpec 自动创建符号链接以确保所有工具都能找到指令：
+不同的 AI 工具期望不同的指令文件名。HarnSpec 自动创建符号链接以确保所有工具都能找到指令：
 
-| AI 工具 | 期望的文件 | LeanSpec 处理方式 |
+| AI 工具 | 期望的文件 | HarnSpec 处理方式 |
 |---------|-----------|------------------|
 | Claude Code / Claude Desktop | `CLAUDE.md` | 符号链接 → AGENTS.md |
 | Gemini CLI | `GEMINI.md` | 符号链接 → AGENTS.md |
@@ -101,7 +101,7 @@ lean-spec init -y --agent-tools none
 
 ### 主要方法：MCP 工具（推荐）
 
-如果您有 LeanSpec MCP 工具可用，**始终使用它们**：
+如果您有 HarnSpec MCP 工具可用，**始终使用它们**：
 
 | 操作 | MCP 工具 | 描述 |
 |------|----------|------|
@@ -167,13 +167,13 @@ lean-spec init -y --agent-tools none
 2. **搜索相关工作** → 创建新 Spec 之前使用 `search` 工具
 3. **永远不要手动创建文件** → 始终使用 `create` 工具创建新 Spec
 
-> **为什么？** 跳过发现会导致重复工作。手动创建文件会破坏 LeanSpec 工具链。
+> **为什么？** 跳过发现会导致重复工作。手动创建文件会破坏 HarnSpec 工具链。
 
 ## 🔧 如何管理 Spec
 
 ### 主要方法：MCP 工具（推荐）
 
-如果您有 LeanSpec MCP 工具可用，**始终使用它们**：
+如果您有 HarnSpec MCP 工具可用，**始终使用它们**：
 
 | 操作 | MCP 工具 | 描述 |
 |------|----------|------|
@@ -202,7 +202,7 @@ lean-spec init -y --agent-tools none
     lean-spec update <spec> --status <status>  # 更新状态
     lean-spec deps <spec>        # 显示依赖
 
-**提示：** 使用 CLI 前先检查是否有 LeanSpec MCP 工具可用。
+**提示：** 使用 CLI 前先检查是否有 HarnSpec MCP 工具可用。
 
 ## ⚠️ SDD 工作流检查点
 
@@ -237,7 +237,7 @@ lean-spec init -y --agent-tools none
 1. **首先阅读 README.md** - 了解项目上下文
 2. **检查 specs/** - 开始前审查现有 Spec
 3. **使用 MCP 工具** - 可用时优先使用 MCP 而非 CLI
-4. **遵循 LeanSpec 原则** - 清晰度优于文档
+4. **遵循 HarnSpec 原则** - 清晰度优于文档
 5. **保持最小** - 如果不增加清晰度，就删除它
 6. **永不手动编辑 frontmatter** - 使用 `update`、`link`、`unlink` 工具
 7. **在 Spec 中跟踪进度** - 更新状态并记录决策
@@ -279,7 +279,7 @@ lean-spec init -y --agent-tools none
 
 ### Claude Code
 
-Claude Code 默认读取 `CLAUDE.md`。LeanSpec 自动创建此符号链接：
+Claude Code 默认读取 `CLAUDE.md`。HarnSpec 自动创建此符号链接：
 
 ```bash
 # lean-spec init 后
@@ -287,7 +287,7 @@ ls -la CLAUDE.md
 # CLAUDE.md -> AGENTS.md
 ```
 
-**使用 MCP（推荐）：** 配置 LeanSpec MCP 服务器以获得完整功能。参见 [MCP 集成](/zh-Hans/docs/guide/usage/mcp-integration)。
+**使用 MCP（推荐）：** 配置 HarnSpec MCP 服务器以获得完整功能。参见 [MCP 集成](/zh-Hans/docs/guide/usage/mcp-integration)。
 
 ### Gemini CLI
 
@@ -324,14 +324,14 @@ Windsurf 默认读取 `AGENTS.md`。无需额外设置。
 
 ### Claude Desktop / ChatGPT / 其他聊天界面
 
-这些工具配合 MCP 集成效果最佳。配置 LeanSpec MCP 服务器：
+这些工具配合 MCP 集成效果最佳。配置 HarnSpec MCP 服务器：
 
 ```json
 {
   "mcpServers": {
-    "leanspec": {
+    "HarnSpec": {
       "command": "npx",
-      "args": ["-y", "@leanspec/mcp"]
+      "args": ["-y", "@HarnSpec/mcp"]
     }
   }
 }
@@ -471,7 +471,7 @@ your-project/
 
 ### 测试 AI 理解
 
-向您的 AI 代理提出这些问题以验证 LeanSpec 集成：
+向您的 AI 代理提出这些问题以验证 HarnSpec 集成：
 
 **测试 1：它能发现项目吗？**
 ```
@@ -519,7 +519,7 @@ AI 代理应该仔细阅读所有可用的文档
 ```markdown
 1. 首先阅读 README.md
 2. 使用 `lean-spec list` 检查现有 Spec
-3. 遵循 LeanSpec 原则（见 AGENTS.md）
+3. 遵循 HarnSpec 原则（见 AGENTS.md）
 ```
 
 ### 2. 模糊的成功标准
@@ -533,7 +533,7 @@ AI 代理应该仔细阅读所有可用的文档
 
 ✅ **好：**
 ```markdown
-- [ ] API 响应 <100ms（p95）
+- [ ] API 响应 `<100`ms（p95）
 - [ ] 1 周内零崩溃
 - [ ] NPS 分数 >8
 ```

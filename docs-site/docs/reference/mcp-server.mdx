@@ -5,7 +5,7 @@ sidebar_position: 4
 ---
 # MCP Server
 
-The LeanSpec MCP (Model Context Protocol) server enables AI assistants like Claude Desktop, GitHub Copilot, and other MCP-compatible clients to interact with your LeanSpec projects directly.
+The HarnSpec MCP (Model Context Protocol) server enables AI assistants like Claude Desktop, GitHub Copilot, and other MCP-compatible clients to interact with your HarnSpec projects directly.
 
 ## Overview
 
@@ -55,7 +55,7 @@ Quick action templates for common workflows:
 
 ## Installation
 
-The MCP server is included with LeanSpec. No additional installation is required.
+The MCP server is included with HarnSpec. No additional installation is required.
 
 ```bash
 npm install -g lean-spec
@@ -70,7 +70,7 @@ npm install -g lean-spec
    - Type "Preferences: Open User Settings (JSON)"
    - Or directly edit `~/.vscode/settings.json`
 
-2. Add the LeanSpec MCP server configuration:
+2. Add the HarnSpec MCP server configuration:
 
 ```json
 {
@@ -97,7 +97,7 @@ Using `npx` ensures you're always using the latest version and works without glo
    - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
    - **Linux**: `~/.config/Claude/claude_desktop_config.json`
 
-2. Add the LeanSpec MCP server configuration:
+2. Add the HarnSpec MCP server configuration:
 
 ```json
 {
@@ -111,11 +111,11 @@ Using `npx` ensures you're always using the latest version and works without glo
 }
 ```
 
-Replace `/path/to/your/lean-spec/project` with the absolute path to your LeanSpec project directory.
+Replace `/path/to/your/lean-spec/project` with the absolute path to your HarnSpec project directory.
 
 ### Multiple Projects
 
-You can configure multiple LeanSpec projects:
+You can configure multiple HarnSpec projects:
 
 ```json
 {
@@ -136,7 +136,7 @@ You can configure multiple LeanSpec projects:
 
 ### Alternative: Using Global Installation
 
-If you have LeanSpec installed globally (`npm install -g lean-spec`), you can use:
+If you have HarnSpec installed globally (`npm install -g lean-spec`), you can use:
 
 ```json
 {
@@ -154,12 +154,12 @@ If you have LeanSpec installed globally (`npm install -g lean-spec`), you can us
 
 For other MCP-compatible clients, configure them to run:
 - **Command**: `npx -y lean-spec mcp` (recommended) or `lean-spec mcp` (if globally installed)
-- **Working Directory**: Your LeanSpec project root
+- **Working Directory**: Your HarnSpec project root
 - **Transport**: stdio
 
 ## Usage Examples
 
-Once configured, you can interact with your LeanSpec project through your AI assistant:
+Once configured, you can interact with your HarnSpec project through your AI assistant:
 
 ### List specifications
 
@@ -285,7 +285,7 @@ This helps you make smart decisions about what to load into context, avoiding co
 
 ### Server won't start
 
-- Verify the `cwd` path in your configuration points to a valid LeanSpec project (has `.lean-spec/config.json`)
+- Verify the `cwd` path in your configuration points to a valid HarnSpec project (has `.lean-spec/config.json`)
 - If using `npx`, ensure you have internet access for the first run
 - If using global installation, check that `lean-spec` is in your PATH
 - Try running `npx -y lean-spec mcp` or `lean-spec mcp` directly from your project directory
@@ -294,7 +294,7 @@ This helps you make smart decisions about what to load into context, avoiding co
 
 - Restart your MCP client after configuration changes
 - Check client logs for connection errors
-- Verify the LeanSpec project is properly initialized (`lean-spec init`)
+- Verify the HarnSpec project is properly initialized (`lean-spec init`)
 
 ### Permission errors
 
@@ -324,7 +324,7 @@ lean-spec mcp
 
 :::warning Security
 - The MCP server runs with the same permissions as your user account
-- It can read and modify files in your LeanSpec project
+- It can read and modify files in your HarnSpec project
 - Only expose the server to trusted MCP clients
 - Review changes made by AI assistants before committing
 :::
@@ -333,4 +333,4 @@ lean-spec mcp
 
 - [Model Context Protocol Documentation](https://modelcontextprotocol.io/)
 - [Claude Desktop MCP Setup](https://support.anthropic.com/en/articles/model-context-protocol)
-- **[Working with AI](/docs/guide/usage/advanced-features/agent-configuration)** - LeanSpec AI integration guide
+- **[Working with AI](/docs/guide/usage/advanced-features/agent-configuration)** - HarnSpec AI integration guide

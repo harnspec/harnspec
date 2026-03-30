@@ -4,7 +4,7 @@ sidebar_position: 2
 ---
 # Built-in Metadata
 
-LeanSpec specs store a small set of system-managed fields in frontmatter so humans, dashboards, and AI agents share the same truth. Keep these fields accurate—automation, Kanban boards, and MCP-powered workflows all rely on them.
+HarnSpec specs store a small set of system-managed fields in frontmatter so humans, dashboards, and AI agents share the same truth. Keep these fields accurate—automation, Kanban boards, and MCP-powered workflows all rely on them.
 
 ## Status Lifecycle
 1. **planned** — intent captured, implementation not started.
@@ -16,7 +16,7 @@ LeanSpec specs store a small set of system-managed fields in frontmatter so huma
 Update status the moment implementation starts or stops; status tracks the work, not the spec writing process. Use `lean-spec update <spec> --status <value>` so every tool (and AI agent) sees the same state.
 
 ## Relationships
-LeanSpec uses **`depends_on`** to capture blocking dependencies:
+HarnSpec uses **`depends_on`** to capture blocking dependencies:
 
 - **`depends_on`** — Directional dependency. Spec A cannot start until Spec B is complete.
   ```yaml

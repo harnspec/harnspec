@@ -1,21 +1,21 @@
 ---
 id: 'migration'
-title: '迁移到 LeanSpec'
+title: '迁移到 HarnSpec'
 sidebar_position: 3
 ---
 
-# 迁移到 LeanSpec
+# 迁移到 HarnSpec
 
-本指南帮助你从现有的 SDD 工具和文档系统迁移到 LeanSpec。
+本指南帮助你从现有的 SDD 工具和文档系统迁移到 HarnSpec。
 
 ## 快速概述
 
-LeanSpec 迁移主要关注两个方面：
+HarnSpec 迁移主要关注两个方面：
 
 1. **元数据/Frontmatter**（主要）- 使用 `lean-spec backfill` 从 git 历史中提取
 2. **文件夹组织**（因工具而异）- 取决于你的源工具
 
-**好消息**：LeanSpec 对内容格式很灵活——你可以保留现有的写作风格！
+**好消息**：HarnSpec 对内容格式很灵活——你可以保留现有的写作风格！
 
 ## 按源工具分类的迁移
 
@@ -217,7 +217,7 @@ lean-spec migrate ./openspec
 这会生成一个提示，你可以复制到 ChatGPT、Claude、Copilot 或任何 AI 助手：
 
 ```
-你正在帮助将 Spec 文档迁移到 LeanSpec 格式。
+你正在帮助将 Spec 文档迁移到 HarnSpec 格式。
 
 源：./openspec（找到 23 个文档）
 
@@ -228,7 +228,7 @@ lean-spec migrate ./openspec
    - 运行：lean-spec create <name>
    - 运行：lean-spec update <name> --status <status>
    - 运行：lean-spec update <name> --priority <priority>
-   - 编辑内容以匹配 LeanSpec 结构
+   - 编辑内容以匹配 HarnSpec 结构
 4. 保留决策理由和关系
 5. 保持 Spec 在 400 行以下
 
@@ -275,8 +275,8 @@ lean-spec migrate ./openspec --backfill
 - [ ] 备份现有文档
 - [ ] 审查源文件夹结构
 - [ ] 检查 git 历史是否可用（用于 `backfill`）
-- [ ] 安装 LeanSpec：`npm install -g lean-spec`
-- [ ] 初始化 LeanSpec：`lean-spec init`
+- [ ] 安装 HarnSpec：`npm install -g lean-spec`
+- [ ] 初始化 HarnSpec：`lean-spec init`
 
 ### 迁移期间
 
@@ -309,7 +309,7 @@ openspec/AGENTS.md
 CLAUDE.md
 ```
 
-### LeanSpec 使用
+### HarnSpec 使用
 
 ```
 AGENTS.md（在项目根目录）
@@ -317,12 +317,12 @@ AGENTS.md（在项目根目录）
 
 ### 可选：将 SDD 工作流迁移到 Agent Skills
 
-LeanSpec 支持通过 SKILL.md 提供 **Agent Skills**。这样 AGENTS.md 可以保持精简，仅包含项目特定规则。
+HarnSpec 支持通过 SKILL.md 提供 **Agent Skills**。这样 AGENTS.md 可以保持精简，仅包含项目特定规则。
 
 **推荐步骤：**
 1. 通过 `lean-spec skill install` 安装 Skill
-2. 使用安装后的 SKILL.md：.github/skills/leanspec-sdd/
-3. 将 AGENTS.md 缩减为项目特定规则（<100 行）
+2. 使用安装后的 SKILL.md：.github/skills/HarnSpec-sdd/
+3. 将 AGENTS.md 缩减为项目特定规则（`<100` 行）
 4. 在 AGENTS.md 中添加指向 skill 的简短说明
 5. 提交 skill 目录便于共享
 
@@ -333,7 +333,7 @@ LeanSpec 支持通过 SKILL.md 提供 **Agent Skills**。这样 AGENTS.md 可以
 
 ## 项目：Your Project
 
-核心 SDD 工作流定义在 .github/skills/leanspec-sdd/SKILL.md。
+核心 SDD 工作流定义在 .github/skills/HarnSpec-sdd/SKILL.md。
 
 ## 项目特定规则
 - 使用 pnpm 而非 npm
@@ -343,7 +343,7 @@ LeanSpec 支持通过 SKILL.md 提供 **Agent Skills**。这样 AGENTS.md 可以
 
 1. **审查源工具的现有 AI 指导**
 2. **保留项目特定的约定**
-3. **与 LeanSpec AGENTS.md 合并**（由 `lean-spec init` 创建）
+3. **与 HarnSpec AGENTS.md 合并**（由 `lean-spec init` 创建）
 4. **更新命令**：`openspec` → `lean-spec` 等
 5. **保持团队工作流程完整**
 
@@ -424,7 +424,7 @@ lean-spec migrate ./exports/
 
 ### 为什么不直接 API 集成？
 
-LeanSpec 有意不与外部系统 API 集成，因为：
+HarnSpec 有意不与外部系统 API 集成，因为：
 
 - **安全性**：不需要凭证管理
 - **简单性**：无需身份验证、API 密钥、速率限制
@@ -456,9 +456,9 @@ lean-spec check
 
 ### 问题：内容格式与模板不匹配
 
-**好消息**：LeanSpec 很灵活！保留你现有的格式。
+**好消息**：HarnSpec 很灵活！保留你现有的格式。
 
-你不需要重写内容来匹配特定结构。LeanSpec 的首要原则是"意图重于实现"——只要 Spec 清晰地传达意图，确切的格式并不重要。
+你不需要重写内容来匹配特定结构。HarnSpec 的首要原则是"意图重于实现"——只要 Spec 清晰地传达意图，确切的格式并不重要。
 
 ### 问题：迁移后关系损坏
 

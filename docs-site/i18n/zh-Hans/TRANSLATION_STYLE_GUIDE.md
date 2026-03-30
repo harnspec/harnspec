@@ -1,4 +1,4 @@
-# LeanSpec 中文翻译风格指南
+# HarnSpec 中文翻译风格指南
 
 ## 翻译原则
 
@@ -9,7 +9,7 @@
 | 英文 | 中文 | 说明 |
 |------|------|------|
 | Spec | 规范 / 规范文档 | 上下文中可以简称"规范" |
-| LeanSpec | LeanSpec | 保持英文，作为产品名 |
+| HarnSpec | HarnSpec | 保持英文，作为产品名 |
 | Working memory | 工作记忆 | 心理学术语 |
 | Context window | 上下文窗口 | AI 术语 |
 | Token | 令牌 | AI/NLP 术语 |
@@ -24,7 +24,7 @@
 
 ### 2. 语言风格
 
-- **简洁明了**：遵循 LeanSpec 的 Signal-to-Noise 原则，翻译应简洁
+- **简洁明了**：遵循 HarnSpec 的 Signal-to-Noise 原则，翻译应简洁
 - **技术准确**：保持技术术语的准确性
 - **自然流畅**：避免过度直译，使用自然的中文表达
 - **避免过度正式**：使用"您"而不是"阁下"，保持友好专业的语气
@@ -128,18 +128,18 @@
 ### 良好的翻译
 
 **原文：**
-> LeanSpec is a lightweight, agile Spec-Driven Development (SDD) methodology designed to keep specs under 300 lines.
+> HarnSpec is a lightweight, agile Spec-Driven Development (SDD) methodology designed to keep specs under 300 lines.
 
 **翻译：**
-> LeanSpec 是一种轻量级、敏捷的规范驱动开发（SDD）方法论，旨在将规范保持在 300 行以内。
+> HarnSpec 是一种轻量级、敏捷的规范驱动开发（SDD）方法论，旨在将规范保持在 300 行以内。
 
 ### 避免的翻译
 
 **❌ 过度直译：**
-> LeanSpec 是一个轻量的，敏捷的，规范-驱动的发展方法论...
+> HarnSpec 是一个轻量的，敏捷的，规范-驱动的发展方法论...
 
 **❌ 过度正式：**
-> LeanSpec 乃一种轻量级之规范驱动开发方法论...
+> HarnSpec 乃一种轻量级之规范驱动开发方法论...
 
 **❌ 术语不一致：**
 在同一文档中，"spec" 有时翻译为"规范"，有时翻译为"说明书"

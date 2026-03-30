@@ -4,7 +4,7 @@ title: 'AI 辅助的Spec编写'
 sidebar_position: 6
 ---
 
-LeanSpec Spec可以由人类编写、AI 编写，或协作共同创建。本指南介绍如何与 AI 合作起草、完善和维护Spec，同时保持它们精简且可操作。
+HarnSpec Spec可以由人类编写、AI 编写，或协作共同创建。本指南介绍如何与 AI 合作起草、完善和维护Spec，同时保持它们精简且可操作。
 
 ## 三种模式
 
@@ -95,10 +95,10 @@ flowchart LR
 
 ### 步骤 2：AI 起草初始Spec
 
-要求 AI 遵循 LeanSpec 原则起草Spec：
+要求 AI 遵循 HarnSpec 原则起草Spec：
 
 ```
-为 [您的意图] 起草一个 LeanSpec。遵循这些原则：
+为 [您的意图] 起草一个 HarnSpec。遵循这些原则：
 - 上下文经济 (Context Economy)：保持在 300 行以下
 - 信噪比 (Signal-to-Noise)：每个句子都必须提供决策信息
 - 意图优于实现 (Intent Over Implementation)：专注于为什么和什么，而非如何
@@ -131,7 +131,7 @@ flowchart LR
 
 **完善提示**：
 ```
-根据 LeanSpec 第一性原理审查此Spec：
+根据 HarnSpec 第一性原理审查此Spec：
 1. 删除任何不提供决策信息的内容（信噪比）
 2. 确保在 300 行以下（上下文经济）
 3. 添加缺少的"为什么"和权衡（意图优于实现）
@@ -268,7 +268,7 @@ AI 起草Spec并在一个流程中实施。Spec作为所做决策的快照。
 **示例**：
 1. 关于认证重新设计的长时间探索性对话
 2. 尝试多种方法，讨论权衡
-3. 一旦方法清晰："将我们的对话总结为 LeanSpec"
+3. 一旦方法清晰："将我们的对话总结为 HarnSpec"
 4. AI 将对话提炼为结构化Spec
 5. 您完善并形式化
 6. 从Spec实施
@@ -358,10 +358,10 @@ Spec作为随实施变化的演进上下文。
 
 ### 做：保持 AI 专注于原则
 
-在起草时明确提醒 AI 遵循 LeanSpec 原则：
+在起草时明确提醒 AI 遵循 HarnSpec 原则：
 
 ```
-遵循 LeanSpec 原则起草此Spec：
+遵循 HarnSpec 原则起草此Spec：
 - 上下文经济：300 行以下，10 分钟内可读
 - 信噪比：每个句子都提供决策信息
 - 意图优于实现：专注于为什么和什么

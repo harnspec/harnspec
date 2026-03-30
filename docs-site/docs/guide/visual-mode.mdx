@@ -3,14 +3,14 @@ id: visual-mode
 title: Visual Mode
 sidebar_label: Visual Mode
 sidebar_position: 8
-description: Using the LeanSpec web UI for visual spec management
+description: Using the HarnSpec web UI for visual spec management
 ---
 
 # Visual Mode
 
-The LeanSpec UI provides a visual web interface for browsing and managing specs. It's perfect for visual learners, team presentations, and exploratory spec browsing.
+The HarnSpec UI provides a visual web interface for browsing and managing specs. It's perfect for visual learners, team presentations, and exploratory spec browsing.
 
-![LeanSpec UI list view showing spec cards with search and filters](/img/ui/ui-spec-list.png)
+![HarnSpec UI list view showing spec cards with search and filters](/img/ui/ui-spec-list.png)
 
 ## What is Visual Mode?
 
@@ -42,7 +42,7 @@ Visual Mode is a local web application that provides:
 
 ### Method 1: Using `lean-spec ui`
 
-If you have the LeanSpec CLI installed:
+If you have the HarnSpec CLI installed:
 
 ```bash
 lean-spec ui
@@ -53,18 +53,18 @@ This command will:
 - Start the web server on port 3000
 - Open your default browser automatically
 
-### Method 2: Using `npx @leanspec/ui`
+### Method 2: Using `npx @HarnSpec/ui`
 
 You can run the UI directly without installing the CLI:
 
 ```bash
-npx @leanspec/ui
+npx @HarnSpec/ui
 ```
 
 This is useful for:
 - Projects that don't have the CLI installed
 - Quick one-time usage
-- Sharing with team members who don't have LeanSpec installed
+- Sharing with team members who don't have HarnSpec installed
 
 ### Options
 
@@ -156,7 +156,7 @@ Need to find a specific spec? The search UI updates results instantly as you typ
 ```mermaid
 flowchart LR
     CLI[lean-spec ui] -- delegates --> Local[Local Next.js build]
-    External[npx @leanspec/ui] -- downloads --> Package["@leanspec/ui package"]
+    External[npx @HarnSpec/ui] -- downloads --> Package["@HarnSpec/ui package"]
     Local & Package --> Server[Next.js standalone server]
     Server -->|Reads specs| FS[specs/ directory]
     Browser((Browser)) -->|HTTP :3000| Server
@@ -173,7 +173,7 @@ flowchart TB
     end
 
     subgraph External Project
-        NPX[npx @leanspec/ui]
+        NPX[npx @HarnSpec/ui]
         npmCache[npm registry cache]
         NPX --> npmCache --> Server2[Standalone server]
     end
@@ -188,7 +188,7 @@ The UI uses **filesystem mode**, which means it stays in sync with your local fi
 ```mermaid
 graph LR
     Editor[Code Editor] -->|Writes| Disk[specs/ directory]
-    Disk -->|Reads| UI[LeanSpec UI]
+    Disk -->|Reads| UI[HarnSpec UI]
     UI -->|Displays| Browser[Web Browser]
 ```
 
@@ -309,10 +309,10 @@ lean-spec ui --no-open
 ```bash
 # Clear npm cache and reinstall
 npx clear-npx-cache
-npx @leanspec/ui@latest
+npx @HarnSpec/ui@latest
 
 # Or if using CLI, update it
-npm install -g @leanspec/cli@latest
+npm install -g @HarnSpec/cli@latest
 ```
 
 ### Changes Not Appearing
@@ -329,7 +329,7 @@ npm install -g @leanspec/cli@latest
 **Problem**: `Error: Build directory not found`
 
 **Solution**:
-This only affects LeanSpec contributors in the monorepo:
+This only affects HarnSpec contributors in the monorepo:
 ```bash
 cd packages/web
 npm run build
@@ -358,7 +358,7 @@ npm run build
 ## Next Steps
 
 - **Learn More**: See [CLI Reference](/docs/reference/cli#lean-spec-ui) for all command options
-- **UI Package**: Check out [@leanspec/ui](/docs/reference/ui-package) for technical details
+- **UI Package**: Check out [@HarnSpec/ui](/docs/reference/ui-package) for technical details
 - **Get Started**: Read [Getting Started](/docs/guide/getting-started) to set up your first specs
 
 ## Related Documentation

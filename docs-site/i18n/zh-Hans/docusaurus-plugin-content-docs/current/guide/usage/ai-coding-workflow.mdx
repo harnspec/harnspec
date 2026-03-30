@@ -8,7 +8,7 @@ description: The recommended Spec-Driven Development workflow with AI coding ass
 
 # AI Coding Workflow
 
-LeanSpec enables a powerful **Spec-Driven Development (SDD)** workflow with AI coding assistants. This guide shows you the recommended workflow for building features with AI.
+HarnSpec enables a powerful **Spec-Driven Development (SDD)** workflow with AI coding assistants. This guide shows you the recommended workflow for building features with AI.
 
 ## The SDD Cycle
 
@@ -60,7 +60,7 @@ This creates `specs/042-user-auth-api/README.md` with status `planned`.
 **Work with AI to draft the spec:**
 
 ```
-Draft a LeanSpec for user authentication API. Include:
+Draft a HarnSpec for user authentication API. Include:
 - Problem: Why we need this
 - Solution: High-level approach
 - Success Criteria: Measurable outcomes
@@ -205,7 +205,7 @@ $ lean-spec validate
 
 ### MCP Integration (Recommended)
 
-Connect LeanSpec to Claude, Cursor, or other MCP-compatible AI:
+Connect HarnSpec to Claude, Cursor, or other MCP-compatible AI:
 
 ```bash
 # Add to MCP settings
@@ -213,7 +213,7 @@ Connect LeanSpec to Claude, Cursor, or other MCP-compatible AI:
   "mcpServers": {
     "lean-spec": {
       "command": "npx",
-      "args": ["-y", "@leanspec/mcp"]
+      "args": ["-y", "@HarnSpec/mcp"]
     }
   }
 }

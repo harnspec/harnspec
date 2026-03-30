@@ -5,7 +5,7 @@ sidebar_position: 2
 ---
 # 快速开始
 
-本指南将帮助你设置 LeanSpec 并采用 SDD 工作流程。大约需要 5 分钟。
+本指南将帮助你设置 HarnSpec 并采用 SDD 工作流程。大约需要 5 分钟。
 
 :::info 前置条件
 - **Node.js**：版本 20 或更高。从 [nodejs.org](https://nodejs.org/) 下载。
@@ -14,7 +14,7 @@ sidebar_position: 2
 
 ## 安装
 
-使用 npm 全局安装 LeanSpec：
+使用 npm 全局安装 HarnSpec：
 
 ```bash
 npm install -g lean-spec
@@ -34,7 +34,7 @@ lean-spec init -y
 
 ```
 your-project/
-├── .lean-spec/        # LeanSpec 配置
+├── .lean-spec/        # HarnSpec 配置
 ├── specs/             # 所有 Spec 都放在这里
 ├── AGENTS.md          # AI 代理的系统提示
 └── ... （你的项目文件）
@@ -105,7 +105,7 @@ AI 将读取 Spec 并根据要求开始实施。
 4. 总结更改并在 Spec 中记录进度
 
 :::tip 推荐的 AI 模型
-虽然不是必需的，但我们强烈建议使用高级 LLM，如 [Claude Sonnet 4.5](https://www.anthropic.com/news/claude-sonnet-4-5)、[GPT-5.1](https://openai.com/index/gpt-5-1/) 或 [Gemini 3](https://aistudio.google.com/models/gemini-3)，以获得 LeanSpec 的最佳效果。
+虽然不是必需的，但我们强烈建议使用高级 LLM，如 [Claude Sonnet 4.5](https://www.anthropic.com/news/claude-sonnet-4-5)、[GPT-5.1](https://openai.com/index/gpt-5-1/) 或 [Gemini 3](https://aistudio.google.com/models/gemini-3)，以获得 HarnSpec 的最佳效果。
 :::
 
 ## 开发之后
@@ -117,7 +117,7 @@ AI 完成实施后，你可以：
 
 ## 下一步
 
-现在你已经设置好了 LeanSpec，你可以：
+现在你已经设置好了 HarnSpec，你可以：
 
 **尝试教程：**
 - [使用 AI 完成第一个功能](/zh-Hans/docs/tutorials/first-spec-with-ai) - 构建完整功能（10 分钟）
@@ -127,10 +127,10 @@ AI 完成实施后，你可以：
 **学习基础知识：**
 - [Spec 概念](/docs/guide/terminology/spec) - 解释基本 SDD 术语
 - [第一性原理](/docs/advanced/first-principles) - 5 个基本原则
-- [理解 LeanSpec](/docs/guide/understanding-leanspec) - 核心概念和使用时机
+- [理解 HarnSpec](/docs/guide/understanding-harnspec) - 核心概念和使用时机
 - [上下文工程](/docs/advanced/context-engineering) - 管理 AI 工作记忆 (Working Memory)
 
-**开始使用 LeanSpec：**
+**开始使用 HarnSpec：**
 - [创建和管理 Spec](/docs/guide/usage/cli/creating-managing) - 基本操作
 - [查找 Spec](/docs/guide/usage/cli/finding-specs) - 搜索和发现
 - [Spec 结构](/docs/guide/usage/spec-structure) - 组织你的 Spec

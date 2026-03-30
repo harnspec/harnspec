@@ -1,18 +1,18 @@
 ---
 id: ui-package
-title: '@leanspec/ui 包'
-sidebar_label: '@leanspec/ui'
+title: '@HarnSpec/ui 包'
+sidebar_label: '@HarnSpec/ui'
 sidebar_position: 4
-description: '@leanspec/ui npm 包的参考文档'
+description: '@HarnSpec/ui npm 包的参考文档'
 ---
 
-# @leanspec/ui 包
+# @HarnSpec/ui 包
 
-`@leanspec/ui` 包是一个独立的 LeanSpec 网页 UI，无需安装 CLI 即可运行。
+`@HarnSpec/ui` 包是一个独立的 HarnSpec 网页 UI，无需安装 CLI 即可运行。
 
 ## 概述
 
-`@leanspec/ui` 是一个基于 Next.js 的网页应用程序，为浏览和管理 LeanSpec Spec提供可视化界面。它发布在 npm 上，可以直接使用 `npx` 运行或全局安装。
+`@HarnSpec/ui` 是一个基于 Next.js 的网页应用程序，为浏览和管理 HarnSpec Spec提供可视化界面。它发布在 npm 上，可以直接使用 `npx` 运行或全局安装。
 
 **主要特性：**
 - 独立包 - 无需安装 CLI
@@ -27,7 +27,7 @@ description: '@leanspec/ui npm 包的参考文档'
 无需安装：
 
 ```bash
-npx @leanspec/ui
+npx @HarnSpec/ui
 ```
 
 这将：
@@ -42,10 +42,10 @@ npx @leanspec/ui
 
 ```bash
 # 全局安装
-npm install -g @leanspec/ui
+npm install -g @HarnSpec/ui
 
 # 从任何目录运行
-leanspec-ui
+HarnSpec-ui
 
 # 或使用简短别名
 lsui
@@ -56,7 +56,7 @@ lsui
 添加到项目的开发依赖：
 
 ```bash
-npm install --save-dev @leanspec/ui
+npm install --save-dev @HarnSpec/ui
 ```
 
 然后添加到 `package.json` 脚本：
@@ -64,7 +64,7 @@ npm install --save-dev @leanspec/ui
 ```json
 {
   "scripts": {
-    "specs": "leanspec-ui"
+    "specs": "HarnSpec-ui"
   }
 }
 ```
@@ -80,7 +80,7 @@ npm run specs
 该包提供了一个具有以下选项的 CLI 界面：
 
 ```bash
-leanspec-ui [选项]
+HarnSpec-ui [选项]
 ```
 
 ### 选项
@@ -97,19 +97,19 @@ leanspec-ui [选项]
 
 ```bash
 # 基本用法（自动检测Spec）
-npx @leanspec/ui
+npx @HarnSpec/ui
 
 # 自定义Spec目录
-npx @leanspec/ui --specs ./documentation/specs
+npx @HarnSpec/ui --specs ./documentation/specs
 
 # 自定义端口
-npx @leanspec/ui --port 8080
+npx @HarnSpec/ui --port 8080
 
 # 不打开浏览器
-npx @leanspec/ui --no-open
+npx @HarnSpec/ui --no-open
 
 # 组合选项
-npx @leanspec/ui --specs ./specs --port 3100 --no-open
+npx @HarnSpec/ui --specs ./specs --port 3100 --no-open
 ```
 
 ## 环境变量
@@ -130,7 +130,7 @@ npx @leanspec/ui --specs ./specs --port 3100 --no-open
 
 ```mermaid
 graph TD
-    CLI[lean-spec ui] -->|委托| NPX[npx @leanspec/ui]
+    CLI[lean-spec ui] -->|委托| NPX[npx @HarnSpec/ui]
     NPX -->|运行| Next[Next.js 服务器]
     Next -->|读取| Specs[specs/ 目录]
     Browser[Web 浏览器] -->|HTTP :3000| Next
@@ -213,7 +213,7 @@ function getCachedSpec(id: string) {
 ### 包结构
 
 ```
-@leanspec/ui/
+@HarnSpec/ui/
 ├── bin/
 │   └── ui.js              # CLI 入口点
 ├── .next/
@@ -280,10 +280,10 @@ function detectSpecsDir() {
 
 ### 对于贡献者
 
-如果您正在为 LeanSpec 做贡献，可以本地使用 UI 包：
+如果您正在为 HarnSpec 做贡献，可以本地使用 UI 包：
 
 ```bash
-# 克隆 LeanSpec monorepo
+# 克隆 HarnSpec monorepo
 git clone https://github.com/codervisor/lean-spec.git
 cd lean-spec
 
@@ -330,7 +330,7 @@ npm publish
 **解决方案**：
 ```bash
 # 使用 npx 代替（无需安装）
-npx @leanspec/ui
+npx @HarnSpec/ui
 
 # 或修复 npm 权限
 # https://docs.npmjs.com/resolving-eacces-permissions-errors
@@ -343,7 +343,7 @@ npx @leanspec/ui
 **解决方案**：
 ```bash
 # 使用不同端口
-npx @leanspec/ui --port 3100
+npx @HarnSpec/ui --port 3100
 ```
 
 ### 找不到Spec
@@ -353,11 +353,11 @@ npx @leanspec/ui --port 3100
 **解决方案**：
 ```bash
 # 明确指定
-npx @leanspec/ui --specs ./path/to/specs
+npx @HarnSpec/ui --specs ./path/to/specs
 
 # 或确保您在正确的目录
 cd /path/to/project
-npx @leanspec/ui
+npx @HarnSpec/ui
 ```
 
 ### 版本过时
@@ -370,10 +370,10 @@ npx @leanspec/ui
 npx clear-npx-cache
 
 # 明确运行最新版本
-npx @leanspec/ui@latest
+npx @HarnSpec/ui@latest
 
 # 或更新全局安装
-npm update -g @leanspec/ui
+npm update -g @HarnSpec/ui
 ```
 
 ### 服务器无法启动
@@ -389,12 +389,12 @@ node --version
 # https://nodejs.org/
 
 # 检查错误日志
-npx @leanspec/ui 2>&1 | tee ui-error.log
+npx @HarnSpec/ui 2>&1 | tee ui-error.log
 ```
 
 ## 与 CLI 的比较
 
-| 功能 | `@leanspec/ui` | `lean-spec ui`（CLI） |
+| 功能 | `@HarnSpec/ui` | `lean-spec ui`（CLI） |
 |------|----------------|---------------------|
 | 安装 | 无需安装（npx） | 需要 CLI 安装 |
 | Spec创建 | 否 | 是 |
@@ -407,14 +407,14 @@ npx @leanspec/ui 2>&1 | tee ui-error.log
 
 **何时使用：**
 
-- **使用 `@leanspec/ui`** 用于无需安装任何内容的快速查看
+- **使用 `@HarnSpec/ui`** 用于无需安装任何内容的快速查看
 - **使用 `lean-spec ui`** 如果您已经有 CLI 并希望命令一致
 
 两者都启动相同的网页界面 - 区别在于您如何启动它。
 
 ## 版本历史
 
-`@leanspec/ui` 包遵循语义版本控制：
+`@HarnSpec/ui` 包遵循语义版本控制：
 
 - **Major**：CLI 界面或行为的破坏性更改
 - **Minor**：新功能、非破坏性更改
@@ -424,7 +424,7 @@ npx @leanspec/ui 2>&1 | tee ui-error.log
 
 ## 包信息
 
-- **npm**：https://www.npmjs.com/package/@leanspec/ui
+- **npm**：https://www.npmjs.com/package/@HarnSpec/ui
 - **仓库**：https://github.com/codervisor/lean-spec
 - **错误报告**：https://github.com/codervisor/lean-spec/issues
 - **许可证**：MIT
@@ -433,5 +433,5 @@ npx @leanspec/ui 2>&1 | tee ui-error.log
 
 - [可视化模式指南](/docs/guide/visual-mode) - 全面的使用指南
 - [CLI 参考](/docs/reference/cli#lean-spec-ui) - `lean-spec ui` 命令
-- [入门指南](/docs/guide/getting-started) - 设置 LeanSpec
-- [配置](/docs/reference/config) - 配置 LeanSpec 设置
+- [入门指南](/docs/guide/getting-started) - 设置 HarnSpec
+- [配置](/docs/reference/config) - 配置 HarnSpec 设置

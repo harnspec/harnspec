@@ -1,18 +1,18 @@
 ---
 id: ui-package
-title: '@leanspec/ui Package'
-sidebar_label: '@leanspec/ui'
+title: '@HarnSpec/ui Package'
+sidebar_label: '@HarnSpec/ui'
 sidebar_position: 4
-description: Reference documentation for the @leanspec/ui npm package
+description: Reference documentation for the @HarnSpec/ui npm package
 ---
 
-# @leanspec/ui Package
+# @HarnSpec/ui Package
 
-The `@leanspec/ui` package is a standalone web UI for LeanSpec that can be run without installing the CLI.
+The `@HarnSpec/ui` package is a standalone web UI for HarnSpec that can be run without installing the CLI.
 
 ## Overview
 
-`@leanspec/ui` is a Next.js-based web application that provides a visual interface for browsing and managing LeanSpec specifications. It's published to npm and can be run directly with `npx` or installed globally.
+`@HarnSpec/ui` is a Next.js-based web application that provides a visual interface for browsing and managing HarnSpec specifications. It's published to npm and can be run directly with `npx` or installed globally.
 
 **Key Features:**
 - Standalone package - no CLI installation required
@@ -27,7 +27,7 @@ The `@leanspec/ui` package is a standalone web UI for LeanSpec that can be run w
 No installation needed:
 
 ```bash
-npx @leanspec/ui
+npx @HarnSpec/ui
 ```
 
 This will:
@@ -42,10 +42,10 @@ Install once, use anywhere:
 
 ```bash
 # Install globally
-npm install -g @leanspec/ui
+npm install -g @HarnSpec/ui
 
 # Run from any directory
-leanspec-ui
+HarnSpec-ui
 
 # Or use the shorter alias
 lsui
@@ -56,7 +56,7 @@ lsui
 Add to your project's dev dependencies:
 
 ```bash
-npm install --save-dev @leanspec/ui
+npm install --save-dev @HarnSpec/ui
 ```
 
 Then add to `package.json` scripts:
@@ -64,7 +64,7 @@ Then add to `package.json` scripts:
 ```json
 {
   "scripts": {
-    "specs": "leanspec-ui"
+    "specs": "HarnSpec-ui"
   }
 }
 ```
@@ -80,7 +80,7 @@ npm run specs
 The package provides a CLI interface with the following options:
 
 ```bash
-leanspec-ui [options]
+HarnSpec-ui [options]
 ```
 
 ### Options
@@ -97,19 +97,19 @@ leanspec-ui [options]
 
 ```bash
 # Basic usage (auto-detect specs)
-npx @leanspec/ui
+npx @HarnSpec/ui
 
 # Custom specs directory
-npx @leanspec/ui --specs ./documentation/specs
+npx @HarnSpec/ui --specs ./documentation/specs
 
 # Custom port
-npx @leanspec/ui --port 8080
+npx @HarnSpec/ui --port 8080
 
 # Don't open browser
-npx @leanspec/ui --no-open
+npx @HarnSpec/ui --no-open
 
 # Combine options
-npx @leanspec/ui --specs ./specs --port 3100 --no-open
+npx @HarnSpec/ui --specs ./specs --port 3100 --no-open
 ```
 
 ## Environment Variables
@@ -129,7 +129,7 @@ The package uses these environment variables internally:
 
 ```mermaid
 graph TD
-    CLI[lean-spec ui] -->|Delegates| NPX[npx @leanspec/ui]
+    CLI[lean-spec ui] -->|Delegates| NPX[npx @HarnSpec/ui]
     NPX -->|Runs| Next[Next.js Server]
     Next -->|Reads| Specs[specs/ directory]
     Browser[Web Browser] -->|HTTP :3000| Next
@@ -211,7 +211,7 @@ function getCachedSpec(id: string) {
 ### Package Structure
 
 ```
-@leanspec/ui/
+@HarnSpec/ui/
 ├── bin/
 │   └── ui.js              # CLI entry point
 ├── .next/
@@ -278,10 +278,10 @@ function detectSpecsDir() {
 
 ### For Contributors
 
-If you're contributing to LeanSpec, you can work with the UI package locally:
+If you're contributing to HarnSpec, you can work with the UI package locally:
 
 ```bash
-# Clone the LeanSpec monorepo
+# Clone the HarnSpec monorepo
 git clone https://github.com/codervisor/lean-spec.git
 cd lean-spec
 
@@ -328,7 +328,7 @@ npm publish
 **Solution**:
 ```bash
 # Use npx instead (no installation needed)
-npx @leanspec/ui
+npx @HarnSpec/ui
 
 # Or fix npm permissions
 # https://docs.npmjs.com/resolving-eacces-permissions-errors
@@ -341,7 +341,7 @@ npx @leanspec/ui
 **Solution**:
 ```bash
 # Use different port
-npx @leanspec/ui --port 3100
+npx @HarnSpec/ui --port 3100
 ```
 
 ### Specs Not Found
@@ -351,11 +351,11 @@ npx @leanspec/ui --port 3100
 **Solution**:
 ```bash
 # Specify explicitly
-npx @leanspec/ui --specs ./path/to/specs
+npx @HarnSpec/ui --specs ./path/to/specs
 
 # Or ensure you're in the right directory
 cd /path/to/project
-npx @leanspec/ui
+npx @HarnSpec/ui
 ```
 
 ### Outdated Version
@@ -368,10 +368,10 @@ npx @leanspec/ui
 npx clear-npx-cache
 
 # Run latest version explicitly
-npx @leanspec/ui@latest
+npx @HarnSpec/ui@latest
 
 # Or update global installation
-npm update -g @leanspec/ui
+npm update -g @HarnSpec/ui
 ```
 
 ### Server Won't Start
@@ -387,12 +387,12 @@ node --version
 # https://nodejs.org/
 
 # Check for error logs
-npx @leanspec/ui 2>&1 | tee ui-error.log
+npx @HarnSpec/ui 2>&1 | tee ui-error.log
 ```
 
 ## Comparison with CLI
 
-| Feature | `@leanspec/ui` | `lean-spec ui` (CLI) |
+| Feature | `@HarnSpec/ui` | `lean-spec ui` (CLI) |
 |---------|----------------|---------------------|
 | Installation | No install needed (npx) | Requires CLI install |
 | Spec creation | No | Yes |
@@ -405,18 +405,18 @@ npx @leanspec/ui 2>&1 | tee ui-error.log
 
 **When to use each:**
 
-- **Use `@leanspec/ui`** for quick viewing without installing anything
+- **Use `@HarnSpec/ui`** for quick viewing without installing anything
 - **Use `lean-spec ui`** if you already have the CLI and want consistent commands
 
 Both launch the same web interface - the difference is how you start it.
 
 ## API Reference
 
-While `@leanspec/ui` doesn't expose a programmatic API, you can import and use the Next.js server programmatically:
+While `@HarnSpec/ui` doesn't expose a programmatic API, you can import and use the Next.js server programmatically:
 
 ```javascript
 // Not officially supported, but possible for advanced use cases
-import { createServer } from '@leanspec/ui/.next/standalone/server.js';
+import { createServer } from '@HarnSpec/ui/.next/standalone/server.js';
 
 const server = createServer({
   port: 3000,
@@ -430,7 +430,7 @@ server.listen();
 
 ## Version History
 
-The `@leanspec/ui` package follows semantic versioning:
+The `@HarnSpec/ui` package follows semantic versioning:
 
 - **Major**: Breaking changes to CLI interface or behavior
 - **Minor**: New features, non-breaking changes
@@ -440,7 +440,7 @@ Check the [CHANGELOG](https://github.com/codervisor/lean-spec/blob/main/CHANGELO
 
 ## Package Information
 
-- **npm**: https://www.npmjs.com/package/@leanspec/ui
+- **npm**: https://www.npmjs.com/package/@HarnSpec/ui
 - **Repository**: https://github.com/codervisor/lean-spec
 - **Bug Reports**: https://github.com/codervisor/lean-spec/issues
 - **License**: MIT
@@ -449,5 +449,5 @@ Check the [CHANGELOG](https://github.com/codervisor/lean-spec/blob/main/CHANGELO
 
 - [Visual Mode Guide](/docs/guide/visual-mode) - Comprehensive usage guide
 - [CLI Reference](/docs/reference/cli#lean-spec-ui) - `lean-spec ui` command
-- [Getting Started](/docs/guide/getting-started) - Set up LeanSpec
-- [Configuration](/docs/reference/config) - Configure LeanSpec settings
+- [Getting Started](/docs/guide/getting-started) - Set up HarnSpec
+- [Configuration](/docs/reference/config) - Configure HarnSpec settings

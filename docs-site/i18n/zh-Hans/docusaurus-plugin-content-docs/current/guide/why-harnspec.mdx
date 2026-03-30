@@ -1,6 +1,6 @@
-# 为什么选择 LeanSpec？
+# 为什么选择 HarnSpec？
 
-**LeanSpec 是一个轻量级的 Spec 驱动开发 (Spec-Driven Development, SDD) 框架，通过人机对齐优化开发速度。**
+**HarnSpec 是一个轻量级的 Spec 驱动开发 (Spec-Driven Development, SDD) 框架，通过人机对齐优化开发速度。**
 
 **核心优势：**
 - **轻量级** - 最小化设置，无重度依赖
@@ -13,7 +13,7 @@
 
 ## 快速对比
 
-| 功能 | LeanSpec | Spec Kit | OpenSpec | Kiro | PM 工具 | Vibe Coding |
+| 功能 | HarnSpec | Spec Kit | OpenSpec | Kiro | PM 工具 | Vibe Coding |
 |---------|----------|----------|----------|------|----------|-------------|
 | **类型** | SDD 框架 | SDD 框架 | SDD 框架 | AI IDE + SDD | 项目管理 | 无结构 |
 | **Spec结构** | ✅ 灵活 | ⚠️ 刚性格式 | ⚠️ 刚性模板 | ✅ 内置 | ❌ 基于任务 | ❌ 无 |
@@ -29,9 +29,9 @@
 | **适应性** | ✅ 高 | ⚠️ 规定性 | ⚠️ 规定性 | ⚠️ IDE 锁定 | ⚠️ 组织特定 | ✅ 非常高 |
 | **最适合** | 1-50+ 团队 | 企业 SDD | 正式提案 | 单人/小团队 | 大型组织 | 单人原型 |
 
-### 何时选择 LeanSpec
+### 何时选择 HarnSpec
 
-**✅ 选择 LeanSpec 当您重视：**
+**✅ 选择 HarnSpec 当您重视：**
 - 轻量级设置，无重度依赖
 - 简单灵活的结构，从一个文件开始
 - 直接编辑，无多步骤工作流
@@ -43,7 +43,7 @@
 - **企业治理**：Spec Kit 用于规定性 5 步流程
 - **正式变更提案**：OpenSpec 用于提案 → 审查 → 归档
 - **集成 AI IDE**：Kiro 用于一体化 SDD + 自主代理
-- **项目管理**：Jira/Linear 用于任务跟踪（与 LeanSpec 一起使用）
+- **项目管理**：Jira/Linear 用于任务跟踪（与 HarnSpec 一起使用）
 - **最大速度**：Vibe coding 用于单人原型（无结构）
 
 ---
@@ -70,7 +70,7 @@
 
 **最适合**：需要结构化治理和正式规划阶段的企业团队。
 
-**LeanSpec 的优势**：**轻量级且适应性强**。灵活结构（单文件或按需子 Spec），2,000 Token 以下以获得最佳 AI/人类性能。渐进式披露 (Progressive Disclosure)而非规定性流程。无必需工作流——适应您的团队文化。
+**HarnSpec 的优势**：**轻量级且适应性强**。灵活结构（单文件或按需子 Spec），2,000 Token 以下以获得最佳 AI/人类性能。渐进式披露 (Progressive Disclosure)而非规定性流程。无必需工作流——适应您的团队文化。
 
 ### 对比 OpenSpec
 
@@ -91,7 +91,7 @@
 
 **最适合**：希望在合并到Spec真实源之前使用审查工作流进行正式变更提案的团队。
 
-**LeanSpec 的优势**：**简单性和敏捷性**。编号Spec便于引用。使用 git 版本控制直接编辑。无提案，无变更文件夹，无归档步骤。灵活模板。简洁的 AGENTS.md（2,000 Token 以下）。像编辑代码一样编辑Spec——提交、推送、完成。
+**HarnSpec 的优势**：**简单性和敏捷性**。编号Spec便于引用。使用 git 版本控制直接编辑。无提案，无变更文件夹，无归档步骤。灵活模板。简洁的 AGENTS.md（2,000 Token 以下）。像编辑代码一样编辑Spec——提交、推送、完成。
 
 
 ### 对比 AI IDE（Kiro）
@@ -110,7 +110,7 @@
 - **学习曲线** - 新编辑器和工作流
 - **较少控制** - 固执己见的自动驾驶行为
 
-**LeanSpec 的优势**：**适应性和灵活性**。编辑器无关——适用于任何 AI 工具（Copilot、Claude、Cursor、Windsurf）和任何编辑器（VS Code、JetBrains、Vim、Emacs）。保持现有工作流和肌肉记忆。
+**HarnSpec 的优势**：**适应性和灵活性**。编辑器无关——适用于任何 AI 工具（Copilot、Claude、Cursor、Windsurf）和任何编辑器（VS Code、JetBrains、Vim、Emacs）。保持现有工作流和肌肉记忆。
 
 
 ### 对比文档集合（RFC/ADR）
@@ -122,7 +122,7 @@
 - 结构不一致
 - 无 AI 优化（通常 1000+ 行）
 
-**LeanSpec 的优势**：RFC/ADR 哲学 + 现代工具。CLI/MCP 工具、一致结构、AI 优化（&lt;2,000 Token）、搜索和验证。
+**HarnSpec 的优势**：RFC/ADR 哲学 + 现代工具。CLI/MCP 工具、一致结构、AI 优化（&lt;2,000 Token）、搜索和验证。
 
 
 ### 对比项目管理工具（Jira、Linear）
@@ -135,7 +135,7 @@ PM 工具擅长任务跟踪和团队协调。
 - 不与代码一起版本控制
 - 错误抽象（工单 vs. 技术Spec）
 
-**LeanSpec 的优势**：Spec存在于您的仓库中——零 API 开销。与代码一起版本控制。使用 Jira 进行任务跟踪，使用 LeanSpec 进行技术Spec。
+**HarnSpec 的优势**：Spec存在于您的仓库中——零 API 开销。与代码一起版本控制。使用 Jira 进行任务跟踪，使用 HarnSpec 进行技术Spec。
 
 
 ### 对比 Vibe Coding
@@ -147,7 +147,7 @@ PM 工具擅长任务跟踪和团队协调。
 - 决策在聊天历史中丢失
 - 没有书面Spec，AI 可能会产生幻觉
 
-**LeanSpec 的优势**：最小结构实现最大敏捷性。足够的Spec以对齐团队并指导 AI 而无重度流程。
+**HarnSpec 的优势**：最小结构实现最大敏捷性。足够的Spec以对齐团队并指导 AI 而无重度流程。
 
 
 
@@ -155,7 +155,7 @@ PM 工具擅长任务跟踪和团队协调。
 
 ## 哲学：第一原则优于流程
 
-LeanSpec 建立在 **5 个第一原则**之上（按优先顺序）：
+HarnSpec 建立在 **5 个第一原则**之上（按优先顺序）：
 
 1. **上下文经济** - Spec必须适应工作记忆 (Working Memory)（人类 + AI）
    - 目标：控制长度（通常每个Spec 2,000 Token 以下）
@@ -178,7 +178,7 @@ LeanSpec 建立在 **5 个第一原则**之上（按优先顺序）：
    - 感到痛点？添加标签、优先级、自定义字段
    - 永远不要添加"以防万一"的功能
 
-**这些原则指导每个决策。**其他工具预先添加功能和流程。LeanSpec 从最小化开始，仅在您感到痛点时增长。
+**这些原则指导每个决策。**其他工具预先添加功能和流程。HarnSpec 从最小化开始，仅在您感到痛点时增长。
 
 
 ## 迁移与现实期望
@@ -199,7 +199,7 @@ lean-spec backfill                         # 从 git 回填元数据
 
 [Robert Matsuoka 的批判性评估](https://hyperdev.matsuoka.com/p/is-ai-a-bubble-i-didnt-think-so-until)指出 AI 编码估值（25-70倍 ARR vs 互联网泡沫峰值 18倍）并警告 18-24 个月内可能出现修正。
 
-**LeanSpec 的定位：**
+**HarnSpec 的定位：**
 - ✅ 免费、开源——不销售平台或 IDE
 - ✅ 对Spec何时有帮助或有害持务实态度
 - ✅ 诚实面对限制（[Rice 定理](https://www.marvinzhang.dev/blog/rices-theorem-why-automated-testing-will-fail)证明完全自动化是不可能的）
@@ -207,7 +207,7 @@ lean-spec backfill                         # 从 git 回填元数据
 
 **理论基础：**Rice 定理（1951）证明 AI 无法通过算法确定“您想要什么”。Spec提供语义基础——人类定义意图，AI 在这些约束内放大规模。
 
-**Spec会成为表演吗？**是的，当详尽、未读或静态时。LeanSpec 通过明确的“何时不使用Spec”指导、2,000 Token目标以及关注意图而非实现来避免这种情况。
+**Spec会成为表演吗？**是的，当详尽、未读或静态时。HarnSpec 通过明确的“何时不使用Spec”指导、2,000 Token目标以及关注意图而非实现来避免这种情况。
 
 📖 [深入探讨：限制、权衡与现实 →](/zh-Hans/docs/advanced/limits-and-tradeoffs)
 
@@ -223,7 +223,7 @@ lean-spec backfill                         # 从 git 回填元数据
 
 **预测：**18-24 个月内修正。那些在"技术潜力"上烧钱而非展示产品市场契合度的公司将面临清算。
 
-### 为什么 LeanSpec 处于不同位置
+### 为什么 HarnSpec 处于不同位置
 
 **我们不是：**
 - ❌ 承诺 70% 自动化或自主编码
@@ -253,7 +253,7 @@ lean-spec backfill                         # 从 git 回填元数据
 - 人类定义意图，AI 放大规模（实现/测试）
 - 测试是采样，而非证明——我们在理论约束内建立信心
 
-**LeanSpec 的哲学与 Rice 定理一致：**人类提供意图（Spec），AI 在这些约束内生成实现。我们与基本限制合作，而非对抗它们。
+**HarnSpec 的哲学与 Rice 定理一致：**人类提供意图（Spec），AI 在这些约束内生成实现。我们与基本限制合作，而非对抗它们。
 
 ### Spec会成为表演吗？
 
@@ -263,7 +263,7 @@ lean-spec backfill                         # 从 git 回填元数据
 - 对琐碎变更应用刚性流程
 - 文档保持静态而代码在演化
 
-**LeanSpec 通过以下方式避免这种情况：**
+**HarnSpec 通过以下方式避免这种情况：**
 - 明确的"何时不使用Spec"指导
 - 2,000 Token目标防止上下文溢出
 - 渐进式披露（从简单开始，仅在需要时添加结构）
@@ -275,7 +275,7 @@ lean-spec backfill                         # 从 git 回填元数据
 
 ## 总结
 
-**LeanSpec 适合想要以下特性的团队：**
+**HarnSpec 适合想要以下特性的团队：**
 - **高速度**通过低认知负荷和高 AI 对齐
 - **适应性**适应任何团队文化、组织结构或工具
 - **简单性**而不牺牲全面性
@@ -287,7 +287,7 @@ lean-spec backfill                         # 从 git 回填元数据
 - **结构化工作流**（Spec Kit） - 企业治理的规定性多步骤流程
 - **变更治理**（OpenSpec） - 正式提案 → 审查 → 归档工作流
 - **集成体验**（Kiro） - 内置 SDD 和自主代理的完整 AI IDE
-- **项目管理**（Jira、Linear） - 任务跟踪和团队协调（补充 LeanSpec）
+- **项目管理**（Jira、Linear） - 任务跟踪和团队协调（补充 HarnSpec）
 - **最大速度**（vibe coding） - 无结构，无文档，只有聊天
 
 选择适合您团队工作流和需求的工具。对[理论约束](https://www.marvinzhang.dev/blog/rices-theorem-why-automated-testing-will-fail)内可能实现的目标保持现实态度。

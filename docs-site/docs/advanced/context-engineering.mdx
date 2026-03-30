@@ -7,7 +7,7 @@ sidebar_position: 4
 
 > "Bigger context windows ≠ better results. Smart curation > raw capacity."
 
-Context engineering is the practice of managing AI working memory to maximize effectiveness. LeanSpec applies context engineering principles to spec management, ensuring specs fit in working memory and deliver high signal-to-noise ratio.
+Context engineering is the practice of managing AI working memory to maximize effectiveness. HarnSpec applies context engineering principles to spec management, ensuring specs fit in working memory and deliver high signal-to-noise ratio.
 
 ## The Core Problem
 
@@ -21,9 +21,9 @@ Even with 1M+ token windows:
 
 **Key Insight**: Bigger windows don't solve the problem. Smart curation does.
 
-### The LeanSpec Connection
+### The HarnSpec Connection
 
-LeanSpec exists because:
+HarnSpec exists because:
 1. **Context Economy** - Specs must fit in working memory (human + AI)
 2. **Signal-to-Noise** - Every word must inform decisions
 3. **Context failures** happen when we violate these principles
@@ -38,7 +38,7 @@ Based on research from [LangChain](https://blog.langchain.com/context-engineerin
 
 **What**: Split content across multiple contexts with selective loading
 
-**LeanSpec Application**:
+**HarnSpec Application**:
 ```markdown
 # Instead of one 11K-token spec:
 specs/045/README.md          (~1,200 tokens - overview)
@@ -68,7 +68,7 @@ specs/045/TESTING.md         (~1,100 tokens - tests)
 
 **What**: Eliminate duplicate or inferable content
 
-**LeanSpec Application**:
+**HarnSpec Application**:
 ```markdown
 # Before compaction (verbose):
 ## Authentication
@@ -108,7 +108,7 @@ Uses JWT tokens (stateless, no session storage).
 
 **What**: Condense while preserving essential information
 
-**LeanSpec Application**:
+**HarnSpec Application**:
 ```markdown
 # Before compression:
 ## Phase 1: Infrastructure Setup
@@ -147,7 +147,7 @@ See git commit abc123 for implementation details.
 
 **What**: Split unrelated concerns into separate specs
 
-**LeanSpec Application**:
+**HarnSpec Application**:
 ```markdown
 # Before isolation (one spec):
 specs/045-unified-dashboard/README.md
@@ -190,7 +190,7 @@ Based on research from [Drew Breunig](https://www.dbreunig.com/2025/06/22/how-co
 
 **Definition**: Hallucinated or erroneous content makes it into context and gets repeatedly referenced
 
-**Symptoms in LeanSpec**:
+**Symptoms in HarnSpec**:
 ```markdown
 # AI hallucinates during edit:
 "The authentication module uses Redis for session storage"
@@ -214,7 +214,7 @@ Based on research from [Drew Breunig](https://www.dbreunig.com/2025/06/22/how-co
 
 **Definition**: Context grows so large the model ignores training and repeats history
 
-**Symptoms in LeanSpec**:
+**Symptoms in HarnSpec**:
 ```markdown
 # Spec grows beyond 4,000 tokens with extensive history
 
@@ -236,7 +236,7 @@ Based on research from [Drew Breunig](https://www.dbreunig.com/2025/06/22/how-co
 
 **Definition**: Superfluous content influences model to make wrong decisions
 
-**Symptoms in LeanSpec**:
+**Symptoms in HarnSpec**:
 ```markdown
 # Spec includes MCP tool definitions for 20 integrations
 # (GitHub, Jira, Slack, Linear, Notion, Asana, ...)
@@ -261,7 +261,7 @@ Based on research from [Drew Breunig](https://www.dbreunig.com/2025/06/22/how-co
 
 **Definition**: Conflicting information within same context
 
-**Symptoms in LeanSpec**:
+**Symptoms in HarnSpec**:
 ```markdown
 # Early in spec:
 "We'll use PostgreSQL for data storage"
@@ -310,7 +310,7 @@ Often multiple strategies apply together:
 
 Context engineering is **the #1 job** when building with AI. These aren't just optimization techniques—they're fundamental to making AI-assisted spec management work.
 
-**Key Insight**: LeanSpec is a context engineering methodology for human-AI collaboration on software specs.
+**Key Insight**: HarnSpec is a context engineering methodology for human-AI collaboration on software specs.
 
 **Remember**:
 - Bigger context windows don't solve the problem

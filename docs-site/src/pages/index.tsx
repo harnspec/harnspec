@@ -17,9 +17,9 @@ function HomepageHeader() {
         <img 
           src="/img/logo-with-bg.svg" 
           alt={translate({
-            message: 'LeanSpec Logo',
+            message: 'HarnSpec Logo',
             id: 'homepage.logo.alt',
-            description: 'Alt text for the LeanSpec logo on homepage'
+            description: 'Alt text for the HarnSpec logo on homepage'
           })}
           className={styles.heroLogo}
         />

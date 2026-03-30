@@ -1,11 +1,11 @@
 ---
 slug: v0210-inline-editing-mcp-autosetup
-title: "LeanSpec 0.2.10: Inline Metadata Editing, MCP Auto-Setup, and Multi-Project Improvements"
+title: "HarnSpec 0.2.10: Inline Metadata Editing, MCP Auto-Setup, and Multi-Project Improvements"
 authors: [marvin]
 tags: [release, web-ui, mcp, multi-project]
 ---
 
-LeanSpec 0.2.10 brings a more interactive web experience with inline metadata editing, zero-config MCP setup during initialization, and significant improvements to multi-project management. This release focuses on reducing friction—whether you're managing specs in the browser, setting up AI agent integrations, or working across multiple projects.
+HarnSpec 0.2.10 brings a more interactive web experience with inline metadata editing, zero-config MCP setup during initialization, and significant improvements to multi-project management. This release focuses on reducing friction—whether you're managing specs in the browser, setting up AI agent integrations, or working across multiple projects.
 
 **Highlights**: Edit spec metadata directly in the browser, automatic MCP configuration for your AI tools, bootstrap mode for legacy specs, and polished multi-project workflows.
 
@@ -46,7 +46,7 @@ Setting up MCP server integration used to require manual configuration. Now `lea
 
 ### Automatic Detection
 
-When you run `lean-spec init`, LeanSpec detects your AI tools and offers to configure MCP:
+When you run `lean-spec init`, HarnSpec detects your AI tools and offers to configure MCP:
 
 ```bash
 $ lean-spec init
@@ -69,14 +69,14 @@ Each configuration file gets the correct format with absolute paths:
   "mcpServers": {
     "lean-spec": {
       "command": "npx",
-      "args": ["@leanspec/mcp"],
+      "args": ["@HarnSpec/mcp"],
       "cwd": "/absolute/path/to/your/project"
     }
   }
 }
 ```
 
-Your AI agents can immediately access LeanSpec tools—no copy-paste from docs, no path troubleshooting.
+Your AI agents can immediately access HarnSpec tools—no copy-paste from docs, no path troubleshooting.
 
 ### Supported Tools
 
@@ -189,7 +189,7 @@ If you're using the MCP server:
 
 ```bash
 # Update MCP package
-npm install -g @leanspec/mcp@latest
+npm install -g @HarnSpec/mcp@latest
 ```
 
 ## What's Next

@@ -6,7 +6,7 @@ sidebar_position: 0
 
 # CLI Overview
 
-The LeanSpec CLI provides a complete toolkit for managing specifications in your project. Whether you're a developer working directly or an AI agent automating workflows, the CLI offers efficient commands for every stage of the spec lifecycle.
+The HarnSpec CLI provides a complete toolkit for managing specifications in your project. Whether you're a developer working directly or an AI agent automating workflows, the CLI offers efficient commands for every stage of the spec lifecycle.
 
 ## For Human Developers
 
@@ -41,7 +41,7 @@ The CLI is designed as a **toolset for AI agents**, enabling them to:
 - **Manage work** - Create, update, and link specs programmatically
 - **Maintain quality** - Validate spec structure and token counts
 
-AI agents can use LeanSpec CLI commands directly as tools:
+AI agents can use HarnSpec CLI commands directly as tools:
 
 ```bash
 # Agent searches for relevant context
@@ -57,7 +57,7 @@ lean-spec deps 042
 lean-spec update 042 --status complete
 ```
 
-**MCP Server Integration**: For seamless AI agent access, LeanSpec provides an [MCP (Model Context Protocol) server](/docs/reference/mcp-server) that exposes CLI functionality as structured tools.
+**MCP Server Integration**: For seamless AI agent access, HarnSpec provides an [MCP (Model Context Protocol) server](/docs/reference/mcp-server) that exposes CLI functionality as structured tools.
 
 ## Command Categories
 
@@ -90,7 +90,7 @@ Track health and validate quality:
 
 ## Core Principles
 
-The CLI design follows LeanSpec's [First Principles](/docs/advanced/first-principles):
+The CLI design follows HarnSpec's [First Principles](/docs/advanced/first-principles):
 
 1. **Context Economy** - Commands help manage token budgets (`tokens`, `validate`)
 2. **Signal-to-Noise** - Quick access to relevant information (`search`, `deps`)
@@ -121,7 +121,7 @@ lean-spec <command> --help        # Command details
 ## Integration Points
 
 ### Version Control
-LeanSpec plays well with Git:
+HarnSpec plays well with Git:
 - Specs are plain markdown files
 - All changes are traceable
 - Easy to review in PRs

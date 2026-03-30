@@ -327,8 +327,8 @@
     "description": "The title of the tag list page"
   },
   "homepage.logo.alt": {
-    "message": "LeanSpec 标志",
-    "description": "Alt text for the LeanSpec logo on homepage"
+    "message": "HarnSpec 标志",
+    "description": "Alt text for the HarnSpec logo on homepage"
   },
   "homepage.tagline": {
     "message": "专为 AI 协作设计的轻量级规范",

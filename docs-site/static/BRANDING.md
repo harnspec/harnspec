@@ -1,6 +1,6 @@
-# LeanSpec Brand Assets
+# HarnSpec Brand Assets
 
-Brand identity and logo usage guidelines for LeanSpec.
+Brand identity and logo usage guidelines for HarnSpec.
 
 ## Logo
 
@@ -97,7 +97,7 @@ Sizes: 16px, 32px, 64px, 128px, 256px, 512px
 ### GitHub Social Preview
 - **Size:** 1280x640px
 - **Format:** PNG
-- **Content:** Logo + "LeanSpec" wordmark + tagline
+- **Content:** Logo + "HarnSpec" wordmark + tagline
 
 ### Twitter/X Card
 - **Size:** 1200x630px

@@ -1,21 +1,21 @@
 ---
 id: 'migration'
-title: 'Migrating to LeanSpec'
+title: 'Migrating to HarnSpec'
 sidebar_position: 3
 ---
 
-# Migrating to LeanSpec
+# Migrating to HarnSpec
 
-This guide helps you migrate from existing SDD tools and documentation systems to LeanSpec.
+This guide helps you migrate from existing SDD tools and documentation systems to HarnSpec.
 
 ## Quick Overview
 
-LeanSpec migration focuses on two main areas:
+HarnSpec migration focuses on two main areas:
 
 1. **Metadata/Frontmatter** (PRIMARY) - Use `lean-spec backfill` to extract from git history
 2. **Folder Organization** (VARIES) - Depends on your source tool
 
-**Good news**: LeanSpec is flexible about content format—you can keep your existing writing style!
+**Good news**: HarnSpec is flexible about content format—you can keep your existing writing style!
 
 ## Migration by Source Tool
 
@@ -217,7 +217,7 @@ lean-spec migrate ./openspec
 This generates a prompt you can copy to ChatGPT, Claude, Copilot, or any AI assistant:
 
 ```
-You are helping migrate specification documents to LeanSpec format.
+You are helping migrate specification documents to HarnSpec format.
 
 Source: ./openspec (23 documents found)
 
@@ -228,7 +228,7 @@ Your Task:
    - Run: lean-spec create <name>
    - Run: lean-spec update <name> --status <status>
    - Run: lean-spec update <name> --priority <priority>
-   - Edit content to match LeanSpec structure
+   - Edit content to match HarnSpec structure
 4. Preserve decision rationale and relationships
 5. Keep specs under 400 lines
 
@@ -275,8 +275,8 @@ Use this checklist to ensure a complete migration:
 - [ ] Backup your existing documentation
 - [ ] Review source folder structure
 - [ ] Check git history is available (for `backfill`)
-- [ ] Install LeanSpec: `npm install -g lean-spec`
-- [ ] Initialize LeanSpec: `lean-spec init`
+- [ ] Install HarnSpec: `npm install -g lean-spec`
+- [ ] Initialize HarnSpec: `lean-spec init`
 
 ### During Migration
 
@@ -309,7 +309,7 @@ openspec/AGENTS.md
 CLAUDE.md
 ```
 
-### LeanSpec Uses
+### HarnSpec Uses
 
 ```
 AGENTS.md (in project root)
@@ -317,12 +317,12 @@ AGENTS.md (in project root)
 
 ### Optional: Move SDD Workflow to Agent Skills
 
-LeanSpec supports **Agent Skills** via SKILL.md. This lets you keep AGENTS.md short and project-specific.
+HarnSpec supports **Agent Skills** via SKILL.md. This lets you keep AGENTS.md short and project-specific.
 
 **Recommended steps:**
 1. Install the skill via `lean-spec skill install`
-2. Use the installed SKILL.md at .github/skills/leanspec-sdd/
-3. Reduce AGENTS.md to project-specific rules only (<100 lines)
+2. Use the installed SKILL.md at .github/skills/HarnSpec-sdd/
+3. Reduce AGENTS.md to project-specific rules only (`<100` lines)
 4. Add a short note in AGENTS.md that references the skill
 5. Commit the skill folder so it is shareable
 
@@ -333,7 +333,7 @@ LeanSpec supports **Agent Skills** via SKILL.md. This lets you keep AGENTS.md sh
 
 ## Project: Your Project
 
-Core SDD workflow is defined in .github/skills/leanspec-sdd/SKILL.md.
+Core SDD workflow is defined in .github/skills/HarnSpec-sdd/SKILL.md.
 
 ## Project-Specific Rules
 - Use pnpm instead of npm
@@ -343,7 +343,7 @@ Core SDD workflow is defined in .github/skills/leanspec-sdd/SKILL.md.
 
 1. **Review existing AI guidance** from source tool
 2. **Preserve project-specific conventions**
-3. **Merge with LeanSpec AGENTS.md** (created by `lean-spec init`)
+3. **Merge with HarnSpec AGENTS.md** (created by `lean-spec init`)
 4. **Update commands**: `openspec` → `lean-spec`, etc.
 5. **Keep team workflows intact**
 
@@ -424,7 +424,7 @@ lean-spec migrate ./exports/
 
 ### Why No Direct API Integration?
 
-LeanSpec intentionally doesn't integrate with external system APIs because:
+HarnSpec intentionally doesn't integrate with external system APIs because:
 
 - **Security**: No credential management needed
 - **Simplicity**: No authentication, API keys, rate limits
@@ -456,9 +456,9 @@ lean-spec check
 
 ### Issue: Content format doesn't match template
 
-**Good news**: LeanSpec is flexible! Keep your existing format.
+**Good news**: HarnSpec is flexible! Keep your existing format.
 
-You don't need to rewrite content to match a specific structure. LeanSpec's first principle is "Intent Over Implementation"—as long as the spec communicates intent clearly, the exact format doesn't matter.
+You don't need to rewrite content to match a specific structure. HarnSpec's first principle is "Intent Over Implementation"—as long as the spec communicates intent clearly, the exact format doesn't matter.
 
 ### Issue: Relationships broken after migration
 

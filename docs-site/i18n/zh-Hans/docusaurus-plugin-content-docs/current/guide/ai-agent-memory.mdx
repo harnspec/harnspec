@@ -7,7 +7,7 @@ sidebar_position: 4
 
 > "Spec作为 AI 代理的持久语义记忆。"
 
-LeanSpec Spec作为 AI 代理的 **持久记忆层**——提供跨会话持久的长期知识存储，并实现有效的人机协作。
+HarnSpec Spec作为 AI 代理的 **持久记忆层**——提供跨会话持久的长期知识存储，并实现有效的人机协作。
 
 ## 记忆问题
 
@@ -20,7 +20,7 @@ AI 代理面临一个根本挑战：**工作记忆 (Working Memory)是短暂的*
 
 **传统解决方案**：对文档的 RAG（检索增强生成）
 
-**LeanSpec 解决方案**：Spec作为 **语义记忆** - 代理可以可靠访问的结构化、持久知识
+**HarnSpec 解决方案**：Spec作为 **语义记忆** - 代理可以可靠访问的结构化、持久知识
 
 ## Spec作为语义记忆
 
@@ -35,10 +35,10 @@ AI 代理面临一个根本挑战：**工作记忆 (Working Memory)是短暂的*
 ### 语义记忆（持久）
 - **什么**：长期知识、事实、决策、理由
 - **生命周期**：跨会话和任务持久
-- **存储**：LeanSpec Spec + MCP 检索
+- **存储**：HarnSpec Spec + MCP 检索
 - **大小**：无限制（外部存储）
 
-**LeanSpec Spec = AI 代理的语义记忆**
+**HarnSpec Spec = AI 代理的语义记忆**
 
 ## 如何工作
 
@@ -84,7 +84,7 @@ API 被大量请求击中，40% 的请求来自 2% 的用户。
 
 AI 代理通过以下方式访问Spec记忆：
 
-1. **MCP 服务器集成**：LeanSpec MCP 服务器提供Spec搜索/检索
+1. **MCP 服务器集成**：HarnSpec MCP 服务器提供Spec搜索/检索
 2. **语义搜索**：代理按主题、状态、标签查询Spec
 3. **选择性加载**：仅将相关Spec加载到工作记忆中
 4. **交叉引用**：跟随 `depends_on` 和 `related` 链接
@@ -94,7 +94,7 @@ AI 代理通过以下方式访问Spec记忆：
 人类："为什么我们选择 PostgreSQL 而不是 MongoDB？"
 
 AI 代理：
-1. 查询 LeanSpec MCP：search_specs("database decision")
+1. 查询 HarnSpec MCP：search_specs("database decision")
 2. 检索Spec 023：数据库选择
 3. 从语义记忆中读取决策理由
 4. 响应："根据Spec 023，选择 PostgreSQL 是因为..."
@@ -109,7 +109,7 @@ Spec桥接以下之间的差距：
 
 ```mermaid
 flowchart LR
-    Human[人类意图] -->|编写| Spec[LeanSpec Spec]
+    Human[人类意图] -->|编写| Spec[HarnSpec Spec]
     Spec -->|MCP 检索| AI[AI 代理]
     AI -->|实现| Code[代码库]
     Code -->|验证| Spec
@@ -118,7 +118,7 @@ flowchart LR
     style AI fill:#3b82f6,stroke:#2563eb,color:#fff
 ```
 
-## LeanSpec 中的记忆类型
+## HarnSpec 中的记忆类型
 
 ### 1. 程序记忆（如何）
 - **什么**：标准模式、模板、工作流程
@@ -127,7 +127,7 @@ flowchart LR
 
 ### 2. 语义记忆（什么/为什么）
 - **什么**：事实、决策、理由、约束
-- **存储**：LeanSpec Spec（README、DESIGN 等）
+- **存储**：HarnSpec Spec（README、DESIGN 等）
 - **示例**："为无状态认证选择了 JWT Token（见Spec 042）"
 
 ### 3. 情节记忆（何时/上下文）
@@ -135,7 +135,7 @@ flowchart LR
 - **存储**：Git 历史，Spec转换，时间戳
 - **示例**："API 重新设计（Spec 038）发生在认证重构（Spec 037）之后"
 
-**LeanSpec 主要提供语义记忆** - 持久知识层。
+**HarnSpec 主要提供语义记忆** - 持久知识层。
 
 ## Spec作为记忆的好处
 
@@ -196,7 +196,7 @@ flowchart LR
 
 ## 底线
 
-**LeanSpec 将Spec从静态文档转变为 AI 代理的活跃语义记忆。**
+**HarnSpec 将Spec从静态文档转变为 AI 代理的活跃语义记忆。**
 
 - **工作记忆**（聊天历史）是短暂且有限的
 - **语义记忆**（Spec）是持久且可扩展的

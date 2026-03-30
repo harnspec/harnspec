@@ -17,7 +17,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: 'Introduction',
-      items: ['guide/index', 'guide/getting-started', 'guide/why-leanspec'],
+      items: ['guide/index', 'guide/getting-started', 'guide/why-harnspec'],
     },
     {
       type: 'category',
@@ -67,7 +67,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Core Concepts',
       items: [
-        'guide/understanding-leanspec',
+        'guide/understanding-harnspec',
         {
           type: 'category',
           label: 'Terminology',

@@ -2,9 +2,9 @@
 
 ## Getting Started
 
-### What is LeanSpec?
+### What is HarnSpec?
 
-LeanSpec is a lightweight spec framework optimized for AI-assisted development. It's a CLI tool + markdown files that live in your repo, helping you document technical decisions and guide AI coding tools while keeping specs within the 2,000-token sweet spot for optimal performance.
+HarnSpec is a lightweight spec framework optimized for AI-assisted development. It's a CLI tool + markdown files that live in your repo, helping you document technical decisions and guide AI coding tools while keeping specs within the 2,000-token sweet spot for optimal performance.
 
 **Key features:**
 - Numbered specs for easy reference
@@ -24,7 +24,7 @@ lean-spec create my-first-spec
 
 No configuration files, no database, no server. Works with any editor and any AI tool.
 
-### How do I get started with LeanSpec?
+### How do I get started with HarnSpec?
 
 This is the most common question! Here's your quickstart path:
 
@@ -53,24 +53,24 @@ lean-spec create my-first-feature
 - 📖 [Getting Started Guide](/docs/guide/getting-started)
 - 📖 [AI Coding Workflow](/docs/guide/usage/ai-coding-workflow)
 
-### Why use LeanSpec?
+### Why use HarnSpec?
 
-**Use LeanSpec when you need:**
+**Use HarnSpec when you need:**
 - Team alignment on complex features
 - Documentation for design decisions
 - Context to reduce AI hallucinations
 - Onboarding materials for new team members
 
-**Skip LeanSpec for:**
+**Skip HarnSpec for:**
 - Simple bug fixes
 - Throwaway prototypes
 - Solo projects with clear requirements
 
 **Philosophy:** Get 80% of vibe coding speed with 80% of structured spec benefits. Minimal overhead for maximum agility.
 
-### Can LeanSpec speed up my development?
+### Can HarnSpec speed up my development?
 
-**Yes, but with nuance.** LeanSpec isn't about typing faster—it's about reducing rework and improving AI output quality.
+**Yes, but with nuance.** HarnSpec isn't about typing faster—it's about reducing rework and improving AI output quality.
 
 **How it speeds up development:**
 
@@ -84,7 +84,7 @@ lean-spec create my-first-feature
 - Less time explaining the same decisions repeatedly
 - Team alignment happens once, not every sprint
 
-**When LeanSpec might slow you down:**
+**When HarnSpec might slow you down:**
 - Simple bug fixes (skip the spec, just fix it)
 - Throwaway prototypes (vibe coding is faster)
 - Very clear, well-understood work
@@ -106,11 +106,11 @@ If your spec exceeds 3,500 tokens, split it into sub-spec files (`DESIGN.md`, `I
 
 ## Comparisons
 
-### What's the difference between LeanSpec and other SDD frameworks?
+### What's the difference between HarnSpec and other SDD frameworks?
 
-**LeanSpec vs Spec Kit vs OpenSpec:**
+**HarnSpec vs Spec Kit vs OpenSpec:**
 
-| Aspect | LeanSpec | Spec Kit | OpenSpec |
+| Aspect | HarnSpec | Spec Kit | OpenSpec |
 |--------|----------|----------|----------|
 | **Philosophy** | Lightweight, flexible | Structured governance | Formal proposals |
 | **Spec size** | &lt;2,000 tokens (optimized) | Longer context | Long system prompts |
@@ -120,7 +120,7 @@ If your spec exceeds 3,500 tokens, split it into sub-spec files (`DESIGN.md`, `I
 | **Visual UI** | ✅ Yes | ❌ CLI only | ❌ CLI only |
 | **Best for** | Teams wanting agility | Enterprise governance | Formal change tracking |
 
-**Key LeanSpec advantages:**
+**Key HarnSpec advantages:**
 - **Context Economy** - Optimized for AI working memory
 - **Editor-agnostic** - Works with any AI tool (Copilot, Claude, Cursor, etc.)
 - **Low cognitive load** - Start simple, grow as needed
@@ -131,15 +131,15 @@ If your spec exceeds 3,500 tokens, split it into sub-spec files (`DESIGN.md`, `I
 - **OpenSpec**: Teams wanting formal proposal/review workflows
 - **Kiro**: Teams wanting an integrated AI IDE (but with vendor lock-in)
 
-📖 [Full comparison with detailed analysis →](/docs/guide/why-leanspec)
+📖 [Full comparison with detailed analysis →](/docs/guide/why-harnspec)
 
 ## AI Integration
 
-### Is LeanSpec only suitable for Claude models?
+### Is HarnSpec only suitable for Claude models?
 
-**No! LeanSpec works with any AI model or coding assistant.**
+**No! HarnSpec works with any AI model or coding assistant.**
 
-LeanSpec is model-agnostic by design:
+HarnSpec is model-agnostic by design:
 
 **MCP-compatible tools (full integration):**
 - GitHub Copilot (VS Code)
@@ -162,7 +162,7 @@ Read specs/042-my-feature/README.md and implement accordingly.
 
 The 2,000-token limit is based on cognitive science and AI attention research—it helps *all* models, not just Claude.
 
-### How do I integrate LeanSpec with Claude Code?
+### How do I integrate HarnSpec with Claude Code?
 
 **Quick setup (2 minutes):**
 
@@ -173,14 +173,14 @@ The 2,000-token limit is based on cognitive science and AI attention research—
    - Linux: `~/.config/claude-code/mcp_settings.json`
    - Windows: `%APPDATA%\claude-code\mcp_settings.json`
 
-2. Add the LeanSpec MCP server:
+2. Add the HarnSpec MCP server:
 
 ```json
 {
   "mcpServers": {
-    "leanspec": {
+    "HarnSpec": {
       "command": "npx",
-      "args": ["-y", "@leanspec/mcp"]
+      "args": ["-y", "@HarnSpec/mcp"]
     }
   }
 }
@@ -197,7 +197,7 @@ Claude Code will now use MCP to access your specs with semantic search, dependen
 
 📖 [Full MCP integration guide →](/docs/guide/usage/mcp-integration)
 
-### Why doesn't my AI agent follow the LeanSpec workflow?
+### Why doesn't my AI agent follow the HarnSpec workflow?
 
 **Common causes and fixes:**
 
@@ -235,9 +235,9 @@ Ensure MCP is configured so AI can actually read specs:
 ```json
 {
   "mcpServers": {
-    "leanspec": {
+    "HarnSpec": {
       "command": "npx",
-      "args": ["-y", "@leanspec/mcp"]
+      "args": ["-y", "@HarnSpec/mcp"]
     }
   }
 }
@@ -245,17 +245,17 @@ Ensure MCP is configured so AI can actually read specs:
 
 **Debugging tip:** Ask the AI directly:
 ```
-What instructions do you have about LeanSpec workflow?
+What instructions do you have about HarnSpec workflow?
 Can you list the specs in this project?
 ```
 
 📖 [Agent configuration guide →](/docs/guide/usage/advanced-features/agent-configuration)
 
-## Using LeanSpec
+## Using HarnSpec
 
-### How do I upgrade or re-initialize LeanSpec without losing my specs?
+### How do I upgrade or re-initialize HarnSpec without losing my specs?
 
-**LeanSpec has safe re-initialization built in.** You don't need to delete anything manually.
+**HarnSpec has safe re-initialization built in.** You don't need to delete anything manually.
 
 **Scenario 1: Upgrade to latest config (safest)**
 ```bash
@@ -273,7 +273,7 @@ This resets `.lean-spec/` configuration but keeps your `specs/` directory intact
 ```bash
 lean-spec init
 ```
-When LeanSpec is already initialized, you'll see options:
+When HarnSpec is already initialized, you'll see options:
 - **Upgrade configuration** (recommended) - Update config, keep everything
 - **Reset configuration** - Fresh config, keep specs
 - **Full reset** - Start completely fresh (requires confirmation)
@@ -289,7 +289,7 @@ When LeanSpec is already initialized, you'll see options:
 
 **Pro tip:** Always use `-y` for CI/CD pipelines - it defaults to the safest upgrade option.
 
-### How do I view the LeanSpec UI?
+### How do I view the HarnSpec UI?
 
 **Start the web UI:**
 
@@ -305,7 +305,7 @@ This opens a browser at `http://localhost:3000` with:
 
 **Alternative method (no CLI installation):**
 ```bash
-npx @leanspec/ui
+npx @HarnSpec/ui
 ```
 
 **Options:**
@@ -317,9 +317,9 @@ lean-spec ui --specs ./path # Custom specs directory
 
 📖 [Visual Mode guide →](/docs/guide/visual-mode)
 
-### How do I use LeanSpec to manage multiple features?
+### How do I use HarnSpec to manage multiple features?
 
-**LeanSpec excels at managing concurrent development:**
+**HarnSpec excels at managing concurrent development:**
 
 **1. Create specs for each feature:**
 ```bash

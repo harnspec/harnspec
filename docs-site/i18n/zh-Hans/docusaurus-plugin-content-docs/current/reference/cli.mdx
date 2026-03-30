@@ -5,20 +5,20 @@ sidebar_position: 1
 ---
 # CLI 命令
 
-所有 LeanSpec CLI 命令的完整参考。
+所有 HarnSpec CLI 命令的完整参考。
 
 ## 全局选项
 
 适用于所有命令：
 
 - `--help` - 显示命令帮助
-- `--version` - 显示 LeanSpec 版本
+- `--version` - 显示 HarnSpec 版本
 
 ## 命令
 
 ### `lean-spec init`
 
-在您的项目中初始化 LeanSpec。
+在您的项目中初始化 HarnSpec。
 
 ```bash
 lean-spec init [options]
@@ -30,7 +30,7 @@ lean-spec init [options]
 3. 配置初始设置
 
 **交互式提示（已初始化项目）：**
-当 LeanSpec 已经初始化时，系统会询问如何处理：
+当 HarnSpec 已经初始化时，系统会询问如何处理：
 1. **升级配置** （推荐）- 更新配置到最新版本，保留 Spec 和 AGENTS.md
 2. **重置配置** - 使用模板创建新配置，保留 `specs/` 目录
 3. **完全重置** - 删除所有内容重新开始（需要确认）
@@ -289,7 +289,7 @@ lean-spec children 168
 
 **输出：**
 ```
-Children of 168-leanspec-orchestration-platform
+Children of 168-HarnSpec-orchestration-platform
 ────────────────────────────────────────
   ⏳ 239-ai-coding-session-management - AI Coding Session Management and Monitoring Infrastructure
   ✅ 244-session-ui-enhancement - Session UI Enhancement - List, Detail, and Spec Integration
@@ -659,7 +659,7 @@ lean-spec board
 **输出：**
 ```
 ╔═══════════════════════════════════════════════════════════╗
-║                    LeanSpec 看板                          ║
+║                    HarnSpec 看板                          ║
 ╠═══════════════════════════════════════════════════════════╣
 ║ 计划中           进行中              完成                 ║
 - `--group-by <mode>` - 按 `status`、`priority`、`assignee`、`tag` 或 `parent` 分组（默认：`status`）
@@ -788,7 +788,7 @@ lean-spec ui [选项]
 - `-s, --specs <dir>` - Spec目录（如果省略则自动检测）
 - `-p, --port <port>` - 运行端口（默认：3000）
 - `--no-open` - 不自动打开浏览器
-- `--dev` - 开发模式（仅限 LeanSpec monorepo）
+- `--dev` - 开发模式（仅限 HarnSpec monorepo）
 - `--dry-run` - 显示命令而不执行
 
 **示例：**
@@ -817,11 +817,11 @@ lean-spec ui --dry-run
 **工作原理：**
 
 在外部项目中：
-- 委托给 `npx @leanspec/ui`
+- 委托给 `npx @HarnSpec/ui`
 - 无需额外安装
 - 使用文件系统模式（直接文件读取）
 
-在 LeanSpec monorepo 中：
+在 HarnSpec monorepo 中：
 - 在开发中运行本地 `packages/web`
 - 用于测试 UI 更改
 
@@ -884,7 +884,7 @@ specs/20251102/001-user-auth
 001-user-auth
 ```
 
-无论使用哪种格式，LeanSpec 都会找到Spec。
+无论使用哪种格式，HarnSpec 都会找到Spec。
 
 ---
 

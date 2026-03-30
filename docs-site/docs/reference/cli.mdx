@@ -5,20 +5,20 @@ sidebar_position: 1
 ---
 # CLI Commands
 
-Complete reference for all LeanSpec CLI commands.
+Complete reference for all HarnSpec CLI commands.
 
 ## Global Options
 
 Available for all commands:
 
 - `--help` - Show help for a command
-- `--version` - Show LeanSpec version
+- `--version` - Show HarnSpec version
 
 ## Commands
 
 ### `lean-spec init`
 
-Initialize LeanSpec in your project.
+Initialize HarnSpec in your project.
 
 ```bash
 lean-spec init [options]
@@ -30,7 +30,7 @@ lean-spec init [options]
 3. Configure initial settings
 
 **Interactive prompts (existing project):**
-When LeanSpec is already initialized, you'll be asked how to proceed:
+When HarnSpec is already initialized, you'll be asked how to proceed:
 1. **Upgrade configuration** (recommended) - Update config to latest version, keeps specs and AGENTS.md
 2. **Reset configuration** - Fresh config from template, keeps `specs/` directory
 3. **Full reset** - Remove everything and start fresh (requires confirmation)
@@ -306,7 +306,7 @@ lean-spec children 168
 
 **Output:**
 ```
-Children of 168-leanspec-orchestration-platform
+Children of 168-HarnSpec-orchestration-platform
 ────────────────────────────────────────
   ⏳ 239-ai-coding-session-management - AI Coding Session Management and Monitoring Infrastructure
   ✅ 244-session-ui-enhancement - Session UI Enhancement - List, Detail, and Spec Integration
@@ -697,7 +697,7 @@ lean-spec board [options]
 **Output:**
 ```
 ╔═══════════════════════════════════════════════════════════╗
-║                    LeanSpec Board                         ║
+║                    HarnSpec Board                         ║
 ╠═══════════════════════════════════════════════════════════╣
 ║ PLANNED          IN PROGRESS         COMPLETE             ║
 ╠─────────────────┬────────────────────┬────────────────────╣
@@ -1104,7 +1104,7 @@ Summary:
 ```
 
 **Use Cases:**
-- Migrating to LeanSpec from other systems
+- Migrating to HarnSpec from other systems
 - Recovering missing timestamp data
 - Ensuring accurate spec history
 
@@ -1222,7 +1222,7 @@ lean-spec ui [options]
 - `-s, --specs <dir>` - Specs directory (auto-detected if omitted)
 - `-p, --port <port>` - Port to run on (default: 3000)
 - `--no-open` - Don't open browser automatically
-- `--dev` - Development mode (LeanSpec monorepo only)
+- `--dev` - Development mode (HarnSpec monorepo only)
 - `--dry-run` - Show command without executing
 
 **Examples:**
@@ -1251,11 +1251,11 @@ lean-spec ui --dry-run
 **How It Works:**
 
 In external projects:
-- Delegates to `npx @leanspec/ui` 
+- Delegates to `npx @HarnSpec/ui` 
 - No additional installation required
 - Uses filesystem mode (direct file reads)
 
-In LeanSpec monorepo:
+In HarnSpec monorepo:
 - Runs local `packages/web` in development
 - Useful for testing UI changes
 
@@ -1318,7 +1318,7 @@ specs/20251102/001-user-auth
 001-user-auth
 ```
 
-LeanSpec will find the spec regardless of which format you use.
+HarnSpec will find the spec regardless of which format you use.
 
 ---
 

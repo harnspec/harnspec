@@ -1,8 +1,8 @@
-# AI Agent Instructions for LeanSpec Documentation Site
+# AI Agent Instructions for HarnSpec Documentation Site
 
 ## Core Principles
 
-When working with the LeanSpec documentation site:
+When working with the HarnSpec documentation site:
 
 1. **File paths MUST align with sidebar structure** - No exceptions
 2. **Chinese translations MUST mirror English docs** - Complete parity required
@@ -33,7 +33,7 @@ Every English `.mdx` file needs a Chinese translation in `i18n/zh-Hans/docusauru
 
 Never translate these terms - they are technical concepts with established English usage:
 
-- **Core terms**: Spec, LeanSpec, CLI, Token, README, frontmatter, MCP
+- **Core terms**: Spec, HarnSpec, CLI, Token, README, frontmatter, MCP
 - **Commands**: `lean-spec create`, `lean-spec update`, `lean-spec board`, etc.
 - **Status values**: `draft`, `planned`, `in-progress`, `complete`, `archived`
 - **File types**: `.md`, `.mdx`, `.json`, `.yaml`
@@ -109,7 +109,7 @@ Balance readability with precision:
 | English | Chinese (Don't Use) | Usage |
 |---------|-------------------|--------|
 | Spec | ❌ 规格/规范 | "创建新 Spec" ✅ |
-| LeanSpec | ❌ 精益规范 | "LeanSpec 方法论" ✅ |
+| HarnSpec | ❌ 精益规范 | "HarnSpec 方法论" ✅ |
 | CLI | ❌ 命令行界面 | "使用 CLI 命令" ✅ |
 | Token | ❌ 令牌/标记 | "Token 数量" ✅ |
 | README | ❌ 说明文件 | "README.md 文件" ✅ |
@@ -149,20 +149,20 @@ Balance readability with precision:
 **Section Headers:**
 
 ```markdown
-✅ "## 什么是 LeanSpec？"
+✅ "## 什么是 HarnSpec？"
 ✅ "## 快速开始"
 ✅ "## 核心概念"
-✅ "## 为什么使用 LeanSpec"
+✅ "## 为什么使用 HarnSpec"
 
-❌ "## What is LeanSpec?" (in Chinese docs)
+❌ "## What is HarnSpec?" (in Chinese docs)
 ❌ "## Getting Started" (in Chinese docs)
 ```
 
 **Feature Descriptions:**
 
 ```markdown
-✅ "LeanSpec 是一种轻量级的规格驱动开发 (SDD) 方法论"
-❌ "LeanSpec 是一个轻量级规范驱动的开发方法"
+✅ "HarnSpec 是一种轻量级的规格驱动开发 (SDD) 方法论"
+❌ "HarnSpec 是一个轻量级规范驱动的开发方法"
 
 ✅ "使用 `lean-spec board` 查看 Spec 看板"
 ❌ "使用 `lean-spec board` 查看规格说明看板"

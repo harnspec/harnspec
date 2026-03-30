@@ -7,7 +7,7 @@ sidebar_position: 4
 
 > "更大的上下文窗口 ≠ 更好的结果。智能策展 > 原始容量。"
 
-上下文工程是管理 AI 工作记忆 (Working Memory)以最大化效果的实践。LeanSpec 将上下文工程原则应用于Spec管理，确保Spec适应工作记忆并提供高信噪比 (Signal-to-Noise)。
+上下文工程是管理 AI 工作记忆 (Working Memory)以最大化效果的实践。HarnSpec 将上下文工程原则应用于Spec管理，确保Spec适应工作记忆并提供高信噪比 (Signal-to-Noise)。
 
 ## 核心问题
 
@@ -21,9 +21,9 @@ sidebar_position: 4
 
 **关键见解**：更大的窗口并不能解决问题。智能策展可以。
 
-### LeanSpec 的联系
+### HarnSpec 的联系
 
-LeanSpec 存在是因为：
+HarnSpec 存在是因为：
 1. **上下文经济 (Context Economy)** - Spec必须适应工作记忆（人类 + AI）
 2. **信噪比** - 每个字都必须提供决策信息
 3. **上下文失败**发生在我们违反这些原则时
@@ -38,7 +38,7 @@ LeanSpec 存在是因为：
 
 **什么**：将内容分割到多个上下文中，有选择地加载
 
-**LeanSpec 应用**：
+**HarnSpec 应用**：
 ```markdown
 # 不是一个 11K-token 的Spec：
 specs/045/README.md          (~1,200 Token - 概述)
@@ -68,7 +68,7 @@ specs/045/TESTING.md         (~1,100 Token - 测试)
 
 **什么**：消除重复或可推断的内容
 
-**LeanSpec 应用**：
+**HarnSpec 应用**：
 ```markdown
 # 压实前（冗长）：
 ## 认证
@@ -108,7 +108,7 @@ JWT tokens 的好处是它们不需要服务器端
 
 **什么**：在保留基本信息的同时进行压缩
 
-**LeanSpec 应用**：
+**HarnSpec 应用**：
 ```markdown
 # 压缩前：
 ## 阶段 1：基础设施设置
@@ -147,7 +147,7 @@ JWT tokens 的好处是它们不需要服务器端
 
 **什么**：将不相关的关注点拆分到单独的Spec中
 
-**LeanSpec 应用**：
+**HarnSpec 应用**：
 ```markdown
 # 隔离前（一个Spec）：
 specs/045-unified-dashboard/README.md
@@ -190,7 +190,7 @@ specs/062-metrics-api/             # API 端点
 
 **定义**：幻觉或错误内容进入上下文并被反复引用
 
-**LeanSpec 中的症状**：
+**HarnSpec 中的症状**：
 ```markdown
 # AI 在编辑时产生幻觉：
 "认证模块使用 Redis 进行会话存储"
@@ -214,7 +214,7 @@ specs/062-metrics-api/             # API 端点
 
 **定义**：上下文增长得太大，模型忽略训练并重复历史
 
-**LeanSpec 中的症状**：
+**HarnSpec 中的症状**：
 ```markdown
 # Spec增长超过 4,000 Token，包含大量历史
 
@@ -236,7 +236,7 @@ specs/062-metrics-api/             # API 端点
 
 **定义**：多余内容影响模型做出错误决策
 
-**LeanSpec 中的症状**：
+**HarnSpec 中的症状**：
 ```markdown
 # Spec包含 20 个集成的 MCP 工具定义
 # (GitHub, Jira, Slack, Linear, Notion, Asana, ...)
@@ -261,7 +261,7 @@ specs/062-metrics-api/             # API 端点
 
 **定义**：同一上下文中的冲突信息
 
-**LeanSpec 中的症状**：
+**HarnSpec 中的症状**：
 ```markdown
 # Spec早期：
 "我们将使用 PostgreSQL 进行数据存储"
@@ -310,7 +310,7 @@ specs/062-metrics-api/             # API 端点
 
 上下文工程是 **使用 AI 构建时的 #1 工作**。这些不仅仅是优化技术——它们是使 AI 辅助的Spec管理工作的基础。
 
-**关键见解**：LeanSpec 是用于软件Spec人机协作的上下文工程方法论。
+**关键见解**：HarnSpec 是用于软件Spec人机协作的上下文工程方法论。
 
 **记住**：
 - 更大的上下文窗口并不能解决问题

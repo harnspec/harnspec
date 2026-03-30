@@ -9,7 +9,7 @@ sidebar_position: 2
 
 ## 配置文件
 
-LeanSpec 配置存储在项目根目录的 `.lean-spec/config.json` 中。
+HarnSpec 配置存储在项目根目录的 `.lean-spec/config.json` 中。
 
 ## 默认配置
 
@@ -91,7 +91,7 @@ LeanSpec 配置存储在项目根目录的 `.lean-spec/config.json` 中。
 **类型：** `boolean`  
 **默认：** `true`
 
-启用后，LeanSpec 在Spec创建期间自动检查序列号冲突，如果存在重复则发出警告。
+启用后，HarnSpec 在Spec创建期间自动检查序列号冲突，如果存在重复则发出警告。
 
 ```json
 {
@@ -417,7 +417,7 @@ Specfrontmatter字段验证的配置。
 
 ## 验证
 
-LeanSpec 在加载时验证配置：
+HarnSpec 在加载时验证配置：
 
 - 必需的结构字段必须有效
 - 自定义字段类型必须有效（`string`、`number`、`boolean`、`array`）

@@ -1,10 +1,10 @@
 {
   "title": {
-    "message": "LeanSpec",
+    "message": "HarnSpec",
     "description": "The title in the navbar"
   },
   "logo.alt": {
-    "message": "LeanSpec 标志",
+    "message": "HarnSpec 标志",
     "description": "The alt text of navbar logo"
   },
   "item.label.Guide": {

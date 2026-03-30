@@ -1,6 +1,6 @@
-# LeanSpec 术语表
+# HarnSpec 术语表
 
-> 本文档为 LeanSpec 中文本地化提供统一的术语翻译标准
+> 本文档为 HarnSpec 中文本地化提供统一的术语翻译标准
 
 ## 核心概念术语
 
@@ -8,7 +8,7 @@
 |------|------|------|------|
 | Spec | 规范 / 规范文档 | guīgé / guīgé wéndàng | 核心概念，可简称"规范" |
 | Spec-Driven Development (SDD) | 规范驱动开发 | guīgé qūdòng kāifā | 方法论名称 |
-| LeanSpec | LeanSpec | - | 产品名称，保持英文 |
+| HarnSpec | HarnSpec | - | 产品名称，保持英文 |
 | Context | 上下文 | shàngxià wén | 技术术语 |
 | Token | 令牌 | lìngpái | AI/NLP 领域标准译法 |
 | Agent | AI 代理 | dàilǐ | 指 AI 代理程序 |

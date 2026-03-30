@@ -1,6 +1,6 @@
 # Documentation Quality Standards
 
-Comprehensive guidelines for maintaining high-quality documentation in the LeanSpec documentation site.
+Comprehensive guidelines for maintaining high-quality documentation in the HarnSpec documentation site.
 
 ## 1. File Path and Sidebar Alignment
 

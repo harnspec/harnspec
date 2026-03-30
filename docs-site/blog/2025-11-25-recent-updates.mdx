@@ -1,11 +1,11 @@
 ---
 slug: recent-updates-getting-started
-title: "LeanSpec Updates: Example Projects, Better Tooling, and Your Path to Getting Started"
+title: "HarnSpec Updates: Example Projects, Better Tooling, and Your Path to Getting Started"
 authors: [marvin]
 tags: [release, getting-started, tutorials]
 ---
 
-We've been busy making LeanSpec easier to adopt and more powerful to use. Whether you're exploring spec-driven development for the first time or scaling to enterprise workflows, these updates accelerate your journey from intent to working code.
+We've been busy making HarnSpec easier to adopt and more powerful to use. Whether you're exploring spec-driven development for the first time or scaling to enterprise workflows, these updates accelerate your journey from intent to working code.
 
 **What's new**: Example projects for instant hands-on learning, JSON output for automation, simplified templates, and major improvements to our MCP server integration.
 
@@ -13,7 +13,7 @@ We've been busy making LeanSpec easier to adopt and more powerful to use. Whethe
 
 ## 🚀 Example Projects: Start Learning in Seconds
 
-The best way to understand LeanSpec is to use it. That's why we built **example project scaffolding**—complete tutorial projects you can spin up instantly.
+The best way to understand HarnSpec is to use it. That's why we built **example project scaffolding**—complete tutorial projects you can spin up instantly.
 
 ### Three Ready-to-Use Examples
 
@@ -30,7 +30,7 @@ npm start
 
 Each example comes with:
 - ✅ **Complete starter code** - A working React app you can immediately build on
-- ✅ **LeanSpec already initialized** - Specs, templates, and configuration ready to go
+- ✅ **HarnSpec already initialized** - Specs, templates, and configuration ready to go
 - ✅ **Realistic feature specs** - Real-world examples you can follow
 - ✅ **Tutorial-ready** - Designed to work with our [hands-on tutorials](/docs/tutorials/first-spec-with-ai)
 
@@ -43,7 +43,7 @@ Perfect first project. Learn the basics: create a spec, work with AI, track prog
 Multi-component feature. Practice splitting specs, managing complexity, using sub-specs.
 
 **`api-refactor`** - Modernize a REST API to GraphQL  
-Backend-focused example. See how LeanSpec handles architecture changes and migrations.
+Backend-focused example. See how HarnSpec handles architecture changes and migrations.
 
 ### Why This Matters
 
@@ -63,14 +63,14 @@ No more blank-page syndrome. No more "where do I start?" Just hands-on learning 
 
 ### MCP Server as Standalone Package
 
-We extracted `@leanspec/mcp` into its own npm package. Setup is now cleaner:
+We extracted `@HarnSpec/mcp` into its own npm package. Setup is now cleaner:
 
 ```json
 {
   "mcpServers": {
     "lean-spec": {
       "command": "npx",
-      "args": ["@leanspec/mcp"]
+      "args": ["@HarnSpec/mcp"]
     }
   }
 }
@@ -110,7 +110,7 @@ lean-spec list --json --status=complete | jq -r '.[] | .name'
 lean-spec timeline --json > project-timeline.json
 ```
 
-Use LeanSpec data in your CI/CD pipelines, project dashboards, or custom tooling.
+Use HarnSpec data in your CI/CD pipelines, project dashboards, or custom tooling.
 
 ## 📝 Simplified Templates
 
@@ -142,7 +142,7 @@ Not sure where to begin? Here's the recommended path:
 
 ### 1. Understand the Why (5 minutes)
 
-Read [Why Your AI Agent Gets Dumber with Large Specs](/blog/ai-agent-performance) to understand the context engineering principles behind LeanSpec.
+Read [Why Your AI Agent Gets Dumber with Large Specs](/blog/ai-agent-performance) to understand the context engineering principles behind HarnSpec.
 
 **Key takeaway**: It's not about fitting in context windows—it's about maintaining AI performance as projects scale.
 
@@ -154,7 +154,7 @@ cd dark-theme
 npm install
 ```
 
-You now have a working React app with LeanSpec already configured.
+You now have a working React app with HarnSpec already configured.
 
 ### 3. Follow the Tutorial (10 minutes)
 
@@ -186,14 +186,14 @@ Now apply what you learned. Start simple (status + created), add structure as ne
 
 ## What's Next
 
-We're focused on making LeanSpec work seamlessly with more AI tools and development workflows:
+We're focused on making HarnSpec work seamlessly with more AI tools and development workflows:
 
 - **GitHub Copilot Workspace integration** - Native spec support in Copilot's task planning
 - **VS Code extension** - Inline spec viewing, validation, and status tracking
 - **Project management integrations** - Jira, Linear, and GitHub Projects sync
 - **More example projects** - Backend APIs, mobile apps, infrastructure
 
-**Feedback shapes the roadmap**. What would make LeanSpec more useful for your workflow? [Open an issue](https://github.com/codervisor/lean-spec/issues) or [join the discussion](https://github.com/codervisor/lean-spec/discussions).
+**Feedback shapes the roadmap**. What would make HarnSpec more useful for your workflow? [Open an issue](https://github.com/codervisor/lean-spec/issues) or [join the discussion](https://github.com/codervisor/lean-spec/discussions).
 
 ## Try It Today
 

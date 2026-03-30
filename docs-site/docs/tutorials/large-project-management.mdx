@@ -12,30 +12,30 @@ As projects grow beyond a handful of specs, you need better tools to maintain vi
 **Outcome**: Master project management tools for large codebases
 
 :::tip For Advanced Users
-This tutorial assumes you're comfortable with basic LeanSpec workflows. If you're new, start with [Your First Spec with AI](./first-spec-with-ai).
+This tutorial assumes you're comfortable with basic HarnSpec workflows. If you're new, start with [Your First Spec with AI](./first-spec-with-ai).
 :::
 
 ## Real-World Example
 
-Want to see these tools in action? Check out the **[LeanSpec project itself](https://web.lean-spec.dev)**—a live example with 100+ specs showing real dependencies, numbering conventions, and project organization.
+Want to see these tools in action? Check out the **[HarnSpec project itself](https://web.lean-spec.dev)**—a live example with 100+ specs showing real dependencies, numbering conventions, and project organization.
 
 :::tip Try It Yourself
-For the best learning experience, clone the LeanSpec repo locally and explore in visual mode:
+For the best learning experience, clone the HarnSpec repo locally and explore in visual mode:
 
 ```bash
 git clone https://github.com/codervisor/lean-spec.git
 cd lean-spec
-npx @leanspec/cli ui
+npx @HarnSpec/cli ui
 ```
 
 This gives you interactive access to the dependency graph, filtering, and all PM tools.
 :::
 
-Throughout this tutorial, we'll reference actual specs from the LeanSpec codebase to show how these patterns work in practice.
+Throughout this tutorial, we'll reference actual specs from the HarnSpec codebase to show how these patterns work in practice.
 
 ## Essential PM Tools
 
-LeanSpec provides five key tools for managing large projects:
+HarnSpec provides five key tools for managing large projects:
 
 1. **`lean-spec board`** - Kanban view of project status
 2. **`lean-spec deps <spec>`** - Dependency analysis
@@ -55,7 +55,7 @@ lean-spec board
 
 Shows all specs organized by status columns: **Planned** → **In Progress** → **Complete** → **Archived**
 
-**Example from LeanSpec project:**
+**Example from HarnSpec project:**
 - Planned: 15 specs (new features, enhancements)
 - In Progress: 0 specs (nothing actively being worked on)
 - Complete: 64 specs (shipped features)
@@ -83,7 +83,7 @@ Shows three types of relationships:
 - **Dependents** (`required_by`): What specs need this one
 - **Related**: Contextually connected specs
 
-**Real example from LeanSpec:**
+**Real example from HarnSpec:**
 
 ```bash
 lean-spec deps 114  # Example Projects Scaffold
@@ -148,7 +148,7 @@ lean-spec list --tags documentation
 lean-spec list --tags v0.3.0
 ```
 
-**Real LeanSpec tags:**
+**Real HarnSpec tags:**
 - `web`, `cli`, `mcp`, `docs` - Component areas
 - `ux`, `dx`, `performance` - Quality attributes
 - `v0.2.0`, `v0.3.0` - Release milestones
@@ -190,7 +190,7 @@ Search uses semantic matching—it understands context and finds relevant specs 
 
 ### Numbering Conventions
 
-LeanSpec uses number ranges to group related work:
+HarnSpec uses number ranges to group related work:
 
 - **010-029**: Project setup and tooling
 - **040-059**: Core features and workflows  
@@ -245,9 +245,9 @@ Clean up outdated dependencies:
 lean-spec unlink A --depends-on B    # Remove dependency
 ```
 
-## Live Example: LeanSpec Web UI
+## Live Example: HarnSpec Web UI
 
-See all these tools in action at **[web.lean-spec.dev](https://web.lean-spec.dev)**—the LeanSpec project's own spec dashboard.
+See all these tools in action at **[web.lean-spec.dev](https://web.lean-spec.dev)**—the HarnSpec project's own spec dashboard.
 
 You'll see:
 - 100+ specs organized by status

@@ -1,11 +1,11 @@
 ---
 slug: v0210-inline-editing-mcp-autosetup
-title: "LeanSpec 0.2.10：内联元数据编辑、MCP 自动配置和多项目改进"
+title: "HarnSpec 0.2.10：内联元数据编辑、MCP 自动配置和多项目改进"
 authors: [marvin]
 tags: [release, web-ui, mcp, multi-project]
 ---
 
-LeanSpec 0.2.10 带来了更具交互性的 Web 体验：内联元数据编辑、初始化时零配置 MCP 设置，以及多项目管理的重大改进。本次发布专注于减少摩擦——无论您是在浏览器中管理 Spec、设置 AI Agent 集成，还是跨多个项目工作。
+HarnSpec 0.2.10 带来了更具交互性的 Web 体验：内联元数据编辑、初始化时零配置 MCP 设置，以及多项目管理的重大改进。本次发布专注于减少摩擦——无论您是在浏览器中管理 Spec、设置 AI Agent 集成，还是跨多个项目工作。
 
 **亮点**：直接在浏览器中编辑 Spec 元数据、AI 工具的自动 MCP 配置、遗留 Spec 的 Bootstrap 模式，以及更完善的多项目工作流。
 
@@ -46,7 +46,7 @@ lean-spec ui --port 3001
 
 ### 自动检测
 
-运行 `lean-spec init` 时，LeanSpec 会检测您的 AI 工具并提供 MCP 配置：
+运行 `lean-spec init` 时，HarnSpec 会检测您的 AI 工具并提供 MCP 配置：
 
 ```bash
 $ lean-spec init
@@ -69,14 +69,14 @@ $ lean-spec init
   "mcpServers": {
     "lean-spec": {
       "command": "npx",
-      "args": ["@leanspec/mcp"],
+      "args": ["@HarnSpec/mcp"],
       "cwd": "/absolute/path/to/your/project"
     }
   }
 }
 ```
 
-您的 AI Agent 可以立即访问 LeanSpec 工具——无需从文档复制粘贴，无需排查路径问题。
+您的 AI Agent 可以立即访问 HarnSpec 工具——无需从文档复制粘贴，无需排查路径问题。
 
 ### 支持的工具
 
@@ -189,7 +189,7 @@ npx lean-spec@latest board
 
 ```bash
 # 更新 MCP 包
-npm install -g @leanspec/mcp@latest
+npm install -g @HarnSpec/mcp@latest
 ```
 
 ## 下一步计划

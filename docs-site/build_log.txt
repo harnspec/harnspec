@@ -1,0 +1,39 @@
+
+> docs-site@0.0.0 build D:\Develop\Projects\lean-spec\docs-site
+> docusaurus build
+
+[INFO] Website will be built for all these locales: 
+- en
+- zh-Hans
+[INFO] [en] Creating an optimized production build...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[90m[[90mwebpackbar[90m][39m [36m鈩?[39m Compiling Client
+[90m[[90mwebpackbar[90m][39m [36m鈩?[39m Compiling Server
+[90m[[90mwebpackbar[90m][39m [32m鉁?[39m Server: Compiled with some errors in 9.79s
+<w> [webpack.cache.PackFileCacheStrategy] Skipped not serializable cache item 'Compilation/modules|D:\Develop\Projects\lean-spec\docs-site\node_modules\.pnpm\@docusaurus+mdx-loader@3.9._ae4c899c4a69633f544f502309b11d45\node_modules\@docusaurus\mdx-loader\lib\index.js??ruleSet[1].rules[8].use[0]!D:\Develop\Projects\lean-spec\docs-site\docs\guide\migration.mdx': No serializer registered for VFileMessage
+<w> while serializing webpack/lib/cache/PackFileCacheStrategy.PackContentItems -> webpack/lib/NormalModule -> webpack/lib/ModuleBuildError -> Error -> VFileMessage
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[90m[[90mwebpackbar[90m][39m [32m鉁?[39m Client: Compiled with some errors in 29.12s
+[ERROR] Client bundle compiled with errors therefore further build is impossible.
+Error: MDX compilation failed for file "D:\Develop\Projects\lean-spec\docs-site\docs\guide\migration.mdx"
+Cause: Unexpected character `1` (U+0031) before name, expected a character that can start a name, such as a letter, `$`, or `_`
+Details:
+{
+  "column": 54,
+  "file": "",
+  "message": "Unexpected character `1` (U+0031) before name, expected a character that can start a name, such as a letter, `$`, or `_`",
+  "line": 325,
+  "name": "325:54",
+  "place": {
+    "_bufferIndex": 50,
+    "_index": 0,
+    "line": 325,
+    "column": 54,
+    "offset": 8147
+  },
+  "reason": "Unexpected character `1` (U+0031) before name, expected a character that can start a name, such as a letter, `$`, or `_`",
+  "ruleId": "unexpected-character",
+  "source": "micromark-extension-mdx-jsx",
+  "url": "https://github.com/micromark/micromark-extension-mdx-jsx#unexpected-character-at-expected-expect"
+}
+鈥塃LIFECYCLE鈥?Command failed with exit code 1.

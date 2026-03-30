@@ -1,14 +1,14 @@
 ---
-title: Understanding LeanSpec
+title: Understanding HarnSpec
 sidebar_position: 2
 ---
-# Understanding LeanSpec
+# Understanding HarnSpec
 
-LeanSpec is designed so both humans and AI agents can hold the full context for a piece of work. This page explains why the structure matters, how each concept connects, and how to evolve specs as complexity grows.
+HarnSpec is designed so both humans and AI agents can hold the full context for a piece of work. This page explains why the structure matters, how each concept connects, and how to evolve specs as complexity grows.
 
 ## Core Principles
 
-LeanSpec is built on five key principles designed to bridge the gap between human intent and AI execution:
+HarnSpec is built on five key principles designed to bridge the gap between human intent and AI execution:
 
 1.  **Context Economy**: Keep specs small (&lt;2,000 tokens) to fit in working memory.
 2.  **Signal-to-Noise**: Every word must inform a decision.
@@ -28,7 +28,7 @@ Write or update a spec when:
 **Skip it when:** Fixing obvious bugs, performing mechanical refactors, or prototyping to learn.
 
 ## Why the Structure Works
-LeanSpec optimizes for Context Economy and Signal-to-Noise:
+HarnSpec optimizes for Context Economy and Signal-to-Noise:
 - **Frontmatter** keeps machine-readable truth about status, dependencies, and priority so boards and agents stay aligned.
 - **Overview** captures the problem, why now, and success criteria—enough intent for someone new to take action.
 - **Plan / Design** evolves as you learn. Add phases, trade-offs, or sub-spec links only when the main README would exceed ~2,000 tokens.

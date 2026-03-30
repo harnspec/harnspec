@@ -5,7 +5,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'LeanSpec',
+  title: 'HarnSpec',
   tagline: 'Lightweight spec methodology for AI-powered development',
   favicon: 'favicon.ico',
 
@@ -15,15 +15,15 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://lean-spec.dev',
+  url: 'https://harnspec.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'codervisor', // Usually your GitHub org/user name.
-  projectName: 'lean-spec', // Usually your repo name.
+  organizationName: 'harnspec', // Usually your GitHub org/user name.
+  projectName: 'harnspec.github.io', // Usually your repo name.
 
   onBrokenLinks: 'throw',
 
@@ -44,7 +44,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/codervisor/lean-spec/tree/main/docs-site/',
+            'https://github.com/harnspec/harnspec/tree/main/docs-site/',
         },
         blog: {
           showReadingTime: true,
@@ -55,7 +55,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/codervisor/lean-spec/tree/main/docs-site/',
+            'https://github.com/harnspec/harnspec/tree/main/docs-site/',
           // Useful options to enforce blogging best practices
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
@@ -75,9 +75,9 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: 'LeanSpec',
+      title: 'HarnSpec',
       logo: {
-        alt: 'LeanSpec Logo',
+        alt: 'HarnSpec Logo',
         src: 'img/logo-with-bg.svg',
         srcDark: 'img/logo-dark-bg.svg',
       },
@@ -96,7 +96,7 @@ const config: Config = {
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://web.lean-spec.dev',
+          href: 'https://harnspec.github.io/',
           label: 'Web App',
           position: 'left',
         },
@@ -105,7 +105,7 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://github.com/codervisor/lean-spec',
+          href: 'https://github.com/harnspec/harnspec',
           label: 'GitHub',
           position: 'right',
         },
@@ -140,15 +140,15 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/codervisor/lean-spec',
+              href: 'https://github.com/harnspec/harnspec',
             },
             {
               label: 'Issues',
-              href: 'https://github.com/codervisor/lean-spec/issues',
+              href: 'https://github.com/harnspec/harnspec/issues',
             },
             {
               label: 'Discussions',
-              href: 'https://github.com/codervisor/lean-spec/discussions',
+              href: 'https://github.com/harnspec/harnspec/discussions',
             },
           ],
         },
@@ -161,20 +161,20 @@ const config: Config = {
             },
             {
               label: 'Contributing',
-              href: 'https://github.com/codervisor/lean-spec/blob/main/CONTRIBUTING.md',
+              href: 'https://github.com/harnspec/harnspec/blob/main/CONTRIBUTING.md',
             },
             {
               label: 'Changelog',
-              href: 'https://github.com/codervisor/lean-spec/blob/main/CHANGELOG.md',
+              href: 'https://github.com/harnspec/harnspec/blob/main/CHANGELOG.md',
             },
             {
               label: 'npm Package',
-              href: 'https://www.npmjs.com/package/lean-spec',
+              href: 'https://www.npmjs.com/package/harnspec',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} codervisor. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} HarnSpec. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
