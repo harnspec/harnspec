@@ -328,7 +328,7 @@ interface ConversationMetadata {
   - Error handling and logging
   - Ensure cross-platform compatibility (Linux/macOS/Windows)
 
-- [x] **1.3 Update useHardSpecChat Hook**
+- [x] **1.3 Update useHarnSpecChat Hook**
   - Replace localStorage calls with Rust backend API
   - Add conversation management functions (create, list, delete)
   - Implement auto-save on message completion

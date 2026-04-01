@@ -277,7 +277,7 @@ const systemMessage = useMemo(() => {
 }, [spec]);
 
 // Pass to chat hook
-const { messages, sendMessage } = useHardSpecChat({
+const { messages, sendMessage } = useHarnSpecChat({
   // ...
   systemMessage,
 });
@@ -382,7 +382,7 @@ packages/ui/src/components/
 - [ ] Adjust tool call display for sidebar constraints
 - [ ] Implement auto-scroll to latest message
 - [ ] Loading states and error handling
-- [ ] Integrate with existing `useHardSpecChat` hook
+- [ ] Integrate with existing `useHarnSpecChat` hook
 
 ### Phase 4: Remove Chat Page (1 day)
 

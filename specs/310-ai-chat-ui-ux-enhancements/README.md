@@ -49,7 +49,7 @@ Loading indicator ([ChatContainer.tsx](../../packages/ui/src/components/chat/Cha
 
 ### Existing Chat Sidebar Context
 
-- The sidebar used in the app layout is [packages/ui/src/components/chat/ChatSidebar.tsx](../../packages/ui/src/components/chat/ChatSidebar.tsx). It is mounted in [packages/ui/src/components/Layout.tsx](../../packages/ui/src/components/Layout.tsx) and uses `useHardSpecChat`.
+- The sidebar used in the app layout is [packages/ui/src/components/chat/ChatSidebar.tsx](../../packages/ui/src/components/chat/ChatSidebar.tsx). It is mounted in [packages/ui/src/components/Layout.tsx](../../packages/ui/src/components/Layout.tsx) and uses `useHarnSpecChat`.
 - A separate, full-page chat UI exists at [packages/ui/src/pages/ChatPage.tsx](../../packages/ui/src/pages/ChatPage.tsx) with its own sidebar component. This spec should only affect the layout sidebar unless explicitly extended.
 
 ### Conversation History UI (Already Built)

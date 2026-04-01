@@ -76,7 +76,7 @@ Users cannot see or access their historical AI chat conversations in the web UI.
 
 - [ ] Ensure conversations load on open/mount and project change in the chosen UI (currently only loads when the sidebar opens in [packages/ui/src/contexts/ChatContext.tsx](packages/ui/src/contexts/ChatContext.tsx)).
 - [ ] Fix the “first message before session id” issue in the layout sidebar: replace the inline `createConversation` + send flow with a pending-message approach (like [packages/ui/src/pages/ChatPage.tsx](packages/ui/src/pages/ChatPage.tsx)) in [packages/ui/src/components/chat/ChatSidebar.tsx](packages/ui/src/components/chat/ChatSidebar.tsx).
-- [ ] Load messages when selecting a conversation by relying on `useHardSpecChat`’s `threadId` change behavior in [packages/ui/src/lib/use-chat.ts](packages/ui/src/lib/use-chat.ts).
+- [ ] Load messages when selecting a conversation by relying on `useHarnSpecChat`’s `threadId` change behavior in [packages/ui/src/lib/use-chat.ts](packages/ui/src/lib/use-chat.ts).
 - [ ] Make history visible by default or add a clear call-to-action (either wire [packages/ui/src/components/chat/ChatHistory.tsx](packages/ui/src/components/chat/ChatHistory.tsx) into the sidebar UI or ensure the Chat page’s sidebar is discoverable).
 
 ### Phase 3: Session Management
@@ -124,7 +124,7 @@ Users cannot see or access their historical AI chat conversations in the web UI.
 - ✅ Identified Chat page as primary UI (works correctly)
 - ✅ Fixed "first message before session" bug in Layout sidebar by implementing pending message pattern
 - ✅ Verified conversations load on mount and project change (Chat page already working)
-- ✅ Confirmed messages load when selecting conversation via `useHardSpecChat` hook
+- ✅ Confirmed messages load when selecting conversation via `useHarnSpecChat` hook
 - ✅ Sessions already created before first message in Chat page
 - ✅ Messages persist after send via `onFinish` callback in `use-chat.ts`
 - ✅ Active session kept across refreshes via localStorage
@@ -137,6 +137,6 @@ Users cannot see or access their historical AI chat conversations in the web UI.
 - The Chat page (`/pages/ChatPage.tsx`) already had proper conversation history management
 - The Layout sidebar (`/components/chat/ChatSidebar.tsx`) had the "send before session created" race condition
 - Backend API (`/api/chat/sessions`) works correctly
-- The `useHardSpecChat` hook properly loads messages on thread change
+- The `useHarnSpecChat` hook properly loads messages on thread change
 
 The conversation history functionality is now complete and working as expected.

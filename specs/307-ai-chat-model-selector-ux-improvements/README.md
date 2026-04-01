@@ -44,7 +44,7 @@ In `ChatPage.tsx`:
 - `selectedModel` state starts with this hardcoded default
 - The `useEffect` that syncs `selectedModel` with `defaultSelection` only runs when the initial model doesn't exist or provider isn't configured
 - When user selects a model in InlineModelSelector, `selectedModel` is updated correctly
-- **BUT**: The `useHardSpecChat` hook uses `selectedModel.providerId` and `selectedModel.modelId` for the transport
+- **BUT**: The `useHarnSpecChat` hook uses `selectedModel.providerId` and `selectedModel.modelId` for the transport
 - When creating a new thread, `ChatApi.createThread()` is called with the current `selectedModel`
 - The thread is created with correct model info
 - However, the chat transport is created with potentially stale values if react state hasn't synchronized

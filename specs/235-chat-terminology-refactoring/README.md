@@ -132,7 +132,7 @@ class ChatApi {
 **Before**:
 
 ```typescript
-interface useHardSpecChatOptions {
+interface useHarnSpecChatOptions {
   providerId?: string;
   modelId?: string;
   threadId?: string;
@@ -142,7 +142,7 @@ interface useHardSpecChatOptions {
 **After**:
 
 ```typescript
-interface useHardSpecChatOptions {
+interface useHarnSpecChatOptions {
   providerId?: string;
   modelId?: string;
   conversationId?: string;
@@ -169,10 +169,10 @@ const loadConversations = useCallback(async () => { ... });
 
 ```typescript
 // Before
-useHardSpecChat({ threadId: activeThreadId })
+useHarnSpecChat({ threadId: activeThreadId })
 
 // After
-useHardSpecChat({ conversationId: activeConversationId })
+useHarnSpecChat({ conversationId: activeConversationId })
 ```
 
 #### 5. Backend API Paths (Optional)
@@ -212,7 +212,7 @@ useHardSpecChat({ conversationId: activeConversationId })
 
 **Phase 3: React Hook**
 
-- [ ] Rename parameter: `threadId` → `conversationId` in `useHardSpecChatOptions`
+- [ ] Rename parameter: `threadId` → `conversationId` in `useHarnSpecChatOptions`
 - [ ] Update internal usage: `options.threadId` → `options.conversationId`
 - [ ] Update comments and documentation
 
