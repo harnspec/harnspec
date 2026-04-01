@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Documentation Deployment Pipeline** ([spec 383](https://harnspec.github.io/specs/383)) — Automated documentation publishing to `harnspec.github.io`
+
 - **TUI Multi-Project Management** ([spec 372](https://harnspec.github.io/specs/372)) — Switch between and manage multiple projects from the TUI
 - **TUI Sidebar Navigation & Tree View** ([spec 371](https://harnspec.github.io/specs/371)) — Sidebar with sort/filter controls and hierarchical tree view for specs
 - **TUI Board View Enhancements** — Collapsible board groups with sort indicator, TOC overlay, and scrollbars

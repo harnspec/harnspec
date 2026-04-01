@@ -1,0 +1,41 @@
+name: Documentation Deployment
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'docs-site/**'
+      - '.github/workflows/docs.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: Build docs site
+        run: pnpm docs:build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          external_repository: harnspec/harnspec.github.io
+          publish_branch: main
+          publish_dir: ./docs-site/build
+          personal_token: ${{ secrets.DOCUMENTATION_DEPLOY_TOKEN }}
+          commit_message: "docs: deploy to harnspec.github.io (from ${{ github.sha }}) [skip ci]"
