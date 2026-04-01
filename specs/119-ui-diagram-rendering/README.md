@@ -27,7 +27,7 @@ completed: '2025-11-25'
 
 ## Overview
 
-**Problem**: Spec documents often contain Mermaid or PlantUML code blocks for architecture diagrams, flowcharts, and sequence diagrams. Currently, `@leanspec/ui` displays these as raw code instead of rendered visuals, making specs harder to read and understand.
+**Problem**: Spec documents often contain Mermaid or PlantUML code blocks for architecture diagrams, flowcharts, and sequence diagrams. Currently, `@harnspec/ui` displays these as raw code instead of rendered visuals, making specs harder to read and understand.
 
 **Request**: User feedback asks for natural diagram rendering in the spec detail view.
 
@@ -218,7 +218,7 @@ const MermaidDiagram = dynamic(
 
 **Phase 1: Mermaid Support (MVP)**
 
-- [ ] Add `mermaid` package to `@leanspec/ui` dependencies
+- [ ] Add `mermaid` package to `@harnspec/ui` dependencies
 - [ ] Create `MermaidDiagram` client component
 - [ ] Add custom `code` component to ReactMarkdown in `spec-detail-client.tsx`
 - [ ] Implement dark mode theme switching

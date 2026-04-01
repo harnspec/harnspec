@@ -18,7 +18,8 @@ Evaluate adopting Zustand and TanStack Query for improved state management in th
 
 ## Background
 
-The current UI (`@leanspec/ui`) uses React Context extensively for state management:
+The current UI (`@harnspec/ui`) uses React Context extensively for state management:
+
 - **7+ Context providers**: ProjectContext, SessionsContext, SpecsContext, ThemeContext, LayoutContext, MachineContext, ChatContext
 - **Manual data fetching**: Each context manages its own `loading`, `error`, and data states with `useEffect` + custom API calls
 - **No caching layer**: API responses aren't cached, leading to redundant requests
@@ -37,12 +38,14 @@ The current UI (`@leanspec/ui`) uses React Context extensively for state managem
 Evaluate two complementary libraries:
 
 ### Zustand (Client State)
+
 - Simpler alternative to Context for UI state (theme, layout, sidebar open/closed)
 - Minimal boilerplate, no providers needed
 - DevTools support
 - Bundle size: ~2KB
 
 ### TanStack Query (Server State)
+
 - Automatic caching, deduplication, and background refetching
 - Built-in loading/error states
 - Optimistic updates support
@@ -62,12 +65,14 @@ Evaluate two complementary libraries:
 ## Scope
 
 ### In Scope
+
 - Evaluate Zustand for: ThemeContext, LayoutContext, MachineContext
 - Evaluate TanStack Query for: ProjectContext, SpecsContext, SessionsContext
 - Create proof-of-concept migration for one context of each type
 - Document migration path and breaking changes
 
 ### Out of Scope
+
 - Full migration (separate spec if evaluation is positive)
 - ChatContext (tightly coupled with AI SDK)
 - Desktop/Tauri-specific state
@@ -75,16 +80,19 @@ Evaluate two complementary libraries:
 ## Implementation Approach
 
 ### Phase 1: Research & Benchmarks
+
 1. Document current bundle size and render metrics
 2. Analyze API call patterns (frequency, duplication)
 3. Review existing TanStack Query + Zustand codebases (similar scale)
 
 ### Phase 2: Proof of Concept
+
 1. Migrate `ThemeContext` to Zustand store
 2. Migrate `SpecsContext` API calls to TanStack Query
 3. Compare before/after metrics
 
 ### Phase 3: Decision
+
 1. Write recommendation with trade-offs
 2. If positive, create follow-up spec for full migration
 
@@ -190,6 +198,7 @@ Phase 3: Remove old contexts
 **Proceed with full migration** (create follow-up spec)
 
 **Rationale:**
+
 1. Bundle size impact is minimal (~14KB gzipped vs 1.6MB current)
 2. Code reduction: Remove 7 Context providers, simplify component tree
 3. Better DX: Built-in loading/error states, automatic caching
@@ -197,6 +206,7 @@ Phase 3: Remove old contexts
 5. Industry standard: Both libraries are widely adopted (Zustand: 50K+ GitHub stars, TanStack Query: 45K+ stars)
 
 **Suggested migration order:**
+
 1. ThemeContext + LayoutContext → Zustand (quick wins)
 2. SpecsContext → TanStack Query (most API calls)
 3. ProjectContext → TanStack Query (cascading benefits)

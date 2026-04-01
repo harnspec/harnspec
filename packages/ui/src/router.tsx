@@ -10,7 +10,7 @@ import { RootRedirect } from './components/root-redirect';
 import { createProjectRoutes } from './router/projectRoutes';
 
 /**
- * Router configuration for @leanspec/ui (Vite SPA).
+ * Router configuration for @harnspec/ui (Vite SPA).
  *
  * Layout hierarchy:
  * - Layout: Navigation + MainSidebar (for all project routes including projects list)

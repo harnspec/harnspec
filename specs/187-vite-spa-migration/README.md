@@ -26,13 +26,15 @@ updated_at: 2025-12-19T06:23:45.000000Z
 ## Overview
 
 **Problem**: Current web UI uses Next.js with SSR/SSG, adding:
+
 - **150MB+ bundle overhead** (SSR runtime, Node.js dependencies)
 - **Complexity**: API routes, getServerSideProps, configuration
 - **Slower dev experience**: Next.js build time, HMR slower than Vite
 - **Overkill**: We don't need SSR for local file-based spec UI
 
 **Solution**: Migrate to **Vite SPA** (Single Page Application):
-- Use shared UI components from `@leanspec/ui-components`
+
+- Use shared UI components from `@harnspec/ui-components`
 - **Web**: Connect to Rust HTTP server
 - **Desktop**: Bundle UI locally, use Tauri commands (direct Rust calls)
 - React Router for client-side navigation
@@ -48,11 +50,12 @@ updated_at: 2025-12-19T06:23:45.000000Z
 **Two deployment targets, one codebase:**
 
 **Web Browser:**
+
 ```
 ┌────────────────────────────────────────────────────┐
 │  Vite SPA (http://localhost:3333)                 │
 │  ┌──────────────────────────────────────────────┐  │
-│  │  React Router + @leanspec/ui-components      │  │
+│  │  React Router + @harnspec/ui-components      │  │
 │  └──────────────────────────────────────────────┘  │
 │  ┌──────────────────────────────────────────────┐  │
 │  │  HttpBackendAdapter                          │  │
@@ -70,12 +73,13 @@ updated_at: 2025-12-19T06:23:45.000000Z
 ```
 
 **Desktop (Tauri):**
+
 ```
 ┌────────────────────────────────────────────────────┐
 │  Tauri App (tauri://localhost)                    │
 │  ┌──────────────────────────────────────────────┐  │
 │  │  Same Vite SPA (bundled locally)             │  │
-│  │  React Router + @leanspec/ui-components      │  │
+│  │  React Router + @harnspec/ui-components      │  │
 │  └──────────────────────────────────────────────┘  │
 │  ┌──────────────────────────────────────────────┐  │
 │  │  TauriBackendAdapter                         │  │
@@ -170,6 +174,7 @@ export function createBackend(): BackendAdapter {
 ```
 
 **Usage in app**:
+
 ```typescript
 // src/lib/api-client.ts
 const backend = createBackend();
@@ -241,7 +246,7 @@ export const router = createBrowserRouter([
 - **Build Tool**: Vite 5 (fast HMR, optimized builds)
 - **Framework**: React 18 + TypeScript 5
 - **Routing**: React Router 6 (client-side)
-- **Components**: `@leanspec/ui-components` (shared library)
+- **Components**: `@harnspec/ui-components` (shared library)
 - **API**: Fetch API + TypeScript client
 - **State**: React Context + hooks (no Redux needed)
 - **Styling**: Tailwind CSS 3
@@ -250,13 +255,15 @@ export const router = createBrowserRouter([
 ## Plan
 
 ### Phase 1: Project Setup (Day 1)
+
 - [x] Create new Vite project in `packages/ui-vite`
 - [x] Configure TypeScript + React
 - [x] Set up Tailwind CSS
 - [x] Configure Vite for optimal builds
-- [x] Add `@leanspec/ui-components` dependency
+- [x] Add `@harnspec/ui-components` dependency
 
 ### Phase 2: API Client (Day 1-2)
+
 - [x] Implement API client class
 - [x] Add all endpoint methods
 - [x] Error handling and retries
@@ -264,12 +271,14 @@ export const router = createBrowserRouter([
 - [x] Environment variable configuration
 
 ### Phase 3: Routing Setup (Day 2)
+
 - [x] Install React Router
 - [x] Define route structure
 - [x] Create Layout component
 - [x] Set up navigation
 
 ### Phase 4: Page Implementation (Day 3-5)
+
 - [x] SpecsPage (list view)
   - ✅ Basic implementation with API integration
   - ✅ Shows status, priority, tags
@@ -290,6 +299,7 @@ export const router = createBrowserRouter([
   - ✅ Basic settings structure
 
 ### Phase 5: Project Context (Day 5-6)
+
 - [x] Create project context provider
 - [x] Handle project switching
 - [x] Persist selected project in localStorage
@@ -297,6 +307,7 @@ export const router = createBrowserRouter([
 - **Status: Complete ✅**
 
 ### Phase 6: Feature Parity (Day 6-7)
+
 - [x] All features from Next.js UI work
 - [x] Keyboard shortcuts
 - [x] Dark mode (toggle/switcher)
@@ -306,6 +317,7 @@ export const router = createBrowserRouter([
 - **Status: Mostly Complete ⚠️** - Validation UI deferred
 
 ### Phase 7: Desktop Integration (Day 7-8)
+
 - [ ] Update `packages/desktop` to bundle new Vite SPA
 - [ ] Desktop bundles UI files locally (no HTTP server needed)
 - [ ] Update Tauri commands to use leanspec_core directly
@@ -315,6 +327,7 @@ export const router = createBrowserRouter([
 - **Status: Partially Complete ⚠️** - Backend adapter implemented, bundling not done
 
 ### Phase 8: Testing (Day 8-9)
+
 - [x] Unit tests for API client
 - [ ] Component integration tests (deferred)
 - [ ] E2E tests with Playwright (deferred)
@@ -322,6 +335,7 @@ export const router = createBrowserRouter([
 - **Status: Basic tests complete** - API client has 8 passing tests, comprehensive testing deferred
 
 ### Phase 9: Migration & Launch (Day 9-10)
+
 - [ ] Archive old Next.js UI (`packages/ui-legacy-nextjs`)
 - [ ] Rename `packages/ui-vite` → `packages/ui`
 - [ ] Update CLI launcher
@@ -361,6 +375,7 @@ export const router = createBrowserRouter([
 ### Migration Strategy
 
 **Clean cutover approach**:
+
 1. Build complete new UI in `packages/ui-new`
 2. Achieve feature parity
 3. Test thoroughly
@@ -368,6 +383,7 @@ export const router = createBrowserRouter([
 5. One release, clean migration
 
 **Why not incremental?**:
+
 - Two UIs = double maintenance
 - Next.js + Vite coexistence complex
 - Clean break is faster in AI coding era
@@ -377,17 +393,21 @@ export const router = createBrowserRouter([
 Desktop uses **same UI components** but **different backend connection**:
 
 **Architecture difference**:
+
 - **Web**: UI → HTTP client → Rust HTTP server → leanspec_core
 - **Desktop**: UI → Tauri commands (direct Rust calls) → leanspec_core
 
 **Why different?**
+
 - Desktop can call Rust directly (no network overhead)
 - Web must use HTTP (browser security restrictions)
 - Same UI components work with both backends via abstraction layer
 
 **Implementation**:
-- Shared UI components from `@leanspec/ui-components`
+
+- Shared UI components from `@harnspec/ui-components`
 - Abstract backend interface (adapter pattern):
+
   ```typescript
   // Web: uses fetch to HTTP server
   // Desktop: uses Tauri invoke commands
@@ -397,6 +417,7 @@ Desktop uses **same UI components** but **different backend connection**:
     // ... other methods
   }
   ```
+
 - Desktop bundles UI files in app (loads from `tauri://localhost`)
 - Desktop provides Tauri file dialogs for better UX
 - No UI code duplication, just different backend transport
@@ -412,6 +433,7 @@ Desktop uses **same UI components** but **different backend connection**:
 ### 2025-12-19: Phase 8 Completion - Testing Infrastructure
 
 **Phase 8 - Testing:**
+
 - ✅ **Test Infrastructure**: Set up Vitest with jsdom environment
   - Created `vitest.config.ts` for ui-vite package
   - Added `@testing-library/react` and `@testing-library/jest-dom`
@@ -424,11 +446,13 @@ Desktop uses **same UI components** but **different backend connection**:
 - ✅ **Test Scripts**: Added `test` and `test:watch` scripts to package.json
 
 **Test Results:**
+
 - ✅ 8/8 tests passing
 - Coverage: API client fully tested
 - Execution time: < 700ms
 
 **Deferred Testing:**
+
 - Component integration tests (not blocking - components work in practice)
 - E2E tests with Playwright (can add iteratively)
 - Performance benchmarks (bundle size already validated at ~492KB)
@@ -438,6 +462,7 @@ Desktop uses **same UI components** but **different backend connection**:
 ### 2025-12-19: Phase 5, 6 & 7 (Partial) Completion
 
 **Phase 5 - Project Context:**
+
 - ✅ **ProjectContext**: Created React context provider for project state management
   - Tracks current project and available projects
   - Handles project switching with API integration
@@ -448,6 +473,7 @@ Desktop uses **same UI components** but **different backend connection**:
   - Visual indicator for current project
 
 **Phase 6 - Feature Parity:**
+
 - ✅ **Dark Mode**: Implemented ThemeProvider with light/dark/system options
   - ThemeToggle component in header
   - Persists theme preference to localStorage
@@ -466,6 +492,7 @@ Desktop uses **same UI components** but **different backend connection**:
   - Save/Cancel with API integration
 
 **Phase 7 - Desktop Integration (Partial):**
+
 - ✅ **Backend Adapter Layer**: Implemented abstraction for HTTP vs Tauri IPC
   - `BackendAdapter` interface defining all operations
   - `HttpBackendAdapter` for web browser (uses fetch to HTTP server)
@@ -477,6 +504,7 @@ Desktop uses **same UI components** but **different backend connection**:
   - Options: Replace desktop UI with ui-vite, or keep separate
 
 **Build Results:**
+
 - Bundle size: ~492KB JS + 64KB CSS (uncompressed)
 - Estimated ~154KB gzipped (vs Next.js 129MB+)
 - Build time: ~2s
@@ -484,6 +512,7 @@ Desktop uses **same UI components** but **different backend connection**:
 - 1,963 modules transformed successfully
 
 **Files Added:**
+
 - `src/contexts/ProjectContext.tsx` - Project state management
 - `src/contexts/ThemeContext.tsx` - Theme state management
 - `src/contexts/index.ts` - Context exports
@@ -493,6 +522,7 @@ Desktop uses **same UI components** but **different backend connection**:
 - `src/lib/backend-adapter.ts` - Backend abstraction layer
 
 **Files Modified:**
+
 - `src/main.tsx` - Added ThemeProvider and ProjectProvider
 - `src/components/Layout.tsx` - Added ProjectSwitcher, ThemeToggle, keyboard shortcuts help
 - `src/pages/SettingsPage.tsx` - Uses shared ProjectContext
@@ -501,6 +531,7 @@ Desktop uses **same UI components** but **different backend connection**:
 ### 2025-12-19: Phase 4 Completion
 
 **Completed Features:**
+
 - ✅ **Markdown Rendering**: Integrated react-markdown with remark-gfm for proper spec content rendering
 - ✅ **Search & Filters**: Added comprehensive search and multi-filter system to SpecsPage
   - Search by name, title, or tags
@@ -515,6 +546,7 @@ Desktop uses **same UI components** but **different backend connection**:
 - ✅ **Navigation**: Added Settings to main navigation menu
 
 **Build Results:**
+
 - Bundle size: ~481KB JS + 64KB CSS (uncompressed)
 - Estimated ~150KB gzipped (vs Next.js 129MB+)
 - Build time: ~2s
@@ -523,6 +555,7 @@ Desktop uses **same UI components** but **different backend connection**:
 
 **Phase 4 Status: COMPLETE ✅**
 All planned features for Phase 4 have been implemented:
+
 - All 5 pages exist and are functional
 - Search and filters working
 - Markdown rendering working
@@ -532,6 +565,7 @@ All planned features for Phase 4 have been implemented:
 ### 2025-12-19: Comprehensive Status Audit
 
 **Architecture Verification:**
+
 - ✅ Vite project created in `packages/ui-vite`
 - ✅ Rust HTTP server exists (`rust/leanspec-http`) and is marked complete (Spec 186)
 - ❌ Desktop integration not yet implemented (no Tauri adapter in ui-vite)
@@ -540,12 +574,14 @@ All planned features for Phase 4 have been implemented:
 **Completed Phases: 1-4 (Partial)**
 
 **Phase 1 ✅ Complete:**
+
 - Vite + React + TypeScript configured
 - Tailwind CSS with custom theme
 - Build tooling working
-- `@leanspec/ui-components` workspace dependency added
+- `@harnspec/ui-components` workspace dependency added
 
 **Phase 2 ✅ Complete:**
+
 - API client implemented (`src/lib/api.ts`)
 - All core endpoints: getSpecs, getSpec, getStats, getDependencies, updateSpec
 - Error handling with APIError class
@@ -553,12 +589,14 @@ All planned features for Phase 4 have been implemented:
 - Connects to Rust HTTP server at `http://localhost:3333`
 
 **Phase 3 ✅ Complete:**
+
 - React Router 7 installed
 - Route structure defined (/, /specs, /specs/:specName, /stats, /dependencies)
 - Layout component with navigation
 - Client-side routing working
 
 **Phase 4 ⚠️ Partially Complete (4/5 pages):**
+
 - ✅ **SpecsPage**: Basic list view with status, priority, tags
   - Missing: Search/filter UI
 - ✅ **SpecDetailPage**: Shows content, metadata, dependencies
@@ -572,6 +610,7 @@ All planned features for Phase 4 have been implemented:
   - Need: Project switcher, project CRUD operations
 
 **Phase 5 ❌ Not Started:**
+
 - No project context provider
 - No project switching logic
 - Single project hardcoded
@@ -579,6 +618,7 @@ All planned features for Phase 4 have been implemented:
 - No project switcher in header
 
 **Phase 6 ❌ Not Started:**
+
 - No search functionality
 - No filter UI
 - No metadata editing capability
@@ -587,12 +627,14 @@ All planned features for Phase 4 have been implemented:
 - No validation UI
 
 **Phase 7 ❌ Not Started:**
+
 - No Tauri integration in ui-vite
 - Backend adapter pattern not implemented (design documented but not coded)
 - Desktop package not updated to use new UI
 - No file picker integration
 
 **Phase 8 ❌ Not Started:**
+
 - No test files found
 - No unit tests for API client
 - No component tests
@@ -600,6 +642,7 @@ All planned features for Phase 4 have been implemented:
 - No performance benchmarks
 
 **Phase 9 ❌ Not Started:**
+
 - Next.js UI (`packages/ui`) still exists
 - No migration/archival performed
 - No CLI integration
@@ -607,14 +650,16 @@ All planned features for Phase 4 have been implemented:
 - Both UIs coexist without cutover
 
 **Bundle Size Achievement:**
+
 - Estimated 384KB (uncompressed) vs Next.js 129MB
 - ~99.7% reduction ✅
 - Build time: ~1.7s
 - Dev server: ~180ms startup
 
 **Technical Debt:**
+
 1. ~~Spec content rendering uses `<pre>` not Markdown~~ ✅ Fixed with react-markdown
-2. No shared UI components usage from `@leanspec/ui-components` (components exist but not used yet)
+2. No shared UI components usage from `@harnspec/ui-components` (components exist but not used yet)
 3. Dependency graph is text list, not visualization (deferred to Phase 6)
 4. Stats page has no charts (deferred to Phase 6)
 5. No TypeScript strict mode enforcement in all files
@@ -625,6 +670,7 @@ All planned features for Phase 4 have been implemented:
 10. No metadata editing UI (Phase 6)
 
 **Blockers for Completion:**
+
 1. Multi-project support needs project management UI (Phase 5)
 2. Feature parity requires significant UI work (Phase 6)
 3. Desktop integration requires architectural refactoring (Phase 7)
@@ -632,6 +678,7 @@ All planned features for Phase 4 have been implemented:
 5. Migration strategy needs execution plan (Phase 9)
 
 **Recommendation:**
+
 - Status should remain `in-progress`
 - Current implementation: **~40% complete** (4/9 phases done)
 - MVP is functional but lacks production-readiness
@@ -640,6 +687,7 @@ All planned features for Phase 4 have been implemented:
 ### 2025-12-18: Initial Implementation
 
 **Completed:**
+
 - ✅ Phase 1: Project Setup
   - Created Vite project in `packages/ui-vite`
   - Configured TypeScript + React
@@ -665,12 +713,14 @@ All planned features for Phase 4 have been implemented:
   - All pages connect to API and handle loading/error states
 
 **Build Results:**
+
 - Bundle size: ~316KB (100KB gzipped)
 - Build time: ~1.7s
 - Dev server starts in ~180ms
 - All TypeScript checks pass
 
 **Next Steps:**
+
 - Phase 5: Add project context and switcher
 - Phase 6: Feature parity (search, filters, metadata editing)
 - Phase 7: Desktop integration
@@ -678,7 +728,8 @@ All planned features for Phase 4 have been implemented:
 - Phase 9: Migration and launch
 
 **Technical Notes:**
-- Using `@leanspec/ui-components` as workspace dependency
+
+- Using `@harnspec/ui-components` as workspace dependency
 - API expects HTTP server at `http://localhost:3333`
 - All routes use React Router for client-side navigation
 - Tailwind configured with same theme as original UI
@@ -687,6 +738,7 @@ All planned features for Phase 4 have been implemented:
 ## Current Status: Phase 1-6 & 8 Complete ✅
 
 The Vite SPA is production-ready for web use:
+
 - Core architecture established
 - API client working with all endpoints and tested (8 unit tests passing)
 - All 5 pages implemented and functional
@@ -698,7 +750,8 @@ The Vite SPA is production-ready for web use:
 - Metadata editing
 - Basic test infrastructure in place
 
-### What Works Now:
+### What Works Now
+
 - View all specs in a list with search and filters
 - View and edit individual spec details (status, priority, tags)
 - View project statistics
@@ -710,7 +763,8 @@ The Vite SPA is production-ready for web use:
 - Error handling
 - Unit tests for API client
 
-### What's Deferred (Not Blocking):
+### What's Deferred (Not Blocking)
+
 - **Phase 7**: Desktop app bundling (backend adapter exists, Tauri bundling not integrated)
 - **Phase 8**: Comprehensive testing (component tests, E2E, performance)
 - **Phase 9**: Migration cutover (archive Next.js UI, update CLI, docs)
@@ -718,9 +772,10 @@ The Vite SPA is production-ready for web use:
 - Charts (stats page shows numbers)
 - Validation UI
 
-### Implementation Notes:
+### Implementation Notes
 
 **Completed:**
+
 - ✅ All 5 pages working
 - ✅ Backend adapter pattern implemented (HTTP + Tauri)
 - ✅ Project context provider with localStorage persistence
@@ -732,6 +787,7 @@ The Vite SPA is production-ready for web use:
 - ✅ Basic unit tests (API client)
 
 **Deferred (not critical):**
+
 - Graph visualizations can use existing list view
 - Charts can be added incrementally
 - Desktop bundling works with existing backend adapter

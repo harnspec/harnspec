@@ -15,7 +15,7 @@ updated_at: 2026-03-03T07:25:37.538188Z
 
 ## Overview
 
-Despite spec 177 (Playwright E2E) being marked complete, **no UI e2e tests exist** in the codebase. The UI (`@leanspec/ui`) only has 8 unit test files. Rather than adopting a traditional Playwright setup, we should leverage the **agent-browser skill** for UI e2e testing.
+Despite spec 177 (Playwright E2E) being marked complete, **no UI e2e tests exist** in the codebase. The UI (`@harnspec/ui`) only has 8 unit test files. Rather than adopting a traditional Playwright setup, we should leverage the **agent-browser skill** for UI e2e testing.
 
 ### Why Agent-Browser over Playwright
 
@@ -30,6 +30,7 @@ Despite spec 177 (Playwright E2E) being marked complete, **no UI e2e tests exist
 ### What Needs E2E Coverage
 
 The LeanSpec UI (Vite SPA) has these critical flows with zero e2e coverage:
+
 1. **Spec browsing** — list, filter, search, detail view
 2. **Board view** — grouping, status visualization
 3. **Dependency graph** — DAG/network rendering
@@ -42,7 +43,7 @@ The LeanSpec UI (Vite SPA) has these critical flows with zero e2e coverage:
 
 ### Approach: Agent-Browser Skill as E2E Runner
 
-Use the `agent-browser` CLI to drive browser sessions against a locally running `@leanspec/ui` dev server. Tests are defined as reproducible agent-browser command sequences.
+Use the `agent-browser` CLI to drive browser sessions against a locally running `@harnspec/ui` dev server. Tests are defined as reproducible agent-browser command sequences.
 
 ```bash
 # Example: Test spec list page loads

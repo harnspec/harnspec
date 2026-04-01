@@ -59,7 +59,7 @@ async function atomicWriteFile(filePath: string, content: string): Promise<void>
 
 ### Implementation Strategy
 
-**Shared implementation in `@leanspec/core`:**
+**Shared implementation in `@harnspec/core`:**
 
 - Create `src/utils/atomic-file.ts` with `atomicWriteFile()` function
 - Export from core package for use across CLI, MCP, UI
@@ -96,7 +96,7 @@ async function atomicWriteFile(filePath: string, content: string): Promise<void>
 ## Plan
 
 - [x] Create spec and design
-- [x] Implement `atomicWriteFile()` in `@leanspec/core`
+- [x] Implement `atomicWriteFile()` in `@harnspec/core`
 - [x] Update CLI: `frontmatter.ts` to use atomic writes
 - [x] Update CLI: `commands/create.ts` to use atomic writes
 - [x] Update UI: metadata PATCH endpoint to use atomic writes
@@ -108,7 +108,7 @@ async function atomicWriteFile(filePath: string, content: string): Promise<void>
 
 ### Files Changed
 
-**Core Package (`@leanspec/core`):**
+**Core Package (`@harnspec/core`):**
 
 - `src/utils/atomic-file.ts` - New atomic write utility (write-then-rename pattern)
 - `src/utils/atomic-file.test.ts` - Unit tests (11 tests, all passing)
@@ -120,7 +120,7 @@ async function atomicWriteFile(filePath: string, content: string): Promise<void>
 - `src/commands/create.ts` - Replace `fs.writeFile` with `atomicWriteFile` for main file and template copies
 - `src/commands/atomic-operations.test.ts` - Integration tests (5 tests, all passing)
 
-**UI Package (`@leanspec/ui`):**
+**UI Package (`@harnspec/ui`):**
 
 - `src/app/api/projects/[id]/specs/[spec]/metadata/route.ts` - Replace `writeFile` with `atomicWriteFile` in PATCH handler
 

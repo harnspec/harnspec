@@ -40,9 +40,9 @@ As LeanSpec grows (CLI, MCP server, Web UI, core library), our testing approach 
 
 | Package | Test Files | Focus |
 |---------|-----------|-------|
-| `@leanspec/cli` | 35 | Commands, validators, MCP server |
-| `@leanspec/core` | 12 | Search, token counting, validators |
-| `@leanspec/ui` | 5 | Components, API routes |
+| `@harnspec/cli` | 35 | Commands, validators, MCP server |
+| `@harnspec/core` | 12 | Search, token counting, validators |
+| `@harnspec/ui` | 5 | Components, API routes |
 
 ## Design
 

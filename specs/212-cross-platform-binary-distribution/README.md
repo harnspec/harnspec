@@ -562,7 +562,7 @@ leanspec_0.3.0-1_arm64.deb
 Package: leanspec
 Version: 0.3.0-1
 Architecture: amd64
-Maintainer: LeanSpec Team <team@leanspec.org>
+Maintainer: LeanSpec Team <team@harnspec.org>
 Description: Lightweight spec methodology for AI-powered development
 ```
 

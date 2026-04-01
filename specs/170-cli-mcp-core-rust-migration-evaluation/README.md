@@ -43,10 +43,10 @@ Following the approval of **spec 169** (full migration of desktop UI backend to 
 
 **Affected Components**:
 
-- `@leanspec/core` - Platform-agnostic parsing, validation, utilities (TypeScript)
+- `@harnspec/core` - Platform-agnostic parsing, validation, utilities (TypeScript)
 - `harnspec` CLI - Command-line interface (TypeScript/Node.js)
-- `@leanspec/mcp` - MCP server (TypeScript/Node.js wrapper)
-- `@leanspec/ui` - Web UI launcher (Node.js wrapper for Next.js)
+- `@harnspec/mcp` - MCP server (TypeScript/Node.js wrapper)
+- `@harnspec/ui` - Web UI launcher (Node.js wrapper for Next.js)
 
 **What Would Remain Node.js**:
 
@@ -464,7 +464,7 @@ spawn(binaryPath, process.argv.slice(2), {
 
 **Developer-Facing**:
 
-- `@leanspec/core` TypeScript package deprecated
+- `@harnspec/core` TypeScript package deprecated
 - Contributors need Rust toolchain
 - Build process changes
 - Testing framework changes

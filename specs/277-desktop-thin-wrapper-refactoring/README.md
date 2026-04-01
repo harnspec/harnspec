@@ -10,7 +10,7 @@ updated_at: 2026-02-02T04:02:50.048842986Z
 
 ## Context
 
-The @leanspec/desktop package currently has UI components and logic that duplicate or overlap with @leanspec/ui. While the desktop app does import from @leanspec/ui, it maintains its own:
+The @harnspec/desktop package currently has UI components and logic that duplicate or overlap with @harnspec/ui. While the desktop app does import from @harnspec/ui, it maintains its own:
 
 - **Layout components**: `DesktopLayout.tsx`, `DesktopMenu.tsx`
 - **Project management UI**: `ProjectsManager.tsx`, `ProjectCard.tsx`, `ProjectsTable.tsx`
@@ -23,7 +23,7 @@ This creates maintenance overhead and risks UI/UX inconsistencies between deskto
 
 ## Goal
 
-Refactor @leanspec/desktop to be a **thin wrapper** around @leanspec/ui, keeping only desktop-native functionality in the desktop package while maximizing code reuse.
+Refactor @harnspec/desktop to be a **thin wrapper** around @harnspec/ui, keeping only desktop-native functionality in the desktop package while maximizing code reuse.
 
 ### What Should Stay in Desktop (Tauri-native)
 
@@ -35,7 +35,7 @@ Refactor @leanspec/desktop to be a **thin wrapper** around @leanspec/ui, keeping
 6. **Desktop-specific context bridging**: Minimal glue to connect Tauri state with UI contexts
 7. **Menu Bar**: Native menu bar integration
 
-### What Should Move to @leanspec/ui
+### What Should Move to @harnspec/ui
 
 1. **Project management UI**: `ProjectsManager`, `ProjectCard`, `ProjectsTable` → use shared `ProjectsPage` from ui
 2. **Layout logic**: Most of `DesktopLayout` → use `Layout` from ui directly
@@ -79,7 +79,7 @@ Refactor @leanspec/desktop to be a **thin wrapper** around @leanspec/ui, keeping
 
 1. Desktop package src/components/ contains only: `WindowControls.tsx`, `DesktopMenu.tsx` (if needed for native menu)
 2. Desktop package shares 95%+ of UI code with web
-3. Adding a new UI feature in @leanspec/ui automatically works in desktop
+3. Adding a new UI feature in @harnspec/ui automatically works in desktop
 4. Bundle size remains similar or smaller
 5. No visual or functional regression in desktop app
 

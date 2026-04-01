@@ -27,12 +27,12 @@ transitions:
 
 **Current Reality**:
 
-- ✅ **Vite SPA** (`@leanspec/ui-vite`) is feature-complete and production-ready
-- ✅ **Rust HTTP Server** (`@leanspec/http-server`) is built, tested, and working
+- ✅ **Vite SPA** (`@harnspec/ui-vite`) is feature-complete and production-ready
+- ✅ **Rust HTTP Server** (`@harnspec/http-server`) is built, tested, and working
 - ✅ **Desktop app** fully integrated with ui-vite (specs 204-207)
 - ✅ **99.7% bundle reduction** - 492KB vs Next.js 129MB+
 - ✅ **10x performance improvement** with Rust backend
-- ⚠️ **Next.js UI** (`@leanspec/ui`) still exists but is **no longer used**
+- ⚠️ **Next.js UI** (`@harnspec/ui`) still exists but is **no longer used**
 
 **Problem**: We have a fully functional new architecture but haven't officially retired the old one. This creates:
 
@@ -116,7 +116,7 @@ rm -rf packages/ui-legacy-nextjs
 
 ```bash
 git mv packages/ui-vite packages/ui
-# Update package name: @leanspec/ui-vite → @leanspec/ui
+# Update package name: @harnspec/ui-vite → @harnspec/ui
 # Keep version continuity for npm
 ```
 
@@ -158,11 +158,11 @@ git mv packages/ui-vite packages/ui
 
 **No changes needed**:
 
-- `@leanspec/ui-components` - Already shared, works with Vite
-- `@leanspec/http-server` - Already Rust-based
-- `@leanspec/desktop` - Already uses ui-vite
-- `@leanspec/cli` - Already launches correct architecture
-- `@leanspec/mcp` - Already uses Rust implementation
+- `@harnspec/ui-components` - Already shared, works with Vite
+- `@harnspec/http-server` - Already Rust-based
+- `@harnspec/desktop` - Already uses ui-vite
+- `@harnspec/cli` - Already launches correct architecture
+- `@harnspec/mcp` - Already uses Rust implementation
 
 ### Version Management
 
@@ -173,7 +173,7 @@ Option 1: **Keep version continuity** (Recommended)
 ```json
 // packages/ui/package.json (formerly ui-vite)
 {
-  "name": "@leanspec/ui",
+  "name": "@harnspec/ui",
   "version": "0.3.0", // Continue from ui-vite's version
   "description": "LeanSpec web UI launcher for visual spec management (Vite SPA)"
 }
@@ -183,13 +183,13 @@ Option 2: **Fresh start**
 
 ```json
 {
-  "name": "@leanspec/ui",
+  "name": "@harnspec/ui",
   "version": "1.0.0", // New major version
   "description": "..."
 }
 ```
 
-**Recommendation**: Option 1 - No version jump needed since npm already knows `@leanspec/ui@0.2.x` was the Next.js version. Publishing `@leanspec/ui@0.3.0` with Vite is a minor upgrade.
+**Recommendation**: Option 1 - No version jump needed since npm already knows `@harnspec/ui@0.2.x` was the Next.js version. Publishing `@harnspec/ui@0.3.0` with Vite is a minor upgrade.
 
 ### CLI Integration
 
@@ -197,12 +197,12 @@ Option 2: **Fresh start**
 
 - `harnspec ui` command spawns HTTP server + opens browser
 - No changes needed to CLI logic
-- Already using `@leanspec/http-server` package
+- Already using `@harnspec/http-server` package
 
 **After Rename**:
 
 - CLI continues working exactly the same
-- Internally points to `@leanspec/ui` (now Vite)
+- Internally points to `@harnspec/ui` (now Vite)
 - No breaking changes for users
 
 ### Documentation Updates
@@ -296,7 +296,7 @@ Option 2: **Fresh start**
 
 - [ ] **Verify Vite UI is production-ready**
   - [ ] Run full test suite: `pnpm test`
-  - [ ] Build production bundle: `pnpm --filter @leanspec/ui-vite build`
+  - [ ] Build production bundle: `pnpm --filter @harnspec/ui-vite build`
   - [ ] Check bundle size (should be ~492KB, not 150MB+)
   - [ ] Verify dev server starts: `pnpm dev:web`
   - [ ] Manual smoke test: specs list, detail, stats, deps, search, filters
@@ -345,8 +345,8 @@ Option 2: **Fresh start**
 
   ```diff
   {
-  - "name": "@leanspec/ui-vite",
-  + "name": "@leanspec/ui",
+  - "name": "@harnspec/ui-vite",
+  + "name": "@harnspec/ui",
     "version": "0.3.0",
   - "description": "LeanSpec Vite SPA - Lightweight UI for spec management",
   + "description": "LeanSpec web UI launcher for visual spec management",
@@ -371,16 +371,16 @@ Option 2: **Fresh start**
   // packages/desktop/package.json
   {
     "dependencies": {
-  -   "@leanspec/ui-vite": "workspace:*",
-  +   "@leanspec/ui": "workspace:*"
+  -   "@harnspec/ui-vite": "workspace:*",
+  +   "@harnspec/ui": "workspace:*"
     }
   }
   ```
   
   ```diff
   // packages/desktop/src/main.tsx and other files
-  - import { ... } from '@leanspec/ui-vite';
-  + import { ... } from '@leanspec/ui';
+  - import { ... } from '@harnspec/ui-vite';
+  + import { ... } from '@harnspec/ui';
   ```
 
 - [x] **Update turbo.json**
@@ -388,11 +388,11 @@ Option 2: **Fresh start**
   ```diff
   {
     "pipeline": {
-  +   "@leanspec/ui#build": {
-  +     "dependsOn": ["@leanspec/ui-components#build"],
+  +   "@harnspec/ui#build": {
+  +     "dependsOn": ["@harnspec/ui-components#build"],
   +     "outputs": ["dist/**"]
   +   },
-  +   "@leanspec/ui#dev": {
+  +   "@harnspec/ui#dev": {
   +     "cache": false,
   +     "persistent": true
   +   }
@@ -407,10 +407,10 @@ Option 2: **Fresh start**
   ```diff
   {
     "scripts": {
-  -   "dev": "turbo run dev --filter=@leanspec/ui-vite --filter=@leanspec/http-server",
-  +   "dev": "turbo run dev --filter=@leanspec/ui --filter=@leanspec/http-server",
-  -   "dev:web": "turbo run dev:web --filter=@leanspec/ui-vite",
-  +   "dev:web": "turbo run dev --filter=@leanspec/ui"
+  -   "dev": "turbo run dev --filter=@harnspec/ui-vite --filter=@harnspec/http-server",
+  +   "dev": "turbo run dev --filter=@harnspec/ui --filter=@harnspec/http-server",
+  -   "dev:web": "turbo run dev:web --filter=@harnspec/ui-vite",
+  +   "dev:web": "turbo run dev --filter=@harnspec/ui"
     }
   }
   ```
@@ -426,7 +426,7 @@ Option 2: **Fresh start**
 
   ```bash
   pnpm install
-  pnpm -r list --depth=0  # Should show @leanspec/ui, not ui-vite
+  pnpm -r list --depth=0  # Should show @harnspec/ui, not ui-vite
   ```
 
 ### Phase 5: Update Documentation (2 hours)
@@ -444,7 +444,7 @@ Option 2: **Fresh start**
 
 - [x] **Update packages/README.md**
   - [x] Architecture diagram: Update package names
-  - [x] Package descriptions: Update @leanspec/ui description
+  - [x] Package descriptions: Update @harnspec/ui description
   - [x] Remove Next.js references
 
 - [x] **Update AGENTS.md**
@@ -467,15 +467,15 @@ Option 2: **Fresh start**
 
   ```diff
   - name: Build Next.js UI
-  - run: pnpm --filter @leanspec/ui build
+  - run: pnpm --filter @harnspec/ui build
   
   + name: Build Vite UI
-  + run: pnpm --filter @leanspec/ui build
+  + run: pnpm --filter @harnspec/ui build
   ```
 
 - [ ] **Update .github/workflows/publish-*.yml**
   - [ ] Update package paths in build steps
-  - [ ] Verify @leanspec/ui gets published
+  - [ ] Verify @harnspec/ui gets published
   - [ ] Ensure legacy Next.js UI is not published (package removed)
 
 - [x] **Update version sync scripts**
@@ -497,8 +497,8 @@ Option 2: **Fresh start**
   ```diff
   // scripts/publish-main-packages.ts
   const packages = [
-  - '@leanspec/ui-vite',
-  + '@leanspec/ui',
+  - '@harnspec/ui-vite',
+  + '@harnspec/ui',
     // ...
   ];
   ```
@@ -584,7 +584,7 @@ Option 2: **Fresh start**
   - Remove Next.js from CI/CD workflows
   - Update translation paths in AGENTS.md
   
-  BREAKING CHANGE: @leanspec/ui is now Vite SPA (was Next.js)
+  BREAKING CHANGE: @harnspec/ui is now Vite SPA (was Next.js)
   - No user-facing breakage (CLI handles new architecture)
   - Old Next.js code removed from the repo
   
@@ -606,13 +606,13 @@ Option 2: **Fresh start**
 - [ ] **Publish to npm**
 
   ```bash
-  pnpm publish-main-packages  # Publishes @leanspec/ui (Vite version)
+  pnpm publish-main-packages  # Publishes @harnspec/ui (Vite version)
   ```
 
 - [ ] **Verify npm package**
 
   ```bash
-  npm info @leanspec/ui
+  npm info @harnspec/ui
   # Should show v0.3.0 with Vite description
   ```
 
@@ -623,13 +623,13 @@ Option 2: **Fresh start**
   
   ### Breaking Changes
   - Removed Next.js UI implementation, promoted Vite SPA as primary
-  - @leanspec/ui now ships Vite build (was Next.js in v0.2.x)
+  - @harnspec/ui now ships Vite build (was Next.js in v0.2.x)
   - 99.7% smaller bundle (492KB vs 129MB+)
   - 10x faster with Rust HTTP backend
   
   ### Migration
   - No action required for CLI users (`harnspec ui` works the same)
-  - npm package name unchanged (@leanspec/ui)
+  - npm package name unchanged (@harnspec/ui)
   - Desktop app automatically uses new architecture
   
   ### Archived
@@ -646,7 +646,7 @@ Option 2: **Fresh start**
 **Core Migration (100% Complete)**:
 
 - ✅ Removed legacy Next.js UI package from the repo
-- ✅ Promoted Vite SPA to `@leanspec/ui` (renamed from `@leanspec/ui-vite`)
+- ✅ Promoted Vite SPA to `@harnspec/ui` (renamed from `@harnspec/ui-vite`)
 - ✅ Updated all desktop imports and dependencies
 - ✅ Updated turbo.json configuration
 - ✅ Updated root package.json scripts
@@ -668,7 +668,7 @@ Option 2: **Fresh start**
 **Release Tooling (100% Complete)**:
 
 - ✅ Version sync scripts updated (no `ui-vite` references)
-- ✅ publish-main-packages.ts now publishes `@leanspec/ui`
+- ✅ publish-main-packages.ts now publishes `@harnspec/ui`
 - ✅ Lockfile refreshed after renames
 
 **Legacy Cleanup (Deferred to Spec 215)**:
@@ -721,7 +721,7 @@ The core goal is **100% complete**: Next.js is removed, Vite is promoted as the 
 - [ ] Workspace installs without errors (`pnpm install`)
 - [ ] All packages build successfully (`pnpm build`)
 - [ ] No broken imports or references
-- [ ] Desktop package correctly imports from @leanspec/ui
+- [ ] Desktop package correctly imports from @harnspec/ui
 - [ ] Root scripts work (dev, build, test)
 - [ ] CI/CD workflows pass
 - [ ] Documentation is accurate and complete
@@ -774,12 +774,12 @@ The core goal is **100% complete**: Next.js is removed, Vite is promoted as the 
 
 ### npm Package Verification
 
-- [ ] `npm pack` succeeds for @leanspec/ui
+- [ ] `npm pack` succeeds for @harnspec/ui
 - [ ] Package size is reasonable (~2-3MB with node_modules)
 - [ ] Package includes correct files (dist/, bin/, README, LICENSE)
 - [ ] bin/ui.js is executable
 - [ ] Package installs in clean project
-- [ ] Installed package works (`npx @leanspec/ui`)
+- [ ] Installed package works (`npx @harnspec/ui`)
 
 ## Notes
 

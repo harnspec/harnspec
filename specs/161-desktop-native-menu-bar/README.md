@@ -269,10 +269,10 @@ fn main() {
 
 Manual desktop verification still needs hardware. Automated checks executed in this change:
 
-- `pnpm --filter @leanspec/desktop lint`
-- `pnpm --filter @leanspec/ui lint`
+- `pnpm --filter @harnspec/desktop lint`
+- `pnpm --filter @harnspec/ui lint`
 
-> Both lint commands currently fail (missing flat config in `@leanspec/desktop`, pre-existing ESLint violations in `@leanspec/ui`). No code changes were made to resolve those unrelated issues as part of this spec.
+> Both lint commands currently fail (missing flat config in `@harnspec/desktop`, pre-existing ESLint violations in `@harnspec/ui`). No code changes were made to resolve those unrelated issues as part of this spec.
 
 ## Notes
 

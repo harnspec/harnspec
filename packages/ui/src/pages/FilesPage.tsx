@@ -1,6 +1,6 @@
 /**
  * FilesPage - VS Code-like codebase browser
- * Spec 246 - Codebase File Viewing in @leanspec/ui
+ * Spec 246 - Codebase File Viewing in @harnspec/ui
  */
 
 import { useEffect, useState } from 'react';

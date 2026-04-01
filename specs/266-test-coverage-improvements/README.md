@@ -15,7 +15,7 @@ completed_at: 2026-02-02T10:10:00.000000Z
 
 ## Overview
 
-Improve test coverage in @leanspec/ui with focused, high-value tests for hooks and context providers.
+Improve test coverage in @harnspec/ui with focused, high-value tests for hooks and context providers.
 
 ## Design
 
@@ -24,10 +24,10 @@ Improve test coverage in @leanspec/ui with focused, high-value tests for hooks a
 
 ## Plan
 
-- [x] Add tests for @leanspec/ui hooks
+- [x] Add tests for @harnspec/ui hooks
   - [x] `use-media-query.ts` - 6 tests covering query matching and event handling
   - [x] `useKeyboardShortcuts.ts` - 14 tests covering key combos and input filtering
-- [x] Add tests for @leanspec/ui context providers
+- [x] Add tests for @harnspec/ui context providers
   - [x] `ThemeContext` - 11 tests covering theme persistence and switching
 - [x] Existing tests verified:
   - [x] `i18n.test.ts` - 8 tests for internationalization
@@ -35,14 +35,15 @@ Improve test coverage in @leanspec/ui with focused, high-value tests for hooks a
 
 ## Test
 
-- [x] pnpm test passes (51 tests in @leanspec/ui)
+- [x] pnpm test passes (51 tests in @harnspec/ui)
 - [x] All new tests pass
 
 ## Notes
 
-Test coverage increased from 2 test files to 5 test files in @leanspec/ui.
+Test coverage increased from 2 test files to 5 test files in @harnspec/ui.
 
 Total tests: 51
+
 - Hooks: 20 tests (use-media-query + useKeyboardShortcuts)
 - Contexts: 11 tests (ThemeContext)  
 - Components: 12 tests (chat)

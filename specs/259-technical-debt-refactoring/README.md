@@ -42,7 +42,7 @@ This umbrella spec captures cross-cutting decisions that guide the child refacto
 - **Canonical UI primitives** live in `packages/ui-components/src/components/ui`.
 - **Canonical spec/API types** live in `packages/ui-components/src/types/specs.ts` with `contentMd` as the standard field name.
 - **Shared Rust helpers** (e.g., hashing, spec transformations) move into `leanspec-core` utilities.
-- **Chat server removal** is blocked until `@leanspec/ai-worker` exists in-repo (see dependency on spec 237).
+- **Chat server removal** is blocked until `@harnspec/ai-worker` exists in-repo (see dependency on spec 237).
 - **Config standardization** aligns Vite, TypeScript targets, PostCSS config, and ESLint in UI packages.
 
 ## Plan

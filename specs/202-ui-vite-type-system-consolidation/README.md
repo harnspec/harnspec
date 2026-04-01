@@ -22,9 +22,10 @@ transitions:
 
 ## Overview
 
-**Problem**: @leanspec/ui-vite has **duplicate type definitions** and unnecessary data transformation layers. The same data is represented in three formats: `RustSpec`, `NextJsSpec`, and various intermediate shapes, requiring constant conversion via adapter functions.
+**Problem**: @harnspec/ui-vite has **duplicate type definitions** and unnecessary data transformation layers. The same data is represented in three formats: `RustSpec`, `NextJsSpec`, and various intermediate shapes, requiring constant conversion via adapter functions.
 
 **Current State**:
+
 - Two parallel type hierarchies: `RustSpec`/`NextJsSpec`, `RustStats`/`NextJsStats`, `RustSpecDetail`/`NextJsSpecDetail`
 - ~200 lines of adapter code transforming between identical formats
 - Redundant fields: both `name` and `specName` exist for the same value
@@ -46,6 +47,7 @@ transitions:
 **Simplify**: Keep only minimal date parsing utilities
 
 **Rationale**:
+
 1. Rust types are **authoritative** - they define the actual API contract
 2. Already use camelCase serialization (`#[serde(rename_all = "camelCase")]`)
 3. Well-typed and complete (no missing fields)
@@ -80,6 +82,7 @@ interface NextJsSpec {
 ```
 
 **What adapters do**:
+
 ```typescript
 function adaptSpec(rustSpec: RustSpec): NextJsSpec {
   return {
@@ -153,24 +156,28 @@ const createdDate = spec.createdAt ? parseDate(spec.createdAt) : null;
 ### Migration Strategy
 
 **Phase 1: Type Renaming**
+
 1. Rename `RustSpec` → `Spec` (canonical name)
 2. Rename `RustSpecDetail` → `SpecDetail`
 3. Rename `RustStats` → `Stats`
 4. Mark old types as `@deprecated`
 
 **Phase 2: Remove Adapters**
+
 1. Delete `adaptSpec()`, `adaptSpecDetail()`, `adaptStats()`
 2. Remove adapter calls from backend-adapter.ts
 3. Remove adapter calls from api.ts
 4. Keep only `parseDate()` utility
 
 **Phase 3: Update Components**
+
 1. Update all imports: `NextJsSpec` → `Spec`
 2. Remove redundant field access (use `specName` not `name`)
 3. Update date handling to use `parseDate()` helper
 4. Test all pages
 
 **Phase 4: Cleanup**
+
 1. Delete `NextJsSpec`, `NextJsSpecDetail`, `NextJsStats` types
 2. Remove `normalizeProjectsResponse()` (after old API is gone)
 3. Remove test mocks for old types
@@ -196,7 +203,7 @@ const createdDate = spec.createdAt ? parseDate(spec.createdAt) : null;
 
 ## Implementation Notes
 
-- Canonicalized @leanspec/ui-vite types by renaming RustSpec/RustSpecDetail/RustStats to Spec/SpecDetail/Stats and removing the legacy Next.js variants and their adapters.
+- Canonicalized @harnspec/ui-vite types by renaming RustSpec/RustSpecDetail/RustStats to Spec/SpecDetail/Stats and removing the legacy Next.js variants and their adapters.
 - API and backend adapters now return backend shapes directly (with a minimal `parseDate` helper retained for optional date parsing) and no longer perform redundant spec/stat transformations.
 - UI components and dashboards now consume `specName` consistently (no `name` alias), and list/board/search interactions rely on canonical fields.
 - Updated vitest mocks to the canonical shapes and adjusted project normalization expectations to reflect the defaulted project fields.
@@ -206,11 +213,13 @@ const createdDate = spec.createdAt ? parseDate(spec.createdAt) : null;
 ## Test
 
 **Type Safety**:
+
 - [x] `pnpm -C packages/ui-vite typecheck` passes with no errors
 - [x] No references to deprecated types remain
 - [x] All components import from canonical types
 
 **Runtime Verification**:
+
 - [ ] Dashboard displays specs correctly (check `specName` field access)
 - [ ] Spec detail page shows all metadata
 - [ ] Date fields display correctly (created, updated, completed)
@@ -221,11 +230,13 @@ const createdDate = spec.createdAt ? parseDate(spec.createdAt) : null;
 - [ ] Stats page calculations correct
 
 **Unit Tests**:
+
 - [x] `pnpm -C packages/ui-vite test` passes
 - [x] Test mocks use canonical types
 - [ ] Date parsing utility has tests
 
 **Performance**:
+
 - [ ] Bundle size decreased (measure before/after)
 - [ ] No runtime errors in console
 - [ ] API response handling is faster (no transformation overhead)
@@ -235,6 +246,7 @@ const createdDate = spec.createdAt ? parseDate(spec.createdAt) : null;
 ### Type Usage Audit
 
 **Files using NextJsSpec** (need updates):
+
 - `src/lib/api.ts` - Type exports and adapter functions
 - `src/lib/backend-adapter.ts` - Interface types
 - `src/pages/StatsPage.tsx`
@@ -251,6 +263,7 @@ const createdDate = spec.createdAt ? parseDate(spec.createdAt) : null;
 - Plus type-only imports in ~5 more files
 
 **Files using RustSpec** (already correct):
+
 - `src/types/api.ts` - Type definitions
 - Some adapter functions in api.ts
 
@@ -268,6 +281,7 @@ const createdDate = spec.createdAt ? parseDate(spec.createdAt) : null;
 ### Adapter Functions to Delete
 
 **Current adapters** (~200 lines total):
+
 - ❌ `adaptSpec()` - Adds redundant `name` field
 - ❌ `adaptSpecDetail()` - Same + handles sub-specs
 - ❌ `adaptStats()` - Just passes through unchanged
@@ -277,6 +291,7 @@ const createdDate = spec.createdAt ? parseDate(spec.createdAt) : null;
 - ❌ `adaptContextFileContent()` - Adds token count (move to component)
 
 **Keep these utilities**:
+
 - ✅ `extractSpecNumber()` - Useful string parsing
 - ✅ `calculateCompletionRate()` - Business logic
 - ✅ `toDateOrNull()` → rename to `parseDate()`
@@ -285,12 +300,14 @@ const createdDate = spec.createdAt ? parseDate(spec.createdAt) : null;
 ### Breaking Changes
 
 **None!** This is a **non-breaking refactor** because:
+
 1. Old type names can remain as aliases during migration
 2. Field names stay the same (just stop adding `name` field)
 3. Components already handle optional fields
 4. Date strings work everywhere Date objects work
 
 **Migration path**:
+
 ```typescript
 // Step 1: Add aliases (non-breaking)
 export type NextJsSpec = Spec;  // @deprecated
@@ -313,9 +330,11 @@ export type RustSpec = Spec;
 ### Related Specs
 
 **Depends on**:
+
 - 201-ui-vite-backend-adapter-migration (adapter layer must be stable first)
 
 **Enables**:
+
 - Cleaner API layer in backend-adapter
 - Easier Tauri integration (no format juggling)
 - Better TypeScript inference

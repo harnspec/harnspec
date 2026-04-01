@@ -56,7 +56,7 @@ Most early LeanSpec users come from China. Without Chinese localization, we're c
 
 1. ~~**Docs Site** (docusaurus)~~ - ✅ COMPLETE (spec 064)
 
-2. ~~**Web App** (@leanspec/ui)~~ - ✅ COMPLETE (Priority 1)
+2. ~~**Web App** (@harnspec/ui)~~ - ✅ COMPLETE (Priority 1)
    - UI strings and labels
    - Error messages
    - Help text and tooltips

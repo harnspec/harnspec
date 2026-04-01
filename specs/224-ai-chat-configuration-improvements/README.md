@@ -24,19 +24,21 @@ transitions:
 
 ## Overview
 
-The current AI chat implementation in `@leanspec/chat-server` has critical configuration and security limitations:
+The current AI chat implementation in `@harnspec/chat-server` has critical configuration and security limitations:
 
 1. **Hardcoded credentials**: API keys are read from environment variables at server startup with no runtime management
 2. **Limited provider support**: Only OpenAI/OpenRouter supported, despite AI SDK supporting 50+ providers
 3. **No chat session management**: Each request is stateless; conversation context not properly managed (partially addressed in spec 223)
 
 **Why now?**
+
 - Security risk: API keys exposed in process environment
 - Deployment friction: Requires server restart to change models or credentials
 - User limitation: Can't switch providers or use their own API keys
 - Developer experience: Adding new providers requires code changes
 
 **Impact:**
+
 - **Users**: Enable BYOK (bring your own key) for better privacy and cost control
 - **Operators**: Hot-reload configuration without server restarts
 - **Developers**: Extensible provider system via AI SDK's unified interface
@@ -46,6 +48,7 @@ The current AI chat implementation in `@leanspec/chat-server` has critical confi
 ### 1. Configuration-Driven Model Management
 
 **Config Schema** (`~/.leanspec/chat-config.json`):
+
 ```json
 {
   "version": "1.0",
@@ -116,11 +119,13 @@ The current AI chat implementation in `@leanspec/chat-server` has critical confi
 ```
 
 **Environment Variable Interpolation**:
+
 - Support `${VAR_NAME}` syntax in config
 - Fall back to `.env` files or process environment
 - Log warning if API key missing but don't crash server
 
 **Config Hot-Reload**:
+
 ```typescript
 import chokidar from 'chokidar';
 
@@ -152,6 +157,7 @@ class ConfigManager {
 ### 2. AI SDK Multi-Provider Support
 
 **Provider Factory** (leverage AI SDK's native support):
+
 ```typescript
 import { createOpenAI } from '@ai-sdk/openai';
 import { createAnthropic } from '@ai-sdk/anthropic';
@@ -196,6 +202,7 @@ class ProviderFactory {
 ```
 
 **Updated Chat Endpoint**:
+
 ```typescript
 app.post('/api/chat', async (req, res) => {
   const { messages, projectId, providerId, modelId } = req.body;
@@ -228,6 +235,7 @@ app.post('/api/chat', async (req, res) => {
 **Note**: This section complements spec 223 (chat-persistence-strategy) by defining the **session lifecycle and backend API**, while spec 223 focuses on **SQLite-based storage and UI**.
 
 **Session Schema** (aligns with spec 223's Conversation model):
+
 ```typescript
 interface ChatSession {
   id: string;              // Maps to conversation_id in SQLite
@@ -255,6 +263,7 @@ interface ChatMessage {
 ```
 
 **Backend Session APIs** (new endpoints):
+
 ```typescript
 // Create new session
 app.post('/api/chat/sessions', async (req, res) => {
@@ -296,6 +305,7 @@ app.delete('/api/chat/sessions/:id', async (req, res) => {
 ```
 
 **Updated Chat Endpoint with Session Context**:
+
 ```typescript
 app.post('/api/chat', async (req, res) => {
   const { messages, projectId, sessionId, providerId, modelId } = req.body;
@@ -325,6 +335,7 @@ app.post('/api/chat', async (req, res) => {
 ### 4. UI Configuration Interface
 
 **Model Picker Component** (✅ Implemented):
+
 ```tsx
 // packages/ui/src/components/chat/ModelPicker.tsx
 import { useState, useEffect } from 'react';
@@ -381,6 +392,7 @@ export function ModelPicker({ value, onChange, disabled }: ModelPickerProps) {
 ```
 
 **Settings Page** (✅ Implemented):
+
 ```tsx
 // packages/ui/src/pages/ChatSettingsPage.tsx
 export function ChatSettingsPage() {
@@ -490,6 +502,7 @@ export function ChatSettingsPage() {
 ```
 
 **Features Implemented**:
+
 - ✅ View all configured providers with API key status indicators
 - ✅ Add new providers with validation (ID format, URL validation, required fields)
 - ✅ Edit provider details (name, base URL, API key using ${ENV_VAR} syntax)
@@ -504,12 +517,14 @@ export function ChatSettingsPage() {
 ### 5. Security Considerations
 
 **API Key Storage**:
+
 - **Local development**: Use `.env` files (never commit)
 - **Production deployment**: Use environment variables or secrets management
 - **Desktop app**: Store in secure OS keychain (via Tauri's `tauri-plugin-stronghold`)
 - **Web UI**: API keys never sent to browser; server-side only
 
 **Config Validation**:
+
 ```typescript
 import { z } from 'zod';
 
@@ -544,6 +559,7 @@ function validateConfig(config: unknown): ChatConfig {
 ## Plan
 
 ### Phase 1: Configuration Infrastructure (2 days)
+
 - [x] Define `ChatConfig` TypeScript interfaces
 - [x] Create `ConfigManager` class with hot-reload support
 - [x] Add Zod schema validation
@@ -553,6 +569,7 @@ function validateConfig(config: unknown): ChatConfig {
 - [x] Test: Config loads, hot-reloads, validates correctly
 
 ### Phase 2: Multi-Provider Support (2 days)
+
 - [x] Install AI SDK provider packages: `@ai-sdk/anthropic`, `@ai-sdk/google`
 - [x] Create `ProviderFactory` class
 - [x] Update `/api/chat` endpoint to use dynamic providers
@@ -561,6 +578,7 @@ function validateConfig(config: unknown): ChatConfig {
 - [x] Document supported providers in README
 
 ### Phase 3: Session Management Backend (2 days)
+
 - [x] Define `ChatSession` and `ChatMessage` schemas (align with spec 223)
 - [x] Add `provider_id` and `model_id` columns to SQLite conversations table
 - [x] Create session CRUD endpoints: POST/GET/PATCH/DELETE `/api/chat/sessions`
@@ -569,6 +587,7 @@ function validateConfig(config: unknown): ChatConfig {
 - [x] Test: Create session, send messages, reload conversation
 
 ### Phase 4: UI Integration (2 days)
+
 - [x] Create `ModelPicker` component with provider/model dropdowns
 - [x] Add model picker to chat input area
 - [x] Create `ChatSettingsPage` with provider management
@@ -580,6 +599,7 @@ function validateConfig(config: unknown): ChatConfig {
 - [x] Test: Change models, add custom provider, save settings
 
 ### Phase 5: Security & Desktop Integration (1 day)
+
 - [x] Add API key validation before allowing provider selection
 - [ ] Implement secure keychain storage for desktop app (Tauri)
 - [ ] Add config file encryption option (optional)
@@ -587,6 +607,7 @@ function validateConfig(config: unknown): ChatConfig {
 - [ ] Test: API keys never exposed in browser, keychain integration works
 
 ### Phase 6: Documentation (1 day)
+
 - [x] Update chat-server README with configuration examples
 - [x] Document all supported providers with setup instructions
 - [x] Add troubleshooting guide for common provider issues
@@ -596,6 +617,7 @@ function validateConfig(config: unknown): ChatConfig {
 ## Test
 
 ### Manual Testing
+
 - [x] **Config Management**
   - [x] Edit `chat-config.json`, verify hot-reload without server restart
   - [x] Add invalid config, verify validation error
@@ -624,6 +646,7 @@ function validateConfig(config: unknown): ChatConfig {
 **Status: ✅ Implemented and passing (45 tests)**
 
 Tests implemented in `packages/chat-server/src/`:
+
 - `config.test.ts` - ConfigManager functionality (22 tests)
 - `provider-factory.test.ts` - Provider creation (9 tests)
 - `prompts.test.ts` - System prompt validation (4 tests)
@@ -677,6 +700,7 @@ describe('Session API', () => {
 ```
 
 ### Success Criteria
+
 - ✅ Users can add/remove AI providers without code changes
 - ✅ API keys hot-reload without server restart
 - ✅ Chat sessions persist across page reloads
@@ -708,7 +732,7 @@ describe('Session API', () => {
      - Quick provider/model selection in chat header
      - Shows "(no key)" for providers without configured API keys
      - Integrated into ChatPage settings panel
-   
+
    - **ChatSettingsPage** (`packages/ui/src/pages/ChatSettingsPage.tsx`)
      - Full CRUD interface for providers and models
      - Add/edit/delete providers with validation
@@ -744,6 +768,7 @@ describe('Session API', () => {
 Location: `~/.leanspec/chat-config.json`
 
 Example:
+
 ```json
 {
   "version": "1.0",
@@ -768,12 +793,14 @@ Example:
 ### Architecture Decisions
 
 **Why JSON config over database?**
+
 - **Simplicity**: Easy to edit manually, version control friendly
 - **Portability**: Copy config across machines
 - **No migration**: No schema changes, just add new fields
 - **Performance**: In-memory config fast enough for chat use case
 
 **Why SQLite for session storage?**
+
 - **Unified storage**: Same database used for all chat persistence (spec 223)
 - **ACID compliance**: Reliable transactions, no partial writes
 - **Performance**: Fast queries with proper indexes
@@ -781,6 +808,7 @@ Example:
 - **Easy backup**: Just copy the database file
 
 **Session management integration with spec 223**:
+
 - **This spec (224)**: Defines provider/model tracking in sessions, backend APIs
 - **Spec 223**: Implements SQLite storage layer, conversation UI, schema
 - **Integration**: Extend spec 223's conversations table with `provider_id` and `model_id` columns
@@ -789,6 +817,7 @@ Example:
 ### AI SDK Provider Support
 
 AI SDK natively supports:
+
 - **OpenAI**: GPT-4o, GPT-4o-mini, o1, o3-mini
 - **Anthropic**: Claude Sonnet/Opus/Haiku
 - **Google**: Gemini Pro/Flash

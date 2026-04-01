@@ -49,7 +49,7 @@ Three issues with the current skills setup:
 | Factor | `codervisor/leanspec-skills` | `codervisor/skills` |
 |--------|------------------------------|---------------------|
 | Scales to future products | No — one repo per product | Yes — all codervisor skills in one place |
-| Install UX | `npx skills add codervisor/leanspec-skills` | `npx skills add codervisor/skills@leanspec` |
+| Install UX | `npx skills add codervisor/leanspec-skills` | `npx skills add codervisor/skills@harnspec` |
 | Discoverability | Users must know the exact repo name | Single repo to browse all available skills |
 | Complements `codervisor/forge` | Overlapping concern | Clean separation: forge = infra skills, skills = product skills |
 | Community contributions | Fragmented across repos | Single contribution point |
@@ -79,7 +79,7 @@ codervisor/skills
 
 ```bash
 # Install the LeanSpec skill
-npx skills add codervisor/skills@leanspec
+npx skills add codervisor/skills@harnspec
 
 # Future skills from the same repo
 npx skills add codervisor/skills@some-future-skill
@@ -115,7 +115,7 @@ These are never distributed. The `npx skills` framework reads from `codervisor/s
 -1. **leanspec-sdd** - Spec-Driven Development methodology
 -   - Location: [.agents/skills/leanspec-sdd/SKILL.md](.agents/skills/leanspec-sdd/SKILL.md)
 +1. **leanspec** - Spec-Driven Development methodology
-+   - Install: `npx skills add codervisor/skills@leanspec`
++   - Install: `npx skills add codervisor/skills@harnspec`
 +   - Source: [codervisor/skills](https://github.com/codervisor/skills)
     - Use when: Working with specs, planning features, multi-step changes
     - Key: Run `board` or `search` before creating specs
@@ -156,13 +156,13 @@ Then rename the frontmatter `name: leanspec-sdd` → `name: leanspec` in SKILL.m
 
 ### Phase 3: Validate distribution
 
-- [ ] Verify `npx skills add codervisor/skills@leanspec` works
+- [ ] Verify `npx skills add codervisor/skills@harnspec` works
 - [ ] Verify `npx skills add codervisor/harnspec` does NOT expose internal skills
 - [ ] Test installation across tools (Claude, Cursor, Copilot)
 
 ## Test
 
-- [ ] `npx skills add codervisor/skills@leanspec` installs the skill correctly
+- [ ] `npx skills add codervisor/skills@harnspec` installs the skill correctly
 - [ ] Installed SKILL.md has `name: leanspec` (not `leanspec-sdd`)
 - [ ] Internal skills (`leanspec-development`, `agent-browser`) are not accessible via `npx skills add codervisor/harnspec`
 - [ ] AGENTS.md references the correct install command

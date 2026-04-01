@@ -18,6 +18,7 @@ updated_at: 2026-01-28T01:33:33.043699Z
 Redesign the AI chat interface to use a right sidebar pattern similar to GitHub Copilot in VS Code, replacing the current floating widget and dedicated chat page. This provides better integration with the main UI while maintaining focus on spec management.
 
 **Current Problems**:
+
 - **Floating widget** (`GlobalChatWidget.tsx`) appears in bottom-right corner, feels disconnected from main UI
 - **Dedicated `/chat` page** takes users away from specs context
 - **Poor integration** with spec detail view - users lose context when switching to chat
@@ -25,6 +26,7 @@ Redesign the AI chat interface to use a right sidebar pattern similar to GitHub 
 - **Awkward positioning** - bottom-right widget blocks spec content on smaller screens
 
 **Proposed Solution**:
+
 - **Right sidebar** that slides in/out, similar to GitHub Copilot or VS Code panel
 - **Persistent across routes** - stays open when navigating between specs
 - **Integrated chat history** - show conversation threads in collapsible list within sidebar
@@ -33,6 +35,7 @@ Redesign the AI chat interface to use a right sidebar pattern similar to GitHub 
 - **Better space usage** - 400-500px sidebar vs bottom-right widget
 
 **Key Benefits**:
+
 - Maintain spec context while chatting (no route changes)
 - Better mobile experience (full-height sidebar)
 - Consistent with modern AI coding assistant UX patterns
@@ -44,6 +47,7 @@ Redesign the AI chat interface to use a right sidebar pattern similar to GitHub 
 ### UI Layout
 
 **Sidebar Specifications**:
+
 - **Position**: Fixed right, full height
 - **Width**: 400px default (resizable 300-600px with drag handle)
 - **States**: Collapsed (icon-only, 48px) / Expanded (400px)
@@ -52,6 +56,7 @@ Redesign the AI chat interface to use a right sidebar pattern similar to GitHub 
 - **Transition**: Slide animation (300ms ease-in-out)
 
 **Layout Structure**:
+
 ```tsx
 <div className="flex h-screen">
   {/* Main content area */}
@@ -73,6 +78,7 @@ Redesign the AI chat interface to use a right sidebar pattern similar to GitHub 
 ```
 
 **Responsive Behavior**:
+
 - **Desktop (≥1024px)**: Sidebar pushes content, both visible
 - **Tablet (768-1023px)**: Sidebar overlays content with backdrop
 - **Mobile (<768px)**: Full-screen sidebar, hides main content
@@ -80,6 +86,7 @@ Redesign the AI chat interface to use a right sidebar pattern similar to GitHub 
 ### Sidebar Components
 
 **Header** (always visible when expanded):
+
 ```tsx
 <SidebarHeader>
   <h2>AI Assistant</h2>
@@ -93,6 +100,7 @@ Redesign the AI chat interface to use a right sidebar pattern similar to GitHub 
 ```
 
 **Chat History Section** (collapsible):
+
 ```tsx
 <ChatHistory collapsed={!showHistory}>
   <SectionHeader
@@ -115,6 +123,7 @@ Redesign the AI chat interface to use a right sidebar pattern similar to GitHub 
 ```
 
 **Active Chat Area** (main content):
+
 ```tsx
 <ChatMessages className="flex-1 overflow-y-auto">
   {messages.map(msg => (
@@ -139,9 +148,10 @@ Redesign the AI chat interface to use a right sidebar pattern similar to GitHub 
 Since we're removing the dedicated chat page, history must be accessible within the sidebar:
 
 **Collapsible History Panel**:
+
 - **Default state**: Collapsed, showing only active conversation
 - **Expand button**: At top of sidebar, shows conversation count badge
-- **Collapsed view**: 
+- **Collapsed view**:
   - Current conversation title
   - Model badge
   - Message count
@@ -152,12 +162,14 @@ Since we're removing the dedicated chat page, history must be accessible within 
   - Actions: rename, delete via context menu
 
 **Behavior**:
+
 - **Auto-collapse** when sending first message (focus on conversation)
 - **Persist state** in localStorage: `leanspec.chat.historyExpanded`
 - **Keyboard shortcut**: `Cmd/Ctrl + Shift + H` to toggle history
 - **Smooth animation**: 200ms slide up/down
 
 **Visual Design**:
+
 ```tsx
 <div className="border-b">
   <button
@@ -189,6 +201,7 @@ Since we're removing the dedicated chat page, history must be accessible within 
 ### State Management
 
 **Global Chat Context**:
+
 ```tsx
 interface ChatContext {
   isOpen: boolean;
@@ -211,6 +224,7 @@ interface ChatContext {
 ```
 
 **Persistence**:
+
 - `leanspec.chat.sidebarOpen` (boolean)
 - `leanspec.chat.sidebarWidth` (number, 300-600)
 - `leanspec.chat.historyExpanded` (boolean)
@@ -219,6 +233,7 @@ interface ChatContext {
 ### Removing Chat Page
 
 **Changes Required**:
+
 1. **Delete route**: Remove `/projects/:projectId/chat` and `/chat` routes
 2. **Remove components**: Delete `ChatPage.tsx` and related page-level components
 3. **Redirect legacy URLs**: `/chat` → redirect to last active spec, open sidebar
@@ -226,6 +241,7 @@ interface ChatContext {
 5. **Settings page**: Keep `/chat/settings` accessible via sidebar settings button
 
 **Migration Strategy**:
+
 - Keep chat settings page as separate route (needed for API key configuration)
 - Sidebar settings button navigates to settings page, sidebar stays open
 - Settings page has "Back to Chat" button that returns to previous route + opens sidebar
@@ -233,6 +249,7 @@ interface ChatContext {
 ### Keyboard Shortcuts
 
 **New Shortcuts**:
+
 - `Cmd/Ctrl + Shift + I`: Toggle AI chat sidebar
 - `Cmd/Ctrl + Shift + H`: Toggle chat history (when sidebar open)
 - `Cmd/Ctrl + N`: New chat (when sidebar open)
@@ -268,6 +285,7 @@ const { messages, sendMessage } = useLeanSpecChat({
 
 **Quick Actions**:
 Add context menu in spec detail view:
+
 - "Ask AI about this spec"
 - "Generate implementation plan"
 - "Review checklist items"
@@ -277,12 +295,14 @@ These actions open sidebar and pre-fill input with relevant prompt.
 ### Mobile Experience
 
 **Full-screen Overlay**:
+
 - Sidebar takes full screen width on mobile
 - Backdrop overlay dims main content
 - Swipe gesture to close (right → left)
 - Header shows "Back" button instead of close icon
 
 **Responsive Breakpoints**:
+
 ```tsx
 const isMobile = useMediaQuery('(max-width: 767px)');
 const isTablet = useMediaQuery('(min-width: 768px) and (max-width: 1023px)');
@@ -292,6 +312,7 @@ const isDesktop = useMediaQuery('(min-width: 1024px)');
 ### Technical Implementation
 
 **Component Structure**:
+
 ```
 packages/ui/src/components/chat/
 ├── ChatSidebar.tsx              # Main sidebar container
@@ -313,7 +334,8 @@ packages/ui/src/components/
 ```
 
 **Dependencies** (use existing):
-- `@leanspec/ui-components` - Button, Card, Input, etc.
+
+- `@harnspec/ui-components` - Button, Card, Input, etc.
 - `framer-motion` - Animations
 - `react-router-dom` - Navigation
 - `lucide-react` - Icons
@@ -324,6 +346,7 @@ packages/ui/src/components/
 ### Accessibility
 
 **Requirements**:
+
 - Sidebar announces state changes via `aria-live`
 - Focus trap when sidebar open on mobile
 - Keyboard navigation for all actions
@@ -334,6 +357,7 @@ packages/ui/src/components/
 ## Plan
 
 ### Phase 1: Core Sidebar Structure (2 days)
+
 - [ ] Create `ChatSidebar` component with slide animation
 - [ ] Implement `ChatContext` for global state management
 - [ ] Add resize handle with drag functionality (300-600px)
@@ -342,6 +366,7 @@ packages/ui/src/components/
 - [ ] Add keyboard shortcut: `Cmd/Ctrl + Shift + I` to toggle
 
 ### Phase 2: Chat History Integration (2 days)
+
 - [ ] Create collapsible `ChatHistory` component
 - [ ] Implement conversation list with time-based grouping
 - [ ] Add search functionality for conversations
@@ -351,6 +376,7 @@ packages/ui/src/components/
 - [ ] Persist history expanded state to localStorage
 
 ### Phase 3: Chat Message Area (1 day)
+
 - [ ] Move `ChatMessages` and `ChatInput` into sidebar layout
 - [ ] Update message rendering for narrower width (400px)
 - [ ] Adjust tool call display for sidebar constraints
@@ -359,6 +385,7 @@ packages/ui/src/components/
 - [ ] Integrate with existing `useLeanSpecChat` hook
 
 ### Phase 4: Remove Chat Page (1 day)
+
 - [ ] Delete `/chat` route and `ChatPage.tsx`
 - [ ] Remove chat navigation items from menus
 - [ ] Add redirect: `/chat` → last spec + open sidebar
@@ -367,6 +394,7 @@ packages/ui/src/components/
 - [ ] Clean up unused components
 
 ### Phase 5: Spec Context Integration (1 day)
+
 - [ ] Pass current spec context to chat when on spec detail page
 - [ ] Add "Ask AI" quick actions in spec detail view
 - [ ] Pre-fill chat input with context-aware prompts
@@ -374,6 +402,7 @@ packages/ui/src/components/
 - [ ] Test context passing and AI responses
 
 ### Phase 6: Mobile & Responsive (1 day)
+
 - [ ] Full-screen sidebar on mobile (<768px)
 - [ ] Backdrop overlay for tablet/mobile
 - [ ] Swipe gesture to close on mobile
@@ -381,6 +410,7 @@ packages/ui/src/components/
 - [ ] Test on iOS Safari and Android Chrome
 
 ### Phase 7: Polish & Accessibility (1 day)
+
 - [ ] Smooth animations with Framer Motion
 - [ ] Keyboard shortcuts implementation
 - [ ] Focus trap on mobile when sidebar open
@@ -390,6 +420,7 @@ packages/ui/src/components/
 - [ ] Screen reader testing
 
 ### Phase 8: Testing & Documentation (1 day)
+
 - [ ] E2E tests: open/close sidebar, create thread, send message
 - [ ] Component tests: resize handle, history collapse
 - [ ] Responsive layout tests (desktop/tablet/mobile)
@@ -401,6 +432,7 @@ packages/ui/src/components/
 ## Test
 
 ### Manual Testing
+
 - [ ] Sidebar opens/closes smoothly on all devices
 - [ ] Resize handle works (300-600px range)
 - [ ] Chat history expands/collapses without jank
@@ -412,6 +444,7 @@ packages/ui/src/components/
 - [ ] Spec context passed to AI correctly
 
 ### Automated Testing
+
 - [ ] E2E: Complete chat workflow (open → new conversation → send → close)
 - [ ] Component: Sidebar state management
 - [ ] Component: Resize handle constraints
@@ -422,6 +455,7 @@ packages/ui/src/components/
 - [ ] Performance: No layout shifts or reflows
 
 ### Browser Support
+
 - [ ] Chrome/Edge (latest 2 versions)
 - [ ] Firefox (latest 2 versions)
 - [ ] Safari (latest 2 versions)
@@ -429,6 +463,7 @@ packages/ui/src/components/
 - [ ] Mobile Chrome (Android 10+)
 
 ### Success Criteria
+
 - ✅ Chat feels integrated, not separate
 - ✅ No route changes when opening chat
 - ✅ History accessible without cluttering UI
@@ -440,12 +475,14 @@ packages/ui/src/components/
 ## Notes
 
 **Design Inspiration**:
+
 - **GitHub Copilot** in VS Code - right sidebar pattern
 - **Cursor AI** - integrated chat panel
 - **Linear** - collapsible command menu + sidebar
 - **Slack** - resizable sidebar with threads
 
 **Dependencies**:
+
 - **Spec 094**: AI chatbot implementation (tool system)
 - **Spec 223**: Chat persistence (SQLite backend)
 - **Spec 227**: UI/UX modernization (this builds on top)
@@ -459,6 +496,7 @@ Following Vercel AI SDK conventions:
 
 **
 **Future Enhancements** (out of scope):
+
 - Split view: chat + spec side-by-side
 - Pinned conversations in sidebar
 - Multi-chat tabs within sidebar
@@ -466,12 +504,14 @@ Following Vercel AI SDK conventions:
 - Voice input/output
 
 **Migration Path**:
+
 1. Build sidebar alongside existing widget (feature flag)
 2. Test with subset of users
 3. Migrate all users to sidebar
 4. Remove widget code in next release
 
 **Performance Considerations**:
+
 - Lazy load chat components (code splitting)
 - Virtual scrolling for long conversations
 - Debounce resize events

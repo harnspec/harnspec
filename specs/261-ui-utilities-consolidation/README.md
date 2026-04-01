@@ -21,25 +21,25 @@ transitions:
 
 ## Overview
 
-Consolidate duplicate UI utilities so @leanspec/ui uses the shared implementations from @leanspec/ui-components.
+Consolidate duplicate UI utilities so @harnspec/ui uses the shared implementations from @harnspec/ui-components.
 
 ## Design
 
 - Canonical utility implementations live in ui-components.
-- @leanspec/ui re-exports from ui-components to avoid breaking imports.
+- @harnspec/ui re-exports from ui-components to avoid breaking imports.
 
 ## Plan
 
 - [x] Locate usages of packages/ui/src/lib/date-utils.ts, packages/ui/src/lib/utils.ts, and packages/ui/src/hooks/use-local-storage.ts.
 - [x] Move or re-create these utilities in packages/ui-components with identical APIs.
-- [x] Update @leanspec/ui imports to point to ui-components equivalents.
-- [x] Add re-export stubs in @leanspec/ui if external imports rely on old paths.
+- [x] Update @harnspec/ui imports to point to ui-components equivalents.
+- [x] Add re-export stubs in @harnspec/ui if external imports rely on old paths.
 - [x] Delete the old utility files and remove the empty packages/ui/src/lib/__tests__/ directory.
 
 ## Test
 
 - [x] pnpm pre-release
-- [x] No TypeScript errors in @leanspec/ui
+- [x] No TypeScript errors in @harnspec/ui
 
 ## Notes
 

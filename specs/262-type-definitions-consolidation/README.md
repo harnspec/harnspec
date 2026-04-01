@@ -27,13 +27,13 @@ Consolidate spec/API types into a single canonical source to remove fragmentatio
 
 - Canonical types live in packages/ui-components/src/types/specs.ts.
 - Field naming standard: use contentMd (not content) to align with existing ui-components and desktop types.
-- @leanspec/ui and @leanspec/desktop import from ui-components types.
+- @harnspec/ui and @harnspec/desktop import from ui-components types.
 
 ## Plan
 
 - [x] Identify current spec/API type definitions in packages/ui/src/types/api.ts and packages/desktop/src/types.ts.
 - [x] Define canonical interfaces in packages/ui-components/src/types/specs.ts and ensure they include all required fields.
-- [x] Update @leanspec/ui and @leanspec/desktop to import these types instead of local copies.
+- [x] Update @harnspec/ui and @harnspec/desktop to import these types instead of local copies.
 - [x] Replace content field usage with contentMd where needed, adding compatibility adapters only if required.
 - [x] Remove or deprecate the duplicated type definitions.
 

@@ -25,12 +25,14 @@ Set up GitHub Actions CI/CD to build desktop packages for Windows, macOS, and Li
 ## Motivation
 
 Building desktop apps for multiple platforms is time-consuming and resource-intensive. Developers need to:
+
 - Manually set up build environments for Windows, macOS, and Linux
 - Install platform-specific toolchains (Rust, system dependencies)
 - Run builds locally (slow, inconsistent results)
 - Share binaries manually for testing
 
 **With GitHub Actions CI/CD:**
+
 - ✅ Automated multi-platform builds on every commit/PR
 - ✅ Consistent build environments (no "works on my machine")
 - ✅ Downloadable artifacts for testing without local builds
@@ -52,6 +54,7 @@ Use GitHub Actions matrix strategy to build for all platforms in parallel:
 | **Linux (Debian)** | `ubuntu-latest` | `.deb` | Debian/Ubuntu package |
 
 **Why These Formats?**
+
 - **DMG (macOS)**: Standard macOS distribution format
 - **MSI (Windows)**: Official installer format, supports auto-update
 - **AppImage (Linux)**: Works on all distros, no installation required
@@ -85,6 +88,7 @@ on:
 ```
 
 **Rationale:**
+
 - **No PR/push builds** → Saves CI minutes, builds only when ready to release
 - **Release trigger** → Automatic builds when version is tagged or release published
 - **Manual dispatch** → Quick testing without creating releases
@@ -123,6 +127,7 @@ on:
 ### Tauri Build Configuration
 
 **Current State** (from `tauri.conf.json`):
+
 ```json
 {
   "bundle": {
@@ -133,10 +138,11 @@ on:
 ```
 
 **CI-Specific Build Command:**
+
 ```bash
 pnpm build:desktop
 # Internally runs:
-# 1. pnpm --filter @leanspec/ui build (Next.js standalone)
+# 1. pnpm --filter @harnspec/ui build (Next.js standalone)
 # 2. pnpm prepare:ui (copy to Tauri resources)
 # 3. cargo tauri build (Rust + bundle)
 ```
@@ -144,6 +150,7 @@ pnpm build:desktop
 ### Artifact Organization
 
 **Naming Convention:**
+
 ```
 leanspec-desktop-{version}-{platform}-{arch}.{ext}
 
@@ -156,6 +163,7 @@ Examples:
 ```
 
 **Artifact Storage Strategy:**
+
 - **Manual builds**: Keep for 30 days (testing only)
 - **Release builds**: Keep for 90 days (versioned releases)
 - **GitHub Releases**: Permanent (attached to release)
@@ -165,6 +173,7 @@ Examples:
 **Current Scope:** Unsigned builds for testing
 
 **Future Enhancements:**
+
 - **macOS**: Apple Developer ID signing + notarization
 - **Windows**: Code signing certificate + SmartScreen bypass
 - **Linux**: No signing required (community standard)
@@ -174,6 +183,7 @@ Examples:
 ## Plan
 
 ### Phase 1: Basic Multi-Platform Workflow
+
 - [ ] Create `.github/workflows/desktop-build.yml`
 - [ ] Set up build matrix for macOS, Windows, Linux
 - [ ] Configure Node.js (v20) and pnpm setup
@@ -181,6 +191,7 @@ Examples:
 - [ ] Add platform-specific dependencies (Linux: webkit2gtk, etc.)
 
 ### Phase 2: Build Process Integration
+
 - [ ] Run `pnpm install --frozen-lockfile` in CI
 - [ ] Execute `pnpm build:desktop` command
 - [ ] Handle build failures gracefully
@@ -188,6 +199,7 @@ Examples:
 - [ ] Cache dependencies (pnpm store, Rust cargo)
 
 ### Phase 3: Artifact Upload & Organization
+
 - [ ] Upload build artifacts with `actions/upload-artifact@v4`
 - [ ] Name artifacts by platform and version
 - [ ] Set retention policies (7 days PR, 90 days main)
@@ -195,6 +207,7 @@ Examples:
 - [ ] Create artifact index/manifest file
 
 ### Phase 4: Release Integration & Testing
+
 - [ ] Configure release tag trigger (`v*.*.*` pattern)
 - [ ] Test manual workflow dispatch with version input
 - [ ] Verify artifacts attach to GitHub Releases automatically
@@ -202,6 +215,7 @@ Examples:
 - [ ] Test with actual release creation
 
 ### Phase 5: Documentation & Developer Experience
+
 - [ ] Document how to download artifacts from Actions tab
 - [ ] Add troubleshooting guide for build failures
 - [ ] Create testing checklist for QA on different platforms
@@ -209,6 +223,7 @@ Examples:
 - [ ] Add workflow status badge to README
 
 ### Phase 6: Optimization & Polish
+
 - [ ] Parallelize builds (already done via matrix)
 - [ ] Optimize caching strategy (Rust incremental builds)
 - [ ] Add build time metrics
@@ -218,6 +233,7 @@ Examples:
 ## Test
 
 ### Workflow Validation
+
 - [ ] Workflow YAML syntax is valid (`actionlint` or GitHub's checker)
 - [ ] All required secrets/variables are documented
 - [ ] Workflow triggers correctly on release tags, release publish, manual
@@ -226,6 +242,7 @@ Examples:
 - [ ] Manual dispatch platform filtering works correctly
 
 ### Build Quality Checks
+
 - [ ] macOS `.dmg` mounts and installs correctly
 - [ ] Windows `.msi` installs without admin warnings
 - [ ] Linux `.AppImage` runs on Ubuntu 22.04, Fedora 39
@@ -233,6 +250,7 @@ Examples:
 - [ ] All artifacts launch the desktop app successfully
 
 ### Artifact Verification
+
 - [ ] Artifacts are named correctly (`leanspec-desktop-{version}-{platform}`)
 - [ ] Checksums are generated and match
 - [ ] Artifact sizes are reasonable (<100 MB each)
@@ -240,6 +258,7 @@ Examples:
 - [ ] Retention policies work (30d manual, 90d release)
 
 ### Platform-Specific Tests
+
 - [ ] **macOS**: App runs on Intel Macs (x64)
 - [ ] **macOS**: Gatekeeper warning appears (unsigned, expected)
 - [ ] **Windows**: Installer creates Start Menu shortcuts
@@ -248,6 +267,7 @@ Examples:
 - [ ] **Linux**: DEB package installs dependencies correctly
 
 ### Performance & Reliability
+
 - [ ] Full build completes in <30 minutes (across all platforms)
 - [ ] Builds are deterministic (same commit → same output)
 - [ ] Cache hits improve build time by >50%
@@ -264,19 +284,24 @@ Examples:
 ### Platform-Specific Dependencies
 
 **macOS:**
+
 - Pre-installed: Xcode Command Line Tools, Rust
 - Required: None (GitHub runner has everything)
 
 **Windows:**
+
 - Pre-installed: Visual Studio Build Tools, Rust
 - Required: WiX Toolset (for MSI generation)
+
   ```yaml
   - name: Install WiX
     run: dotnet tool install --global wix
   ```
 
 **Linux (Ubuntu):**
+
 - Required system packages:
+
   ```yaml
   - name: Install dependencies
     run: |
@@ -292,6 +317,7 @@ Examples:
 ### Caching Strategy
 
 **pnpm Dependencies:**
+
 ```yaml
 - uses: actions/setup-node@v4
   with:
@@ -300,6 +326,7 @@ Examples:
 ```
 
 **Rust Toolchain & Cargo:**
+
 ```yaml
 - uses: actions/cache@v4
   with:
@@ -313,22 +340,26 @@ Examples:
 ```
 
 **Expected Cache Improvement:**
+
 - First build: ~20-25 minutes
 - Cached build: ~10-12 minutes (50% faster)
 
 ### Alternative Approaches Considered
 
 **1. Tauri GitHub Action (`tauri-apps/tauri-action`)**
+
 - ✅ Pros: Pre-configured, handles signing, draft releases
 - ❌ Cons: Less control, opaque failures, overkill for MVP
 - **Decision**: Build our own first, migrate later if needed
 
 **2. Cross-Platform Build on Single Runner**
+
 - ✅ Pros: Simpler workflow
 - ❌ Cons: Much slower (serial builds), runner doesn't support cross-compilation
 - **Decision**: Use matrix for parallel builds
 
 **3. Docker-Based Builds**
+
 - ✅ Pros: Consistent environments
 - ❌ Cons: Doesn't work for macOS signing, complex setup
 - **Decision**: Use native runners (GitHub-hosted)
@@ -336,6 +367,7 @@ Examples:
 ### Future Enhancements
 
 **Phase 2 (Post-MVP):**
+
 - [ ] Add code signing for macOS (notarization)
 - [ ] Add code signing for Windows (authenticode)
 - [ ] Auto-generate release notes from git history
@@ -346,6 +378,7 @@ Examples:
 - [ ] Add Flatpak/Snap support (Linux)
 
 **Phase 3 (Advanced):**
+
 - [ ] Build ARM64 binaries for Apple Silicon Macs
 - [ ] Build ARM64 binaries for Raspberry Pi (Linux)
 - [ ] Incremental builds (only changed packages)
@@ -364,16 +397,19 @@ Examples:
 ### Success Metrics
 
 **Immediate (MVP):**
+
 - ✅ Builds succeed on all 3 platforms
 - ✅ Artifacts downloadable from Actions tab
 - ✅ Build time <30 minutes per platform
 
 **Short-Term (1-2 weeks):**
+
 - ✅ Team members test artifacts on their machines
 - ✅ No manual builds required for QA
 - ✅ Contributors can test PRs without local setup
 
 **Long-Term (1-3 months):**
+
 - ✅ Automated releases on version tags
 - ✅ Auto-update system working
 - ✅ Community can easily test pre-release builds

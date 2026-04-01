@@ -5,8 +5,9 @@ This document contains detailed implementation guidance for building the AI chat
 ## npm Distribution Strategy
 
 **Package Structure**:
+
 ```
-@leanspec/chat-server           # Node.js chat server (separate package)
+@harnspec/chat-server           # Node.js chat server (separate package)
 ├── src/
 │   ├── index.ts                # Main server entry
 │   ├── tools/                  # LeanSpec tool definitions
@@ -15,22 +16,24 @@ This document contains detailed implementation guidance for building the AI chat
 │   └── leanspec-chat.js        # CLI entry point
 └── package.json                # Standalone package
 
-@leanspec/http-server           # Rust HTTP server (platform binaries)
+@harnspec/http-server           # Rust HTTP server (platform binaries)
 ├── Adds /api/chat proxy route
 └── No changes to existing distribution
 
-@leanspec/ui                    # UI package
+@harnspec/ui                    # UI package
 ├── optionalDependencies:
-│   └── "@leanspec/chat-server": "workspace:*"
+│   └── "@harnspec/chat-server": "workspace:*"
 └── Uses chat-server only when AI features enabled
 ```
 
 **Publishing Order** (via CI):
-1. Platform binaries for `@leanspec/http-server` (existing)
-2. `@leanspec/chat-server` (new Node.js package)
-3. `@leanspec/ui` (depends on both)
+
+1. Platform binaries for `@harnspec/http-server` (existing)
+2. `@harnspec/chat-server` (new Node.js package)
+3. `@harnspec/ui` (depends on both)
 
 **Why separate package?**
+
 - Optional dependency: Users without AI features don't download Node.js runtime
 - Independent versioning: Update AI SDK without full UI rebuild
 - Smaller bundle: ~5MB vs inlining 50MB+ Node.js dependencies
@@ -39,6 +42,7 @@ This document contains detailed implementation guidance for building the AI chat
 ## CI/CD Pipeline
 
 **Build Matrix** (`.github/workflows/publish.yml`):
+
 ```yaml
 jobs:
   # Step 1: Build Rust binaries (existing, no changes)
@@ -124,6 +128,7 @@ jobs:
 ```
 
 **Testing Strategy**:
+
 ```yaml
 # packages/chat-server/package.json
 {
@@ -213,7 +218,7 @@ impl ChatServerManager {
         let node = which::which("node")?;
         
         // Find chat-server package (in node_modules)
-        let server_path = PathBuf::from("node_modules/@leanspec/chat-server/dist/index.js");
+        let server_path = PathBuf::from("node_modules/@harnspec/chat-server/dist/index.js");
         
         // Start process
         let process = Command::new(node)
@@ -276,7 +281,7 @@ async fn main() {
 # packages/desktop/package.json
 {
   "optionalDependencies": {
-    "@leanspec/chat-server": "workspace:*"
+    "@harnspec/chat-server": "workspace:*"
   }
 }
 ```
@@ -299,6 +304,7 @@ fn main() {
 ## Deployment Scenarios
 
 **Scenario 1: Local Development** (default)
+
 ```
 Developer's Machine:
 ├── pnpm dev:all → 3 processes
@@ -309,6 +315,7 @@ Developer's Machine:
 ```
 
 **Scenario 2: Production Web (Docker)**
+
 ```
 Cloud VM / Container:
 ├── Docker Compose
@@ -319,6 +326,7 @@ Cloud VM / Container:
 ```
 
 **Scenario 3: Desktop App**
+
 ```
 User's Machine:
 ├── Tauri App
@@ -329,6 +337,7 @@ User's Machine:
 ```
 
 **Scenario 4: Self-Hosted (systemd)**
+
 ```
 Linux Server:
 ├── /usr/bin/leanspec-http (systemd service)
@@ -367,7 +376,7 @@ CHAT_SERVER_RESTART_ATTEMPTS=3        # before giving up
 
 ```json
 {
-  "name": "@leanspec/chat-server",
+  "name": "@harnspec/chat-server",
   "version": "0.3.0",
   "description": "AI chatbot server for LeanSpec",
   "main": "dist/index.js",
@@ -468,6 +477,7 @@ describe('Chat API Streaming', () => {
 ## Security Considerations
 
 ### API Key Storage
+
 ```typescript
 // Node.js sidecar reads API keys from env
 const apiKey = process.env.OPENAI_API_KEY;
@@ -479,6 +489,7 @@ if (!apiKey) throw new Error('Missing OPENAI_API_KEY');
 ```
 
 ### Rate Limiting
+
 ```rust
 // Rust HTTP server implements rate limiting
 use tower::limit::RateLimitLayer;
@@ -494,6 +505,7 @@ Router::new()
 ```
 
 ### Network Isolation
+
 ```yaml
 # Docker: Use Unix socket via shared volume (most secure)
 version: '3.8'
@@ -526,17 +538,20 @@ networks:
 ## Performance Considerations
 
 **Expected Latency**:
+
 - IPC overhead (Unix socket): ~0.7ms
 - IPC overhead (HTTP): ~1-2ms
 - AI API call: 200-500ms
 - **Total**: 200.7-502ms (overhead <1%)
 
 **Caching Strategy**:
+
 - Tool results: 30s TTL
 - Spec metadata: 1min TTL
 - Project stats: 5min TTL
 
 **Model Selection for Performance**:
+
 - GPT-4o: Fastest, $2.50/$10 per 1M tokens
 - Claude Sonnet 4.5: Best reasoning, $3/$15 per 1M tokens
 - Deepseek R1: Most cost-effective, $0.55/$2.19 per 1M tokens

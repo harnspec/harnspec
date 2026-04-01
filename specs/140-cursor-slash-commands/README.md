@@ -49,7 +49,7 @@ Add LeanSpec integration directly into Cursor IDE via slash commands, enabling d
 **Option C: MCP Integration** (Recommended)
 
 - Cursor supports MCP servers natively
-- LeanSpec already has MCP server (`@leanspec/mcp`)
+- LeanSpec already has MCP server (`@harnspec/mcp`)
 - Users just need to configure MCP in Cursor settings
 
 **Proposed Commands:**

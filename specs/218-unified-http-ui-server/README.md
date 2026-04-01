@@ -18,7 +18,7 @@ updated_at: 2026-02-01T15:40:20.363790Z
 
 ## Overview
 
-**Problem**: Currently, `@leanspec/ui` runs two separate services:
+**Problem**: Currently, `@harnspec/ui` runs two separate services:
 
 1. **Rust HTTP Server** (leanspec-http) - API backend on port 3333
 2. **Node.js Static Server** - UI frontend on port 3000
@@ -58,7 +58,7 @@ This creates unnecessary complexity:
 **Before**:
 
 ```
-User runs: npx @leanspec/ui
+User runs: npx @harnspec/ui
   ↓
   ├─> Node.js process (port 3000)
   │    └─> Serves dist/ files
@@ -73,13 +73,13 @@ Browser: http://localhost:3000
 **After**:
 
 ```
-User runs: npx @leanspec/ui (or just leanspec-http)
+User runs: npx @harnspec/ui (or just leanspec-http)
   ↓
   Rust HTTP process (port 3000)
   ├─> Serves /api/* routes (existing handlers)
   ├─> Serves /* static files (new: tower-http::ServeDir)
-  │    └─> Embeds UI dist/ from @leanspec/ui
-  └─> Spawns @leanspec/ai-worker (IPC for AI chat, see spec 237)
+  │    └─> Embeds UI dist/ from @harnspec/ui
+  └─> Spawns @harnspec/ai-worker (IPC for AI chat, see spec 237)
 
 Browser: http://localhost:3000
          └─> Same-origin API requests (no CORS needed)
@@ -137,7 +137,7 @@ pub fn create_router(state: AppState) -> Router {
 }
 
 fn get_ui_dist_path() -> String {
-    // Priority 1: Environment variable (set by @leanspec/ui launcher)
+    // Priority 1: Environment variable (set by @harnspec/ui launcher)
     if let Ok(ui_dist) = std::env::var("LEANSPEC_UI_DIST") {
         return ui_dist;
     }
@@ -149,18 +149,18 @@ fn get_ui_dist_path() -> String {
     // Priority 3: Production fallback (shouldn't happen with launcher)
     #[cfg(not(debug_assertions))]
     {
-        // Try to find @leanspec/ui package in node_modules
-        // This allows standalone @leanspec/http-server usage
+        // Try to find @harnspec/ui package in node_modules
+        // This allows standalone @harnspec/http-server usage
         let exe_dir = std::env::current_exe()
             .ok()
             .and_then(|p| p.parent().map(|p| p.to_path_buf()))
             .expect("Failed to get executable directory");
         
-        // Look for @leanspec/ui/dist relative to binary
+        // Look for @harnspec/ui/dist relative to binary
         let ui_pkg_path = exe_dir
             .parent()
             .and_then(|p| p.parent())
-            .map(|p| p.join("@leanspec/ui/dist"));
+            .map(|p| p.join("@harnspec/ui/dist"));
             
         if let Some(path) = ui_pkg_path {
             if path.exists() {
@@ -190,25 +190,25 @@ Router::new()
 
 ### Package Structure
 
-**User-Facing Package**: `@leanspec/ui` (unchanged for users)
+**User-Facing Package**: `@harnspec/ui` (unchanged for users)
 
 - Contains Vite build (`dist/`)
 - Contains launcher (`bin/leanspec-ui.js`)
-- Depends on `@leanspec/http-server` and `@leanspec/ai-worker`
-- Users install: `npx @leanspec/ui`
+- Depends on `@harnspec/http-server` and `@harnspec/ai-worker`
+- Users install: `npx @harnspec/ui`
 
-**Backend Package**: `@leanspec/http-server`
+**Backend Package**: `@harnspec/http-server`
 
 - Contains Rust binary
-- Discovers UI files from `@leanspec/ui/dist`
-- Spawns `@leanspec/ai-worker` for AI chat (see spec 237)
+- Discovers UI files from `@harnspec/ui/dist`
+- Spawns `@harnspec/ai-worker` for AI chat (see spec 237)
 - Can be used standalone for API-only scenarios
 
-**AI Worker Package**: `@leanspec/ai-worker` (new in spec 237)
+**AI Worker Package**: `@harnspec/ai-worker` (new in spec 237)
 
 - IPC-based worker for AI SDK streaming
 - Spawned by Rust HTTP server via stdin/stdout
-- Replaces standalone `@leanspec/chat-server`
+- Replaces standalone `@harnspec/chat-server`
 
 ### UI Package Changes
 
@@ -216,7 +216,7 @@ Router::new()
 
 ```json
 {
-  "name": "@leanspec/ui",
+  "name": "@harnspec/ui",
   "bin": {
     "leanspec-ui": "./bin/leanspec-ui.js"
   },
@@ -226,7 +226,7 @@ Router::new()
     "README.md"
   ],
   "dependencies": {
-    "@leanspec/http-server": "workspace:*"
+    "@harnspec/http-server": "workspace:*"
     // Remove: Node.js HTTP server code
   }
 }
@@ -248,7 +248,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Resolve paths
 const uiDistPath = join(__dirname, '..', 'dist');
-const httpServerPath = require.resolve('@leanspec/http-server/bin/leanspec-http.js');
+const httpServerPath = require.resolve('@harnspec/http-server/bin/leanspec-http.js');
 
 console.log('🚀 Starting LeanSpec...');
 
@@ -305,7 +305,7 @@ build:
 **2. Package Structure**
 
 ```
-@leanspec/ui/
+@harnspec/ui/
 ├── bin/
 │   └── leanspec-ui.js (launcher)
 ├── dist/              (Vite build)
@@ -315,7 +315,7 @@ build:
 ├── package.json
 └── README.md
 
-@leanspec/http-server/
+@harnspec/http-server/
 ├── bin/
 │   └── leanspec-http  (Rust binary)
 └── package.json
@@ -323,15 +323,15 @@ build:
 
 **Flow**:
 
-1. User runs: `npx @leanspec/ui`
-2. Launcher starts: `@leanspec/http-server` with `LEANSPEC_UI_DIST` env var
-3. Rust server discovers UI files from `@leanspec/ui/dist`
+1. User runs: `npx @harnspec/ui`
+2. Launcher starts: `@harnspec/http-server` with `LEANSPEC_UI_DIST` env var
+3. Rust server discovers UI files from `@harnspec/ui/dist`
 4. Both UI and API served on port 3000
 
 **3. npm Distribution**
 
 ```
-@leanspec/http-server/
+@harnspec/http-server/
 ├── bin/
 │   ├── leanspec-http (binary)
 │   └── ui-dist/       (UI files)
@@ -361,8 +361,8 @@ build:
 
 **Runtime Dependencies**:
 
-- **Rust binary**: Included in `@leanspec/http-server` package (no separate install)
-- **Node.js**: Required for AI chat features (via `@leanspec/ai-worker`)
+- **Rust binary**: Included in `@harnspec/http-server` package (no separate install)
+- **Node.js**: Required for AI chat features (via `@harnspec/ai-worker`)
   - **Hard Minimum**: v20.0.0 (works with EOL warning)
   - **Recommended**: v22.0.0+ (Jod LTS, supported until April 2027)
   - **Best**: v24.0.0+ (Krypton LTS, supported until April 2028)
@@ -384,56 +384,56 @@ The unified server supports comprehensive CLI arguments, making it flexible for 
 **Network Configuration:**
 
 ```bash
-npx @leanspec/ui --port 3001              # Custom port
-npx @leanspec/ui --host 0.0.0.0           # Bind to all interfaces (for Docker/remote access)
-npx @leanspec/ui -H 0.0.0.0 -p 8080       # Short flags
+npx @harnspec/ui --port 3001              # Custom port
+npx @harnspec/ui --host 0.0.0.0           # Bind to all interfaces (for Docker/remote access)
+npx @harnspec/ui -H 0.0.0.0 -p 8080       # Short flags
 ```
 
 **Project Management:**
 
 ```bash
 # Auto-add project and set as current (if not already in registry)
-npx @leanspec/ui --project /path/to/specs  
-npx @leanspec/ui -P ~/my-project           # Short flag
+npx @harnspec/ui --project /path/to/specs  
+npx @harnspec/ui -P ~/my-project           # Short flag
 ```
 
 **Configuration:**
 
 ```bash
-npx @leanspec/ui --config ~/custom-config.json  # Custom config file location
-npx @leanspec/ui --no-config                    # Skip loading config file (use defaults)
+npx @harnspec/ui --config ~/custom-config.json  # Custom config file location
+npx @harnspec/ui --no-config                    # Skip loading config file (use defaults)
 ```
 
 **Development & Debugging:**
 
 ```bash
-npx @leanspec/ui --verbose                # Enable verbose logging (debug level)
-npx @leanspec/ui -v                       # Short flag
-npx @leanspec/ui --log-level trace        # More granular: trace, debug, info, warn, error
+npx @harnspec/ui --verbose                # Enable verbose logging (debug level)
+npx @harnspec/ui -v                       # Short flag
+npx @harnspec/ui --log-level trace        # More granular: trace, debug, info, warn, error
 ```
 
 **Browser Control:**
 
 ```bash
-npx @leanspec/ui --open                   # Auto-open browser (default)
-npx @leanspec/ui --no-open                # Don't open browser
-npx @leanspec/ui --browser firefox        # Specify browser to use
+npx @harnspec/ui --open                   # Auto-open browser (default)
+npx @harnspec/ui --no-open                # Don't open browser
+npx @harnspec/ui --browser firefox        # Specify browser to use
 ```
 
 **Security & Access:**
 
 ```bash
-npx @leanspec/ui --readonly               # Read-only mode (no modifications allowed)
-npx @leanspec/ui --cors-origins "https://example.com"  # Specify CORS origins
-npx @leanspec/ui --no-cors                # Disable CORS entirely (same-origin only)
+npx @harnspec/ui --readonly               # Read-only mode (no modifications allowed)
+npx @harnspec/ui --cors-origins "https://example.com"  # Specify CORS origins
+npx @harnspec/ui --no-cors                # Disable CORS entirely (same-origin only)
 ```
 
 **UI Customization:**
 
 ```bash
-npx @leanspec/ui --ui-dist /custom/path   # Override UI files location (for testing)
-npx @leanspec/ui --theme dark             # Force theme: light, dark, auto
-npx @leanspec/ui --locale zh-CN           # Force locale
+npx @harnspec/ui --ui-dist /custom/path   # Override UI files location (for testing)
+npx @harnspec/ui --theme dark             # Force theme: light, dark, auto
+npx @harnspec/ui --locale zh-CN           # Force locale
 ```
 
 **Updated Rust Args struct:**
@@ -485,7 +485,7 @@ struct Args {
     #[arg(long)]
     readonly: bool,
 
-    /// UI dist directory (default: auto-detected from @leanspec/ui)
+    /// UI dist directory (default: auto-detected from @harnspec/ui)
     #[arg(long, env = "LEANSPEC_UI_DIST")]
     ui_dist: Option<PathBuf>,
 
@@ -565,7 +565,7 @@ Update `~/.harnspec/config.json` structure for unified server:
 
 **User Impact**:
 
-- Users running `npx @leanspec/ui`: Works exactly the same (port 3000)
+- Users running `npx @harnspec/ui`: Works exactly the same (port 3000)
 - Users with bookmarks to `:3000`: No change needed
 - Users accessing API directly on `:3333`: Need to update to `:3000/api`
 - Custom integrations: May need to update API base URL
@@ -588,11 +588,11 @@ Update `~/.harnspec/config.json` structure for unified server:
 - [x] Implement comprehensive CLI arguments (port, host, project, config, etc.)
 - [x] Add browser auto-open functionality
 - [x] Implement read-only mode support
-- [x] Verify `@leanspec/ui` includes `dist/` in published files
-- [x] Verify `@leanspec/http-server` includes Rust binary
+- [x] Verify `@harnspec/ui` includes `dist/` in published files
+- [x] Verify `@harnspec/http-server` includes Rust binary
 - [ ] Test: `npm pack` both packages and inspect tarballs
 - [ ] Test: Install from tarballs and verify UI discovery works
-- [x] Test: `npx @leanspec/ui` starts successfully
+- [x] Test: `npx @harnspec/ui` starts successfully
 - [x] Ensure API routes take precedence
 
 ### Phase 2: Build Pipeline Integration (Day 2-3)
@@ -611,7 +611,7 @@ Update `~/.harnspec/config.json` structure for unified server:
 
 ### Phase 4: UI Package Updates (Day 4-5)
 
-- [x] Update `@leanspec/ui` launcher to pass through all CLI args to Rust server
+- [x] Update `@harnspec/ui` launcher to pass through all CLI args to Rust server
 - [x] Update API client to use relative URLs (`/api`)
 - [x] Remove port 3333 references
 - [x] Update UI environment detection
@@ -680,15 +680,15 @@ Update `~/.harnspec/config.json` structure for unified server:
 
 ### E2E Tests
 
-- [ ] Install from npm: `npm install @leanspec/ui`
-- [x] Run: `npx @leanspec/ui`
+- [ ] Install from npm: `npm install @harnspec/ui`
+- [x] Run: `npx @harnspec/ui`
 - [x] Verify browser auto-opens to `http://localhost:3000`
 - [x] UI loads and displays correctly
 - [x] API calls work (list projects, etc.)
 - [x] Navigation works (click links, browser back/forward)
 - [x] Ctrl+C shuts down cleanly
-- [ ] Test with custom args: `npx @leanspec/ui --port 3001 --no-open`
-- [ ] Test read-only mode: `npx @leanspec/ui --readonly`
+- [ ] Test with custom args: `npx @harnspec/ui --port 3001 --no-open`
+- [ ] Test read-only mode: `npx @harnspec/ui --readonly`
 - [ ] Test Docker deployment: `docker run -p 8080:8080 leanspec --host 0.0.0.0 --port 8080`
 
 ### Performance Tests
@@ -735,21 +735,21 @@ Update `~/.harnspec/config.json` structure for unified server:
 - Works well with npm distribution
 
 node_modules/
-├── @leanspec/ui/
+├── @harnspec/ui/
 │   ├── bin/leanspec-ui.js    (entry point)
 │   └── dist/                 (UI files discovered by Rust)
 │       ├── index.html
 │       └── assets/
-└── @leanspec/http-server/
+└── @harnspec/http-server/
     └── bin/leanspec-http     (Rust binary)
 
 ```
 
 **Why This Approach?**
-- Users install the package they expect: `@leanspec/ui`
+- Users install the package they expect: `@harnspec/ui`
 - Packages stay independent (can update UI without rebuilding Rust)
 - Smaller binaries (no embedded UI)
-- Flexible: Can use `@leanspec/http-server` standalone for API-only     ├── index.html
+- Flexible: Can use `@harnspec/http-server` standalone for API-only     ├── index.html
         └── assets/
 ```
 
@@ -826,7 +826,7 @@ Both use Rust for backend, UI is a static asset.
 
 ### Migration from Spec 103
 
-[Spec 103](../103-ui-standalone-consolidation/) consolidated Next.js into `@leanspec/ui`. This spec goes further by eliminating the Node.js server entirely.
+[Spec 103](../103-ui-standalone-consolidation/) consolidated Next.js into `@harnspec/ui`. This spec goes further by eliminating the Node.js server entirely.
 
 **Evolution**:
 

@@ -51,14 +51,14 @@ depends_on:
 
 **Phase 2: Published runner (`runPublishedUI`)**
 
-- Outside the monorepo we construct the proper command (`pnpm dlx --prefer-offline @leanspec/ui ...`, `yarn dlx ...`, or `npx --yes ...`) and stream stdio straight through so the packaged UI owns the console experience.
+- Outside the monorepo we construct the proper command (`pnpm dlx --prefer-offline @harnspec/ui ...`, `yarn dlx ...`, or `npx --yes ...`) and stream stdio straight through so the packaged UI owns the console experience.
 - Dry runs show the exact delegation command for both monorepo and external cases, enabling smoke tests without starting servers.
 
-**@leanspec/ui package (packages/ui/)**
+**@harnspec/ui package (packages/ui/)**
 
 - Next.js config now emits `output: 'standalone'`, producing `/.next/standalone/packages/web/server.js` plus the necessary node_modules snapshot.
 - `scripts/prepare-dist.mjs`
-  - Ensures a fresh web build exists (running `pnpm --filter @leanspec/web build` on demand).
+  - Ensures a fresh web build exists (running `pnpm --filter @harnspec/web build` on demand).
   - Copies `.next/standalone`, `.next/static`, `public/`, and `BUILD_ID` into `packages/ui/dist/`, handling the nested `packages/web` path automatically.
 - `bin/ui.js`
   - Resolves specs via flag/config/heuristics, validates ports, and exposes `--port`, `--specs`, `--no-open`, and `--dry-run` flags.
@@ -66,22 +66,22 @@ depends_on:
 
 **Release automation**
 
-- `.github/workflows/publish-ui.yml` installs dependencies, runs `pnpm --filter @leanspec/ui build`, and publishes the package with provenance whenever a `ui-v*` tag is pushed or the workflow is dispatched.
+- `.github/workflows/publish-ui.yml` installs dependencies, runs `pnpm --filter @harnspec/ui build`, and publishes the package with provenance whenever a `ui-v*` tag is pushed or the workflow is dispatched.
   
 **Phase 2: Standalone UI Package (packages/ui/)**
 
-Create new package `@leanspec/ui`:
+Create new package `@harnspec/ui`:
 
 ```json
 {
-  "name": "@leanspec/ui",
+  "name": "@harnspec/ui",
   "version": "0.3.0",
   "description": "Web UI for LeanSpec - visual spec management",
   "bin": {
     "leanspec-ui": "./bin/ui.js"
   },
   "dependencies": {
-    "@leanspec/core": "workspace:*",
+    "@harnspec/core": "workspace:*",
     "next": "16.0.1",
     "react": "19.2.0",
     "react-dom": "19.2.0"
@@ -140,17 +140,17 @@ process.on('SIGINT', () => {
 
 ### Package Publishing Strategy
 
-**Option 1: Separate @leanspec/ui package** (Recommended)
+**Option 1: Separate @harnspec/ui package** (Recommended)
 
 - **Pros**: Clean separation, can be used standalone, smaller CLI package
 - **Cons**: One more package to maintain
 - **Use case**: External projects using `npx harnspec ui`
 
-**Option 2: Bundle in @leanspec/web**
+**Option 2: Bundle in @harnspec/web**
 
 - **Pros**: Reuse existing package
 - **Cons**: Web package is currently private, larger dependency
-- **Use case**: Make `@leanspec/web` public with CLI wrapper
+- **Use case**: Make `@harnspec/web` public with CLI wrapper
 
 **Option 3: Bundle in harnspec CLI**
 
@@ -158,12 +158,12 @@ process.on('SIGINT', () => {
 - **Cons**: CLI becomes massive (Next.js + React = ~50MB)
 - **Use case**: All-in-one installation
 
-**Recommendation: Option 1** - Create `@leanspec/ui` as a thin wrapper around `@leanspec/web` that:
+**Recommendation: Option 1** - Create `@harnspec/ui` as a thin wrapper around `@harnspec/web` that:
 
-- Shares code with `@leanspec/web` (monorepo symlinks)
+- Shares code with `@harnspec/web` (monorepo symlinks)
 - Has its own bin/ui.js entry point
 - Can be published separately
-- CLI delegates to it via `npx @leanspec/ui`
+- CLI delegates to it via `npx @harnspec/ui`
 
 ### Auto-Detection Logic
 
@@ -232,7 +232,7 @@ PORT=3000
 
 **Day 3: External Package Delegation** - ✅ **COMPLETE**
 
-- [x] Implement `runPublishedUI()` that spawns pnpm/yarn/npm runners for `@leanspec/ui`
+- [x] Implement `runPublishedUI()` that spawns pnpm/yarn/npm runners for `@harnspec/ui`
 - [x] Add specs directory auto-detection (config + heuristics)
 - [x] Add error handling for missing specs / missing build artifacts
 - [x] Add graceful shutdown (SIGINT handling)
@@ -270,13 +270,13 @@ PORT=3000
 
 - [x] Update CLI help text with `ui` command + specs override example
 - [x] Add examples to main README (Quick Start step 4)
-- [x] Create @leanspec/ui README with usage + env docs
+- [x] Create @harnspec/ui README with usage + env docs
 - [x] Document environment variables in the package README
 - [x] Add troubleshooting guide for the published package
 
 **Day 11-12: Publishing Preparation**
 
-- [x] Version bump coordination (`@leanspec/ui@0.3.0`)
+- [x] Version bump coordination (`@harnspec/ui@0.3.0`)
 - [x] Update CHANGELOG.md
 - [ ] Test npm publish dry-run (handled during release freeze)
 - [x] Verify package.json metadata + files list
@@ -284,7 +284,7 @@ PORT=3000
 
 **Day 13: Release**
 
-- [ ] Publish `@leanspec/ui` to npm (next release tag `ui-v0.3.0`)
+- [ ] Publish `@harnspec/ui` to npm (next release tag `ui-v0.3.0`)
 - [ ] Publish updated `harnspec` CLI to npm (bundled with release cadence)
 - [ ] Create GitHub release with notes
 - [ ] Announce feature in docs/social once npm publish is live
@@ -308,7 +308,7 @@ PORT=3000
 
 **Standalone UI Package:**
 
-- [ ] `npx @leanspec/ui` launches web UI (will verify after first publish)
+- [ ] `npx @harnspec/ui` launches web UI (will verify after first publish)
 - [x] Dry-run confirms env vars (SPECS_MODE/SPECS_DIR) and command construction
 - [x] Works with custom `--specs` directory via CLI flag
 - [x] Browser auto-open + graceful shutdown logic implemented
@@ -351,10 +351,10 @@ PORT=3000
 
 ### Design Decisions
 
-**Why separate @leanspec/ui package?**
+**Why separate @harnspec/ui package?**
 
 - **Clean separation**: CLI stays lightweight, UI is separate concern
-- **Standalone use**: Users can run `npx @leanspec/ui` directly
+- **Standalone use**: Users can run `npx @harnspec/ui` directly
 - **Smaller CLI**: Don't bloat CLI with Next.js/React dependencies
 - **Easier maintenance**: UI can version independently
 
@@ -383,7 +383,7 @@ PORT=3000
 | Package | Compressed | Unpacked | Dependencies |
 |---------|-----------|----------|--------------|
 | `harnspec` CLI | ~500KB | ~2MB | 20 packages |
-| `@leanspec/ui` | ~5MB | ~25MB | Next.js, React, UI libs |
+| `@harnspec/ui` | ~5MB | ~25MB | Next.js, React, UI libs |
 | **Combined** | ~5.5MB | ~27MB | Separate installs |
 
 **If bundled in CLI**: ~50MB unpacked (not acceptable)

@@ -21,9 +21,10 @@ transitions:
 
 ## Overview
 
-**Problem**: @leanspec/ui-vite has only **30% i18n implementation** despite having complete translation files. While @leanspec/ui (Next.js) has 29 components using i18n (58% coverage), ui-vite has only 9 components (24% coverage). This creates a poor user experience for Chinese users and blocks feature parity.
+**Problem**: @harnspec/ui-vite has only **30% i18n implementation** despite having complete translation files. While @harnspec/ui (Next.js) has 29 components using i18n (58% coverage), ui-vite has only 9 components (24% coverage). This creates a poor user experience for Chinese users and blocks feature parity.
 
 **Current State**:
+
 - ✅ Translation files synced (1,010 lines, 6 files total)
 - ✅ Language switcher working
 - ✅ Core navigation translated
@@ -34,25 +35,28 @@ transitions:
 - ❌ Form labels, errors, toasts all hardcoded in English
 
 **Impact**:
+
 - Chinese users see mostly English UI despite choosing Chinese
-- Feature parity gap with @leanspec/ui blocks migration
+- Feature parity gap with @harnspec/ui blocks migration
 - Poor impression for primary target market
 - Inconsistent multilingual experience
 
 **Scope**:
+
 1. Install missing i18n dependencies
-2. Migrate translation logic from @leanspec/ui to ui-vite components
+2. Migrate translation logic from @harnspec/ui to ui-vite components
 3. Achieve 100% component translation coverage
 4. Add comprehensive test suite
 5. Sync missing translation keys between packages
 
 **Out of Scope**:
+
 - Creating new translations (reuse existing)
 - Translating user-generated content
 - Adding languages beyond en/zh-CN
 - Backend/API translations (CLI/MCP handled separately in spec 157)
 
-**Success Criteria**: @leanspec/ui-vite achieves translation parity with @leanspec/ui
+**Success Criteria**: @harnspec/ui-vite achieves translation parity with @harnspec/ui
 
 ## Design
 
@@ -60,7 +64,7 @@ Design captures the gap analysis and phased migration approach to reach i18n par
 
 ### Gap Analysis Summary
 
-| Feature                   | @leanspec/ui          | @leanspec/ui-vite     | Gap                |
+| Feature                   | @harnspec/ui          | @harnspec/ui-vite     | Gap                |
 | ------------------------- | --------------------- | --------------------- | ------------------ |
 | **i18n Library**          | i18next + detector    | i18next only          | ⚠️ Missing detector |
 | **Translation Files**     | 1,008 lines (6 files) | 1,010 lines (6 files) | ✅ Identical        |
@@ -76,12 +80,14 @@ Design captures the gap analysis and phased migration approach to reach i18n par
 #### Phase 1: Dependencies & Configuration
 
 **Install Missing Packages**:
+
 ```bash
 cd packages/ui-vite
 pnpm add i18next-browser-languagedetector
 ```
 
 **Upgrade i18n Configuration** (`src/lib/i18n.ts`):
+
 ```typescript
 import LanguageDetector from 'i18next-browser-languagedetector';
 
@@ -106,40 +112,47 @@ i18n
 
 #### Phase 2: Component Migration Strategy
 
-**Pattern**: Copy translation hooks from @leanspec/ui components
+**Pattern**: Copy translation hooks from @harnspec/ui components
 
 **Priority 1: Badges & Status Indicators** (High Visibility)
+
 - `StatusBadge.tsx` ← from `status-badge.tsx`
 - `PriorityBadge.tsx` ← from `priority-badge.tsx`
 
 **Before**:
+
 ```tsx
 <Badge>{priority}</Badge>
 ```
 
 **After**:
+
 ```tsx
 const { t } = useTranslation('common');
 <Badge>{t(`priority.${priority}`)}</Badge>
 ```
 
 **Priority 2: Navigation & Filters** (High Usage)
+
 - `SpecsNavSidebar.tsx` ← from `specs-nav-sidebar.tsx`
 - `SpecsFilters.tsx` (enhance existing)
 - `QuickSearch.tsx` (enhance existing)
 
 **Priority 3: Views & Pages** (Core Functionality)
+
 - `BoardView.tsx` ← from `specs-client.tsx` (board logic)
 - `ListView.tsx` ← from `specs-client.tsx` (list logic)
 - Dashboard components (if implemented)
 
 **Priority 4: Editors & Forms** (User Input)
+
 - `EditableMetadata.tsx` ← from `editable-spec-metadata.tsx`
 - `metadata-editors/PriorityEditor.tsx` ← from `priority-editor.tsx`
 - `metadata-editors/TagsEditor.tsx` ← from `tags-editor.tsx`
 - `projects/CreateProjectDialog.tsx` ← from `create-project-dialog.tsx`
 
 **Priority 5: Context & Analytics** (Advanced Features)
+
 - `context/ContextClient.tsx` ← from `context-client.tsx`
 - `context/ContextFileDetail.tsx` ← from `context-file-detail.tsx`
 - `dashboard/StatCard.tsx` (if exists)
@@ -147,6 +160,7 @@ const { t } = useTranslation('common');
 #### Phase 3: Missing Components
 
 **Components in ui-vite WITHOUT translation** (28 total):
+
 ```
 1. StatusBadge.tsx
 2. PriorityBadge.tsx
@@ -170,7 +184,7 @@ const { t } = useTranslation('common');
 
 #### Phase 4: Testing Strategy
 
-Create `packages/ui-vite/src/lib/i18n.test.ts` based on @leanspec/ui:
+Create `packages/ui-vite/src/lib/i18n.test.ts` based on @harnspec/ui:
 
 ```typescript
 import { describe, it, expect } from 'vitest';
@@ -230,7 +244,8 @@ describe('i18n configuration', () => {
 
 #### Phase 5: Translation Key Sync
 
-**Add missing keys to @leanspec/ui**:
+**Add missing keys to @harnspec/ui**:
+
 ```json
 // packages/ui/src/locales/en/common.json
 {
@@ -253,7 +268,7 @@ describe('i18n configuration', () => {
 
 ### Migration Reference Map
 
-| ui-vite Component         | Source in @leanspec/ui       | Translation Keys    |
+| ui-vite Component         | Source in @harnspec/ui       | Translation Keys    |
 | ------------------------- | ---------------------------- | ------------------- |
 | `StatusBadge.tsx`         | `status-badge.tsx`           | `status.*`          |
 | `PriorityBadge.tsx`       | `priority-badge.tsx`         | `priority.*`        |
@@ -270,10 +285,11 @@ Plan tracks weekly execution and remaining gaps for localization completion.
 ### Timeline: 3 Weeks (15 Hours Total)
 
 #### Week 1: Infrastructure & High Priority (5 hours)
+
 - [x] Install `i18next-browser-languagedetector`
 - [x] Upgrade `src/lib/i18n.ts` configuration
 - [x] Add namespace support (`common`, `errors`, `help`)
-- [x] Sync missing translation keys to @leanspec/ui
+- [x] Sync missing translation keys to @harnspec/ui
 - [x] Migrate StatusBadge.tsx
 - [x] Migrate PriorityBadge.tsx
 - [x] Create test file with 8 tests
@@ -282,6 +298,7 @@ Plan tracks weekly execution and remaining gaps for localization completion.
 **Deliverable**: Core infrastructure + badges working
 
 #### Week 2: Views & Navigation (6 hours)
+
 - [x] Migrate SpecsNavSidebar.tsx (filters, search)
 - [x] Migrate BoardView.tsx (status columns, drag-drop)
 - [x] Migrate ListView.tsx (sort, metadata)
@@ -292,6 +309,7 @@ Plan tracks weekly execution and remaining gaps for localization completion.
 **Deliverable**: Main spec browsing fully translated
 
 #### Week 3: Editors, Forms & Polish (4 hours)
+
 - [x] Migrate metadata editors (Status, Priority, Tags)
 - [x] Migrate CreateProjectDialog.tsx
 - [x] Migrate DirectoryPicker.tsx
@@ -307,17 +325,18 @@ Plan tracks weekly execution and remaining gaps for localization completion.
 
 - Added `i18next-browser-languagedetector` and expanded `src/lib/i18n.ts` to load `common`, `errors`, and `help` namespaces with browser + localStorage detection.
 - Localized core UI components (badges, navigation, board/list views, quick search, filters, metadata editors, create project, directory picker, context pages, dashboard) using shared translation keys.
-- Synced new/common keys across @leanspec/ui-vite and @leanspec/ui (actions, directory picker, dashboard block, metadata source/link, specs filter summary, navigation settings).
-- Localized SpecsLayout mobile header/button, ThemeToggle aria label, and MermaidDiagram loading/error states with new mermaid error keys synced to @leanspec/ui and @leanspec/ui-vite.
-- Added `packages/ui-vite/src/lib/i18n.test.ts` mirroring @leanspec/ui coverage; suite now passes. Existing API tests still fail due to mock `response.text` not being a function (pre-existing).
+- Synced new/common keys across @harnspec/ui-vite and @harnspec/ui (actions, directory picker, dashboard block, metadata source/link, specs filter summary, navigation settings).
+- Localized SpecsLayout mobile header/button, ThemeToggle aria label, and MermaidDiagram loading/error states with new mermaid error keys synced to @harnspec/ui and @harnspec/ui-vite.
+- Added `packages/ui-vite/src/lib/i18n.test.ts` mirroring @harnspec/ui coverage; suite now passes. Existing API tests still fail due to mock `response.text` not being a function (pre-existing).
 - Localized remaining surface strings in ui-vite (keyboard shortcuts overlay, table of contents, sub-spec tabs, back-to-top control, color picker, error boundary) and aligned context viewer fallbacks (errors + default file type) with translated keys.
-- Added shared translation keys (keyboard shortcuts, table of contents, color picker, context errors/default file type, back-to-top action) to both @leanspec/ui-vite and @leanspec/ui for parity.
-- Localized dashboard, specs, dependencies, stats, context, and projects pages plus their empty/error states; added matching translation keys to both @leanspec/ui-vite and @leanspec/ui for parity.
+- Added shared translation keys (keyboard shortcuts, table of contents, color picker, context errors/default file type, back-to-top action) to both @harnspec/ui-vite and @harnspec/ui for parity.
+- Localized dashboard, specs, dependencies, stats, context, and projects pages plus their empty/error states; added matching translation keys to both @harnspec/ui-vite and @harnspec/ui for parity.
 - Outstanding localization gaps: toast notifications still need localization; API tests remain red due to mock `response.text` shape; manual QA outstanding.
 
 ### Validation Checklist
 
 **Component Coverage** (100% required):
+
 - [x] All 37 components using `useTranslation()`
 - [x] No hardcoded English strings in JSX
 - [x] All buttons, labels, placeholders translated
@@ -326,12 +345,14 @@ Plan tracks weekly execution and remaining gaps for localization completion.
 - [x] All empty states translated
 
 **Configuration**:
+
 - [x] Browser language detection working
 - [x] localStorage persistence working
 - [ ] Language switcher toggles correctly
 - [x] All 3 namespaces loaded
 
 **Testing**:
+
 - [x] 8 i18n tests passing
 - [ ] No regression in existing tests
 - [ ] Manual Chinese mode walkthrough complete
@@ -343,12 +364,14 @@ Test section summarizes automated i18n coverage and pending manual/QA items.
 ### Automated Tests (packages/ui-vite/src/lib/i18n.test.ts)
 
 **Configuration Tests**:
+
 - [x] i18n has English and Chinese resources
 - [x] i18n has common, errors, help namespaces
 - [x] Browser language detector is registered
 - [x] localStorage persistence is configured
 
 **Translation Tests**:
+
 - [x] navigation.home translates to "首页"
 - [ ] spec.spec translates to "规范"
 - [x] status.planned translates to "已计划"
@@ -397,11 +420,11 @@ Notes capture risks, dependencies, and related specs affecting this migration.
 
 ### Dependencies
 
-- **Depends on**: 
+- **Depends on**:
   - [Spec 091](../091-chinese-localization-strategy/) - i18n infrastructure (complete)
   - [Spec 187](../187-vite-spa-migration/) - ui-vite exists (complete)
-- **Blocks**: 
+- **Blocks**:
   - [Spec 190](../190-ui-vite-parity-rust-backend/) - Full feature parity
   - [Spec 193](../193-frontend-ui-parity/) - UI component parity
 - **Related**:
-  - [Spec 157](../157-complete-ui-cli-translation/) - @leanspec/ui translation (in-progress)
+  - [Spec 157](../157-complete-ui-cli-translation/) - @harnspec/ui translation (in-progress)

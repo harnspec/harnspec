@@ -46,7 +46,7 @@ This spec addresses comprehensive improvements to the documentation site based o
 
 **Missing Content:**
 
-- `harnspec ui` / `@leanspec/ui` package not documented (needs separate spec)
+- `harnspec ui` / `@harnspec/ui` package not documented (needs separate spec)
 
 ### Goals
 
@@ -129,7 +129,7 @@ This spec addresses comprehensive improvements to the documentation site based o
 
 **Out of Scope for This Spec:**
 
-- `harnspec ui` / `@leanspec/ui` documentation (track in separate spec)
+- `harnspec ui` / `@harnspec/ui` documentation (track in separate spec)
 
 ### Technical Approach
 
@@ -369,5 +369,5 @@ LeanSpec is designed for AI-first development. Video walkthrough placeholders su
 
 ### Related Work
 
-- Separate spec needed for `@leanspec/ui` documentation
+- Separate spec needed for `@harnspec/ui` documentation
 - May want to track translation process improvements if this reveals systematic issues

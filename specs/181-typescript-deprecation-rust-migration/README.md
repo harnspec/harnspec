@@ -32,8 +32,9 @@ completed: '2025-12-18'
 With Rust implementations of CLI and MCP server now complete (specs 170, 172, 173), we need to deprecate all TypeScript core code and ensure TypeScript packages become thin wrappers around Rust binaries rather than reimplementing features.
 
 **Current Problem:**
-- `@leanspec/core` (TypeScript) still contains core logic
-- `@leanspec/ui` imports from `@leanspec/core` causing build dependencies
+
+- `@harnspec/core` (TypeScript) still contains core logic
+- `@harnspec/ui` imports from `@harnspec/core` causing build dependencies
 - TypeScript and Rust implementations diverge over time
 - Double maintenance burden for features
 - CI workflows must build both TypeScript and Rust
@@ -44,24 +45,28 @@ With Rust implementations of CLI and MCP server now complete (specs 170, 172, 17
 
 ### TypeScript Packages Using Core Logic
 
-**@leanspec/core** (`packages/core/src/`):
+**@harnspec/core** (`packages/core/src/`):
+
 - Frontmatter parsing/updating (`createUpdatedFrontmatter`)
 - File I/O utilities (`atomicWriteFile`)
 - Token counting (tiktoken-based)
 - Spec validation
 - Search utilities
 
-**@leanspec/ui** uses `@leanspec/core` for:
+**@harnspec/ui** uses `@harnspec/core` for:
+
 - `createUpdatedFrontmatter` - updating spec frontmatter in API routes
 - `atomicWriteFile` - safe file writing
 - Files: `packages/ui/src/app/api/projects/[id]/specs/[spec]/metadata/route.ts`
 - Files: `packages/ui/src/app/api/projects/[id]/specs/[spec]/status/route.ts`
 
-**@leanspec/cli** (TypeScript version):
-- Entire CLI implementation wraps `@leanspec/core`
+**@harnspec/cli** (TypeScript version):
 
-**@leanspec/mcp** (TypeScript version):
-- MCP server wraps `@leanspec/core`
+- Entire CLI implementation wraps `@harnspec/core`
+
+**@harnspec/mcp** (TypeScript version):
+
+- MCP server wraps `@harnspec/core`
 
 ### Rust Implementations (Already Complete)
 
@@ -73,14 +78,16 @@ With Rust implementations of CLI and MCP server now complete (specs 170, 172, 17
 ## Migration Strategy
 
 ### Phase 1: Remove TypeScript CLI/MCP Packages
+
 - [ ] Delete `packages/cli/` (TypeScript version)
 - [ ] Delete `packages/mcp/` (TypeScript version)
 - [ ] Update root `package.json` scripts to use Rust binaries
 - [ ] Update monorepo workspace config to remove these packages
 - [ ] Update documentation to reference Rust binaries only
 
-### Phase 2: Inline Minimal Functions in @leanspec/ui
-- [ ] Identify the 2 functions UI needs from `@leanspec/core`:
+### Phase 2: Inline Minimal Functions in @harnspec/ui
+
+- [ ] Identify the 2 functions UI needs from `@harnspec/core`:
   - `createUpdatedFrontmatter` - Update spec frontmatter fields
   - `atomicWriteFile` - Safe file writing
 - [ ] Create `packages/ui/src/lib/spec-utils/frontmatter.ts` with inline implementation
@@ -88,11 +95,12 @@ With Rust implementations of CLI and MCP server now complete (specs 170, 172, 17
 - [ ] Update imports in affected files:
   - `packages/ui/src/app/api/projects/[id]/specs/[spec]/metadata/route.ts`
   - `packages/ui/src/app/api/projects/[id]/specs/[spec]/status/route.ts`
-- [ ] Remove `@leanspec/core` from UI's `devDependencies`
+- [ ] Remove `@harnspec/core` from UI's `devDependencies`
 - [ ] Test metadata/status update endpoints work correctly
 
-### Phase 3: Delete @leanspec/core Package
-- [ ] Mark `@leanspec/core` as deprecated in npm (publish final version)
+### Phase 3: Delete @harnspec/core Package
+
+- [ ] Mark `@harnspec/core` as deprecated in npm (publish final version)
 - [ ] Add deprecation notice to README
 - [ ] Publish final version with deprecation notice
 - [ ] Delete `packages/core/` directory entirely
@@ -100,12 +108,14 @@ With Rust implementations of CLI and MCP server now complete (specs 170, 172, 17
 - [ ] Update `pnpm-workspace.yaml` to remove core package
 
 ### Phase 4: Update CI/CD
+
 - [ ] Remove TypeScript build from CI (except UI)
 - [ ] Simplify CI to: Rust build → UI build (inline utils)
 - [ ] Update publish workflows
 - [ ] Remove `pnpm build` from copilot-setup-steps (except UI)
 
 ### Phase 5: Documentation Updates
+
 - [ ] Update AGENTS.md to clarify Rust is primary
 - [ ] Update CONTRIBUTING.md
 - [ ] Update architecture diagrams
@@ -114,13 +124,15 @@ With Rust implementations of CLI and MCP server now complete (specs 170, 172, 17
 
 ## Decision: Inline Functions in UI Package
 
-**Approach: Inline 2 Functions Directly in @leanspec/ui**
+**Approach: Inline 2 Functions Directly in @harnspec/ui**
 
-Only 2 functions from `@leanspec/core` are used by UI:
+Only 2 functions from `@harnspec/core` are used by UI:
+
 - `createUpdatedFrontmatter` (used in 2 API routes)
 - `atomicWriteFile` (used in 1 API route)
 
 **Implementation:**
+
 ```typescript
 // packages/ui/src/lib/spec-utils/frontmatter.ts
 import matter from 'gray-matter';
@@ -143,6 +155,7 @@ export async function atomicWriteFile(filePath: string, content: string): Promis
 ```
 
 **Rationale:**
+
 - Only ~20 lines of code total
 - No point maintaining entire package for 2 functions
 - UI already has `gray-matter` as dependency

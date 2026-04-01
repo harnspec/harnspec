@@ -21,7 +21,7 @@ transitions:
 
 ## Overview
 
-`@leanspec/ui` and `@leanspec/ui-components` have significant overlap: 6 structurally duplicated components, 3 divergent duplicates, 3x duplicated badge config data, inconsistent file naming (PascalCase in `ui` vs kebab-case in `ui-components`), and ~400-500 lines of redundant code. This spec consolidates the two packages, standardizes naming, and eliminates DRY violations.
+`@harnspec/ui` and `@harnspec/ui-components` have significant overlap: 6 structurally duplicated components, 3 divergent duplicates, 3x duplicated badge config data, inconsistent file naming (PascalCase in `ui` vs kebab-case in `ui-components`), and ~400-500 lines of redundant code. This spec consolidates the two packages, standardizes naming, and eliminates DRY violations.
 
 ## Non-Goals
 
@@ -35,10 +35,10 @@ transitions:
 
 **Approach: Absorb `ui-components` into `ui` with a library sub-export.**
 
-`@leanspec/ui` becomes both the application AND component library via Vite's library mode + app mode builds:
+`@harnspec/ui` becomes both the application AND component library via Vite's library mode + app mode builds:
 
 ```
-@leanspec/ui
+@harnspec/ui
 ├── src/
 │   ├── components/     ← all components (merged)
 │   ├── lib/            ← shared utilities
@@ -49,6 +49,7 @@ transitions:
 ```
 
 **Package exports** (for desktop and external consumers):
+
 ```json
 {
   "exports": {
@@ -58,7 +59,7 @@ transitions:
 }
 ```
 
-**Deprecation**: Publish a final `@leanspec/ui-components` version that re-exports from `@leanspec/ui` with a console deprecation notice.
+**Deprecation**: Publish a final `@harnspec/ui-components` version that re-exports from `@harnspec/ui` with a console deprecation notice.
 
 ### 2. File Naming Convention
 
@@ -78,25 +79,30 @@ Component **exports remain PascalCase** (only file names change). Barrel `index.
 ### 3. DRY Consolidation Plan
 
 **True duplicates → delete `ui` version, use merged component:**
+
 - `PriorityEditor` / `StatusEditor` / `TagsEditor` — keep callback-based versions, add i18n prop
 - `BackToTop` — keep configurable version, add `ariaLabel` prop
 - `Tooltip` — keep one, reconcile z-index/colors via CSS variables
 - `ProjectAvatar` — remove inlined color utils, use `color-utils.ts`
 
 **Divergent duplicates → extend library component:**
+
 - `PriorityBadge` / `StatusBadge` — add `editable` + `onChange` props to single version
 - `EmptyState` — merge to support both `actions: ReactNode` and simple action
 
 **Config dedup:**
+
 - Centralize badge config (icons, colors) in one `badge-config.ts`, export for both display and edit use
 - `ui` app layer adds i18n label resolution on top
 
 **Utility dedup:**
+
 - Remove inlined `getInitials` / `getContrastColor` / `getColorForName` from component files → import from `lib/color-utils.ts`
 
 ## Plan
 
 ### Phase 1: DRY Elimination (within current structure)
+
 - [x] Centralize badge config into `ui-components`, export it
 - [x] Add `editable` + `onChange` to PriorityBadge/StatusBadge in `ui-components`
 - [x] Add callback props (i18n, API) to editors in `ui-components`
@@ -106,43 +112,45 @@ Component **exports remain PascalCase** (only file names change). Barrel `index.
 - [x] Consolidate BackToTop and EmptyState
 
 ### Phase 2: File Naming Standardization
+
 - [x] Rename all PascalCase component files in `ui/src/components` to kebab-case
 - [x] Update all import paths across the codebase
 - [x] Verify build and tests pass
 
 ### Phase 3: Package Merge
+
 - [x] Move `ui-components/src/` contents into `ui/src/components/` and `ui/src/lib/`
 - [x] Add Vite library build config (`vite.lib.config.ts`)
 - [x] Update `package.json` exports for library consumers
-- [x] Update `desktop` package imports from `@leanspec/ui-components` → `@leanspec/ui`
-- [x] Publish deprecation shim for `@leanspec/ui-components`
+- [x] Update `desktop` package imports from `@harnspec/ui-components` → `@harnspec/ui`
+- [x] Publish deprecation shim for `@harnspec/ui-components`
 - [x] Remove `packages/ui-components/` from monorepo
 - [x] Update pnpm-workspace.yaml and turbo.json
 
-
 ### Implementation Mapping (validated)
+
 - UI duplicates: packages/ui/src/components/PriorityBadge.tsx, StatusBadge.tsx, ThemeToggle.tsx, Tooltip.tsx, shared/BackToTop.tsx, shared/EmptyState.tsx, shared/ProjectAvatar.tsx, metadata-editors/PriorityEditor.tsx, StatusEditor.tsx, TagsEditor.tsx, badge-config.ts.
 - Library equivalents: packages/ui-components/src/components/spec/priority-badge.tsx, status-badge.tsx, priority-editor.tsx, status-editor.tsx, tags-editor.tsx; layout/empty-state.tsx; navigation/back-to-top.tsx, navigation/theme-toggle.tsx; project/project-avatar.tsx; ui/tooltip.tsx.
 - Shared utils already in library: packages/ui-components/src/lib/color-utils.ts (getInitials/getContrastColor/getColorFromString). UI duplicates them in ProjectAvatar today.
 - Badge config duplication: UI uses packages/ui/src/components/badge-config.ts with i18n label keys; ui-components embeds default configs inside the badge/editor files listed above. Plan is to hoist configs into a single ui-components file and have UI layer add i18n label mapping.
-- Desktop integration points: packages/desktop/src/main.tsx (styles import), packages/desktop/src/types.ts (type re-exports), packages/desktop/package.json (build script depends on @leanspec/ui-components).
+- Desktop integration points: packages/desktop/src/main.tsx (styles import), packages/desktop/src/types.ts (type re-exports), packages/desktop/package.json (build script depends on @harnspec/ui-components).
 
 ## Test
 
 - [ ] All existing tests pass in `ui` and `desktop` after each phase
 - [ ] `pnpm build` succeeds for all affected packages
-- [ ] Desktop app runs and renders correctly with imports from `@leanspec/ui`
+- [ ] Desktop app runs and renders correctly with imports from `@harnspec/ui`
 - [ ] `ui` dev server and production build both work
 - [ ] No duplicate component exports in final bundle (tree-shaking check)
 
 ## Notes
 
-- **Prior art**: Spec 103 consolidated `@leanspec/web` → `@leanspec/ui` (Next.js merge). This is the logical next step.
-- **Risk**: `@leanspec/ui-components` is published to npm. External consumers need migration path via deprecation shim.
+- **Prior art**: Spec 103 consolidated `@harnspec/web` → `@harnspec/ui` (Next.js merge). This is the logical next step.
+- **Risk**: `@harnspec/ui-components` is published to npm. External consumers need migration path via deprecation shim.
 - **Desktop impact**: Desktop only imports types and CSS from `ui-components`. Migration is low-effort (update import paths + CSS import).
 - **Package count**: `ui` has 81 component files, `ui-components` has 99. Merged total ~150 after dedup.
 - **Duplicate elimination**: ~400-500 lines of redundant code removed (6 true dupes + 3 divergent dupes + 3x config).
-- **Shim status**: `@leanspec/ui-components` now serves as a deprecation shim re-exporting `@leanspec/ui` and is excluded from the workspace.
+- **Shim status**: `@harnspec/ui-components` now serves as a deprecation shim re-exporting `@harnspec/ui` and is excluded from the workspace.
 
 - **Behavior deltas to resolve in merge**:
   - `TagsEditor`: ui-components normalizes tags to lowercase and lacks compact/overflow display; UI preserves user casing, supports `compact` and hidden tags count, and fetches tags from API. Decide whether to extend the library component or keep a UI wrapper.
@@ -151,7 +159,7 @@ Component **exports remain PascalCase** (only file names change). Barrel `index.
 
 ### Progress Check (2026-02-06)
 
-- Verified: workspace excludes `packages/ui-components` (still present as shim), library build + exports configured in `@leanspec/ui`, deprecation shim re-exports `@leanspec/ui`, desktop imports updated to `@leanspec/ui` styles, and no PascalCase component filenames remain under `packages/ui/src/components`.
+- Verified: workspace excludes `packages/ui-components` (still present as shim), library build + exports configured in `@harnspec/ui`, deprecation shim re-exports `@harnspec/ui`, desktop imports updated to `@harnspec/ui` styles, and no PascalCase component filenames remain under `packages/ui/src/components`.
 - Pending: `packages/ui-components/` directory still exists with `src/` content; spec item “Remove `packages/ui-components/` from monorepo” not fully verified.
 - Tests: not run/verified; `pnpm typecheck` currently failing (exit code 2).
 - Open question: tags editor behavior divergence (library lowercases tags; app preserves casing + compact/overflow logic) remains as two implementations.
@@ -159,5 +167,5 @@ Component **exports remain PascalCase** (only file names change). Barrel `index.
 ### Progress Check (2026-02-06, follow-up)
 
 - Verified: `pnpm typecheck` succeeds (no TypeScript errors).
-- Verified: `pnpm --filter @leanspec/ui test` passes (87 tests).
-- Verified: `pnpm --filter @leanspec/desktop build` succeeds; warnings about large chunks and Tauri dynamic/static import overlap were emitted, but build completed.
+- Verified: `pnpm --filter @harnspec/ui test` passes (87 tests).
+- Verified: `pnpm --filter @harnspec/desktop build` succeeds; warnings about large chunks and Tauri dynamic/static import overlap were emitted, but build completed.

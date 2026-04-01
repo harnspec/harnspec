@@ -77,13 +77,13 @@ From spec 066 research findings:
 
 **Three Layers of Token Counting**:
 
-1. **Core Library** (`@leanspec/core`)
+1. **Core Library** (`@harnspec/core`)
    - Token counting utilities using `tiktoken`
    - Sub-spec aggregation
    - Content type breakdown
    - Export for reuse across packages
 
-2. **CLI Commands** (`@leanspec/cli`)
+2. **CLI Commands** (`@harnspec/cli`)
    - `harnspec tokens <spec>` - Show token count for spec
    - `harnspec tokens <spec> --detailed` - Breakdown by file/type
    - `harnspec tokens --all` - Compare all specs
@@ -112,7 +112,7 @@ From spec 066 research findings:
                         │
               ┌─────────▼──────────┐
               │   Core Library     │
-              │  @leanspec/core    │
+              │  @harnspec/core    │
               ├────────────────────┤
               │ TokenCounter       │
               │  - count()         │
@@ -165,7 +165,7 @@ enc.free(); // Important: free memory
 
 ### Core Utilities
 
-New utilities in `@leanspec/core/src/utils/token-counter.ts`:
+New utilities in `@harnspec/core/src/utils/token-counter.ts`:
 
 ```typescript
 export interface TokenCount {
@@ -324,7 +324,7 @@ Agent: "Perfect, that fits in my context budget."
 ### Phase 1: Core Utilities (v0.3.0 - Week 1) ✅ COMPLETE
 
 - [x] Install `tiktoken` as dependency
-- [x] Create `TokenCounter` class in `@leanspec/core`
+- [x] Create `TokenCounter` class in `@harnspec/core`
 - [x] Implement `countFile()` using `tiktoken`
 - [x] Implement `countSpec()` with sub-spec support
 - [x] Implement `analyzeBreakdown()` for content type analysis

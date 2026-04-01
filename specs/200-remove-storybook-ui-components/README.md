@@ -21,7 +21,7 @@ transitions:
 
 ## Overview
 
-The `@leanspec/ui-components` package currently includes Storybook for component documentation and development. This adds significant complexity with minimal value:
+The `@harnspec/ui-components` package currently includes Storybook for component documentation and development. This adds significant complexity with minimal value:
 
 - **6+ Storybook devDependencies** (~100MB+ in node_modules)
 - **23 story files** that duplicate README documentation
@@ -44,6 +44,7 @@ The `@leanspec/ui-components` package currently includes Storybook for component
 ### 📊 What We're Removing
 
 **Dependencies** (from package.json devDependencies):
+
 ```
 @storybook/addon-essentials
 @storybook/addon-interactions
@@ -55,15 +56,18 @@ storybook
 ```
 
 **Files/Directories**:
+
 - `.storybook/` (2 config files)
 - `stories/` (23 story files)
 - `storybook-static/` (build artifacts)
 
 **Scripts** (from package.json):
+
 - `storybook`
 - `build-storybook`
 
 **Documentation references**:
+
 - Makefile storybook target
 - scripts.md Storybook commands
 - Spec 185 mentions (historical)
@@ -79,6 +83,7 @@ With the Rust migration and unified architecture (spec 184), LeanSpec is moving 
 ## Plan
 
 ### Phase 1: Remove Code
+
 - [x] Remove Storybook devDependencies from package.json
 - [x] Remove npm scripts (storybook, build-storybook)
 - [x] Delete .storybook/ directory
@@ -86,14 +91,16 @@ With the Rust migration and unified architecture (spec 184), LeanSpec is moving 
 - [x] Delete storybook-static/ directory (if exists)
 
 ### Phase 2: Update Documentation
+
 - [x] Remove Storybook references from README.md
 - [x] Update Makefile (remove storybook target)
 - [x] Update scripts.md (remove Storybook commands)
 - [x] Verify README has sufficient component documentation
 
 ### Phase 3: Cleanup
+
 - [x] Run `pnpm install` to update lockfile
-- [ ] Verify builds still work: `pnpm build` *(fails in @leanspec/ui-vite tailwind.config.js:52 - requires CJS require in ESM)*
+- [ ] Verify builds still work: `pnpm build` *(fails in @harnspec/ui-vite tailwind.config.js:52 - requires CJS require in ESM)*
 - [ ] Verify typecheck passes: `pnpm typecheck` *(fails in tests/api headers typing and response.data unknown)*
 - [ ] Verify tests pass: `pnpm test`
 - [x] Update turbo.json if needed
@@ -104,12 +111,14 @@ With the Rust migration and unified architecture (spec 184), LeanSpec is moving 
 **After**: README only (already comprehensive)
 
 The README.md includes:
+
 - Installation instructions
 - Usage examples for all components
 - Component API documentation
 - Integration examples with ui-vite
 
 **For development**: Test components in ui-vite's actual UI during feature work. This provides:
+
 - Real-world usage context
 - Integration testing with actual data
 - Faster feedback loop (no separate Storybook server)
@@ -135,10 +144,12 @@ The README.md includes:
 **Decision**: Not needed - UI components are simple, well-typed, and tested in ui-vite's E2E tests
 
 **Current Risks/Follow-ups**:
+
 - `pnpm build` fails in `packages/ui-vite/tailwind.config.js` because `require` is used under ESM (Node 22)
 - `pnpm typecheck` fails in `tests/api` due to `Headers` being non-iterable for `Object.fromEntries` and `response.data` typed as `unknown`
 
 **Related Specs**:
+
 - Spec 184: UI Packages Consolidation (consolidation strategy)
 - Spec 185: UI Components Extraction (where Storybook was added)
 - Spec 187: Vite SPA Migration (primary consumer of ui-components)

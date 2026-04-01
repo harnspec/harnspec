@@ -114,14 +114,14 @@ The redirect persists until another repo is created with the old name.
 
 - Scales to future products without creating per-product repos
 - Single place for users to discover all codervisor skills
-- Clean install: `npx skills add codervisor/skills@leanspec`
+- Clean install: `npx skills add codervisor/skills@harnspec`
 - Complements `codervisor/forge` (infra skills vs product skills)
 
 #### `@` syntax confirmed
 
 Research confirms `@` in `npx skills add` is a **skill name selector**, not a git ref:
 
-- `npx skills add codervisor/skills@leanspec` → installs only the `leanspec` skill
+- `npx skills add codervisor/skills@harnspec` → installs only the `leanspec` skill
 - Equivalent to `npx skills add codervisor/skills --skill leanspec`
 - The CLI matches against the `name` field in SKILL.md frontmatter
 
@@ -184,7 +184,7 @@ The MCP server name should also align:
 - [ ] Rename to `leanspec` (frontmatter + any internal references)
 - [ ] Set up CI for skill validation
 - [ ] Add README with catalog and install instructions
-- [ ] Verify `npx skills add codervisor/skills@leanspec` works
+- [ ] Verify `npx skills add codervisor/skills@harnspec` works
 
 ### Phase 2: Rename CLI and npm package
 
@@ -216,7 +216,7 @@ The MCP server name should also align:
 
 - [ ] `npx leanspec` works
 - [ ] `npx harnspec` shows deprecation warning but still works
-- [ ] `npx skills add codervisor/skills@leanspec` installs correctly
+- [ ] `npx skills add codervisor/skills@harnspec` installs correctly
 - [ ] `npx skills add codervisor/leanspec` does NOT expose internal skills
 - [ ] GitHub redirect: `codervisor/harnspec` URLs → `codervisor/leanspec`
 - [ ] All CI workflows pass after rename
@@ -229,7 +229,7 @@ The MCP server name should also align:
 
 Check if `leanspec` is available on npm before proceeding. If taken, alternatives:
 
-- `@leanspec/cli`
+- `@harnspec/cli`
 - `@codervisor/leanspec`
 
 ### Relationship to other specs

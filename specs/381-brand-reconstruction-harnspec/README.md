@@ -32,7 +32,7 @@ The original "LeanSpec" name and its associated vision (as outlined in Spec 380)
 
 - Root project renamed to `harnspec`.
 - CLI package renamed to `harnspec`.
-- All `@leanspec/*` packages renamed to `@harnspec/*`.
+- All `@harnspec/*` packages renamed to `@harnspec/*`.
 
 ### 3. Documentation
 

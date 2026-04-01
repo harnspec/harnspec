@@ -3,10 +3,11 @@
 #### v0.3.0 (Filesystem Mode)
 
 **Vercel Configuration:**
+
 ```json
 // vercel.json (web app deployment)
 {
-  "buildCommand": "pnpm -F @leanspec/web build",
+  "buildCommand": "pnpm -F @harnspec/web build",
   "outputDirectory": "packages/web/.next",
   "framework": "nextjs",
   "installCommand": "pnpm install"
@@ -14,6 +15,7 @@
 ```
 
 **Environment Variables (Vercel Dashboard):**
+
 ```bash
 SPECS_MODE=filesystem
 SPECS_DIR=../../specs
@@ -22,6 +24,7 @@ REVALIDATION_SECRET=<random-secret>
 ```
 
 **Key Points:**
+
 - Specs directory (`specs/`) must be in git repo
 - No database required for v0.3.0
 - Specs read at runtime from filesystem
@@ -31,10 +34,11 @@ REVALIDATION_SECRET=<random-secret>
 #### v0.3.1+ (Dual Mode)
 
 **Vercel Configuration:**
+
 ```json
 // vercel.json (unchanged)
 {
-  "buildCommand": "pnpm -F @leanspec/web build",
+  "buildCommand": "pnpm -F @harnspec/web build",
   "outputDirectory": "packages/web/.next",
   "framework": "nextjs",
   "installCommand": "pnpm install",
@@ -46,6 +50,7 @@ REVALIDATION_SECRET=<random-secret>
 ```
 
 **Environment Variables (Vercel Dashboard):**
+
 ```bash
 SPECS_MODE=both
 SPECS_DIR=../../specs
@@ -57,12 +62,14 @@ REVALIDATION_SECRET=<random-secret>
 ```
 
 **Database Setup (Vercel Postgres):**
+
 1. Create Vercel Postgres database
-2. Run migrations: `pnpm -F @leanspec/web db:migrate`
-3. Seed LeanSpec project: `pnpm -F @leanspec/web db:seed`
+2. Run migrations: `pnpm -F @harnspec/web db:migrate`
+3. Seed LeanSpec project: `pnpm -F @harnspec/web db:seed`
 4. Cron job handles external repos
 
 **Key Points:**
+
 - Both filesystem and database sources active
 - LeanSpec's specs use filesystem (fast, realtime)
 - External repos use database (cached, scheduled sync)

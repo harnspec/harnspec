@@ -513,14 +513,14 @@ class SpecDependencyGraph {
 **Related Spec Needed**: Yes
 
 - **Spec #099**: "Enhanced Dependency Commands for CLI/MCP"
-  - Implement in-memory graph in `@leanspec/core`
+  - Implement in-memory graph in `@harnspec/core`
   - Add CLI commands for complete dependency views
   - Update MCP tools to support full graph
   - Ensure consistency between web, CLI, and MCP
 
 **Core Package Changes**:
 
-- Add `SpecDependencyGraph` class to `@leanspec/core`
+- Add `SpecDependencyGraph` class to `@harnspec/core`
 - Export graph building utilities
 - Share implementation between web API and CLI
 
@@ -569,6 +569,6 @@ class SpecDependencyGraph {
 **Spec #099** (To Be Created - Enhanced Dependency Commands):
 
 - **Scope**: CLI/MCP enhancements for complete dependency graph
-- **Shared code**: In-memory graph implementation in `@leanspec/core`
+- **Shared code**: In-memory graph implementation in `@harnspec/core`
 - **Consistency**: Ensure web, CLI, MCP all show same dependency information
 - **Dependencies**: This spec (#097) should complete Phase 2 before #099 starts

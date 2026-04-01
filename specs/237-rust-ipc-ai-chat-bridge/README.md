@@ -24,10 +24,12 @@ transitions:
 ## Overview
 
 **Problem**: Currently, AI chat functionality requires running two servers:
+
 1. **Rust HTTP Server** (`leanspec-http`) - Main API and UI server
 2. **Node.js Chat Server** - Separate process for AI streaming via Vercel AI SDK
 
 This architecture has several issues:
+
 - Two processes to manage and coordinate
 - Extra complexity in process lifecycle management
 - Chat server requires its own port/socket management
@@ -59,6 +61,7 @@ This architecture has several issues:
 ```
 
 **Benefits**:
+
 - Single server process (Rust manages everything)
 - No separate port/socket needed for chat
 - Simplified deployment (Node.js is a child process)
@@ -72,6 +75,7 @@ This architecture has several issues:
 ### Why IPC vs HTTP?
 
 **IPC Advantages**:
+
 - ✅ No port conflicts or discovery needed
 - ✅ Process isolation (can restart worker without affecting main server)
 - ✅ Simple protocol (JSON lines over stdio)
@@ -81,6 +85,7 @@ This architecture has several issues:
 - ✅ Automatic cleanup (child process dies with parent)
 
 **HTTP Disadvantages**:
+
 - ❌ Port management complexity
 - ❌ Network overhead even for localhost
 - ❌ More complex error handling
@@ -92,12 +97,14 @@ This architecture has several issues:
 ### Architecture Changes
 
 **Current Flow** (Two Servers):
+
 ```
 Browser → Rust HTTP (:3000) → Node.js Chat (:socket/http) → AI Provider API
          ↑ CORS/proxy
 ```
 
 **New Flow** (Rust + IPC Worker):
+
 ```
 Browser → Rust HTTP (:3000) → Node.js Worker (IPC) → AI Provider API
                               ↑ spawn/manage
@@ -106,11 +113,13 @@ Browser → Rust HTTP (:3000) → Node.js Worker (IPC) → AI Provider API
 ### IPC Protocol
 
 **Transport**: JSON Lines over stdin/stdout
+
 - **Request**: JSON object + newline → worker stdin
 - **Response**: JSON object + newline ← worker stdout
 - **Errors**: Plain text → worker stderr (logged by Rust)
 
 **Request Format**:
+
 ```json
 {
   "id": "req_123",
@@ -130,6 +139,7 @@ Browser → Rust HTTP (:3000) → Node.js Worker (IPC) → AI Provider API
 ```
 
 **Response Format** (Streaming):
+
 ```json
 {"id": "req_123", "type": "chunk", "data": {"text": "Hello"}}
 {"id": "req_123", "type": "chunk", "data": {"text": " world"}}
@@ -140,6 +150,7 @@ Browser → Rust HTTP (:3000) → Node.js Worker (IPC) → AI Provider API
 ```
 
 **Health Check**:
+
 ```json
 // Request
 {"id": "health_1", "type": "health"}
@@ -149,6 +160,7 @@ Browser → Rust HTTP (:3000) → Node.js Worker (IPC) → AI Provider API
 ```
 
 **Config Update**:
+
 ```json
 // Request
 {"id": "cfg_1", "type": "reload_config", "payload": {...}}
@@ -272,11 +284,11 @@ impl AiWorker {
             .ok_or_else(|| anyhow::anyhow!("No parent dir"))?
             .to_path_buf();
 
-        // Look for @leanspec/ai-worker package
+        // Look for @harnspec/ai-worker package
         let worker_path = exe_dir
             .parent()
             .and_then(|p| p.parent())
-            .map(|p| p.join("@leanspec/ai-worker/dist/worker.js"));
+            .map(|p| p.join("@harnspec/ai-worker/dist/worker.js"));
 
         if let Some(path) = worker_path {
             if path.exists() {
@@ -654,7 +666,7 @@ worker.start().catch((error) => {
 ```json
 // packages/ai-worker/package.json
 {
-  "name": "@leanspec/ai-worker",
+  "name": "@harnspec/ai-worker",
   "version": "0.4.0",
   "type": "module",
   "main": "./dist/worker.js",
@@ -681,13 +693,15 @@ worker.start().catch((error) => {
 ### Chat Server Migration Path
 
 **Option 1: Keep Both Temporarily** (Recommended)
-- Keep `@leanspec/chat-server` as-is during migration
-- Create new `@leanspec/ai-worker` package
+
+- Keep `@harnspec/chat-server` as-is during migration
+- Create new `@harnspec/ai-worker` package
 - Rust supports both: IPC worker (new) + HTTP fallback (old)
 - Gradual migration, zero breaking changes
 
 **Option 2: In-Place Transformation**
-- Rename `@leanspec/chat-server` to `@leanspec/ai-worker`
+
+- Rename `@harnspec/chat-server` to `@harnspec/ai-worker`
 - Add IPC mode flag to existing code
 - Keep HTTP mode for backward compatibility
 
@@ -696,29 +710,32 @@ worker.start().catch((error) => {
 ### Deployment Changes
 
 **Before** (Two Servers):
+
 ```bash
 # Terminal 1
 npx leanspec-http
 
 # Terminal 2  
-npx @leanspec/chat-server
+npx @harnspec/chat-server
 
 # User needs to manage both
 ```
 
 **After** (Single Server):
+
 ```bash
-npx @leanspec/ui
+npx @harnspec/ui
 # Rust spawns worker automatically
 # User doesn't even know worker exists
 ```
 
 **Docker**:
+
 ```dockerfile
 FROM node:20-slim
 
 # Install both packages
-RUN npm install -g @leanspec/ui @leanspec/ai-worker
+RUN npm install -g @harnspec/ui @harnspec/ai-worker
 
 # Only need to run one command
 CMD ["leanspec-http"]
@@ -727,17 +744,20 @@ CMD ["leanspec-http"]
 ### Error Handling
 
 **Worker Crashes**:
+
 - Rust detects worker exit via process handle
 - Automatically respawn on next chat request
 - Log error to stderr for debugging
 - Return 503 to client if worker unavailable
 
 **IPC Protocol Errors**:
+
 - Invalid JSON → log error, ignore line, continue
 - Request timeout → return 504 to client
 - Unexpected response → log warning, continue
 
 **Graceful Shutdown**:
+
 - Rust sends SIGTERM to worker
 - Worker finishes current requests (max 30s)
 - Force kill after timeout
@@ -745,7 +765,7 @@ CMD ["leanspec-http"]
 
 ## Plan
 
-- [ ] **Phase 1: Create @leanspec/ai-worker Package**
+- [ ] **Phase 1: Create @harnspec/ai-worker Package**
   - [x] Create `packages/ai-worker/` directory
   - [x] Set up package.json and TypeScript config
   - [x] Copy provider factory and tools from chat-server
@@ -797,7 +817,7 @@ CMD ["leanspec-http"]
   - [ ] Load testing (ensure no memory leaks)
 
 - [ ] **Phase 6: Package Distribution**
-  - [x] Update `@leanspec/ui` to depend on `@leanspec/ai-worker`
+  - [x] Update `@harnspec/ui` to depend on `@harnspec/ai-worker`
   - [x] Ensure worker script included in npm package
   - [ ] Update CI/CD to build and publish ai-worker
   - [ ] Test npm install and worker discovery
@@ -810,7 +830,7 @@ CMD ["leanspec-http"]
   - [ ] Add troubleshooting section
 
 - [ ] **Phase 8: Deprecate Old Chat Server**
-  - [ ] Add deprecation notice to `@leanspec/chat-server`
+  - [ ] Add deprecation notice to `@harnspec/chat-server`
   - [ ] Keep it working for 1-2 versions
   - [ ] Remove HTTP fallback from Rust
   - [ ] Archive chat-server package
@@ -874,6 +894,7 @@ CMD ["leanspec-http"]
 ### Why JSON Lines?
 
 **Alternatives Considered**:
+
 1. **Length-prefixed binary**: More efficient but harder to debug
 2. **HTTP over Unix socket**: Overkill, adds HTTP overhead
 3. **gRPC**: Too heavy for simple IPC
@@ -881,6 +902,7 @@ CMD ["leanspec-http"]
 5. **JSON Lines**: ✅ **Chosen** (simple, debuggable, streaming-friendly)
 
 **JSON Lines Benefits**:
+
 - Human-readable (easy debugging)
 - Line-buffered (natural backpressure)
 - Streaming-friendly (parse line by line)
@@ -890,14 +912,16 @@ CMD ["leanspec-http"]
 ### Worker Discovery Strategy
 
 **Priority order**:
+
 1. `LEANSPEC_AI_WORKER` env var (explicit override)
 2. Development mode: `../../packages/ai-worker/dist/worker.js`
-3. Production: `node_modules/@leanspec/ai-worker/dist/worker.js`
+3. Production: `node_modules/@harnspec/ai-worker/dist/worker.js`
 4. Bundled: `./ai-worker.js` (future: bundle with binary)
 
 ### Node.js Environment Requirements
 
 **Verification Strategy**:
+
 ```rust
 fn verify_nodejs() -> Result<()> {
     // Check if node is in PATH
@@ -945,6 +969,7 @@ fn verify_nodejs() -> Result<()> {
 ```
 
 **Requirements**:
+
 - **Hard Minimum**: Node.js v20.0.0 (Iron LTS, EOL April 2026) - works with warning
 - **Recommended Minimum**: Node.js v22.0.0 (Jod LTS, supported until April 2027) - no warnings
 - **Best**: Node.js v24+ (Krypton LTS, supported until April 2028)
@@ -954,12 +979,14 @@ fn verify_nodejs() -> Result<()> {
   - <v20: ❌ Blocked with error
 
 **Detection Behavior**:
+
 1. On startup, Rust checks `node --version`
 2. If not found: Log clear error with installation instructions
 3. If version < 18: Log error with upgrade instructions
 4. If OK: Proceed with worker spawn
 
 **Messages**:
+
 ```rust
 // Node.js not found
 ERROR: AI chat unavailable - Node.js not installed
@@ -979,11 +1006,12 @@ Current version: node --version
 
 // Worker script not found
 ERROR: AI chat unavailable - worker script not found
-Expected location: node_modules/@leanspec/ai-worker/dist/worker.js
-Please reinstall: npm install @leanspec/ai-worker
+Expected location: node_modules/@harnspec/ai-worker/dist/worker.js
+Please reinstall: npm install @harnspec/ai-worker
 ```
 
 **Graceful Degradation**:
+
 ```rust
 pub struct AiWorkerManager {
     worker: Option<AiWorker>,
@@ -1018,6 +1046,7 @@ impl AiWorkerManager {
 ```
 
 **HTTP Handler Response**:
+
 ```rust
 pub async fn chat_stream(
     State(state): State<AppState>,
@@ -1042,6 +1071,7 @@ pub async fn chat_stream(
 ```
 
 **Environment Variables**:
+
 ```bash
 # Disable AI features entirely (skip Node.js check)
 LEANSPEC_NO_AI=1
@@ -1057,19 +1087,21 @@ LEANSPEC_SKIP_NODE_VERSION_CHECK=1
 ```
 
 **User Experience**:
+
 1. **v22+**: Works perfectly, no warnings
 2. **v20-v21**: Works with warning banner: "Node.js v20 reaches EOL April 2026. Upgrade recommended."
 3. **<v20**: Shows error: "AI chat requires Node.js v20+ (recommended v22+)"
 4. **Not installed**: Link to nodejs.org/en/download with clear instructions
-5. **Status indicator**: 
+5. **Status indicator**:
    - Green badge: "AI Ready" (v22+)
    - Yellow badge: "AI Active (upgrade recommended)" (v20-v21)
    - Red badge: "AI Disabled" (<v20 or not installed)
 
 **Package.json Documentation**:
+
 ```json
 {
-  "name": "@leanspec/ui",
+  "name": "@harnspec/ui",
   "peerDependencies": {
     "node": ">=20.0.0"
   },
@@ -1088,12 +1120,13 @@ LEANSPEC_SKIP_NODE_VERSION_CHECK=1
 ```
 
 **Note**: `engines` specifies hard minimum (v20), `volta` specifies recommended version (v22).
+
 ```
 
 **Installation Check**:
 ```bash
 # Add to postinstall script
-npx @leanspec/ui --check-node
+npx @harnspec/ui --check-node
 # Output: ✓ Node.js v20.11.0 detected (OK)
 #         ✓ AI worker installed
 #         ✓ Ready to use
@@ -1102,17 +1135,20 @@ npx @leanspec/ui --check-node
 ### Process Lifecycle
 
 **Startup**:
+
 1. Rust spawns worker on first `/api/chat` request
 2. Worker sends health check response
 3. Rust marks worker as ready
 4. Request processed
 
 **Normal Operation**:
+
 - Worker stays alive for entire server lifetime
 - Multiple requests reuse same worker process
 - Config changes trigger reload (no restart)
 
 **Shutdown**:
+
 1. Rust receives SIGTERM
 2. Rust sends SIGTERM to worker
 3. Worker finishes current requests (max 30s)
@@ -1120,6 +1156,7 @@ npx @leanspec/ui --check-node
 5. Force SIGKILL after timeout
 
 **Crash Recovery**:
+
 1. Rust detects worker exit (process handle)
 2. Log error with exit code
 3. Clear worker reference
@@ -1128,16 +1165,19 @@ npx @leanspec/ui --check-node
 ### Performance Considerations
 
 **IPC Overhead**:
+
 - JSON serialization: ~100μs per message
 - Pipe I/O: ~50μs per write/read
 - Total overhead: <1ms (negligible vs network)
 
 **Memory Usage**:
+
 - Worker process: ~50-100MB (Node.js + AI SDK)
 - IPC buffers: ~128KB (OS default)
 - Total increase: Minimal (worker replaces chat-server)
 
 **Latency**:
+
 - IPC adds ~1ms vs HTTP localhost
 - But removes network stack overhead
 - Net result: Similar or slightly faster
@@ -1145,10 +1185,12 @@ npx @leanspec/ui --check-node
 ### Comparison with Desktop App
 
 This IPC approach mirrors Tauri's command pattern:
+
 - **Desktop**: Tauri → Rust commands → Response
 - **Web**: Browser → Rust → IPC Worker → Response
 
 Both architectures:
+
 - Single main process (Tauri/Rust HTTP)
 - Worker for heavy computation (WebView/Node.js)
 - IPC for communication
@@ -1157,17 +1199,20 @@ Both architectures:
 ### Alternative: WASM AI SDK
 
 **Future possibility**: Compile AI SDK to WebAssembly
+
 - Pure Rust implementation (no Node.js needed)
 - Zero IPC overhead
 - Smaller binaries
 
 **Why not now?**:
+
 - AI SDK ecosystem is JavaScript-native
 - WASM bindings immature
 - Provider SDKs not WASM-compatible
 - Maintenance burden too high
 
 **When to revisit**:
+
 - WASM support improves
 - Pure Rust AI SDK emerges
 - Provider APIs stabilize
@@ -1175,18 +1220,21 @@ Both architectures:
 ### Security Considerations
 
 **IPC Isolation**:
+
 - Worker runs as child process (same user)
 - No network exposure
 - Can't be accessed by other processes
 - Crashes don't affect main server
 
 **API Key Handling**:
+
 - Keys never sent over IPC (use env vars)
 - Worker reads keys from environment
 - Rust passes provider ID, not key
 - Config reload doesn't include secrets
 
 **Resource Limits**:
+
 - Worker memory limit (via cgroups)
 - CPU limits (via nice/cgroups)
 - Request timeouts
@@ -1202,16 +1250,19 @@ Both architectures:
 ### Migration Timeline
 
 **Phase 1** (v0.4.0): Parallel operation
+
 - Both chat-server and ai-worker supported
 - IPC is default, HTTP is fallback
 - No breaking changes
 
 **Phase 2** (v0.5.0): Deprecation
+
 - IPC is only supported mode
 - chat-server marked deprecated
 - Migration guide published
 
 **Phase 3** (v0.6.0): Removal
+
 - chat-server removed
 - IPC is the only way
 - Clean architecture achieved

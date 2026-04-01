@@ -122,7 +122,7 @@ The skill will have YAML frontmatter followed by markdown instructions:
 
 - `name: leanspec-sdd`
 - `description`: Spec-Driven Development methodology for AI-assisted development. Use when working in a LeanSpec project.
-- `compatibility`: Requires harnspec CLI or @leanspec/mcp server
+- `compatibility`: Requires harnspec CLI or @harnspec/mcp server
 - `metadata`: author, version, homepage
 
 **Body sections**:
@@ -139,7 +139,7 @@ See references/ for detailed workflow steps, examples, and patterns.
 
 **Foundation (exists)**:
 
-- MCP server: `@leanspec/mcp` with all tools (list, view, create, etc.)
+- MCP server: `@harnspec/mcp` with all tools (list, view, create, etc.)
 - CLI: `harnspec` commands
 - AGENTS.md: Project-specific instructions
 
@@ -220,7 +220,7 @@ Agent: "Spec created. Ready to implement?"
 
 ### Integration Requirements
 
-- [x] **Compatible with existing tools** - Works with current @leanspec/mcp and CLI
+- [x] **Compatible with existing tools** - Works with current @harnspec/mcp and CLI
 - [x] **No breaking changes** - Skill is additive, doesn't replace existing tools
 - [x] **Validation** - Skill passes `skills-ref validate` check
 - [x] **Progressive disclosure** - SKILL.md under 500 lines, detailed content in references/
@@ -257,7 +257,7 @@ Agent: "Spec created. Ready to implement?"
 
 **Foundation** (must exist):
 
-- ✅ **@leanspec/mcp** - MCP server package (exists)
+- ✅ **@harnspec/mcp** - MCP server package (exists)
 - ✅ **MCP tools** - list, view, create, update, etc. (exists)
 - ✅ **Token counting** - Spec 069 (complete)
 - ✅ **Validation** - Spec 018 (complete)
@@ -934,7 +934,7 @@ Compatible tools: GitHub Copilot, Claude, Cursor, Codex, and more
 
 **Foundation**:
 
-- **102-mcp-wrapper-package**: @leanspec/mcp distribution (complete)
+- **102-mcp-wrapper-package**: @harnspec/mcp distribution (complete)
 - **069-token-counting-utils**: Context economy measurement (complete)
 - **018-spec-validation**: Quality gates (complete)
 - **117-simplify-template-system**: Template structure (complete)

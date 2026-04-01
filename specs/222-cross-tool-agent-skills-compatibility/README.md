@@ -140,7 +140,7 @@ Based on <https://agentskills.io> adoption list and ecosystem research:
 ---
 name: leanspec-sdd
 description: Spec-Driven Development methodology for AI-assisted development. Use when working in a LeanSpec project.
-compatibility: Requires harnspec CLI or @leanspec/mcp server
+compatibility: Requires harnspec CLI or @harnspec/mcp server
 metadata:
   author: LeanSpec
   version: 1.0.0

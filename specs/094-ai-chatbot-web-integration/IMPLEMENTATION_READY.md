@@ -8,7 +8,7 @@ This document captures the CI and npm distribution refinements made to make spec
 
 ### 1. npm Distribution Strategy ✅
 
-**Decision**: Publish `@leanspec/chat-server` as standalone npm package
+**Decision**: Publish `@harnspec/chat-server` as standalone npm package
 
 **Rationale**:
 
@@ -20,9 +20,9 @@ This document captures the CI and npm distribution refinements made to make spec
 **Package Structure**:
 
 ```
-@leanspec/chat-server  ← NEW standalone package
-@leanspec/http-server  ← Existing Rust binary packages
-@leanspec/ui           ← Existing UI package (adds optional dep)
+@harnspec/chat-server  ← NEW standalone package
+@harnspec/http-server  ← Existing Rust binary packages
+@harnspec/ui           ← Existing UI package (adds optional dep)
 ```
 
 ### 2. CI/CD Build Pipeline ✅
@@ -41,9 +41,9 @@ This document captures the CI and npm distribution refinements made to make spec
 **Publishing Order** (critical for dependency resolution):
 
 ```
-1. Rust platform binaries (@leanspec/cli-*, @leanspec/mcp-*, @leanspec/http-*)
-2. @leanspec/chat-server (NEW)
-3. Main packages (@leanspec/ui, harnspec, @leanspec/mcp)
+1. Rust platform binaries (@harnspec/cli-*, @harnspec/mcp-*, @harnspec/http-*)
+2. @harnspec/chat-server (NEW)
+3. Main packages (@harnspec/ui, harnspec, @harnspec/mcp)
 ```
 
 ### 3. Process Management ✅
@@ -152,7 +152,7 @@ Before starting implementation, ensure:
 
 After implementation:
 
-- [ ] `@leanspec/chat-server` published to npm
+- [ ] `@harnspec/chat-server` published to npm
 - [ ] CI workflow publishes all packages successfully
 - [ ] Dev version workflow works end-to-end
 - [ ] Health checks prevent chat server crashes

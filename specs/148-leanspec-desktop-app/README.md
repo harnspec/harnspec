@@ -28,7 +28,7 @@ completed: '2025-12-10'
 
 ## Overview
 
-Native desktop application built on `@leanspec/ui` using Tauri for efficient local multi-project LeanSpec management.
+Native desktop application built on `@harnspec/ui` using Tauri for efficient local multi-project LeanSpec management.
 
 **Problem Statement:**
 The current web-based UI (`harnspec ui`) requires:
@@ -53,7 +53,7 @@ The current web-based UI (`harnspec ui`) requires:
 
 ## Implementation Summary (Dec 10, 2025)
 
-- **New package:** `packages/desktop` ships a Vite-powered chrome plus a Rust/Tauri backend. The shell embeds the existing Next.js UI by launching its standalone server in the background (dev uses `pnpm --filter @leanspec/ui dev`, production bundles `.next/standalone`).
+- **New package:** `packages/desktop` ships a Vite-powered chrome plus a Rust/Tauri backend. The shell embeds the existing Next.js UI by launching its standalone server in the background (dev uses `pnpm --filter @harnspec/ui dev`, production bundles `.next/standalone`).
 - **Windowing:** Frameless window with custom title bar + native controls, backed by `tauri-plugin-window-state` for automatic persistence and close-to-tray behavior (configurable via `desktop.json`).
 - **Project registry:** Rust port of the project registry keeps `~/.harnspec/projects.json` in sync, validates folders, and exposes commands for refresh/add/switch. Config-driven active project switches restart the embedded UI with the right `SPECS_DIR`.
 - **Tray + shortcuts:** Dedicated modules (`tray.rs`, `shortcuts.rs`) manage recent-project menus, quick actions (open, add, refresh, check for updates), and global shortcuts (`Cmd/Ctrl+Shift+L/K/N`). Frontend listeners open the project switcher or project picker when shortcuts fire.
@@ -67,7 +67,7 @@ The current web-based UI (`harnspec ui`) requires:
 pnpm dev:desktop
 
 # Desktop-only Vite build (used by Tauri before packaging)
-pnpm --filter @leanspec/desktop build
+pnpm --filter @harnspec/desktop build
 ```
 
 ### Packaging Workflow
@@ -100,7 +100,7 @@ src-tauri/target/release/bundle/           # OS-specific artifacts
 │  └─────────────────────────────────────────────────────┘    │
 │                            │                                 │
 │  ┌─────────────────────────────────────────────────────┐    │
-│  │        @leanspec/ui (Next.js Frontend)              │    │
+│  │        @harnspec/ui (Next.js Frontend)              │    │
 │  │  • Existing React components                        │    │
 │  │  • Multi-project switching (spec 109)               │    │
 │  │  • Spec viewing/editing                             │    │
@@ -108,7 +108,7 @@ src-tauri/target/release/bundle/           # OS-specific artifacts
 │  └─────────────────────────────────────────────────────┘    │
 │                            │                                 │
 │  ┌─────────────────────────────────────────────────────┐    │
-│  │         @leanspec/core (Spec Operations)            │    │
+│  │         @harnspec/core (Spec Operations)            │    │
 │  │  • Filesystem reading                               │    │
 │  │  • Spec parsing                                     │    │
 │  │  • Search & filtering                               │    │
@@ -145,7 +145,7 @@ packages/
 │   │   │   ├── projects.rs    # Project management
 │   │   │   └── updater.rs     # Auto-update
 │   │   └── tauri.conf.json    # Tauri config
-│   └── src/                   # Frontend (imports @leanspec/ui)
+│   └── src/                   # Frontend (imports @harnspec/ui)
 │       └── App.tsx            # Desktop-specific wrapper
 ├── ui/                        # Existing web UI package
 └── core/                      # Existing core package
@@ -199,21 +199,21 @@ packages/
 
 ### UI Modifications for Desktop
 
-The desktop app wraps `@leanspec/ui` with minimal changes:
+The desktop app wraps `@harnspec/ui` with minimal changes:
 
 **Desktop-Specific Components:**
 
 ```typescript
 // Desktop title bar with native controls
 <TitleBar>
-  <ProjectSwitcher />  {/* From @leanspec/ui */}
+  <ProjectSwitcher />  {/* From @harnspec/ui */}
   <WindowControls />   {/* Native minimize/maximize/close */}
 </TitleBar>
 
 // Desktop-aware layout
 <DesktopLayout>
-  <Sidebar />          {/* From @leanspec/ui */}
-  <MainContent />      {/* From @leanspec/ui */}
+  <Sidebar />          {/* From @harnspec/ui */}
+  <MainContent />      {/* From @harnspec/ui */}
 </DesktopLayout>
 ```
 
@@ -309,7 +309,7 @@ The desktop app wraps `@leanspec/ui` with minimal changes:
 
 - [x] Create `packages/desktop/` directory structure
 - [x] Initialize Tauri project with Next.js frontend
-- [x] Configure Tauri to load `@leanspec/ui` components
+- [x] Configure Tauri to load `@harnspec/ui` components
 - [x] Set up development workflow (hot reload)
 - [x] Add to pnpm workspace
 
@@ -317,7 +317,7 @@ The desktop app wraps `@leanspec/ui` with minimal changes:
 
 - [x] Implement frameless window with custom title bar
 - [x] Add native window controls (minimize/maximize/close)
-- [x] Import existing sidebar and main content from `@leanspec/ui`
+- [x] Import existing sidebar and main content from `@harnspec/ui`
 - [x] Verify multi-project switching works
 - [x] Test window state persistence (tauri-plugin-window-state)
 
@@ -470,7 +470,7 @@ The desktop app wraps `@leanspec/ui` with minimal changes:
 ### Build Verification
 
 - ✅ `pnpm install`
-- ✅ `pnpm --filter @leanspec/desktop build` (Vite renderer bundle)
+- ✅ `pnpm --filter @harnspec/desktop build` (Vite renderer bundle)
 - ⏳ `pnpm build:desktop` (requires macOS codesign + Tauri targets)
 
 GUI-level smoke tests will run once notarization/codesign credentials are available on CI hardware.
@@ -506,7 +506,7 @@ GUI-level smoke tests will run once notarization/codesign credentials are availa
 
 - Web UI still valuable for remote/server deployment
 - Desktop app addresses fundamentally different use case
-- Can share 90%+ of UI code via `@leanspec/ui`
+- Can share 90%+ of UI code via `@harnspec/ui`
 - Not either/or - both serve different purposes
 
 **Scope boundaries:**

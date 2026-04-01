@@ -23,7 +23,7 @@ Agent skills (`leanspec-sdd`, etc.) need a clear distribution and update strateg
 
 **Context:**
 
-- npm packages (`harnspec`, `@leanspec/mcp`) are versioned and published to npm
+- npm packages (`harnspec`, `@harnspec/mcp`) are versioned and published to npm
 - Skills live in `.github/skills/` in the repo but are NOT bundled in npm packages
 - Users of npm packages have no built-in way to get/update skills
 
@@ -35,7 +35,7 @@ Agent skills (`leanspec-sdd`, etc.) need a clear distribution and update strateg
 
 ## Current State
 
-### npm packages (harnspec, @leanspec/mcp)
+### npm packages (harnspec, @harnspec/mcp)
 
 - Published to npm with semantic versioning
 - Skills **embedded in Rust binary** via `include_str!`
@@ -113,7 +113,7 @@ fn skill_update() -> Result<()> {
 
 ### Considerations
 
-- **Requires Node.js**: `npx` needs Node installed (already required for @leanspec/mcp)
+- **Requires Node.js**: `npx` needs Node installed (already required for @harnspec/mcp)
 - **Network dependency**: First install needs internet
 - **Fallback**: Could bundle skills as fallback if `npx` fails (optional)
 
@@ -204,7 +204,7 @@ const SKILL_FILES: &[(&str, &str)] = &[
 
 This approach requires Node.js for `npx`. This is acceptable because:
 
-- `@leanspec/mcp` already requires Node.js
+- `@harnspec/mcp` already requires Node.js
 - Most AI coding tools (Cursor, Copilot, etc.) are in Node ecosystems
 - Fallback: describe manual install in error message
 

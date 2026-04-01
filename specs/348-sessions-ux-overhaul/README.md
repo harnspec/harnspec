@@ -41,6 +41,7 @@ The current sessions UX suffers from fragmentation and over-complexity that make
 ### Key Constraint: Sessions Are Not Always 1:1 With Specs
 
 Sessions don't map cleanly to a single spec:
+
 - **Multi-spec sessions**: One session implementing multiple specs together
 - **Spec-less sessions**: General coding, refactoring, exploration — no spec at all
 - **Exploratory sessions**: Research/prototyping that pre-dates any spec
@@ -72,6 +73,7 @@ Any solution must treat specs as *optional context* attached to sessions, not th
 ```
 
 **Key observations from the actual UI:**
+
 - Spec detail has 4 columns: nav sidebar | specs nav | spec content | AI chat
 - Header action buttons: View Timeline, Relationships, Sessions (count), Focus
 - "New Session" is a persistent bottom-right floating button, not in the header
@@ -86,6 +88,7 @@ Any solution must treat specs as *optional context* attached to sessions, not th
 Redesign the sessions page as a smart dashboard grouped by time, not a flat list:
 
 **Changes:**
+
 - Sessions page (`/sessions`) becomes a chronological dashboard: Active → Today → Yesterday → Older
 - Each session card shows attached spec(s) as linked chips — zero, one, or many
 - Inline log expansion — click `[Logs ▾]` to expand logs without navigating to `/sessions/:id`
@@ -94,6 +97,7 @@ Redesign the sessions page as a smart dashboard grouped by time, not a flat list
 - Bottom-right "New Session" button uses the prompt-first pattern (spec 337), with optional spec attachment
 
 **Layout:**
+
 ```
 ┌────────┬──────────────────────────────────────────────┬──────────────┐
 │ Nav    │ Sessions                    [+ New] [🔍]     │ AI Chat      │
@@ -129,6 +133,7 @@ Redesign the sessions page as a smart dashboard grouped by time, not a flat list
 Option A's hub as home base, plus a compact inline panel on spec detail pages:
 
 **Changes:**
+
 - Sessions Hub from Option A
 - Spec detail header's "Sessions N" button toggles a collapsible panel below the header (not a drawer)
 - Panel shows max 3-5 sessions, compact cards with status and last log line
@@ -136,6 +141,7 @@ Option A's hub as home base, plus a compact inline panel on spec detail pages:
 - Start session directly from the panel
 
 **Spec Detail with Panel Open:**
+
 ```
 ┌────────┬──────────┬───────────────────────────────┬──────────────┐
 │ Nav    │ Specs    │ #30 Log Lifecycle Hygiene      │ AI Chat      │
@@ -163,6 +169,7 @@ Option A's hub as home base, plus a compact inline panel on spec detail pages:
 Global active session bar at the bottom of the app, visible on every page:
 
 **Changes:**
+
 - Replace the floating "New Session" button with a thin status bar
 - Shows active/pending session count, total cost, expandable
 - Click to expand into a panel showing all active sessions with compact logs
@@ -170,6 +177,7 @@ Global active session bar at the bottom of the app, visible on every page:
 - Works regardless of which page you're on
 
 **Bottom Bar (collapsed) — always visible:**
+
 ```
 ┌────────┬────────────────────────────────────────┬──────────────┐
 │ Nav    │ (any page content)                     │ AI Chat      │
@@ -181,6 +189,7 @@ Global active session bar at the bottom of the app, visible on every page:
 ```
 
 **Bottom Bar (expanded):**
+
 ```
 ┌────────┬────────────────────────────────────────┬──────────────┐
 │ Nav    │ (page content, vertically compressed)  │ AI Chat      │
@@ -212,14 +221,18 @@ Global active session bar at the bottom of the app, visible on every page:
 ## Shared UX Improvements (All Phases)
 
 ### 1. One-Click Session Launch
+
 Replace current bottom-right form with prompt-first creation:
+
 - Auto-selects runner (last used or configured default)
 - Pre-fills prompt from spec content (if in spec context)
 - Supports attaching 0, 1, or multiple specs
 - No dialog unless user wants to customize
 
 ### 2. Session Status in Specs Sidebar
+
 Add real-time session indicators to spec rows in the left specs nav:
+
 ```
 #30 Log Lifecycle   17h ago  🟢    ← Green dot = running session
 #29 Docker Mode     17h ago  ✅    ← Check = completed recently
@@ -227,12 +240,15 @@ Add real-time session indicators to spec rows in the left specs nav:
 ```
 
 ### 3. Inline Log Expansion
+
 Every session card, everywhere, supports `[Logs ▾]` to expand logs inline — no page navigation to `/sessions/:id` needed.
 
 ### 4. Live Notifications
+
 Toast when session completes, fails, or needs HITL attention.
 
 ### 5. Keyboard Shortcuts
+
 - `Cmd+Shift+S` — Start new session (from current spec context if applicable)
 - `Cmd+Shift+L` — Toggle sessions popover / session logs
 - `Escape` — Close expanded panels
@@ -286,6 +302,7 @@ Toast when session completes, fails, or needs HITL attention.
 Verified against actual implementation in `packages/ui/src` and current test/typecheck results.
 
 Completed and verified:
+
 - Phase 1 sessions hub with chronological grouping (`active/today/yesterday/older`) and grouped rendering on Sessions page.
 - Session cards show 0/1/N spec chips and support inline log expansion.
 - Spec-context prefilter flow exists via spec detail Sessions button -> sessions popover with spec filter -> "View all" opens hub with `?spec=` prefilter.
@@ -297,15 +314,18 @@ Completed and verified:
 - i18n updates present for implemented sessions UX labels in both `en` and `zh-CN` locales.
 
 Still pending:
+
 - End-to-end/manual validation checklist remains open.
 
 Pivot note:
+
 - Product direction changed from bottom status bar to top navigation sessions popover; checklist and phase wording were updated to reflect this.
 - Phase 3 spec-detail collapsible panel was removed from the active roadmap because popover + filter satisfies quick access.
 
 Validation evidence:
-- `pnpm --filter @leanspec/ui test` -> 10 files passed, 76 tests passed.
-- `pnpm --filter @leanspec/ui typecheck` -> passed.
+
+- `pnpm --filter @harnspec/ui test` -> 10 files passed, 76 tests passed.
+- `pnpm --filter @harnspec/ui typecheck` -> passed.
 
 ### 2026-03-03 Test Verification
 

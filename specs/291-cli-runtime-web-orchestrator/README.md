@@ -41,12 +41,14 @@ We don't need to fully emulate PTY/TTY because we don't need to natively interac
 ### Why This Approach
 
 **Problems with Full PTY Emulation**:
+
 - ❌ Complex VTE parsing and terminal state management
 - ❌ Dirty rect tracking and streaming overhead
 - ❌ Significant development time (10-12 weeks estimated)
 - ❌ Maintenance burden for terminal edge cases
 
 **Benefits of Sub-Agent Architecture**:
+
 - ✅ Leverage existing, working AI chat (spec 094)
 - ✅ Runners handle their own context - we just invoke and get results
 - ✅ Much simpler implementation (2-3 weeks)
@@ -61,7 +63,7 @@ We don't need to fully emulate PTY/TTY because we don't need to natively interac
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                         │
 │   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │              Web Client (@leanspec/ui)                          │   │
+│   │              Web Client (@harnspec/ui)                          │   │
 │   │                                                                 │   │
 │   │   ┌───────────────────────────────────────────────────────┐     │   │
 │   │   │              AI Chat Interface                        │     │   │
@@ -73,7 +75,7 @@ We don't need to fully emulate PTY/TTY because we don't need to natively interac
 │   └─────────────────────────────────────────────────────────────────┘   │
 │                                     │                                   │
 │   ┌─────────────────────────────────▼───────────────────────────────┐   │
-│   │              Primary Agent (@leanspec/chat-server)              │   │
+│   │              Primary Agent (@harnspec/chat-server)              │   │
 │   │                                                                 │   │
 │   │   ┌─────────────────────────────────────────────────────────┐   │   │
 │   │   │              Tool Registry                              │   │   │
@@ -125,11 +127,13 @@ This revised approach simplifies the umbrella scope:
 **Purpose**: The AI chat is now native Rust in `leanspec-core/src/ai_native/`. Spec 094's implementation has been migrated from Node.js to Rust (spec 264 complete).
 
 **Current Implementation:**
+
 - `chat.rs` - Streaming chat with OpenAI/Anthropic
 - `providers.rs` - Provider selection and client creation
 - `tools/mod.rs` - 13 LeanSpec tools with JsonSchema
 
 **Enhancements Needed:**
+
 - Add file-context injection for `run_subagent` (workspace path only today)
 - Add multi-runner configuration tests
 - Expand sub-agent session lifecycle (spec 295)
@@ -139,6 +143,7 @@ This revised approach simplifies the umbrella scope:
 **Purpose**: Implement `runSubagent` tool that invokes AI runners.
 
 **Key Capabilities**:
+
 - Load runner config from registry (spec 288)
 - Dispatch task to selected AI runner
 - Return consolidated result to primary agent
@@ -149,6 +154,7 @@ This revised approach simplifies the umbrella scope:
 **Purpose**: Manage sub-agent sessions without PTY complexity.
 
 **Key Capabilities**:
+
 - Session creation/destruction for sub-agents
 - Context injection (workspace, spec context)
 - Result collection and formatting
@@ -160,7 +166,7 @@ This revised approach simplifies the umbrella scope:
 
 | Spec                               | Purpose                                          | Status      |
 | ---------------------------------- | ------------------------------------------------ | ----------- |
-| **094-ai-chatbot-web-integration** | Primary agent: Chat UI + `@leanspec/chat-server` | in-progress |
+| **094-ai-chatbot-web-integration** | Primary agent: Chat UI + `@harnspec/chat-server` | in-progress |
 | **295-runtime-session-registry**   | Sub-agent session management                     | planned     |
 
 ### Archived (PTY Approach Deprecated)
@@ -190,6 +196,7 @@ This revised approach simplifies the umbrella scope:
 ## Plan
 
 ### Phase 1: Activate Spec 094 (Week 1)
+
 - [x] Set spec 094 status to in-progress (now a child of this umbrella)
 - [x] Review current chat-server implementation state
 - [x] Identify gaps for runner config integration
@@ -197,9 +204,10 @@ This revised approach simplifies the umbrella scope:
 
 #### Implementation Review Findings (2026-02-04)
 
-**Key Finding**: The Node.js `@leanspec/chat-server` was retired (spec 264 complete). AI chat is now **native Rust** in `leanspec-core/src/ai_native/`.
+**Key Finding**: The Node.js `@harnspec/chat-server` was retired (spec 264 complete). AI chat is now **native Rust** in `leanspec-core/src/ai_native/`.
 
 **Current State:**
+
 - ✅ Native Rust AI chat with streaming (`chat.rs`)
 - ✅ OpenAI and Anthropic providers (`providers.rs`)
 - ✅ 14 LeanSpec tools implemented (`tools/mod.rs`)
@@ -208,6 +216,7 @@ This revised approach simplifies the umbrella scope:
 - ✅ Runner registry integration for sub-agents
 
 **Existing Tools (14):**
+
 1. `list_specs`, `search_specs`, `get_spec`
 2. `update_spec_status`, `link_specs`, `unlink_specs`
 3. `validate_specs`, `read_spec`, `update_spec`
@@ -216,17 +225,20 @@ This revised approach simplifies the umbrella scope:
 6. `run_subagent`
 
 **Gap Analysis:**
+
 - Need `runSubagent` tool to invoke AI runners as sub-agents
 - Need to integrate `RunnerRegistry` (spec 288) with ai_native module
 - Need context injection (workspace path, spec context) for sub-agents
 
 ### Phase 2: Runner Config Integration (Week 1-2)
+
 - [x] Add `RunnerRegistry` access to `ai_native` module
 - [x] Implement runner config resolution (API keys, model settings)
 - [x] Add runner selection based on config
 - [ ] Test with multiple runner configurations
 
 ### Phase 3: Sub-Agent Tool (Week 2)
+
 - [x] Create `RunSubagentInput` struct with JsonSchema derive
 - [x] Implement `run_subagent` tool in `tools/mod.rs`
 - [x] Implement runner dispatch logic (invoke CLI runners)
@@ -234,18 +246,21 @@ This revised approach simplifies the umbrella scope:
 - [x] Return formatted results to primary agent
 
 ### Phase 4: Session Management (Week 3)
+
 - [ ] Simplify spec 295 to sub-agent focus
 - [ ] Implement session lifecycle (create, run, destroy)
 - [ ] Add optional session persistence
 - [ ] Test multi-runner scenarios
 
 ### Phase 5: Integration & Testing (Week 3)
+
 - [ ] End-to-end test: Primary agent invoking Claude sub-agent
 - [ ] End-to-end test: Switching between runners mid-conversation
 - [ ] Performance testing: sub-agent latency
 - [ ] User acceptance testing
 
 ### Phase 6: Documentation (Week 4)
+
 - [ ] Update docs-site with new architecture
 - [ ] Migration guide from old PTY approach (for reviewers)
 - [ ] Runner configuration examples
@@ -253,17 +268,20 @@ This revised approach simplifies the umbrella scope:
 ## Test
 
 ### Integration Tests
+
 - [ ] Primary agent loads runner configurations correctly
 - [ ] `runSubagent` tool dispatches to correct runner
 - [ ] Context injection (workspace path) works
 - [ ] Results returned and formatted in chat
 
 ### Unit Tests
+
 - [ ] Runner config resolution
 - [ ] Sub-agent tool schema validation
 - [ ] Session lifecycle management
 
 ### User Acceptance Tests
+
 - [ ] Run task via Claude sub-agent from chat
 - [ ] Switch between different runners mid-conversation
 - [ ] Primary agent summarizes sub-agent results
@@ -282,11 +300,13 @@ This revised approach simplifies the umbrella scope:
 ### Architecture Decision: Sub-Agent vs PTY Emulation
 
 **Key Realization**: We don't need native CLI interaction. What we need is:
+
 1. A unified chat interface (spec 094 provides this)
 2. Ability to leverage multiple AI tools (sub-agent pattern)
 3. Configuration reuse across tools (runner registry)
 
 **Trade-offs Accepted**:
+
 - ❌ Cannot render TUI interfaces (vim, fzf, etc.) - acceptable for our use case
 - ❌ No interactive CLI sessions - acceptable, results-oriented instead
 - ✅ Much simpler implementation
@@ -315,6 +335,7 @@ This revised approach simplifies the umbrella scope:
 ### Progress Notes
 
 **2026-02-04**
+
 - Verified native AI chat integration and runner registry wiring in Rust.
 - Implemented `run_subagent` tool with runner dispatch and structured output.
 - Tests: `cargo test -p leanspec-core --features full`.

@@ -35,23 +35,27 @@ completed: '2025-12-14'
 The current LeanSpec desktop app (spec 148) bundles a **100MB Next.js standalone server** with full Node.js runtime to serve the UI. This creates several pain points:
 
 **Bundle Size Issues**:
+
 - Desktop app distribution: ~150-200MB (Electron-sized despite using Tauri)
 - Next.js standalone: 100MB alone
 - Full Node.js module tree with pnpm symlink challenges (spec 166)
 - Large download size discourages adoption
 
 **Runtime Complexity**:
+
 - Node.js server spawned as sidecar process
 - Port management and lifecycle coordination
 - pnpm symlink resolution issues in packaged apps
 - Additional memory footprint (~300-500MB for Node.js)
 
 **Development Friction**:
+
 - Complex build pipeline: Next.js build → standalone copy → Tauri bundle
 - Debugging requires coordinating two processes
 - Hot reload complexity in development mode
 
 **Architectural Mismatch**:
+
 - Tauri chosen for lightweight, native feel
 - But UI backend still heavyweight Node.js
 - Defeats the purpose of using Tauri over Electron
@@ -59,36 +63,40 @@ The current LeanSpec desktop app (spec 148) bundles a **100MB Next.js standalone
 ### Opportunity
 
 The desktop app has a **Rust/Tauri backend** that already handles:
+
 - Project management (10 Tauri commands in `commands.rs`)
 - File system operations
 - System tray and native integrations
 - Window management
 
 The UI has **19 Next.js API routes** (~1,322 LOC) that handle:
+
 - Spec CRUD operations (reading/writing markdown)
 - Project registry management
 - Dependency graph computation
 - Stats aggregation
 - File system access
 
-**Key Insight**: Most Next.js API routes just call `@leanspec/core` TypeScript functions. We could implement these same operations in Rust using Tauri commands, eliminating the Node.js server entirely.
+**Key Insight**: Most Next.js API routes just call `@harnspec/core` TypeScript functions. We could implement these same operations in Rust using Tauri commands, eliminating the Node.js server entirely.
 
 ### Proposed Architecture
 
 **Current (Hybrid)**:
+
 ```
 Desktop App
 ├── Tauri Shell (Rust) - Window management, tray, shortcuts
 └── Next.js Server (Node.js) - UI + API backend
-    └── @leanspec/core (TypeScript) - Spec operations
+    └── @harnspec/core (TypeScript) - Spec operations
 ```
 
 **Proposed (Pure Tauri)**:
+
 ```
 Desktop App
 ├── Tauri Backend (Rust) - Everything backend
 │   ├── Window management, tray, shortcuts
-│   ├── Spec operations (migrate from @leanspec/core)
+│   ├── Spec operations (migrate from @harnspec/core)
 │   └── API commands (migrate from Next.js routes)
 └── Static UI (React) - Pure frontend, no SSR
     └── Vite/SPA build
@@ -97,6 +105,7 @@ Desktop App
 ### Benefits Analysis
 
 **Bundle Size** (Critical for Desktop):
+
 - Current: ~150-200MB
 - Target: ~20-40MB (80% reduction)
 - No Node.js runtime needed
@@ -104,12 +113,14 @@ Desktop App
 - Aligns with Tauri's value proposition
 
 **Performance** (High Impact):
+
 - Startup: <1s (vs 2-3s for Node.js server)
 - Memory: ~50-100MB (vs ~400-600MB total)
 - Native file system access (no IPC overhead)
 - No port management or process coordination
 
 **Developer Experience** (Mixed):
+
 - ✅ Simpler architecture (one process)
 - ✅ Faster builds (no Next.js)
 - ✅ Better debugging (unified stack)
@@ -118,6 +129,7 @@ Desktop App
 - ❌ More complex initial migration
 
 **Maintenance** (Long-term Consideration):
+
 - Rust codebase growth: ~1,300 lines → ~3,000 lines
 - TypeScript API routes: ~1,322 lines → 0 lines
 - Single language for backend (consistency)
@@ -126,11 +138,13 @@ Desktop App
 ### Constraints & Considerations
 
 **What Changes**:
+
 - Desktop backend API only (not web UI deployment)
 - Desktop app becomes pure SPA (no SSR)
 - API routes migrated to Tauri commands
 
 **What Stays Same**:
+
 - Web UI still uses Next.js for SSR (spec 082, 087)
 - CLI still uses Node.js (spec package)
 - MCP server still uses Node.js
@@ -138,6 +152,7 @@ Desktop App
 - User-facing features identical
 
 **Critical Questions**:
+
 1. Can we migrate spec operations from TypeScript to Rust efficiently?
 2. Will we lose important Next.js features (SSR, API middleware)?
 3. What's the migration effort vs. benefit ratio?
@@ -146,15 +161,18 @@ Desktop App
 ### Related Context
 
 **Foundation Specs**:
+
 - **148-leanspec-desktop-app**: Current Tauri desktop architecture
 - **166-desktop-ui-server-bundling-fix**: Current Node.js bundling issues
 - **165-tauri-v2-migration**: Recent Tauri migration experience
 
 **Strategic Specs**:
+
 - **168-leanspec-orchestration-platform**: Desktop as orchestration hub
 - **164-desktop-ci-build-artifacts**: Distribution and CI concerns
 
 **Web UI Specs** (Not Affected):
+
 - **087-cli-ui-command**: Web UI with Next.js SSR
 - **082-web-deployment**: Remote UI deployment
 
@@ -167,17 +185,20 @@ Desktop App
 Migrate all API routes to Rust Tauri commands:
 
 **Pros**:
+
 - Maximum bundle size reduction (80%+)
 - Simplest architecture
 - Best performance
 - No Node.js dependency
 
 **Cons**:
+
 - Most effort upfront (~2-3 weeks)
 - Need Rust expertise
 - Reimplementing TypeScript logic
 
-**Scope**: 
+**Scope**:
+
 - 19 Next.js routes → 19+ Tauri commands
 - Core spec operations in Rust
 - Static React SPA
@@ -187,16 +208,19 @@ Migrate all API routes to Rust Tauri commands:
 Keep Next.js for complex routes, migrate simple ones:
 
 **Pros**:
+
 - Incremental migration
 - Reduce risk
 - Keep TypeScript ecosystem
 
 **Cons**:
+
 - Still need Node.js runtime
 - Limited bundle size savings
 - Complex architecture
 
 **Scope**:
+
 - Migrate: Project management, simple CRUD
 - Keep: Dependency graphs, complex stats
 
@@ -205,16 +229,19 @@ Keep Next.js for complex routes, migrate simple ones:
 Keep current architecture, optimize bundling:
 
 **Pros**:
+
 - No migration effort
 - Proven approach
 - Keep TypeScript
 
 **Cons**:
+
 - Still 150MB+ bundles
 - Node.js overhead remains
 - Doesn't solve core issues
 
 **Scope**:
+
 - Better bundling (spec 166)
 - Optimize Node.js startup
 
@@ -222,7 +249,7 @@ Keep current architecture, optimize bundling:
 
 #### Phase 1: Rust Spec Operations Library
 
-Create Rust equivalent of `@leanspec/core`:
+Create Rust equivalent of `@harnspec/core`:
 
 ```rust
 // packages/desktop/src-tauri/src/specs/mod.rs
@@ -235,6 +262,7 @@ pub mod validator;   // Spec validation
 ```
 
 **Key Dependencies**:
+
 - `gray_matter_rs` or `pulldown-cmark` - Markdown parsing
 - `serde_yaml` - YAML frontmatter (already in Cargo.toml)
 - `walkdir` - Directory traversal (already in Cargo.toml)
@@ -268,12 +296,14 @@ Map each Next.js route to Tauri command:
 Replace Next.js with Vite for desktop build:
 
 **Changes**:
+
 - Remove SSR/SSG (desktop doesn't need it)
 - Replace `fetch('/api/...')` with `invoke('command', ...)`
 - Single-page app with React Router
 - Keep existing React components
 
 **Build Output**:
+
 - Vite → `dist/` static files
 - Tauri bundles `dist/` in resources
 - No server process needed
@@ -286,12 +316,14 @@ Replace Next.js with Vite for desktop build:
 Simplify build pipeline:
 
 **Before**:
+
 1. Build Next.js standalone (100MB)
 2. Copy to `src-tauri/ui-standalone/`
 3. Build sidecar with pkg
 4. Tauri bundle with Node.js + sidecar
 
 **After**:
+
 1. Build Vite SPA (2-5MB)
 2. Tauri bundle with static files
 3. Done
@@ -389,6 +421,7 @@ pub async fn get_dependency_graph(
 | Dependency graph | ~1000ms | ~100ms | 90% faster |
 
 **Why Rust is Faster**:
+
 - No Node.js VM overhead
 - Direct file system access
 - Native compiled code
@@ -498,18 +531,21 @@ pub async fn get_dependency_graph(
 ### Decision Framework
 
 **Recommend Full Migration (Option A) If**:
+
 - Desktop app is strategic focus (spec 168 suggests it is)
 - Bundle size is critical for adoption
 - Team has or can acquire Rust skills
 - 4-6 week timeline acceptable
 
 **Recommend Hybrid Approach (Option B) If**:
+
 - Need incremental path
 - Limited Rust expertise
 - Complex features risky to rewrite
 - Want to validate approach first
 
 **Recommend Status Quo (Option C) If**:
+
 - Desktop app is low priority
 - Bundle size not blocking adoption
 - Node.js bundling issues solvable (spec 166)
@@ -518,44 +554,53 @@ pub async fn get_dependency_graph(
 ### Rust Crate Recommendations
 
 **Markdown & Frontmatter**:
+
 - `pulldown-cmark` - Fast CommonMark parser
 - `serde_yaml` - YAML parsing (already in use)
 - Custom frontmatter: `pulldown-cmark` + `serde_yaml` (split on `---` delimiters)
 - Alternative: `markdown-frontmatter-parser` crate if available
 
 **File System**:
+
 - `walkdir` - Already in use, proven
 - `notify` - File watching if needed
 
 **Search**:
+
 - `tantivy` - Full-text search (Lucene-like)
 - `nucleo` - Fuzzy matching (LSP-grade)
 
 **Graphs**:
+
 - `petgraph` - Graph algorithms
 - Industry standard, well maintained
 
 **HTTP/Async**:
+
 - `tokio` - Already in use
 - `serde_json` - Already in use
 
 ### Risks & Mitigations
 
 **Risk**: Rust expertise gap on team
+
 - Mitigation: Pair programming, code reviews, documentation
 - Mitigation: Start with simple routes, build confidence
 
 **Risk**: Migration bugs introduce regressions
+
 - Mitigation: Comprehensive test coverage
 - Mitigation: Beta program with power users
 - Mitigation: Keep Node.js fallback in early versions
 
 **Risk**: Performance doesn't meet expectations
+
 - Mitigation: Benchmark early and often
 - Mitigation: Profile and optimize hot paths
 - Mitigation: Rust typically faster, low risk here
 
 **Risk**: Maintenance becomes harder with Rust
+
 - Mitigation: Clear documentation
 - Mitigation: Follow Rust best practices
 - Mitigation: Invest in tooling (clippy, fmt)
@@ -563,6 +608,7 @@ pub async fn get_dependency_graph(
 ### Web UI Impact (None Expected)
 
 The web UI (spec 087) continues using Next.js:
+
 - SSR needed for SEO and performance
 - Deployed to Vercel/hosting platforms
 - Different requirements than desktop
@@ -571,12 +617,14 @@ This migration only affects the **desktop app backend**.
 
 ### Alternative: WebAssembly
 
-Could compile `@leanspec/core` TypeScript to WASM:
+Could compile `@harnspec/core` TypeScript to WASM:
+
 - Keep TypeScript codebase
 - Get native performance
 - Bundle in Tauri
 
 **Why Not**:
+
 - WASM still needs JavaScript glue code
 - Doesn't eliminate Node.js from bundle
 - Adds complexity without solving bundling issue
@@ -585,15 +633,18 @@ Could compile `@leanspec/core` TypeScript to WASM:
 ### Related Specs
 
 **Direct Dependencies**:
+
 - **148-leanspec-desktop-app**: Current architecture being evaluated
 - **166-desktop-ui-server-bundling-fix**: Problem this solves
 - **165-tauri-v2-migration**: Recent Tauri experience
 
 **Strategic Context**:
+
 - **168-leanspec-orchestration-platform**: Desktop as orchestration hub
 - **164-desktop-ci-build-artifacts**: Build and distribution
 
 **Unaffected Specs**:
+
 - **087-cli-ui-command**: Web UI keeps Next.js
 - **082-web-deployment**: Remote deployment separate
 
@@ -629,12 +680,12 @@ Could compile `@leanspec/core` TypeScript to WASM:
 
 **Completed (2025-12-13)**:
 
-4. **React Router Setup** (`packages/desktop/src/Router.tsx`):
+1. **React Router Setup** (`packages/desktop/src/Router.tsx`):
    - Client-side routing configuration
    - Root layout with project context
    - Routes: `/specs`, `/specs/:specId`, `/stats`, `/dependencies`
 
-5. **Native SPA Pages** (`packages/desktop/src/pages/`):
+2. **Native SPA Pages** (`packages/desktop/src/pages/`):
    - `SpecsPage.tsx` - Specs list with search, filter, sort, list/board views
    - `SpecDetailPage.tsx` - Individual spec with content, metadata, dependencies
    - `StatsPage.tsx` - Project statistics and metrics overview
@@ -642,6 +693,7 @@ Could compile `@leanspec/core` TypeScript to WASM:
    - CSS modules with dark theme styling for all pages
 
 **Remaining Work**:
+
 - E2E testing for SPA navigation
 - Performance benchmarks (bundle size, startup time, memory)
 - Packaging updates to remove Node.js bundling
@@ -654,11 +706,13 @@ Could compile `@leanspec/core` TypeScript to WASM:
 **Verification Date**: 2025-12-14
 
 #### Summary
+
 The Rust/Tauri migration evaluation has made **significant progress** (Phases 1-4 complete), but is **not yet production-ready**. Core functionality is implemented and tested, but critical phases remain incomplete.
 
 #### Test Results
 
 **Unit Tests**: ✅ PASS
+
 ```
 36/36 tests passing in leanspec-core
 - Frontmatter parsing: 5 tests ✅
@@ -672,11 +726,13 @@ The Rust/Tauri migration evaluation has made **significant progress** (Phases 1-
 ```
 
 **Build Status**: ✅ SUCCESS
+
 - Rust binaries compile successfully in release mode
 - Build time: ~37 seconds (clean build)
 - No compilation warnings or errors
 
 **Functional Testing**: ⚠️ PARTIAL
+
 - Desktop Tauri commands exist but not tested in this verification
 - Rust core library functional (tested via CLI proxy)
 - UI SPA pages claimed complete but not visually verified
@@ -699,6 +755,7 @@ The Rust/Tauri migration evaluation has made **significant progress** (Phases 1-
 From spec requirements:
 
 **Performance Validation**: ❌ NOT COMPLETED
+
 - [ ] Bundle size <50MB (vs 150MB+ current) - NOT MEASURED
 - [ ] Startup time <1s (vs 2-3s current) - NOT MEASURED
 - [ ] Memory usage <150MB (vs 400-600MB current) - NOT MEASURED
@@ -706,6 +763,7 @@ From spec requirements:
 - [ ] Dependency graph <200ms - NOT MEASURED
 
 **Functional Parity**: ⚠️ PARTIALLY TESTED
+
 - [x] Core spec operations work (via Rust CLI testing)
 - [ ] Desktop app functionality not tested
 - [ ] Multi-project management not verified
@@ -713,6 +771,7 @@ From spec requirements:
 - [ ] Stats and analytics not visually verified
 
 **Cross-Platform Testing**: ❌ NOT COMPLETED
+
 - [ ] macOS (Intel + Apple Silicon)
 - [ ] Linux (Ubuntu, Fedora)
 - [ ] Windows (10, 11)
@@ -720,12 +779,14 @@ From spec requirements:
 - [ ] Performance benchmarks
 
 **Migration Validation**: ❌ NOT COMPLETED
+
 - [ ] Existing projects load correctly
 - [ ] No data loss during transition
 - [ ] Settings preserved
 - [ ] Backward compatible
 
 **Developer Experience**: ❌ NOT COMPLETED
+
 - [ ] Build time acceptable (only measured once: 37s)
 - [ ] Debugging workflow not documented
 - [ ] Error messages not reviewed
@@ -734,6 +795,7 @@ From spec requirements:
 #### Recommendations
 
 **To Complete Evaluation (Spec 169)**:
+
 1. Run performance benchmarks on actual desktop app
 2. Add E2E test suite for SPA navigation
 3. Test desktop app on macOS, Linux, Windows
@@ -741,13 +803,15 @@ From spec requirements:
 5. Document architecture decisions and API
 
 **For Production Readiness**:
+
 1. Complete Phases 5-6 (Packaging, Distribution, Documentation)
 2. Achieve 100% test coverage on all Test section items
 3. Beta test with real users
 4. Create rollback plan
 5. Update CI/CD for Rust builds
 
-**Current Recommendation**: 
+**Current Recommendation**:
+
 - Spec status: **COMPLETE** ✅ (Phases 1-6 done)
 - Technical viability: **PROVEN** ✅
 - Production readiness: **90%** ✅ (E2E tests and beta testing deferred)
@@ -758,6 +822,7 @@ From spec requirements:
 **Phase 5: Packaging and Distribution** ✅
 
 Changes made:
+
 1. **Switched to Native SPA** (`packages/desktop/src/main.tsx`):
    - Changed from iframe-based `App` to Router-based `AppRouter`
    - Removed dependency on Node.js server
@@ -786,6 +851,7 @@ Changes made:
 **Phase 6: Documentation** ✅
 
 Documentation created:
+
 1. **ARCHITECTURE.md** (9,102 characters):
    - Complete system architecture overview
    - Component breakdown (Rust backend, React frontend)
@@ -878,6 +944,7 @@ Note: Desktop app runtime performance not directly measured but expected to matc
 **Completion Status**: **90-95%** ✅
 
 Phases 1-6 are complete. Remaining work items:
+
 - E2E testing (deferred to follow-up spec)
 - Cross-platform CI testing (deferred to spec 164)
 - Beta testing with users (separate v0.3.0 release process)
@@ -892,6 +959,7 @@ Phases 1-6 are complete. Remaining work items:
 **Recommendation**: **Mark spec as COMPLETE** ✅
 
 This evaluation spec has successfully proven:
+
 1. ✅ Technical viability of Rust/Tauri migration
 2. ✅ Massive performance improvements (10-100x as predicted)
 3. ✅ Significant bundle size reduction (83%)

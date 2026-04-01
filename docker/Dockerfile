@@ -2,7 +2,7 @@
 FROM node:20-slim AS builder
 ARG NPM_TAG=latest
 ARG PLATFORM_PKG=http-linux-x64
-RUN npm install -g @leanspec/${PLATFORM_PKG}@${NPM_TAG} @leanspec/ui@${NPM_TAG}
+RUN npm install -g @harnspec/${PLATFORM_PKG}@${NPM_TAG} @harnspec/ui@${NPM_TAG}
 
 # Stage 2: minimal runtime — no Node, just the Rust binary + static files
 FROM debian:bookworm-slim
@@ -14,8 +14,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libssl3 \
   && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /usr/local/lib/node_modules/@leanspec/${PLATFORM_PKG}/leanspec-http /usr/local/bin/leanspec-http
-COPY --from=builder /usr/local/lib/node_modules/@leanspec/ui/dist /app/ui-dist
+COPY --from=builder /usr/local/lib/node_modules/@harnspec/${PLATFORM_PKG}/leanspec-http /usr/local/bin/leanspec-http
+COPY --from=builder /usr/local/lib/node_modules/@harnspec/ui/dist /app/ui-dist
 
 # Non-root user
 RUN groupadd -r leanspec && useradd -r -g leanspec -m -d /home/leanspec leanspec

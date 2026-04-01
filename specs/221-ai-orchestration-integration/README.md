@@ -27,6 +27,7 @@ updated_at: 2026-02-04T05:45:49.010966Z
 **Problem**: We need unified access to multiple AI coding tools (Claude, Copilot, OpenCode, Gemini) without building complex PTY/TTY emulation.
 
 **Solution**: This umbrella spec coordinates a simplified sub-agent approach:
+
 - **Primary Agent**: Existing AI chat (spec 094) handles conversations and orchestration
 - **Sub-Agents**: AI runners invoked via `runSubagent` tool - each handles its own context
 - **Runner Registry**: Unified configuration for API keys, models, and settings (spec 288)
@@ -40,12 +41,14 @@ updated_at: 2026-02-04T05:45:49.010966Z
 The original plan involved complex PTY/VTE terminal emulation (specs 292-296). We've pivoted to a simpler approach:
 
 **Problems with Full PTY Emulation**:
+
 - ❌ Complex VTE parsing and terminal state management
 - ❌ Dirty rect tracking and streaming overhead
 - ❌ Significant development time (10-12 weeks estimated)
 - ❌ Maintenance burden for terminal edge cases
 
 **Benefits of Sub-Agent Architecture**:
+
 - ✅ Leverage existing, working AI chat (spec 094)
 - ✅ Runners handle their own context - we just invoke and get results
 - ✅ Much simpler implementation (2-3 weeks)
@@ -55,6 +58,7 @@ The original plan involved complex PTY/VTE terminal emulation (specs 292-296). W
 ### Key Insight
 
 We don't need to natively interact with CLI tools. What we need is:
+
 1. A unified chat interface (spec 094 provides this)
 2. Ability to leverage multiple AI tools (sub-agent pattern)
 3. Configuration reuse across tools (runner registry)
@@ -69,7 +73,7 @@ We don't need to natively interact with CLI tools. What we need is:
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                         │
 │   ┌─────────────────────────────────────────────────────────────────┐   │
-│   │              Web Client (@leanspec/ui)                          │   │
+│   │              Web Client (@harnspec/ui)                          │   │
 │   │                                                                 │   │
 │   │   ┌───────────────────────────────────────────────────────┐     │   │
 │   │   │              AI Chat Interface                        │     │   │
@@ -81,7 +85,7 @@ We don't need to natively interact with CLI tools. What we need is:
 │   └─────────────────────────────────────────────────────────────────┘   │
 │                                     │                                   │
 │   ┌─────────────────────────────────▼───────────────────────────────┐   │
-│   │              Primary Agent (@leanspec/chat-server)              │   │
+│   │              Primary Agent (@harnspec/chat-server)              │   │
 │   │                                                                 │   │
 │   │   ┌─────────────────────────────────────────────────────────┐   │   │
 │   │   │              Tool Registry                              │   │   │
@@ -167,10 +171,12 @@ Primary Agent:
 ## Dependencies
 
 **Foundation (exists)**:
+
 - ✅ **186-rust-http-server**: Backend infrastructure
 - ✅ **187-vite-spa-migration**: Frontend foundation
 
 **Core Components**:
+
 - **094-ai-chatbot-web-integration**: Primary agent (chat interface)
 - **239-ai-coding-session-management**: Session management foundation
 - **267-ai-session-runner-configuration**: Runner configs
@@ -179,36 +185,42 @@ Primary Agent:
 ## Implementation Roadmap
 
 ### Phase 1: Restore Spec 094 (Week 1)
+
 - [ ] Un-archive spec 094 (set status back to in-progress)
 - [ ] Review current implementation state
 - [ ] Identify gaps for runner config integration
 - [ ] Archive obsolete PTY-related child specs (292, 293, 294, 296)
 
 ### Phase 2: Runner Config Integration (Week 1-2)
+
 - [ ] Add runner config loader to chat-server
 - [ ] Implement config resolution (API keys, model settings)
 - [ ] Add model selection based on runner type
 - [ ] Test with multiple runner configurations
 
 ### Phase 3: Sub-Agent Tool (Week 2)
+
 - [ ] Create `runSubagent` tool definition with Zod schema
 - [ ] Implement runner dispatch logic
 - [ ] Handle context injection (workspace path, file context)
 - [ ] Return formatted results to primary agent
 
 ### Phase 4: Session Management (Week 3)
+
 - [ ] Simplify spec 295 to sub-agent focus
 - [ ] Implement session lifecycle (create, run, destroy)
 - [ ] Add optional session persistence
 - [ ] Test multi-runner scenarios
 
 ### Phase 5: Integration & Testing (Week 3)
+
 - [ ] End-to-end test: Primary agent invoking Claude sub-agent
 - [ ] End-to-end test: Switching between runners mid-conversation
 - [ ] Performance testing: sub-agent latency
 - [ ] User acceptance testing
 
 ### Phase 6: Documentation (Week 4)
+
 - [ ] Update docs-site with new architecture
 - [ ] Runner configuration examples
 - [ ] Sub-agent development guide

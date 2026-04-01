@@ -27,7 +27,7 @@ depends_on:
 
 ## Overview
 
-This spec serves as a test fixture for validating Mermaid diagram rendering in the LeanSpec UI. It contains various diagram types to ensure the `@leanspec/ui` package correctly renders all supported Mermaid diagram formats.
+This spec serves as a test fixture for validating Mermaid diagram rendering in the LeanSpec UI. It contains various diagram types to ensure the `@harnspec/ui` package correctly renders all supported Mermaid diagram formats.
 
 **Related**: See spec 119 (UI Diagram Rendering) for the implementation details.
 

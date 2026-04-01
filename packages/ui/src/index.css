@@ -2,7 +2,7 @@
 @tailwind utilities;
 
 /* 
- * UI-specific styles that extend @leanspec/ui/styles.css
+ * UI-specific styles that extend @harnspec/ui/styles.css
  * Theme variables are defined in ui styles; this file only contains
  * app-specific overrides and additional styles (prose, syntax highlighting, etc.)
  */

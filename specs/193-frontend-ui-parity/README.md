@@ -21,20 +21,21 @@ transitions:
 
 > **Status**: ⏳ In progress · **Priority**: Critical · **Created**: 2025-12-19 · **Tags**: ui, frontend, vite, react, ui-parity
 
-> Achieve **identical UI/UX** between @leanspec/ui (Next.js) and @leanspec/ui-vite (Vite SPA). Zero compromise on appearance, look, feel, and interactions.
+> Achieve **identical UI/UX** between @harnspec/ui (Next.js) and @harnspec/ui-vite (Vite SPA). Zero compromise on appearance, look, feel, and interactions.
 
 ## Overview
 
 **Part of**: [Spec 190](../190-ui-vite-parity-rust-backend/) - UI-Vite Parity
 
-**Problem**: @leanspec/ui-vite lacks UI parity with @leanspec/ui:
+**Problem**: @harnspec/ui-vite lacks UI parity with @harnspec/ui:
+
 - Missing 16 critical components (dashboard, sidebar, ToC, etc.)
 - API response formats differ between Next.js and Rust backend
 - Different framework patterns (Next.js vs React Router)
 - No systematic mapping for component porting
 - Visual inconsistencies in badges, colors, spacing
 
-**Goal**: Port **every component** and **every page** from @leanspec/ui to @leanspec/ui-vite with **pixel-perfect visual parity** and **identical interactions**.
+**Goal**: Port **every component** and **every page** from @harnspec/ui to @harnspec/ui-vite with **pixel-perfect visual parity** and **identical interactions**.
 
 **Non-Negotiable**: UI/UX must be indistinguishable between the two implementations.
 
@@ -72,6 +73,7 @@ transitions:
 | 21  | `skeletons.tsx`              | ✅ Done | 120   | Low        | Skeleton components                |
 
 **Summary**:
+
 - **Total**: 21 components
 - **Complete** (✅): 21 (100%)
 - **Partial** (⚠️): 0 (0%)
@@ -156,6 +158,7 @@ transitions:
 ```
 
 **Mismatches**:
+
 1. ❌ Stats structure completely different (`totalSpecs` vs `total`, `specsByStatus` vs `by_status`)
 2. ❌ Spec field names different (`specNumber` vs missing, `specName` vs `name`)
 3. ❌ Date types different (`Date` vs `string`)
@@ -165,7 +168,7 @@ transitions:
 
 ### Framework Pattern Mapping
 
-| Pattern                | Next.js (@leanspec/ui)                     | Vite (@leanspec/ui-vite)                           |
+| Pattern                | Next.js (@harnspec/ui)                     | Vite (@harnspec/ui-vite)                           |
 | ---------------------- | ------------------------------------------ | -------------------------------------------------- |
 | **Routing**            | `next/link` → `Link href="/path"`          | `react-router-dom` → `Link to="/path"`             |
 | **Navigation**         | `useRouter()` → `router.push()`            | `useNavigate()` → `navigate()`                     |
@@ -201,6 +204,7 @@ complete: "bg-gradient-to-br from-green-500/10"
 ```
 
 **Typography**:
+
 - Dashboard title: `text-3xl sm:text-4xl font-bold tracking-tight`
 - Section headers: `text-lg font-semibold`
 - Metadata labels: `text-sm font-medium text-muted-foreground`
@@ -208,12 +212,14 @@ complete: "bg-gradient-to-br from-green-500/10"
 - Spec numbers: `text-xs font-mono text-muted-foreground`
 
 **Spacing**:
+
 - Page container: `p-4 sm:p-8`
 - Section gaps: `space-y-6 sm:space-y-8`
 - Card padding: `p-4` or `pt-6` (CardContent)
 - Grid gaps: `gap-3 sm:gap-4`
 
 **Interactions**:
+
 - Hover: `hover:bg-accent transition-colors`
 - Focus: `focus:outline-none focus:ring-2 focus:ring-primary`
 - Active: `data-[state=active]:border-primary`
@@ -224,6 +230,7 @@ complete: "bg-gradient-to-br from-green-500/10"
 ### Systematic Porting Strategy
 
 **Phase 1: API Alignment** (Prerequisites)
+
 1. Create response adapters in `api.ts`
 2. Add type definitions matching Next.js shapes
 3. Test all API endpoints return expected data
@@ -249,6 +256,7 @@ For each component:
    - Error states display
 
 **Phase 3: Integration** (Wire up → Verify)
+
 1. Import component in target page
 2. Pass props from API data
 3. Test with real backend
@@ -332,7 +340,8 @@ export const api = {
 #### 1. DashboardClient → Extract Components
 
 **Source**: `packages/ui/src/app/dashboard-client.tsx` (285 lines)
-**Target**: 
+**Target**:
+
 - `packages/ui-vite/src/pages/DashboardPage.tsx` (main)
 - `packages/ui-vite/src/components/dashboard/DashboardClient.tsx` (logic)
 - `packages/ui-vite/src/components/dashboard/StatCard.tsx` (extracted)
@@ -340,6 +349,7 @@ export const api = {
 - `packages/ui-vite/src/components/dashboard/ActivityItem.tsx` (extracted)
 
 **Changes**:
+
 ```diff
 - import Link from 'next/link';
 + import { Link } from 'react-router-dom';
@@ -355,6 +365,7 @@ export const api = {
 ```
 
 **Completion Criteria**:
+
 - [ ] All 4 stat cards render with gradients
 - [ ] Recent specs section shows last 5 specs
 - [ ] Planned/In-progress sections show filtered specs
@@ -370,6 +381,7 @@ export const api = {
 **Complexity**: HIGH (uses react-window, URL sync, scroll persistence)
 
 **Changes**:
+
 ```diff
 - import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 + import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
@@ -387,6 +399,7 @@ export const api = {
 ```
 
 **Completion Criteria**:
+
 - [ ] Sidebar renders with search input
 - [ ] Filter dropdowns work (status, priority, tags)
 - [ ] Virtual scrolling works (react-window)
@@ -404,6 +417,7 @@ export const api = {
 **Decision**: Keep custom modal OR port cmdk-based version.
 
 **If porting cmdk version**:
+
 ```diff
 - import { useRouter } from 'next/navigation';
 + import { useNavigate } from 'react-router-dom';
@@ -416,6 +430,7 @@ export const api = {
 ```
 
 **Completion Criteria**:
+
 - [ ] Cmd+K opens search modal
 - [ ] Fuzzy search works (fuse.js)
 - [ ] Recent searches persist in localStorage
@@ -429,12 +444,14 @@ export const api = {
 **Target**: `packages/ui-vite/src/components/spec-detail/SubSpecTabs.tsx`
 
 **Changes**:
+
 ```diff
 - No Next.js imports, should work as-is!
 + Just copy and verify ReactMarkdown integration
 ```
 
 **Completion Criteria**:
+
 - [ ] Overview tab shows main content
 - [ ] Sub-spec tabs render dynamically
 - [ ] Tab icons display with correct colors
@@ -449,12 +466,14 @@ export const api = {
 **Note**: Has both `TableOfContentsSidebar` (desktop) and `TableOfContents` (mobile FAB + dialog)
 
 **Changes**:
+
 ```diff
 - No framework-specific code
 + Just copy, verify heading extraction works
 ```
 
 **Completion Criteria**:
+
 - [ ] Headings extracted from markdown
 - [ ] Sidebar variant works (desktop)
 - [ ] FAB + Dialog variant works (mobile)
@@ -468,11 +487,13 @@ export const api = {
 **Target**: `packages/ui-vite/src/components/spec-detail/EditableMetadata.tsx`
 
 **Sub-components to port**:
+
 1. `status-editor.tsx` (95 lines) - Select with API call
 2. `priority-editor.tsx` (95 lines) - Select with API call
 3. `tags-editor.tsx` (130 lines) - Input with badges
 
 **Changes**:
+
 ```diff
 // In status-editor.tsx
 - const res = await fetch(`/api/projects/${projectId}/specs/${specId}/status`, ...);
@@ -484,6 +505,7 @@ export const api = {
 ```
 
 **Completion Criteria**:
+
 - [ ] Status dropdown works, updates persist
 - [ ] Priority dropdown works, updates persist
 - [ ] Tags can be added/removed
@@ -495,17 +517,21 @@ export const api = {
 #### 7-9. Project Management Components
 
 **7. CreateProjectDialog**
+
 - Source: `packages/ui/src/components/create-project-dialog.tsx` (220 lines)
 - Complexity: HIGH (form validation, API integration)
 
 **8. DirectoryPicker**
+
 - Source: `packages/ui/src/components/directory-picker.tsx` (180 lines)
 - Complexity: HIGH (filesystem browser, desktop API)
 
 **9. ProjectSwitcher**
+
 - Already exists in ui-vite, needs enhancement
 
 **Completion Criteria**:
+
 - [ ] Create dialog opens from settings
 - [ ] Directory picker browses filesystem
 - [ ] Project validation works
@@ -516,14 +542,17 @@ export const api = {
 #### 10-11. Context Page Components
 
 **10. ContextClient**
+
 - Source: `packages/ui/src/components/context-client.tsx` (240 lines)
 - Target: `packages/ui-vite/src/components/context/ContextClient.tsx`
 
 **11. ContextFileDetail**
+
 - Source: `packages/ui/src/components/context-file-detail.tsx`
 - Dependency: syntax highlighter
 
 **Completion Criteria**:
+
 - [x] Context page renders file tree
 - [x] Clicking file shows content
 - [x] Syntax highlighting works
@@ -536,6 +565,7 @@ export const api = {
 **14. Skeletons** (loading states)
 
 **Completion Criteria**:
+
 - [x] Loading skeletons show during data fetch
 - [x] Back-to-top button appears on scroll
 - [x] Color picker works (if implementing project colors)
@@ -549,6 +579,7 @@ pnpm add -D @types/react-syntax-highlighter
 ```
 
 **Already installed**:
+
 - ✅ `reactflow` + `@dagrejs/dagre`
 - ✅ `recharts`
 - ✅ `mermaid`
@@ -592,7 +623,7 @@ packages/ui-vite/src/
 │       └── ProjectAvatar.tsx            # ← Port from project-avatar.tsx
 ├── lib/
 │   ├── api.ts                           # ← Add adapters
-│   ├── date-utils.ts                    # ← Port from @leanspec/ui
+│   ├── date-utils.ts                    # ← Port from @harnspec/ui
 │   └── markdown-utils.ts                # ← Port heading extraction
 ├── pages/
 │   ├── DashboardPage.tsx                # ← Refactor to use DashboardClient
@@ -668,7 +699,8 @@ packages/ui-vite/src/
   - [x] Test active spec highlighting
   - [x] Test search input
 
-**Acceptance**: 
+**Acceptance**:
+
 - Sidebar matches Next.js version visually
 - All filters work
 - Virtual scrolling smooth with 100+ specs
@@ -679,6 +711,7 @@ packages/ui-vite/src/
 **Decision Point**: Use existing custom modal OR port cmdk-based version?
 
 **Option A: Port cmdk version** (if want feature parity)
+
 - [x] **Task 2.1**: Install dependencies
   - [x] `pnpm add cmdk fuse.js`
   - [x] Verify cmdk styles load
@@ -690,6 +723,7 @@ packages/ui-vite/src/
   - [x] Test fuzzy search (fuse.js)
 
 **Option B: Keep custom modal** (superseded by Option A cmdk port)
+
 - [x] **Task 2.1**: Enhance existing QuickSearch *(not needed — Option A delivered cmdk/fuse-based search)*
   - [x] Add fuzzy search (fuse.js)
   - [x] Add recent searches
@@ -702,6 +736,7 @@ packages/ui-vite/src/
   - [x] Test recent searches persist
 
 **Acceptance**:
+
 - Cmd+K opens search
 - Fuzzy search works
 - Navigation works
@@ -734,6 +769,7 @@ packages/ui-vite/src/
   - [x] Verify typography matches
 
 **Acceptance**:
+
 - Dashboard looks identical to Next.js
 - All sections render (stats, recent, planned, in-progress, activity)
 - Navigation works
@@ -768,6 +804,7 @@ packages/ui-vite/src/
   - [x] Test with long documents
 
 **Acceptance**:
+
 - ToC extracts all headings (H2-H6)
 - Clicking heading scrolls smoothly
 - URL hash updates
@@ -796,6 +833,7 @@ packages/ui-vite/src/
   - [x] Test clicking navigates to tab
 
 **Acceptance**:
+
 - Main spec shows in "Overview" tab
 - Sub-specs render in separate tabs
 - Icons display correctly
@@ -835,6 +873,7 @@ packages/ui-vite/src/
   - [x] Test `onMetadataUpdate` callback
 
 **Acceptance**:
+
 - Status can be changed via dropdown
 - Priority can be changed via dropdown
 - Tags can be added/removed
@@ -866,6 +905,7 @@ packages/ui-vite/src/
   - [x] Test validation (name, path required)
 
 **Acceptance**:
+
 - Dialog opens from settings
 - Directory picker works (desktop app)
 - Project validation works
@@ -899,6 +939,7 @@ packages/ui-vite/src/
   - [x] Persist to backend
 
 **Acceptance**:
+
 - All projects listed
 - Can create new project
 - Can edit project name/color
@@ -923,6 +964,7 @@ packages/ui-vite/src/
   - [x] Test dark mode
 
 **Acceptance**:
+
 - Settings page matches Next.js visually
 - All CRUD operations work
 - Error handling robust
@@ -948,6 +990,7 @@ packages/ui-vite/src/
   - [x] Test navigation
 
 **Acceptance**:
+
 - [x] Context page renders file tree
 - [x] Clicking file shows content
 - [x] Syntax highlighting works
@@ -974,6 +1017,7 @@ packages/ui-vite/src/
   - [x] Skeleton for delayed loads
 
 **Acceptance**:
+
 - No blank pages during load
 - Skeleton shapes match final content
 - Smooth transitions
@@ -998,6 +1042,7 @@ packages/ui-vite/src/
   - [x] Add contact/report link
 
 **Acceptance**:
+
 - All error cases handled gracefully
 - Empty states helpful
 - No cryptic errors
@@ -1021,6 +1066,7 @@ packages/ui-vite/src/
   - [ ] Disabled states look correct
 
 **Acceptance**:
+
 - Interactions feel smooth
 - Animations not janky
 - Keyboard navigation works
@@ -1064,6 +1110,7 @@ packages/ui-vite/src/
   - [ ] Get approval
 
 **Acceptance**:
+
 - Side-by-side screenshots indistinguishable
 - Colors match design system
 - Typography matches
@@ -1090,6 +1137,7 @@ packages/ui-vite/src/
 For each component and page, verify:
 
 #### Dashboard
+
 - [ ] 4 stat cards display with correct gradients (blue, purple, orange, green)
 - [ ] Stat numbers correct (total, planned, in-progress, complete)
 - [ ] Completion rate displays with TrendingUp icon
@@ -1102,6 +1150,7 @@ For each component and page, verify:
 - [ ] Spacing matches: `p-4 sm:p-8`, `space-y-6 sm:space-y-8`
 
 #### Specs Navigation Sidebar
+
 - [ ] Sidebar width 280px when expanded, 0px when collapsed
 - [ ] Search input filters specs in real-time
 - [ ] Status filter dropdown works (planned, in-progress, complete, archived)
@@ -1118,6 +1167,7 @@ For each component and page, verify:
 - [ ] Mobile: Overlay backdrop appears, closes on click
 
 #### Quick Search (Cmd+K)
+
 - [ ] Cmd+K (macOS) / Ctrl+K (Windows) opens modal
 - [ ] Search input focuses automatically
 - [ ] Fuzzy search finds specs (fuse.js with title/specNumber/tags)
@@ -1131,6 +1181,7 @@ For each component and page, verify:
 - [ ] Recent searches persist in localStorage
 
 #### Spec Detail Page
+
 - [ ] Sub-spec tabs display if sub-specs exist (DESIGN.md, IMPLEMENTATION.md, etc.)
 - [ ] Overview tab shows main README content
 - [ ] Sub-spec tabs show correct icons (Palette, Code, etc.) with colors
@@ -1150,6 +1201,7 @@ For each component and page, verify:
 - [ ] GitHub URL link displays (if set)
 
 #### Dependencies Page
+
 - [ ] Dependency graph renders with ReactFlow
 - [ ] Nodes display: #NNN, name, status badge
 - [ ] Edges show dependencies (amber arrow)
@@ -1167,6 +1219,7 @@ For each component and page, verify:
 - [ ] Controls allow zoom, pan, fit-view
 
 #### Stats Page
+
 - [ ] Summary cards display (Total, Planned, In Progress, Complete, Archived)
 - [ ] Completion rate calculated correctly
 - [ ] Pie chart shows status distribution with colors
@@ -1177,6 +1230,7 @@ For each component and page, verify:
 - [ ] Recharts tooltips work on hover
 
 #### Settings Page
+
 - [ ] All projects listed
 - [ ] "Create Project" button opens dialog
 - [ ] Create dialog has name input, directory picker
@@ -1192,6 +1246,7 @@ For each component and page, verify:
 - [ ] Color picker works (if implementing)
 
 #### Context Page (Optional)
+
 - [x] File tree renders context files
 - [x] Clicking file shows content in viewer
 - [x] Syntax highlighting works for code files
@@ -1201,6 +1256,7 @@ For each component and page, verify:
 ### Functional Tests
 
 #### API Integration
+
 - [ ] GET /api/specs returns array of specs
 - [ ] Specs have correct shape after adapter (id, specNumber, specName, title, status, priority, tags, createdAt, updatedAt)
 - [ ] GET /api/stats returns stats with correct shape (totalSpecs, completionRate, specsByStatus)
@@ -1211,6 +1267,7 @@ For each component and page, verify:
 - [ ] Tags update persists to backend
 
 #### Navigation
+
 - [ ] Clicking spec in sidebar navigates to detail
 - [ ] Clicking spec in quick search navigates to detail
 - [ ] Clicking spec in dashboard navigates to detail
@@ -1220,6 +1277,7 @@ For each component and page, verify:
 - [ ] Direct URL navigation works (/specs/123)
 
 #### Project Context
+
 - [ ] Current project shows in header
 - [ ] Switching project updates all views
 - [ ] Project persists in localStorage
@@ -1227,6 +1285,7 @@ For each component and page, verify:
 - [ ] Single-project mode hides project selector
 
 #### Dark Mode
+
 - [ ] Theme toggle switches between light/dark
 - [ ] Theme persists in localStorage
 - [ ] All colors adapt correctly
@@ -1236,6 +1295,7 @@ For each component and page, verify:
 - [ ] Dependency graph nodes contrast in both modes
 
 #### Responsive Design
+
 - [ ] Dashboard responsive on mobile (cards stack)
 - [ ] Specs sidebar becomes overlay on mobile
 - [ ] Spec detail readable on mobile (single column)
@@ -1245,6 +1305,7 @@ For each component and page, verify:
 - [ ] Navigation menu accessible on mobile
 
 #### Keyboard Navigation
+
 - [ ] Cmd+K / Ctrl+K opens quick search
 - [ ] Tab navigates through interactive elements
 - [ ] Enter submits forms
@@ -1253,6 +1314,7 @@ For each component and page, verify:
 - [ ] Shortcuts help dialog accessible (? or Cmd+/)
 
 #### Loading & Error States
+
 - [x] Skeleton shows while loading dashboard
 - [x] Skeleton shows while loading spec list
 - [x] Skeleton shows while loading spec detail
@@ -1303,6 +1365,7 @@ After completing all porting:
 ### Must Have (100% Requirement)
 
 **All Components Ported**:
+
 - [x] DashboardClient (4 sub-components extracted)
 - [x] SpecsNavSidebar (520 lines, virtual scrolling)
 - [x] QuickSearch (cmdk-based OR enhanced custom)
@@ -1317,6 +1380,7 @@ After completing all porting:
 - [x] StatsCharts (recharts visualization)
 
 **All Pages Feature-Complete**:
+
 - [x] Dashboard: Stats + recent specs + activity
 - [ ] Specs List: Grid/list toggle + rich cards + sidebar
 - [x] Spec Detail: ToC + sub-specs + editable metadata
@@ -1326,6 +1390,7 @@ After completing all porting:
 - [x] Context: File browser + viewer (optional)
 
 **Visual Parity (Pixel-Perfect)**:
+
 - [ ] Colors match design system exactly
   - Status badges: blue/orange/green/gray with exact shades
   - Priority badges: gray/blue/orange/red with exact shades
@@ -1346,12 +1411,14 @@ After completing all porting:
   - Disabled: `opacity-50 cursor-not-allowed`
 
 **API Contracts Aligned**:
+
 - [x] Adapter layer transforms Rust responses to Next.js shapes
 - [x] All type definitions match Next.js types
 - [x] Date handling consistent (Date objects vs strings)
 - [x] Null vs optional handling consistent
 
 **Functional Requirements**:
+
 - [ ] All navigation works (Link components, useNavigate)
 - [ ] All keyboard shortcuts work (Cmd+K, etc.)
 - [ ] All CRUD operations work (create/update/delete)
@@ -1363,6 +1430,7 @@ After completing all porting:
 ### Should Have (High Priority)
 
 **Polish**:
+
 - [ ] Loading skeletons for all async operations
 - [ ] Error boundaries catch and display errors gracefully
 - [ ] Empty states helpful and actionable
@@ -1371,12 +1439,14 @@ After completing all porting:
 - [ ] Page transitions smooth
 
 **Responsive**:
+
 - [ ] Mobile layouts work (overlay sidebar, stacked cards)
 - [ ] Tablet layouts work (balanced spacing)
 - [ ] Desktop layouts work (full features)
 - [ ] Touch interactions work (pan, zoom on graphs)
 
 **Accessibility**:
+
 - [ ] Keyboard navigation complete
 - [ ] Focus indicators visible
 - [ ] ARIA labels present
@@ -1386,16 +1456,19 @@ After completing all porting:
 ### Nice to Have (Optional)
 
 **Context Page**:
+
 - [ ] File tree browser
 - [ ] File content viewer with syntax highlighting
 - [ ] Search/filter functionality
 
 **Project Features**:
+
 - [ ] Color picker for project customization
 - [ ] Project avatars with colors
 - [ ] Favorites/pinning
 
 **Advanced Features**:
+
 - [ ] i18n language switcher
 - [ ] Spec timeline view
 - [ ] Velocity tracking charts
@@ -1448,18 +1521,21 @@ After completing all porting:
 From implementation log:
 
 **What Worked**:
+
 - ✅ Extracting inline components improves maintainability
 - ✅ Starting with visualization features (charts, graphs) provides quick wins
-- ✅ Using @leanspec/ui-components for base UI ensures consistency
+- ✅ Using @harnspec/ui-components for base UI ensures consistency
 - ✅ React Flow better than vis-network for React integration
 - ✅ Dagre layout cleaner than force-directed for dependency graphs
 
 **What Didn't Work**:
+
 - ⚠️ Implementing custom QuickSearch instead of porting cmdk version (feature gap)
 - ⚠️ Leaving components inline in pages (DashboardPage was 300+ lines)
 - ⚠️ Not documenting API differences upfront (discovered during implementation)
 
 **What's Still Needed**:
+
 - 🔄 Remaining components (projects CRUD, context view, polish: specs-client, skeletons, back-to-top, color picker, project avatar)
 - 🔄 Visual parity verification (screenshot comparison)
 - 🔄 Comprehensive testing (functional + visual regression)
@@ -1481,7 +1557,7 @@ From implementation log:
 2. **Diff tools**: Use IDE diff to compare files
 3. **Screenshot tools**: Take before/after screenshots
 4. **Design tokens**: Document color/spacing values once, reference everywhere
-5. **Component library**: Use @leanspec/ui-components as source of truth
+5. **Component library**: Use @harnspec/ui-components as source of truth
 6. **Type-driven development**: Let TypeScript guide the adaptation
 
 ### Related Specs
@@ -1494,32 +1570,39 @@ From implementation log:
 ### Design Decisions
 
 **Q: Should we use cmdk for QuickSearch or keep custom modal?**
+
 - A: Port cmdk version for feature parity (fuzzy search, recent searches, tag filtering)
 - Custom modal is simpler but lacks features
 
 **Q: Should we implement project colors/favorites?**
+
 - A: Optional, not blocking. Add if time permits.
 - Focus on core features first (CRUD, switching)
 
 **Q: Should we build Context page?**
+
 - A: Optional, low priority. Most users don't need it.
 - Focus on Dashboard, Specs, Dependencies first
 
 **Q: Should we add i18n?**
+
 - A: Out of scope for this spec. Separate effort.
 - English-only for now, ensure strings extractable later
 
 **Q: How to handle API differences?**
+
 - A: Create adapter layer in api.ts to normalize Rust responses to Next.js shapes
 - Don't change backend, adapt in frontend
 
 **Q: What about tests?**
+
 - A: Manual testing for MVP, automated visual regression later
 - Use playwright for screenshot comparison in future
 
 ## Implementation Log
 
 ### 2025-12-19: Sub-Spec Created
+
 - Split from parent spec 190
 - Focus: Frontend UI/UX only
 - Depends on: Spec 192 (Backend APIs)
@@ -1527,7 +1610,9 @@ From implementation log:
 - Estimated: 3 weeks (15 days)
 
 ### 2025-12-22: Phase 1 & 2 Complete - Core Features Implemented
+
 **Dependencies Added:**
+
 - ✅ cmdk - Command palette support (installed but custom impl used)
 - ✅ recharts - Charts and visualizations
 - ✅ mermaid - Diagram rendering
@@ -1535,46 +1620,56 @@ From implementation log:
 - ✅ @dagrejs/dagre - Graph layout algorithm
 
 **Pages Implemented:**
+
 1. ✅ DashboardPage (inline, needs extraction)
 2. ✅ StatsPage (with Recharts)
 3. ✅ DependenciesPage (with ReactFlow + Dagre)
 4. ✅ SpecDetailPage (with Mermaid)
 
 **Progress Summary:**
+
 - ✅ 40% of critical components complete
 - ✅ All major visualization features implemented
 - 🔄 Remaining: 14 components (sidebar, search, ToC, metadata, projects)
 
 ### 2025-12-23: Phase 3 - Dashboard Refactor & Navigation
+
 **Refactoring:**
+
 - ✅ Refactored DashboardPage to use extracted components
 - ✅ Fixed entry point issues (App.tsx/main.tsx)
 
 **Navigation:**
+
 - ✅ Implemented SpecsNavSidebar with search, filtering, sorting
 - ✅ Created SpecsLayout wrapper
 - ✅ Polished StatusBadge and PriorityBadge
 
 **Progress Summary:**
+
 - ✅ Dashboard fully componentized
 - ✅ Specs navigation sidebar implemented
 - ✅ Visual parity improved for badges
 - 🔄 Remaining: 12 components (QuickSearch, ToC, metadata, projects, context)
 
 ### 2025-12-24: Spec Redesign - Comprehensive Implementation Plan
+
 **Analysis:**
-- Audited all 21 components from @leanspec/ui
+
+- Audited all 21 components from @harnspec/ui
 - Documented API contract differences (Next.js vs Rust)
 - Mapped framework patterns (routing, navigation, data fetching)
 - Defined visual parity requirements (colors, typography, spacing)
 
 **Design:**
+
 - Created systematic porting strategy (Copy → Adapt → Test)
 - Designed API adapter layer to normalize responses
 - Component-by-component porting guide with completion criteria
 - Detailed file structure after port
 
 **Plan:**
+
 - Phase 0: API Alignment (1-2 days)
 - Phase 1: Core Navigation (3-4 days)
 - Phase 2: Spec Detail Enhancements (3-4 days)
@@ -1585,6 +1680,7 @@ From implementation log:
 - **Total: 13-19 days for 100% parity**
 
 **Testing:**
+
 - Comprehensive visual parity checklist (dashboard, sidebar, search, detail, etc.)
 - Functional tests (API, navigation, project context, dark mode, responsive, keyboard)
 - Performance tests (< 1s loads, smooth scrolling, instant updates)
@@ -1592,6 +1688,7 @@ From implementation log:
 - Regression tests (screenshot comparison, color/spacing verification)
 
 **Success Criteria:**
+
 - All 21 components ported with zero compromise
 - Pixel-perfect visual match with Next.js version
 - All interactions identical
@@ -1599,61 +1696,70 @@ From implementation log:
 - Comprehensive testing passed
 
 **Next Steps:**
+
 - Begin Phase 0: Create API adapter layer
 - Port date-utils and markdown-utils
 - Set up type definitions
 - Start Phase 1: Port SpecsNavSidebar
 
 ### 2025-12-24: Phase 0 - API Alignment Complete
+
 - Added shared Next.js/Rust types in `packages/ui-vite/src/types/api.ts` to mirror Next.js shapes while preserving compatibility fields.
 - Implemented adapter helpers in `lib/api.ts` and `backend-adapter.ts` to normalize specs/stats, extract spec numbers, and compute completion rate.
 - Ported `date-utils.ts` and markdown heading extraction into `ui-vite` utilities for consistent formatting and ToC parsing.
 - Updated dashboard and stats pages to consume normalized stats plus Date objects, keeping spec list rendering on adapted fields.
-- Tests: `pnpm --filter @leanspec/ui-vite test src/lib/api.test.ts` (pass).
+- Tests: `pnpm --filter @harnspec/ui-vite test src/lib/api.test.ts` (pass).
 
 ### 2025-12-24: Phase 1 - Specs Navigation Sidebar Parity
+
 - Rebuilt `SpecsNavSidebar` in `ui-vite` with design-system inputs/selects, status/priority/tag filters, clear-all control, and spec number/title badges.
 - Added react-window virtualization with scroll persistence, active spec centering, and relative update timestamps for long lists.
 - Implemented collapse persistence and mobile overlay behavior; `SpecsLayout` now provides a sticky mobile opener and passes visibility state to the sidebar.
-- Dependency added: `react-window` to `@leanspec/ui-vite` for virtualized rendering.
-- Tests: `pnpm --filter @leanspec/ui-vite test -- --runInBand` (pass).
+- Dependency added: `react-window` to `@harnspec/ui-vite` for virtualized rendering.
+- Tests: `pnpm --filter @harnspec/ui-vite test -- --runInBand` (pass).
 
 ### 2025-12-24: Phase 1 - QuickSearch + Dashboard Client
+
 - Ported QuickSearch to the cmdk-based implementation with Fuse.js fuzzy matching, status/priority badges, tag suggestions, recent-search persistence, and Cmd/Ctrl+K toggle plus desktop menu hook.
-- Added `fuse.js` dependency to `@leanspec/ui-vite` and wired tag query handling in `SpecsPage` so `?tag=` navigation filters list views.
+- Added `fuse.js` dependency to `@harnspec/ui-vite` and wired tag query handling in `SpecsPage` so `?tag=` navigation filters list views.
 - Refactored dashboard into `DashboardClient` with extracted StatCard/SpecListItem/ActivityItem components; `DashboardPage` now focuses on data loading and passes project context for the header bar.
-- Tests: `pnpm --filter @leanspec/ui-vite test -- --runInBand` (pass).
+- Tests: `pnpm --filter @harnspec/ui-vite test -- --runInBand` (pass).
 
 ### 2025-12-24: Phase 2 - Spec Detail Enhancements
+
 - Ported Table of Contents (sidebar + FAB dialog) with github-slugger heading IDs and smooth hash syncing; added floating action button for mobile and sticky sidebar for desktop.
 - Ported SubSpecTabs with mermaid-aware markdown rendering, overview card, and metadata-driven sub-spec listings; integrates into SpecDetailPage alongside dependency chips.
 - Ported editable metadata suite (status/priority/tags editors) plus wrapper card; wired to `api.updateSpec`, optimistic local updates, and inline badge display.
 - Updated SpecDetailPage layout to include ToC, sub-spec tabs, metadata card, dependency links, and badges; added skeleton fallbacks.
 - Dependencies added: `github-slugger` (+ `@types/github-slugger`).
-- Tests: `pnpm --filter @leanspec/ui-vite typecheck` (pass).
+- Tests: `pnpm --filter @harnspec/ui-vite typecheck` (pass).
 
 ### 2025-12-24: Phase 3 - Project Management Parity
+
 - Added project CRUD surface in `ui-vite`: ported CreateProjectDialog and DirectoryPicker with filesystem browsing, validation, and error states.
 - Expanded `lib/api.ts` and types to cover project creation, update, delete, validation, stats, and directory listing; improved response parsing for 204/empty bodies.
 - Rebuilt `ProjectContext` with full CRUD, favorites, validation helper, and state persistence for current project selection.
 - Implemented SettingsPage parity: searchable project grid with rename, color picker, favorites, validation badges, stats preview, delete confirmation, and create-project entry point.
 - Ported shared UI polish components (ColorPicker, ProjectAvatar) for consistent visuals and spacing.
-- Tests: `pnpm --filter @leanspec/ui-vite typecheck` (pass).
+- Tests: `pnpm --filter @harnspec/ui-vite typecheck` (pass).
 
 ### 2025-12-24: Phase 4-5 - Context View & Polish
+
 - Delivered Context page parity with list + detail experience: added context APIs to `lib/api.ts`, new `ContextClient`, `ContextFileDetail`, and grouping/search with markdown rendering and mermaid support.
 - Added rehype highlighting/slug deps to ui-vite for consistent markdown rendering and wired BackToTop utility for long documents.
 - Introduced shared skeleton pack (dashboard/spec list/spec detail/stats/context) and replaced spinner text with parity loaders; upgraded error cards with retry actions across dashboard/specs/stats/context pages.
-- Build: `pnpm -F @leanspec/ui-vite build` (pass).
+- Build: `pnpm -F @harnspec/ui-vite build` (pass).
 
 ### 2025-12-24: Phase 5 Polish (Error/Empty States, Transitions)
+
 - Implemented global error boundary, retry affordances, and shared EmptyState component; wrapped Layout outlet and added graceful fallbacks across specs, dependencies, and context pages.
 - Added global BackToTop control and page fade-in transitions; moved per-page BackToTop usage to centralized control.
 - Introduced actionable empty states for specs (no data vs filtered), dependencies (no relationships), and context (no files or search misses).
-- Typecheck: `pnpm -F @leanspec/ui-vite typecheck` (pass).
+- Typecheck: `pnpm -F @harnspec/ui-vite typecheck` (pass).
 
 ### 2025-12-24: Sub-spec API + Spec Detail Error Handling
+
 - Added Rust HTTP sub-spec detection (scan spec directories, strip frontmatter, icon/color heuristics) and surfaced `sub_specs` on spec detail responses.
 - Normalized API adapters and types to consume new sub-spec payloads, fix date field alignment, and map additional relationships/paths.
 - Spec detail page now prefers server-provided sub-specs, upgrades error messaging (status-aware, network hints), and adds report link + focus-visible styling on tabs.
-- Typecheck: `pnpm -F @leanspec/ui-vite typecheck` (pass).
+- Typecheck: `pnpm -F @harnspec/ui-vite typecheck` (pass).

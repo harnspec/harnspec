@@ -23,7 +23,7 @@ const lazy_ = (C: React.LazyExoticComponent<React.ComponentType>) => (
 /**
  * Shared project-scoped route definitions.
  *
- * Both the web app (@leanspec/ui) and desktop app (@leanspec/desktop)
+ * Both the web app (@harnspec/ui) and desktop app (@harnspec/desktop)
  * compose these under their own top-level layouts and router types
  * (browser vs hash).
  */

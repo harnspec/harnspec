@@ -100,7 +100,7 @@ rust/leanspec-http/tests/
 
 **Comparative Testing** (RECOMMENDED):
 
-- Run both Next.js API (`pnpm -F @leanspec/ui dev`) and Rust HTTP server side-by-side
+- Run both Next.js API (`pnpm -F @harnspec/ui dev`) and Rust HTTP server side-by-side
 - Make identical requests to both servers with same test data
 - Compare JSON responses field-by-field
 - Validate identical behavior and structure
@@ -460,7 +460,7 @@ async fn test_search_relevance_ranking() {
 
 **Comparative Testing (Recommended)**:
 
-1. Run Next.js dev server: `pnpm -F @leanspec/ui dev` (port 3000)
+1. Run Next.js dev server: `pnpm -F @harnspec/ui dev` (port 3000)
 2. Run Rust HTTP server: `cargo run --bin leanspec-http` (port 3001)
 3. Point both at same test project directory
 4. Make identical requests to both APIs
@@ -480,7 +480,7 @@ async fn test_search_relevance_ranking() {
 ```bash
 # Terminal 1: Start Next.js API
 cd /path/to/harnspec
-pnpm -F @leanspec/ui dev
+pnpm -F @harnspec/ui dev
 
 # Terminal 2: Start Rust HTTP server
 cd /path/to/harnspec/rust/leanspec-http
@@ -515,7 +515,7 @@ cargo test --test comparative -- --ignored
 
 **API Compatibility** is critical because:
 
-- **@leanspec/ui-vite** expects exact same response format as Next.js APIs
+- **@harnspec/ui-vite** expects exact same response format as Next.js APIs
 - Field names must match (camelCase in JSON, not snake_case)
 - Frontend code should work unchanged when switching backends
 - Type safety: TypeScript types in frontend must match Rust serialization

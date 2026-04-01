@@ -140,7 +140,7 @@ Add a `subSpecs` field to all tool outputs containing lightweight references:
 **Implementation**: Modify `listSpecsData()` in `packages/cli/src/mcp/tools/list.ts` to:
 
 1. Call `loadSubFiles(specDir)` for each spec
-2. Count tokens for each sub-spec using `countTokens()` from `@leanspec/core`
+2. Count tokens for each sub-spec using `countTokens()` from `@harnspec/core`
 3. Add `subSpecs: [{ name, tokens }]` to response
 
 #### 2. `view` Tool (MCP + CLI)

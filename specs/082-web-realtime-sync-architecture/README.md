@@ -103,7 +103,7 @@ A **configurable dual-mode architecture** that:
 │   Mode 1: Filesystem     │   Mode 2: Database + GitHub      │
 │   (Local Specs)          │   (External Repos)               │
 ├──────────────────────────┼──────────────────────────────────┤
-│  specs/ → @leanspec/core │  GitHub API → PostgreSQL         │
+│  specs/ → @harnspec/core │  GitHub API → PostgreSQL         │
 │  In-Memory Cache (60s)   │  Scheduled Sync (cron)           │
 │  Fast (<100ms)           │  Cached (<50ms)                  │
 │  Realtime Updates        │  Near-Realtime (5-60 min)        │
@@ -439,7 +439,7 @@ Sync full repo (50 specs): ~15s (parallel fetching)
 
 **This spec depends on:**
 
-- `@leanspec/core` APIs (SpecReader, SpecParser)
+- `@harnspec/core` APIs (SpecReader, SpecParser)
 - Existing database schema (keep for Phase 2)
 - Vercel serverless functions (filesystem access)
 

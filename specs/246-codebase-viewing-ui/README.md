@@ -18,13 +18,13 @@ transitions:
   at: 2026-02-24T07:16:13.654610Z
 ---
 
-# Codebase File Viewing in @leanspec/ui
+# Codebase File Viewing in @harnspec/ui
 
 ## Overview
 
-**Problem**: Currently, `@leanspec/ui` only displays spec files. Developers and AI agents need to view actual source code to understand the codebase context, but must switch to external editors like VSCode to do so.
+**Problem**: Currently, `@harnspec/ui` only displays spec files. Developers and AI agents need to view actual source code to understand the codebase context, but must switch to external editors like VSCode to do so.
 
-**Solution**: Add lightweight code file viewing to the UI, enabling developers and AI agents to browse and read source files directly within `@leanspec/ui` without needing a full IDE.
+**Solution**: Add lightweight code file viewing to the UI, enabling developers and AI agents to browse and read source files directly within `@harnspec/ui` without needing a full IDE.
 
 **Why Now**: With AI agents increasingly using the UI for context gathering, the ability to view code files alongside specs provides complete project visibility in one place.
 
@@ -33,6 +33,7 @@ transitions:
 ### Scope
 
 **In Scope**:
+
 - Browse project file tree (respecting `.gitignore`)
 - View source code files with syntax highlighting
 - Basic file navigation (click to open, breadcrumb)
@@ -40,6 +41,7 @@ transitions:
 - Support common code file extensions
 
 **Out of Scope**:
+
 - Code editing (read-only viewing only)
 - Full IDE features (debugging, terminal, etc.)
 - File creation/deletion
@@ -50,7 +52,7 @@ transitions:
 The UI already has a Rust HTTP server backend. We'll extend it with file browsing capabilities:
 
 ```
-@leanspec/ui (Vite SPA)
+@harnspec/ui (Vite SPA)
   ↓ HTTP API
 Rust HTTP Server
   ↓ filesystem
@@ -62,6 +64,7 @@ Read code files
 New endpoints for the Rust HTTP server:
 
 **List Directory Contents**:
+
 ```
 GET /api/projects/:id/files?path=src/components
 Response: {
@@ -74,6 +77,7 @@ Response: {
 ```
 
 **Read File Content**:
+
 ```
 GET /api/projects/:id/file?path=src/components/Button.tsx
 Response: {
@@ -87,12 +91,14 @@ Response: {
 ### UI Components
 
 **File Explorer Panel**:
+
 - Tree view of project files
 - Collapsible directories
 - File icons by extension
 - Keyboard navigation support
 
 **Code Viewer** (Monaco Editor):
+
 - Monaco Editor for VS Code-like experience
 - Syntax highlighting for 50+ languages
 - Line numbers and minimap
@@ -104,6 +110,7 @@ Response: {
 - Jump to line (Ctrl+G)
 
 **Navigation**:
+
 - "Files" tab alongside "Specs" tab
 - Split view: file tree on left, content on right
 - Deep linking: `/project/:id/files/:path`
@@ -111,12 +118,14 @@ Response: {
 ### File Type Support
 
 Phase 1 - Common Languages:
+
 - TypeScript/JavaScript (ts, tsx, js, jsx)
 - Rust (rs)
 - Python (py)
 - JSON, YAML, TOML, Markdown
 
 Phase 2 - Extended Support:
+
 - Go, Java, C/C++, Ruby, etc.
 - Configuration files (.env, .gitignore)
 
@@ -162,23 +171,27 @@ Phase 2 - Extended Support:
 ## Notes
 
 **Security Considerations**:
+
 - Always validate and sanitize file paths
 - Never allow reading outside project root
 - Respect `.gitignore` to avoid exposing sensitive files
 - Size limits prevent memory issues with large files
 
 **Performance**:
+
 - Lazy load directory contents (expand on click)
 - Debounce file search input
 - Use virtual scrolling for large directories
 
 **Future Possibilities**:
+
 - Jump to definition from spec references
 - Show git blame annotations
 - Inline code snippets in spec views
 - Cross-reference: click spec tag to view referenced code
 
 **Monaco Editor Considerations**:
+
 - Use `@monaco-editor/react` for React integration
 - Load Monaco from CDN (vs bundled) to reduce bundle size
 - Lazy load editor component only when viewing files
@@ -186,5 +199,6 @@ Phase 2 - Extended Support:
 - Theme: match UI light/dark mode preference
 
 **Related Specs**:
+
 - [184](../184-ui-packages-consolidation/): Unified UI Architecture
 - [186](../186-rust-http-server/): Rust HTTP Server (adds these endpoints)

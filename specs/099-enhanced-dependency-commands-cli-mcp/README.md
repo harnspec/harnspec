@@ -312,7 +312,7 @@ export function dependencyGraphTool(): ToolDefinition {
 
 **Phase 1: Core Package** (Foundation)
 
-- Extract `SpecDependencyGraph` class to `@leanspec/core`
+- Extract `SpecDependencyGraph` class to `@harnspec/core`
 - Implement graph building and query methods
 - Add unit tests for graph construction and traversal
 - Export for use in CLI, MCP, and web
@@ -363,7 +363,7 @@ export function dependencyGraphTool(): ToolDefinition {
 ### Phase 2: CLI Enhancement (Days 3-4)
 
 - [ ] Update `packages/cli/src/commands/deps.ts`
-  - [ ] Import `SpecDependencyGraph` from `@leanspec/core`
+  - [ ] Import `SpecDependencyGraph` from `@harnspec/core`
   - [ ] Add command options: `--complete`, `--upstream`, `--downstream`, `--impact`
   - [ ] Instantiate graph in `showDeps()` function
   - [ ] Add `displayCompleteGraph()` helper (requiredBy section)
@@ -385,7 +385,7 @@ export function dependencyGraphTool(): ToolDefinition {
 ### Phase 3: MCP Enhancement (Days 5-6)
 
 - [ ] Update `packages/cli/src/mcp/tools/deps.ts`
-  - [ ] Import `SpecDependencyGraph` from `@leanspec/core`
+  - [ ] Import `SpecDependencyGraph` from `@harnspec/core`
   - [ ] Add `mode` parameter to `getDepsData()` function
   - [ ] Implement mode routing (complete, upstream, downstream, impact)
   - [ ] Update tool schema (add mode parameter)
@@ -540,7 +540,7 @@ export function dependencyGraphTool(): ToolDefinition {
 
 ### Design Decisions
 
-**Why Share Implementation in @leanspec/core?**
+**Why Share Implementation in @harnspec/core?**
 
 - **Consistency**: Web, CLI, MCP all show same dependency data
 - **Performance**: Shared, optimized graph implementation
@@ -631,7 +631,7 @@ export function dependencyGraphTool(): ToolDefinition {
 
 **Phase 1 (Core)**:
 
-- ✅ `SpecDependencyGraph` class in `@leanspec/core`
+- ✅ `SpecDependencyGraph` class in `@harnspec/core`
 - ✅ All tests pass
 - ✅ Performance <1ms graph construction
 

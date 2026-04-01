@@ -30,7 +30,7 @@ completed: '2025-12-05'
 
 ## Overview
 
-Enable quick metadata edits (status, priority, tags, assignee) directly in `@leanspec/ui` without requiring a code editor or CLI.
+Enable quick metadata edits (status, priority, tags, assignee) directly in `@harnspec/ui` without requiring a code editor or CLI.
 
 ### Problem
 
@@ -270,7 +270,7 @@ const mutation = useMutation({
 ### Phase 1: API & Backend ✅
 
 - [x] Create `PATCH /api/specs/[id]/metadata` route
-- [x] Implement `updateSpecMetadata` service using @leanspec/core
+- [x] Implement `updateSpecMetadata` service using @harnspec/core
 - [x] Add input validation (status, priority, tags, assignee)
 - [x] Handle errors gracefully
 

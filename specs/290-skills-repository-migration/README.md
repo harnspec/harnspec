@@ -89,7 +89,7 @@ const skillPath = path.join(__dirname, 'templates/skills/leanspec-sdd');
 const skillPath = await resolveSkillPath('leanspec-sdd', {
   sources: [
     'bundled',                    // Fallback: bundled copy
-    'npm:@leanspec/skills',       // npm package
+    'npm:@harnspec/skills',       // npm package
     'github:codervisor/leanspec-skills', // Direct fetch
   ]
 });

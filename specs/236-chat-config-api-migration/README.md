@@ -62,12 +62,12 @@ The chat-server loads and persists config from `~/.leanspec/chat-config.json`, m
          ↓
 ┌─────────────────┐
 │   AI Worker     │ ← Stateless AI SDK wrapper
-│ (@leanspec/     │   (See spec 237 for IPC details)
+│ (@harnspec/     │   (See spec 237 for IPC details)
 │  ai-worker)     │
 └─────────────────┘
 ```
 
-**Note**: Spec 237 transforms the chat-server from HTTP-based to IPC-based `@leanspec/ai-worker`.
+**Note**: Spec 237 transforms the chat-server from HTTP-based to IPC-based `@harnspec/ai-worker`.
 
 ### API Surface (Rust)
 
@@ -125,11 +125,13 @@ pub struct Model {
 ### Chat Server Simplification
 
 Remove from chat-server:
+
 - `ConfigManager` class
 - `/api/chat/config` endpoints
 - Config file I/O logic
 
 Add to chat-server:
+
 - Accept config as request parameter or fetch on-demand from http-server
 - Purely stateless request handler
 
@@ -185,6 +187,7 @@ Add to chat-server:
 ### API Key Security
 
 Consider three approaches:
+
 1. **Environment Variables**: Store `OPENAI_API_KEY` reference, resolve at runtime
 2. **Encrypted Storage**: Encrypt keys in JSON, decrypt in memory
 3. **System Keychain**: Use OS keychain APIs (macOS Keychain, Windows Credential Manager)
@@ -201,7 +204,8 @@ Future consideration: Should each project have its own chat config? Current desi
 
 ### AI Worker Communication
 
-With the IPC-based `@leanspec/ai-worker` (spec 237), config is managed by Rust and passed via IPC:
+With the IPC-based `@harnspec/ai-worker` (spec 237), config is managed by Rust and passed via IPC:
+
 - Rust loads config from `~/.leanspec/config/chat.json`
 - Config included in IPC request payload to worker
 - Worker is stateless, receives everything it needs per request

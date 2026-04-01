@@ -9,7 +9,7 @@ tags:
 created_at: 2025-12-18T13:48:54.278021Z
 updated_at: 2026-01-12T08:27:41.583704878Z
 ---
-# Rename CLI Platform Packages to @leanspec/cli-* Scope
+# Rename CLI Platform Packages to @harnspec/cli-* Scope
 
 > **Status**: planned · **Priority**: medium · **Created**: 2025-12-18
 
@@ -18,14 +18,14 @@ updated_at: 2026-01-12T08:27:41.583704878Z
 Currently, CLI platform binary packages use inconsistent naming:
 
 - **Unscoped**: `harnspec-darwin-arm64`, `harnspec-darwin-x64`, etc.
-- **Scoped**: `@leanspec/mcp-darwin-arm64`, `@leanspec/mcp-darwin-x64`, etc. (MCP)
+- **Scoped**: `@harnspec/mcp-darwin-arm64`, `@harnspec/mcp-darwin-x64`, etc. (MCP)
 
 This creates namespace pollution and inconsistency. We need unified scoped naming while keeping the main `harnspec` CLI package name for user-friendliness.
 
 **Goals:**
 
-- Clean namespace under `@leanspec/` org
-- Consistent with MCP pattern (`@leanspec/mcp-*`)
+- Clean namespace under `@harnspec/` org
+- Consistent with MCP pattern (`@harnspec/mcp-*`)
 - Maintain simple user-facing name (`harnspec`)
 - Professional package management
 
@@ -36,28 +36,28 @@ This creates namespace pollution and inconsistency. We need unified scoped namin
 ```
 Current                      → New
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-harnspec-darwin-arm64       → @leanspec/cli-darwin-arm64
-harnspec-darwin-x64         → @leanspec/cli-darwin-x64
-harnspec-linux-x64          → @leanspec/cli-linux-x64
-harnspec-linux-arm64        → @leanspec/cli-linux-arm64
-harnspec-windows-x64        → @leanspec/cli-windows-x64
+harnspec-darwin-arm64       → @harnspec/cli-darwin-arm64
+harnspec-darwin-x64         → @harnspec/cli-darwin-x64
+harnspec-linux-x64          → @harnspec/cli-linux-x64
+harnspec-linux-arm64        → @harnspec/cli-linux-arm64
+harnspec-windows-x64        → @harnspec/cli-windows-x64
 ```
 
 **Keep unchanged:**
 
 - `harnspec` (main CLI wrapper)
-- `@leanspec/mcp` (MCP wrapper)
-- `@leanspec/mcp-*` (MCP platform packages)
+- `@harnspec/mcp` (MCP wrapper)
+- `@harnspec/mcp-*` (MCP platform packages)
 
 ### Directory Structure
 
 ```
 packages/cli/binaries/
 ├── darwin-arm64/
-│   ├── package.json          # name: "@leanspec/cli-darwin-arm64"
+│   ├── package.json          # name: "@harnspec/cli-darwin-arm64"
 │   └── harnspec             # binary
 ├── darwin-x64/
-│   ├── package.json          # name: "@leanspec/cli-darwin-x64"
+│   ├── package.json          # name: "@harnspec/cli-darwin-x64"
 │   └── harnspec
 └── ...
 ```
@@ -70,11 +70,11 @@ packages/cli/binaries/
 {
   "name": "harnspec",
   "optionalDependencies": {
-    "@leanspec/cli-darwin-arm64": "0.2.10",
-    "@leanspec/cli-darwin-x64": "0.2.10",
-    "@leanspec/cli-linux-x64": "0.2.10",
-    "@leanspec/cli-linux-arm64": "0.2.10",
-    "@leanspec/cli-windows-x64": "0.2.10"
+    "@harnspec/cli-darwin-arm64": "0.2.10",
+    "@harnspec/cli-darwin-x64": "0.2.10",
+    "@harnspec/cli-linux-x64": "0.2.10",
+    "@harnspec/cli-linux-arm64": "0.2.10",
+    "@harnspec/cli-windows-x64": "0.2.10"
   }
 }
 ```
@@ -83,7 +83,7 @@ packages/cli/binaries/
 
 **Phase 1: Publish both versions**
 
-- Publish new `@leanspec/cli-*` packages
+- Publish new `@harnspec/cli-*` packages
 - Keep old `harnspec-*` packages active
 - Main package depends on both (new takes precedence)
 
@@ -102,11 +102,11 @@ packages/cli/binaries/
 ### Phase 1: Rename and Publish New Packages
 
 - [x] Rename platform package directories and package.json
-  - [x] `darwin-arm64/package.json`: `name` → `@leanspec/cli-darwin-arm64`
-  - [x] `darwin-x64/package.json`: `name` → `@leanspec/cli-darwin-x64`
-  - [x] `linux-x64/package.json`: `name` → `@leanspec/cli-linux-x64`
-  - [x] `linux-arm64/package.json`: `name` → `@leanspec/cli-linux-arm64`
-  - [x] `windows-x64/package.json`: `name` → `@leanspec/cli-windows-x64`
+  - [x] `darwin-arm64/package.json`: `name` → `@harnspec/cli-darwin-arm64`
+  - [x] `darwin-x64/package.json`: `name` → `@harnspec/cli-darwin-x64`
+  - [x] `linux-x64/package.json`: `name` → `@harnspec/cli-linux-x64`
+  - [x] `linux-arm64/package.json`: `name` → `@harnspec/cli-linux-arm64`
+  - [x] `windows-x64/package.json`: `name` → `@harnspec/cli-windows-x64`
 
 - [x] Update main CLI wrapper package
   - [x] [packages/cli/package.json](../../packages/cli/package.json): Replace `optionalDependencies` with scoped names
@@ -154,7 +154,7 @@ packages/cli/binaries/
 - [x] `harnspec` wrapper correctly resolves new scoped platform packages
 - [ ] Dev publish workflow publishes all 5 platform packages + main wrapper
 - [ ] Fresh install of `harnspec@dev` works on macOS ARM64
-- [ ] Package search shows packages under `@leanspec` org
+- [ ] Package search shows packages under `@harnspec` org
 - [x] Version sync scripts update all packages correctly
 
 ## Notes
@@ -163,7 +163,7 @@ packages/cli/binaries/
 
 **Completed:**
 
-- ✅ All 5 platform packages renamed to `@leanspec/cli-*` in package.json
+- ✅ All 5 platform packages renamed to `@harnspec/cli-*` in package.json
 - ✅ Main CLI package updated to use scoped names in optionalDependencies
 - ✅ Wrapper script (harnspec-rust.js) updated to resolve scoped package names
 - ✅ CI/CD workflow (publish.yml with `dev=true`) publishes dev builds
@@ -178,7 +178,7 @@ packages/cli/binaries/
 
 ### Why Keep `harnspec` Unscoped?
 
-User experience: `npm i -g harnspec` is simpler than `npm i -g @leanspec/cli`. The main CLI should be easy to discover and install. Only internal platform dependencies need scoping.
+User experience: `npm i -g harnspec` is simpler than `npm i -g @harnspec/cli`. The main CLI should be easy to discover and install. Only internal platform dependencies need scoping.
 
 ### Breaking Change Scope
 
@@ -192,7 +192,7 @@ This is a **non-breaking change** for end users:
 
 **Critical**: Platform packages MUST be published before main wrapper, as implemented in [.github/workflows/publish.yml](../../.github/workflows/publish.yml):
 
-1. Publish all 5 `@leanspec/cli-*` platform packages
+1. Publish all 5 `@harnspec/cli-*` platform packages
 2. Then publish `harnspec` main wrapper
 
 ### Rollback Strategy

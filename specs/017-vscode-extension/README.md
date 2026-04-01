@@ -123,7 +123,7 @@ vscode.lm.registerContextProvider('leanspec', {
 **Usage:**
 
 ```
-@leanspec How should I implement the API endpoints?
+@harnspec How should I implement the API endpoints?
 // Copilot gets context from relevant specs
 ```
 

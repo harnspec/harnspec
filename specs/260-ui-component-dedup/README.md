@@ -21,18 +21,18 @@ transitions:
 
 ## Overview
 
-Remove duplicated UI primitives under packages/ui/src/components/ui and standardize on @leanspec/ui-components as the canonical source to reduce duplication and drift.
+Remove duplicated UI primitives under packages/ui/src/components/ui and standardize on @harnspec/ui-components as the canonical source to reduce duplication and drift.
 
 ## Design
 
 - Canonical components live in packages/ui-components/src/components/ui.
-- @leanspec/ui consumes or re-exports from ui-components; no duplicate component sources remain in packages/ui/src/components/ui.
+- @harnspec/ui consumes or re-exports from ui-components; no duplicate component sources remain in packages/ui/src/components/ui.
 - Any ui-only wrapper or styling tweaks must be explicit and documented.
 
 ## Plan
 
 - [x] Inventory duplicated components in packages/ui/src/components/ui and map them to their equivalents in packages/ui-components/src/components/ui.
-- [x] Update import/export paths in @leanspec/ui to use ui-components versions.
+- [x] Update import/export paths in @harnspec/ui to use ui-components versions.
 - [x] Add or adjust re-exports (if needed) so external imports remain stable.
 - [x] Remove duplicated component files from packages/ui/src/components/ui once imports are updated.
 - [x] Verify no remaining references to deleted files.
@@ -40,8 +40,8 @@ Remove duplicated UI primitives under packages/ui/src/components/ui and standard
 ## Test
 
 - [x] pnpm pre-release
-- [x] @leanspec/ui builds without TypeScript errors
+- [x] @harnspec/ui builds without TypeScript errors
 
 ## Notes
 
-No API differences detected; @leanspec/ui already imports from @leanspec/ui-components directly, so the per-component wrappers were removed.
+No API differences detected; @harnspec/ui already imports from @harnspec/ui-components directly, so the per-component wrappers were removed.

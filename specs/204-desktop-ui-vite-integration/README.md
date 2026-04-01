@@ -17,24 +17,26 @@ transitions:
   at: 2026-01-09T01:12:07.518546605Z
 ---
 
-# Desktop UI Integration with @leanspec/ui-vite
+# Desktop UI Integration with @harnspec/ui-vite
 
 > **Status**: 🗓️ Planned · **Created**: 2026-01-09
 
 ## Overview
 
-The desktop app (@leanspec/desktop) currently has its own custom React implementation separate from @leanspec/ui-vite. This creates code duplication and maintenance overhead. The goal is to refactor @leanspec/desktop to leverage @leanspec/ui-vite, eliminating duplicate code and ensuring UI consistency across platforms.
+The desktop app (@harnspec/desktop) currently has its own custom React implementation separate from @harnspec/ui-vite. This creates code duplication and maintenance overhead. The goal is to refactor @harnspec/desktop to leverage @harnspec/ui-vite, eliminating duplicate code and ensuring UI consistency across platforms.
 
 ### Current State
 
-**@leanspec/ui-vite** already has:
+**@harnspec/ui-vite** already has:
+
 - Backend adapter pattern supporting both HTTP and Tauri IPC
 - Modern React Router setup  
-- All necessary UI components via @leanspec/ui-components
+- All necessary UI components via @harnspec/ui-components
 - i18n support
 - Context providers (Theme, Project, KeyboardShortcuts)
 
-**@leanspec/desktop** has:
+**@harnspec/desktop** has:
+
 - Custom implementation with duplicate components
 - Own routing setup
 - Desktop-specific features (title bar, projects manager, window controls)
@@ -54,10 +56,10 @@ Desktop App
     │   ├── Title bar
     │   ├── Projects manager
     │   └── Window controls
-    └── @leanspec/ui-vite (shared UI)
+    └── @harnspec/ui-vite (shared UI)
         ├── Backend adapter (detects Tauri vs HTTP)
         ├── Pages (Specs, Stats, Dependencies, etc.)
-        └── Components (from @leanspec/ui-components)
+        └── Components (from @harnspec/ui-components)
 ```
 
 ### Key Changes
@@ -73,13 +75,14 @@ Desktop App
    - No breaking changes to existing HTTP usage
 
 3. **Integrate ui-vite into Desktop**
-   - Desktop depends on @leanspec/ui-vite
+   - Desktop depends on @harnspec/ui-vite
    - Desktop provides only shell (title bar, window controls)
    - All UI logic comes from ui-vite
 
 ## Plan
 
 ### Phase 1: Add Tauri Backend Adapter to ui-vite
+
 - [x] Create `src/lib/backend-adapter-tauri.ts` with TauriBackendAdapter class
 - [x] Implement all BackendAdapter methods using Tauri invoke
 - [x] Create adapter factory function that detects environment
@@ -87,18 +90,21 @@ Desktop App
 - [x] Update ui-vite to use adapter factory
 
 ### Phase 2: Update Desktop Dependencies
-- [x] Add @leanspec/ui-vite as workspace dependency to desktop
+
+- [x] Add @harnspec/ui-vite as workspace dependency to desktop
 - [x] Configure Vite to properly resolve ui-vite components
 - [x] Remove duplicate components from desktop/src/components
 - [x] Remove duplicate pages from desktop/src/pages
 
 ### Phase 3: Integration
+
 - [x] Create desktop wrapper component that combines title bar + ui-vite
 - [x] Update desktop App.tsx to use ui-vite router
 - [x] Pass Tauri-specific context to ui-vite
 - [x] Test all pages (Specs, Detail, Stats, Dependencies)
 
 ### Phase 4: Cleanup & Testing
+
 - [x] Remove unused desktop code (old Router, pages, components)
 - [x] Update desktop documentation (ARCHITECTURE.md)
 - [x] Test dev mode: `pnpm dev:desktop`
@@ -120,7 +126,7 @@ Desktop App
 
 ### Implementation Summary
 
-Successfully integrated @leanspec/ui-vite into @leanspec/desktop. Key changes:
+Successfully integrated @harnspec/ui-vite into @harnspec/desktop. Key changes:
 
 1. **Backend Adapter**: ui-vite already had TauriBackendAdapter, just needed proper usage
 2. **Desktop App.tsx**: Created new router using ui-vite pages with desktop shell
@@ -130,7 +136,7 @@ Successfully integrated @leanspec/ui-vite into @leanspec/desktop. Key changes:
 
 ### Files Changed
 
-- `packages/desktop/package.json` - Added @leanspec/ui-vite dependency
+- `packages/desktop/package.json` - Added @harnspec/ui-vite dependency
 - `packages/desktop/src/App.tsx` - Completely rewritten to use ui-vite
 - `packages/desktop/src/main.tsx` - Updated imports for ui-vite CSS and i18n
 - `packages/desktop/src/contexts/DesktopProjectContext.tsx` - New context bridge
@@ -141,6 +147,7 @@ Successfully integrated @leanspec/ui-vite into @leanspec/desktop. Key changes:
 ### Bundle Impact
 
 Production build completed successfully:
+
 - Total bundle size: ~2.1 MB (main chunk)
 - Similar to previous implementation
 - No significant size increase despite sharing code with ui-vite
@@ -161,6 +168,7 @@ Production build completed successfully:
 ### Migration Strategy
 
 This is a refactoring, not a rewrite:
+
 1. ui-vite stays backward compatible (HTTP mode unchanged)
 2. Desktop adds ui-vite as dependency alongside existing code
 3. Test both implementations side-by-side

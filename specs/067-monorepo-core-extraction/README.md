@@ -26,11 +26,11 @@ transitions:
 
 ## Overview
 
-Restructure harnspec into a **pnpm monorepo** with a shared `@leanspec/core` package that provides platform-agnostic spec parsing, validation, and utilities. This enables code reuse across CLI, MCP server, and the upcoming web application while maintaining consistency in how specs are processed.
+Restructure harnspec into a **pnpm monorepo** with a shared `@harnspec/core` package that provides platform-agnostic spec parsing, validation, and utilities. This enables code reuse across CLI, MCP server, and the upcoming web application while maintaining consistency in how specs are processed.
 
 **Problem**: The web application (spec 035) needs to parse and validate specs identically to the CLI/MCP server, but currently ~40% of the codebase is tightly coupled to Node.js file system operations. Duplicating this logic would lead to drift and inconsistency.
 
-**Solution**: Extract shared logic into `@leanspec/core` with abstract storage interfaces, allowing the same parsing/validation code to work with both file systems (CLI) and GitHub API (web).
+**Solution**: Extract shared logic into `@harnspec/core` with abstract storage interfaces, allowing the same parsing/validation code to work with both file systems (CLI) and GitHub API (web).
 
 **Why now?**
 
@@ -50,7 +50,7 @@ harnspec/                         # Root monorepo
 ├── turbo.json                    # Turborepo build orchestration (optional)
 ├── packages/
 │   ├── core/                     # 🎯 SHARED CORE PACKAGE
-│   │   ├── package.json          # @leanspec/core
+│   │   ├── package.json          # @harnspec/core
 │   │   ├── src/
 │   │   │   ├── index.ts          # Public API exports
 │   │   │   ├── types/
@@ -84,7 +84,7 @@ harnspec/                         # Root monorepo
 │   │       └── harnspec.js
 │   │
 │   └── web/                      # 🌐 WEB APP (future - spec 035)
-│       ├── package.json          # @leanspec/web
+│       ├── package.json          # @harnspec/web
 │       ├── src/
 │       │   ├── app/              # Next.js App Router
 │       │   ├── components/
@@ -155,14 +155,14 @@ export * from './validators';
 export * from './utils';
 
 // Example usage in CLI:
-import { SpecLoader, FileSystemStorage } from '@leanspec/core';
+import { SpecLoader, FileSystemStorage } from '@harnspec/core';
 
 const storage = new FileSystemStorage();
 const loader = new SpecLoader(storage);
 const specs = await loader.loadAllSpecs({ includeArchived: false });
 
 // Example usage in web:
-import { SpecLoader, GitHubStorage } from '@leanspec/web/adapters';
+import { SpecLoader, GitHubStorage } from '@harnspec/web/adapters';
 
 const storage = new GitHubStorage(octokit, 'codervisor', 'harnspec');
 const loader = new SpecLoader(storage);
@@ -171,7 +171,7 @@ const specs = await loader.loadAllSpecs({ includeArchived: false });
 
 ### What Goes in Core?
 
-**✅ Include in `@leanspec/core`:**
+**✅ Include in `@harnspec/core`:**
 
 - **Type definitions**: `SpecInfo`, `SpecFrontmatter`, `SpecStatus`, `SpecPriority`, etc.
 - **Parsers**: Frontmatter parsing (gray-matter), spec content parsing
@@ -179,7 +179,7 @@ const specs = await loader.loadAllSpecs({ includeArchived: false });
 - **Utils**: Stats calculation, insights generation, filtering, sorting
 - **Pure functions**: Any logic that doesn't depend on I/O
 
-**❌ Keep in `@leanspec/cli`:**
+**❌ Keep in `@harnspec/cli`:**
 
 - CLI command implementations
 - Terminal output formatting (colors, tables)
@@ -187,7 +187,7 @@ const specs = await loader.loadAllSpecs({ includeArchived: false });
 - File system operations (wrapped in adapter)
 - Git operations
 
-**❌ Goes in `@leanspec/web`:**
+**❌ Goes in `@harnspec/web`:**
 
 - Next.js app code
 - React components
@@ -209,15 +209,15 @@ const specs = await loader.loadAllSpecs({ includeArchived: false });
 
 1. Copy shared code to `packages/core/`
 2. Refactor to use abstract storage interface
-3. Update CLI to use `@leanspec/core` + FileSystemStorage
-4. Update MCP server to use `@leanspec/core`
+3. Update CLI to use `@harnspec/core` + FileSystemStorage
+4. Update MCP server to use `@harnspec/core`
 5. Ensure all tests pass
 
 **Phase 3: Optimize & Document**
 
 1. Add tests for core package
 2. Update documentation
-3. Publish `@leanspec/core` to npm (optional)
+3. Publish `@harnspec/core` to npm (optional)
 4. Create migration guide
 
 ## Plan
@@ -241,8 +241,8 @@ const specs = await loader.loadAllSpecs({ includeArchived: false });
 - [ ] Extract all validators (pure functions, no refactoring needed)
 - [ ] Extract utils: `spec-stats.ts`, `insights.ts`, `filters.ts`
 - [ ] Create `FileSystemStorage` adapter in CLI package
-- [ ] Update CLI to use `@leanspec/core` + adapter
-- [ ] Update MCP server to use `@leanspec/core` + adapter
+- [ ] Update CLI to use `@harnspec/core` + adapter
+- [ ] Update MCP server to use `@harnspec/core` + adapter
 
 ### Phase 3: Testing & Validation (2-3 days)
 
@@ -255,7 +255,7 @@ const specs = await loader.loadAllSpecs({ includeArchived: false });
 
 ### Phase 4: Documentation & Polish (1-2 days)
 
-- [ ] Document `@leanspec/core` API
+- [ ] Document `@harnspec/core` API
 - [ ] Document storage adapter pattern
 - [ ] Update CONTRIBUTING.md with monorepo workflow
 - [ ] Create architecture diagram
@@ -324,7 +324,7 @@ const specs = await loader.loadAllSpecs({ includeArchived: false });
 
 **Required by:**
 
-- spec 035 (live-specs-showcase) - Needs `@leanspec/core` for GitHub parsing
+- spec 035 (live-specs-showcase) - Needs `@harnspec/core` for GitHub parsing
 - spec 065 (v0.3 launch) - This is a critical path item
 
 **Blocks:**
@@ -346,7 +346,7 @@ const specs = await loader.loadAllSpecs({ includeArchived: false });
 - Updated CONTRIBUTING.md with monorepo workflow
 - Run `pnpm install` at root (installs all packages)
 - Run `pnpm test` at root (tests all packages)
-- Package-specific commands: `pnpm --filter @leanspec/cli test`
+- Package-specific commands: `pnpm --filter @harnspec/cli test`
 
 ### Tools & Configuration
 
@@ -365,11 +365,11 @@ const specs = await loader.loadAllSpecs({ includeArchived: false });
 
 - Vitest at root (already using)
 - Run all tests: `pnpm test`
-- Run specific: `pnpm --filter @leanspec/core test`
+- Run specific: `pnpm --filter @harnspec/core test`
 
 ### Open Questions
 
-- [ ] Should we publish `@leanspec/core` to npm or keep workspace-only?
+- [ ] Should we publish `@harnspec/core` to npm or keep workspace-only?
 - [ ] Do we need Turborepo now or add later when we have 3+ packages?
 - [ ] Should MCP server be separate package or stay in CLI?
 
@@ -379,6 +379,6 @@ const specs = await loader.loadAllSpecs({ includeArchived: false });
 - ✅ Core package extracted and tested
 - ✅ CLI/MCP work identically to before
 - ✅ Zero breaking changes for users
-- ✅ Ready for web app to consume `@leanspec/core`
+- ✅ Ready for web app to consume `@harnspec/core`
 - ✅ All tests passing
 - ✅ Documentation updated

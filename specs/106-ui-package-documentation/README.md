@@ -23,7 +23,7 @@ completed: '2025-11-19'
 
 ## Overview
 
-The `@leanspec/ui` package and `harnspec ui` CLI command are complete and functional, but lack comprehensive documentation on the docs site. Users need clear guidance on:
+The `@harnspec/ui` package and `harnspec ui` CLI command are complete and functional, but lack comprehensive documentation on the docs site. Users need clear guidance on:
 
 1. **What it is**: Visual web interface for browsing and managing specs
 2. **How to use it**: Both CLI command and standalone package
@@ -35,7 +35,7 @@ The `@leanspec/ui` package and `harnspec ui` CLI command are complete and functi
 **What exists:**
 
 - ✅ `harnspec ui` CLI command (spec 087 - complete)
-- ✅ `@leanspec/ui` npm package published and working
+- ✅ `@harnspec/ui` npm package published and working
 - ✅ Basic README in `packages/ui/README.md`
 - ✅ Filesystem mode integration (spec 082)
 - ✅ Auto-detection of specs directory
@@ -44,7 +44,7 @@ The `@leanspec/ui` package and `harnspec ui` CLI command are complete and functi
 **What's missing in docs:**
 
 - ❌ No docs-site page for `harnspec ui` command
-- ❌ No reference docs for `@leanspec/ui` package
+- ❌ No reference docs for `@harnspec/ui` package
 - ❌ No usage guide for visual spec management
 - ❌ No explanation of filesystem mode vs other modes
 - ❌ Not mentioned in Quick Start or tutorials
@@ -63,7 +63,7 @@ Users don't know the UI exists. It's not mentioned in:
 **Usage Clarity:**
 Users who find it don't understand:
 
-- Difference between `harnspec ui` and `npx @leanspec/ui`
+- Difference between `harnspec ui` and `npx @harnspec/ui`
 - When to use UI vs CLI commands
 - How filesystem mode works
 - What features are available in the UI
@@ -96,7 +96,7 @@ docs/
 │   └── visual-mode.mdx           # NEW: Using the UI (comprehensive guide)
 └── reference/
     ├── cli.mdx                   # UPDATE: Add `harnspec ui` section
-    └── ui-package.mdx            # NEW: @leanspec/ui reference
+    └── ui-package.mdx            # NEW: @harnspec/ui reference
 ```
 
 ### 2. Content Organization
@@ -115,7 +115,7 @@ For a visual interface to browse and manage specs:
 ```bash
 harnspec ui
 # Or from any project:
-npx @leanspec/ui
+npx @harnspec/ui
 ```
 
 The UI provides:
@@ -141,7 +141,7 @@ The UI provides:
 
 2. **Getting Started**
    - `harnspec ui` command
-   - `npx @leanspec/ui` standalone
+   - `npx @harnspec/ui` standalone
    - Auto-detection vs explicit `--specs`
    - Port configuration, browser control
 
@@ -208,7 +208,7 @@ harnspec ui --no-open
 **How it works:**
 
 - In LeanSpec monorepo: runs local web package
-- External projects: delegates to `npx @leanspec/ui`
+- External projects: delegates to `npx @harnspec/ui`
 - Uses filesystem mode (direct file reads)
 - Auto-opens browser unless `--no-open`
 
@@ -229,10 +229,10 @@ harnspec ui --no-open
 2. **Installation & Usage**
    ```bash
    # Direct usage (no install needed)
-   npx @leanspec/ui
+   npx @harnspec/ui
    
    # Or install globally
-   npm install -g @leanspec/ui
+   npm install -g @harnspec/ui
    leanspec-ui
    ```
 
@@ -459,14 +459,14 @@ All new content needs Chinese translation:
 
 **Package Details:**
 
-- Name: `@leanspec/ui`
-- Published to npm: <https://www.npmjs.com/package/@leanspec/ui>
+- Name: `@harnspec/ui`
+- Published to npm: <https://www.npmjs.com/package/@harnspec/ui>
 - Binary: `leanspec-ui`
 - Current version: 0.2.5 (check for latest)
 
 **CLI Command:**
 
-- `harnspec ui` delegates to `@leanspec/ui` in external projects
+- `harnspec ui` delegates to `@harnspec/ui` in external projects
 - Runs local web package in LeanSpec monorepo (dev mode)
 - Auto-detects package manager (pnpm/yarn/npm)
 
@@ -483,7 +483,7 @@ All new content needs Chinese translation:
 - Next.js standalone output (`output: 'standalone'`)
 - `scripts/prepare-dist.mjs` copies build artifacts
 - `bin/ui.js` entry point with CLI parsing
-- Uses `@leanspec/core` for spec parsing
+- Uses `@harnspec/core` for spec parsing
 
 ### Design Decisions
 
@@ -495,11 +495,11 @@ The UI is a distinct interface with its own use cases and workflows. While CLI d
 - Team collaboration scenarios
 - Presentation use cases
 
-**Why include both `harnspec ui` and `@leanspec/ui`?**
+**Why include both `harnspec ui` and `@harnspec/ui`?**
 Users may encounter either:
 
 - `harnspec ui` - if they have CLI installed
-- `@leanspec/ui` - if they find it via npm/docs
+- `@harnspec/ui` - if they find it via npm/docs
 Both should be documented as they serve slightly different audiences.
 
 **Why emphasize filesystem mode?**

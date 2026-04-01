@@ -18,18 +18,18 @@ completed_at: 2026-02-02T10:08:00.000000Z
 
 ## Overview
 
-Remove the deprecated @leanspec/chat-server package. AI chat is now handled natively in Rust using `async-openai` and `anthropic` crates (see `rust/leanspec-core/src/ai_native/`).
+Remove the deprecated @harnspec/chat-server package. AI chat is now handled natively in Rust using `async-openai` and `anthropic` crates (see `rust/leanspec-core/src/ai_native/`).
 
 ## Design
 
 - AI is now native in Rust (no Node.js IPC worker needed)
 - The `ai_native` module in `leanspec-core` implements full AI chat with OpenAI, Anthropic, and OpenRouter support
-- No workspace references remain to @leanspec/chat-server after deletion
+- No workspace references remain to @harnspec/chat-server after deletion
 
 ## Plan
 
 - [x] Confirm native Rust AI is implemented and working (see `ai_native` module in leanspec-core)
-- [x] Identify internal references to @leanspec/chat-server (found in publish scripts)
+- [x] Identify internal references to @harnspec/chat-server (found in publish scripts)
 - [x] Remove packages/chat-server directory
 - [x] Remove packages/ai-worker build artifact directory
 - [x] Update scripts/publish-main-packages.ts to remove chat-server

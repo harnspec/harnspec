@@ -1,6 +1,6 @@
 /**
  * CodeViewer - syntax-highlighted read-only code viewer using shiki
- * Spec 246 - Codebase File Viewing in @leanspec/ui
+ * Spec 246 - Codebase File Viewing in @harnspec/ui
  */
 
 import { useState, useEffect, useRef, type CSSProperties } from 'react';

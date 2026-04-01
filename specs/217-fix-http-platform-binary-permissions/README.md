@@ -14,7 +14,7 @@ updated_at: 2026-01-16T06:24:48.076181Z
 
 ## Overview
 
-HTTP platform packages (@leanspec/http-darwin-arm64, etc.) published to npm are missing execute permissions on binaries, causing EACCES errors when users run `npx @leanspec/ui@dev`.
+HTTP platform packages (@harnspec/http-darwin-arm64, etc.) published to npm are missing execute permissions on binaries, causing EACCES errors when users run `npx @harnspec/ui@dev`.
 
 **Root cause:** Platform packages are published without `postinstall.js` scripts that set executable permissions. The CI `copy-platform-binaries.sh` only copies binaries, not the package metadata files.
 
@@ -23,6 +23,7 @@ HTTP platform packages (@leanspec/http-darwin-arm64, etc.) published to npm are 
 ## Design
 
 ### Current Flow (Broken)
+
 ```
 1. CI builds binaries → uploads as artifacts
 2. copy-platform-binaries.sh → copies ONLY binaries
@@ -31,6 +32,7 @@ HTTP platform packages (@leanspec/http-darwin-arm64, etc.) published to npm are 
 ```
 
 ### Fixed Flow
+
 ```
 1. CI builds binaries → uploads as artifacts  
 2. copy-platform-binaries.sh → copies binaries
@@ -56,6 +58,7 @@ npm strips file permissions from tarballs. The postinstall script runs after `np
 ## Test
 
 ### Local Testing
+
 ```bash
 # Build and copy binaries
 cd rust && cargo build --release && cd ..
@@ -69,16 +72,17 @@ tar -xzf *.tgz && cat package/package.json  # Should have postinstall script
 ```
 
 ### CI Testing
+
 ```bash
 # Trigger dev publish
 gh workflow run publish.yml --field dev=true
 
 # Verify published package
-npm pack @leanspec/http-darwin-arm64@dev
+npm pack @harnspec/http-darwin-arm64@dev
 tar -tzf *.tgz | grep postinstall.js  # Must exist
 
 # Test user experience
-npx @leanspec/http-darwin-arm64@dev  # Should not error
+npx @harnspec/http-darwin-arm64@dev  # Should not error
 ```
 
 - [x] Local pack includes postinstall.js
@@ -104,6 +108,7 @@ npx @leanspec/http-darwin-arm64@dev  # Should not error
 ### Implementation Details
 
 The `generate-platform-manifests.ts` script:
+
 1. Reads the root package version
 2. For each platform + binary combination:
    - Checks if binary exists

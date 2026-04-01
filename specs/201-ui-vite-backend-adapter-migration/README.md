@@ -23,9 +23,10 @@ transitions:
 
 ## Overview
 
-**Problem**: @leanspec/ui-vite has **duplicate API implementations** - `api.ts` (actively used) and `backend-adapter.ts` (created but unused). This creates maintenance burden, code duplication, and missed opportunity for desktop/Tauri support.
+**Problem**: @harnspec/ui-vite has **duplicate API implementations** - `api.ts` (actively used) and `backend-adapter.ts` (created but unused). This creates maintenance burden, code duplication, and missed opportunity for desktop/Tauri support.
 
 **Current State**:
+
 - All components import from `api.ts` directly (18 files)
 - `backend-adapter.ts` exists with `HttpBackendAdapter` + `TauriBackendAdapter` abstraction
 - Both files have ~200 lines of duplicate HTTP methods
@@ -43,6 +44,7 @@ transitions:
 **Delete**: Duplicate methods in `api.ts` (keep only adapters/utilities)
 
 **Rationale**:
+
 1. `backend-adapter.ts` already has Tauri support infrastructure (needed for desktop app)
 2. Interface-based design enables testing and mocking
 3. Cleaner separation of concerns (adapter pattern)
@@ -51,6 +53,7 @@ transitions:
 ### Current File Structure
 
 **api.ts** (~380 lines):
+
 ```typescript
 // ✅ Keep these utilities
 - adaptSpec(), adaptSpecDetail(), adaptStats()
@@ -67,6 +70,7 @@ transitions:
 ```
 
 **backend-adapter.ts** (~241 lines):
+
 ```typescript
 // ✅ Keep entire file
 - BackendAdapter interface
@@ -80,6 +84,7 @@ transitions:
 **Phase 1: Extend Backend Adapter**
 
 Add missing methods to `backend-adapter.ts` that exist in `api.ts`:
+
 - `createProject()`
 - `updateProject()`
 - `deleteProject()`
@@ -144,10 +149,12 @@ Test all 18 importing files still work with **zero breaking changes**.
 ## Test
 
 **Type Safety**:
+
 - [x] `pnpm -C packages/ui-vite typecheck` passes with no errors
 - [ ] No missing exports or broken imports in any component
 
 **Runtime Verification** (test with `pnpm -C packages/ui-vite dev`):
+
 - [ ] Dashboard page loads and displays specs
 - [ ] Spec detail page fetches and renders content
 - [ ] Status/priority updates work (PATCH `/api/specs/:spec/metadata`)
@@ -159,11 +166,13 @@ Test all 18 importing files still work with **zero breaking changes**.
 - [ ] Settings page loads
 
 **Unit Tests**:
+
 - [x] `pnpm -C packages/ui-vite test` passes all tests
 - [x] Mock/stub patterns in `api.test.ts` still work
 - [x] No test failures related to API imports
 
 **Build Verification**:
+
 - [ ] `pnpm -C packages/ui-vite build` succeeds
 - [ ] Production bundle size doesn't increase significantly
 
@@ -172,6 +181,7 @@ Test all 18 importing files still work with **zero breaking changes**.
 ### Files That Import api.ts (18 total)
 
 **Pages** (6 files):
+
 - `src/pages/StatsPage.tsx`
 - `src/pages/SpecsPage.tsx`
 - `src/pages/ProjectsPage.tsx`
@@ -180,6 +190,7 @@ Test all 18 importing files still work with **zero breaking changes**.
 - `src/pages/DashboardPage.tsx`
 
 **Components** (6 files):
+
 - `src/components/SpecsNavSidebar.tsx`
 - `src/components/QuickSearch.tsx`
 - `src/components/metadata-editors/StatusEditor.tsx`
@@ -188,9 +199,11 @@ Test all 18 importing files still work with **zero breaking changes**.
 - `src/components/projects/DirectoryPicker.tsx`
 
 **Tests** (1 file):
+
 - `src/lib/api.test.ts`
 
 **Type-only imports** (5 files):
+
 - `src/components/specs/ListView.tsx`
 - `src/components/specs/BoardView.tsx`
 - `src/components/dashboard/SpecListItem.tsx`
@@ -202,6 +215,7 @@ All should continue working with re-export pattern (zero breaking changes).
 ### Backend Adapter Methods
 
 **Already implemented in `backend-adapter.ts`**:
+
 - ✅ `getProjects()`
 - ✅ `switchProject()`
 - ✅ `getSpecs()`
@@ -212,6 +226,7 @@ All should continue working with re-export pattern (zero breaking changes).
 - ✅ `getDependencies()`
 
 **Need to add to backend-adapter** (8 methods):
+
 - ❌ `createProject(path, options)`
 - ❌ `updateProject(projectId, updates)`
 - ❌ `deleteProject(projectId)`
@@ -223,10 +238,11 @@ All should continue working with re-export pattern (zero breaking changes).
 
 ### Why backend-adapter.ts Was Created
 
-From git history (commit ec949bd): 
+From git history (commit ec949bd):
 > "Backend adapter pattern for web (HTTP) vs desktop (Tauri IPC) - This allows the same UI code to work in both browser and Tauri contexts"
 
 The abstraction was designed for **dual-environment support**:
+
 - **Web**: Uses `HttpBackendAdapter` with `fetch()` calls to Rust HTTP server
 - **Desktop**: Uses `TauriBackendAdapter` with Tauri IPC commands (future)
 
@@ -235,10 +251,12 @@ However, the migration was **never completed** - components continued importing 
 ### Related Specs
 
 **Depends on**:
+
 - 193-frontend-ui-parity (need stable API before refactoring)
 - 198-ui-vite-remaining-issues (fix existing bugs first)
 
 **Enables**:
+
 - 202-ui-vite-type-system-consolidation (eliminate adapter overhead)
 - Future Tauri desktop integration
 - Easier testing and mocking

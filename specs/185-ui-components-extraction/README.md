@@ -21,7 +21,6 @@ transitions:
 
 > **Status**: ✅ Complete · **Priority**: High · **Created**: 2025-12-18 · **Tags**: ui, components, architecture
 
-
 > **Part of**: [Spec 184](../184-ui-packages-consolidation/) - Unified UI Architecture
 >
 > **Token Budget**: Target ~1800 tokens
@@ -29,6 +28,7 @@ transitions:
 ## Overview
 
 **Problem**: We maintain two separate UI implementations with duplicated components:
+
 - **`packages/ui`** (Next.js): Rich, polished components but coupled to Next.js
 - **`packages/desktop`** (Tauri + Vite): Basic components, limited features
 
@@ -39,6 +39,7 @@ This creates duplication, inconsistency, maintenance burden, and tight coupling 
 **Goal**: Remove Next.js entirely by making all components framework-agnostic.
 
 **Scope**:
+
 - Extract React components from both packages/ui and packages/desktop
 - Refactor routing-dependent components to accept navigation props
 - Upgrade to best-in-class implementations
@@ -69,7 +70,9 @@ packages/ui-components/
 ├── vite.config.ts           # Library build config
 └── package.json
 ```
+
 currently Next.js - will be made framework-agnostic)**:
+
 - SpecList with advanced filters, sorting, grouping
 - SpecDetail with sub-specs, metadata panel
 - DependencyGraph using reactflow (refactor to accept navigation callbacks)
@@ -79,11 +82,13 @@ currently Next.js - will be made framework-agnostic)**:
 - Layout components
 
 **From packages/desktop (Tauri)**:
+
 - ProjectSwitcher with quick access (refactor to accept routing props)
 - Simplified SpecCard
 - File tree navigation
 
 **New/Upgraded**:
+
 - ProjectDialog (creation/settings)
 - MetadataEditor (standardized form)
 - GraphControls (zoom, pan, layout)
@@ -91,6 +96,7 @@ currently Next.js - will be made framework-agnostic)**:
 - Toast notifications
 
 **Routing Strategy**: Components that need navigation will accept callback props instead of using framework-specific routing hooks.ndardized form)
+
 - GraphControls (zoom, pan, layout)
 - ErrorBoundary, LoadingStates
 - Toast notifications
@@ -108,6 +114,7 @@ currently Next.js - will be made framework-agnostic)**:
 ### Build Configuration
 
 Tree-shaking enabled Vite library build:
+
 ```typescript
 // vite.config.ts
 export default defineConfig({
@@ -124,13 +131,15 @@ export default defineConfig({
 ```
 
 Import only what you need:
+
 ```typescript
-import { SpecList, useSpecs } from '@leanspec/ui-components'
+import { SpecList, useSpecs } from '@harnspec/ui-components'
 ```
 
 ## Plan
 
 ### Phase 1: Package Setup (Day 1) ✅
+
 - [x] Create `packages/ui-components` directory
 - [x] Initialize package.json with dependencies
 - [x] Configure Vite for library build
@@ -139,12 +148,14 @@ import { SpecList, useSpecs } from '@leanspec/ui-components'
 - [x] Set up Storybook
 
 ### Phase 2: Extract Types & Utilities (Day 1-2) ✅
+
 - [x] Extract TypeScript types from both packages
 - [x] Extract formatters (date, status, priority)
 - [x] Extract validators and helpers
 - [x] Write unit tests
 
 ### Phase 3: Extract Core Components (Day 2-4) ✅
+
 - [x] Extract and upgrade SpecList (filters, sorting, grouping) - framework-agnostic
 - [x] Extract and upgrade SpecDetail (metadata panel, sub-specs) - framework-agnostic
 - [x] Extract SpecCard (compact view)
@@ -158,6 +169,7 @@ import { SpecList, useSpecs } from '@leanspec/ui-components'
 - [x] Write Storybook stories
 
 ### Phase 4: Extract Visualization (Day 4-5)
+
 - [x] Extract DependencyGraph (reactflow) - completed as SpecDependencyGraph
 - [x] Extract StatsCard (simple stat display)
 - [x] Extract StatsOverview (stats grid)
@@ -165,18 +177,21 @@ import { SpecList, useSpecs } from '@leanspec/ui-components'
 - [ ] Extract full StatsCharts (recharts) - requires full chart library (deferred)
 
 ### Phase 5: Extract Search & Filter (Day 5-6) ✅
+
 - [x] Extract SearchInput with debouncing and keyboard shortcuts
 - [x] Extract FilterSelect (dropdown filter)
 - [x] Extract SearchResults
 - [x] Add keyboard shortcuts
 
 ### Phase 6: Extract Project Management (Day 6-7) ✅
+
 - [x] Extract ProjectSwitcher (recent, favorites) - framework-agnostic with callbacks
 - [x] Extract ProjectCard
 - [x] Extract ProjectAvatar
 - [x] Create ProjectDialog (new/edit) - framework-agnostic with callbacks
 
 ### Phase 7: Extract Layout (Day 7) ✅
+
 - [x] Extract EmptyState component
 - [x] Extract loading skeletons (SpecList, SpecDetail, Stats, Kanban, Project, Sidebar)
 - [x] Extract base UI components (Button, Card, Input, Skeleton, Separator, Avatar)
@@ -186,17 +201,20 @@ import { SpecList, useSpecs } from '@leanspec/ui-components'
 - [x] Test dark mode - all components support dark mode
 
 ### Phase 8: Extract Custom Hooks (Day 8) ✅
+
 - [x] Extract useSpecs, useSpecDetail, useSearch - framework-agnostic with callback pattern
 - [x] Extract useProjects, useDependencyGraph - framework-agnostic
 - [x] Extract useLocalStorage, useDebounce
 - [x] Extract useTheme (theme state management)
 
 ### Phase 9: Documentation (Day 9) ✅
+
 - [x] Write comprehensive README
 - [x] Complete Storybook documentation (all components)
 - [x] Add usage examples and migration guide
 
 ### Phase 10: Integration Testing (Day 10) ✅
+
 - [x] Test all components in isolation - Storybook provides component isolation
 - [x] Test dark mode and responsive layouts - verified in Storybook
 - [x] Performance testing (bundle size) - ~95KB gzipped (tree-shakeable)
@@ -242,31 +260,37 @@ import { SpecList, useSpecs } from '@leanspec/ui-components'
 ### Phase 1-2 Completed (2025-12-18)
 
 **Package Setup:**
+
 - Created `packages/ui-components` with Vite library build
 - Configured tree-shaking, TypeScript strict mode, Tailwind CSS
 - Set up Storybook 8 for component documentation
 - Bundle size: ~24KB gzipped
 
 **Extracted Components:**
+
 - `Badge` - Base UI component with variants
 - `StatusBadge` - Spec status display (planned, in-progress, complete, archived)
 - `PriorityBadge` - Spec priority display (low, medium, high, critical)
 
 **Extracted Utilities:**
+
 - `cn()` - Tailwind class merging
 - `extractH1Title()` - Markdown heading extraction
 - Date formatters: `formatDate`, `formatDateTime`, `formatRelativeTime`, `formatDuration`
 
 **Extracted Types:**
+
 - All spec types: `Spec`, `LightweightSpec`, `SidebarSpec`, etc.
 - Relationship types: `SpecRelationships`, `DependencyGraph`, etc.
 - Validation types: `ValidationResult`, `ValidationIssue`
 
 **Extracted Hooks:**
+
 - `useLocalStorage` - State persistence
 - `useDebounce`, `useDebouncedCallback` - Input debouncing
 
 **Unit Tests:**
+
 - `cn()` utility tests
 - `extractH1Title()` tests
 - Date formatter tests
@@ -274,30 +298,36 @@ import { SpecList, useSpecs } from '@leanspec/ui-components'
 ### Phase 3, 7, 9 Progress (2025-12-18)
 
 **New UI Components:**
+
 - `Button` - Button with variants (default, destructive, outline, secondary, ghost, link)
 - `Card` - Card container with CardHeader, CardContent, CardFooter, CardTitle, CardDescription
 - `Input` - Form input field
 - `Skeleton` - Loading placeholder
 
 **New Spec Components:**
+
 - `SpecCard` - Compact spec card for lists with status, priority, tags, updated time
 - `TagBadge` - Display a single tag with optional icon and remove button
 - `TagList` - Display multiple tags with truncation
 
 **New Layout Components:**
+
 - `EmptyState` - Empty state placeholder with icon, title, description, action
 - Loading skeletons: `SpecListSkeleton`, `SpecDetailSkeleton`, `StatsCardSkeleton`, `KanbanBoardSkeleton`, `ProjectCardSkeleton`, `SidebarSkeleton`, `ContentSkeleton`
 
 **New Project Components:**
+
 - `ProjectAvatar` - Avatar with initials and color from project name
 
 **New Utilities:**
+
 - `getColorFromString()` - Generate consistent color from string
 - `getContrastColor()` - Get contrasting text color for background
 - `getInitials()` - Get initials from name string
 - `PROJECT_COLORS` - Predefined color palette
 
 **New Storybook Stories:**
+
 - EmptyState stories (NoSpecs, NoProjects, NoResults, WithLink)
 - LoadingSkeletons stories (all skeleton types)
 - SpecCard stories (default, planned, complete, selected, many tags, grid)
@@ -307,20 +337,25 @@ import { SpecList, useSpecs } from '@leanspec/ui-components'
 ### Phase 5, 7, 8 Progress (2025-12-18)
 
 **New Search & Filter Components:**
+
 - `SearchInput` - Search input with keyboard shortcut hint (⌘K)
 - `FilterSelect` - Dropdown filter component with icons
 
 **New Navigation Components:**
+
 - `ThemeToggle` - Light/dark theme toggle with animated icons
 - `BackToTop` - Floating scroll-to-top button
 
 **New Spec Components:**
+
 - `SpecMetadata` - Metadata display card with all spec details (status, priority, dates, assignee, tags, GitHub link)
 
 **New Hooks:**
+
 - `useTheme` - Theme state management with localStorage persistence
 
 **New Storybook Stories:**
+
 - SearchInput stories (default, with value, shortcuts)
 - FilterSelect stories (status, priority filters)
 - ThemeToggle stories (light, dark, interactive)
@@ -332,14 +367,17 @@ import { SpecList, useSpecs } from '@leanspec/ui-components'
 ### Phase 4, 6 Progress (2025-12-19)
 
 **New Project Components:**
+
 - `ProjectCard` - Project card with avatar, description, tags, specs count, favorite toggle
 
 **New Stats Components:**
+
 - `StatsCard` - Single stat card with icon, value, subtitle, trend indicator
 - `StatsOverview` - Grid of stats cards (total, completed, in-progress, planned)
 - `ProgressBar` - Horizontal progress bar with variants (success, warning, danger, info)
 
 **New Storybook Stories:**
+
 - ProjectCard stories (default, with toggle, grid view)
 - StatsCard stories (all variants, with trends)
 - StatsOverview stories (default, with archived, custom labels)
@@ -352,18 +390,21 @@ import { SpecList, useSpecs } from '@leanspec/ui-components'
 ### Phase 3, 8 Progress - Framework-Agnostic Editors (2025-12-19)
 
 **Extracted Editor Components:**
+
 - `StatusEditor` - Framework-agnostic status editor with callback-based updates
 - `PriorityEditor` - Framework-agnostic priority editor with callback-based updates
 - `TagsEditor` - Framework-agnostic tags editor with autocomplete and callback-based updates
 - `SpecTimeline` - Timeline component with customizable labels and language support
 
 **New UI Components:**
+
 - `Select`, `SelectTrigger`, `SelectContent`, `SelectItem` - Dropdown select component
 - `Popover`, `PopoverTrigger`, `PopoverContent` - Popover overlay component
 - `Command`, `CommandInput`, `CommandList`, `CommandItem` - Command palette component
 - `Dialog` - Modal dialog component
 
 **Key Changes:**
+
 - All editor components now accept callbacks instead of making direct API calls
 - Removed all Next.js dependencies from extracted components
 - Made components fully controllable with optimistic updates and error handling
@@ -372,6 +413,7 @@ import { SpecList, useSpecs } from '@leanspec/ui-components'
 
 **Architecture:**
 The editor components follow a fully controlled pattern:
+
 - `StatusEditor`: Accepts `currentStatus` and `onStatusChange` callback
 - `PriorityEditor`: Accepts `currentPriority` and `onPriorityChange` callback
 - `TagsEditor`: Accepts `currentTags`, `onTagsChange`, and optional `onFetchAvailableTags` callbacks
@@ -382,6 +424,7 @@ The editor components follow a fully controlled pattern:
 ### Phase 4-10 Completion (2025-12-19)
 
 **Extracted Graph Components:**
+
 - `SpecDependencyGraph` - Interactive dependency graph using ReactFlow and Dagre
   - Framework-agnostic with `onNodeClick` callback
   - Customizable labels for internationalization
@@ -390,12 +433,14 @@ The editor components follow a fully controlled pattern:
   - Smooth interactions with zoom, pan, and controls
 
 **Extracted Search Components:**
+
 - `SearchResults` - Search results grid with specs
   - Empty state for no results
   - Loading state support
   - Click handling via callbacks
 
 **Extracted Project Components:**
+
 - `ProjectSwitcher` - Framework-agnostic project switcher
   - Accepts navigation callbacks instead of router hooks
   - Supports collapsed/expanded modes
@@ -407,6 +452,7 @@ The editor components follow a fully controlled pattern:
   - Form validation
 
 **New Storybook Stories:**
+
 - SpecDependencyGraph (default, many dependencies, custom labels)
 - ProjectSwitcher (default, loading, switching, collapsed, custom labels)
 - ProjectDialog (default, with browse, loading, interactive, custom labels)
@@ -415,6 +461,7 @@ The editor components follow a fully controlled pattern:
 **Final Bundle Size:** ~95KB gzipped (tree-shakeable, includes ReactFlow, Dagre, all UI primitives)
 
 **Status:** All phases complete. Package is production-ready with:
+
 - ✅ 40+ framework-agnostic React components
 - ✅ Full TypeScript support
 - ✅ Comprehensive Storybook documentation

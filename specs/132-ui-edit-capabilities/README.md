@@ -19,11 +19,11 @@ updated_at: 2026-02-02T08:18:11.068513807Z
 
 ## Overview
 
-Add editing capabilities to `@leanspec/ui` to enable spec management directly from the web interface.
+Add editing capabilities to `@harnspec/ui` to enable spec management directly from the web interface.
 
 ## Problem
 
-Currently `@leanspec/ui` is read-only. Users cannot:
+Currently `@harnspec/ui` is read-only. Users cannot:
 
 - Update spec metadata (status, priority, tags, assignee)
 - Edit spec content
@@ -57,7 +57,7 @@ Implement progressive editing capabilities:
 
 ## Technical Considerations
 
-- API endpoints already exist in `@leanspec/core`
+- API endpoints already exist in `@harnspec/core`
 - Need to handle concurrent edits (file watching)
 - Consider optimistic updates with conflict resolution
 - Mobile-friendly editing experience

@@ -94,7 +94,7 @@ spawn('harnspec', ['mcp'], { stdio: 'inherit' });  // Delegates to CLI
 **Intended wrapper** (`rust/npm-dist/binary-wrapper.js`):
 
 ```javascript
-// Tries platform package first: @leanspec/${platform}-${arch}
+// Tries platform package first: @harnspec/${platform}-${arch}
 // Falls back to local binaries/
 // But this isn't being used!
 ```
@@ -322,7 +322,7 @@ function findBinary() {
   throw new Error(
     `LeanSpec MCP binary not found for ${platform()}-${arch()}.\n` +
     `Expected at: ${localBinary}\n\n` +
-    `Try reinstalling: npm install @leanspec/mcp`
+    `Try reinstalling: npm install @harnspec/mcp`
   );
 }
 
@@ -886,7 +886,7 @@ harnspec.cmd --version
 
 ## Open Questions
 
-1. **Should we publish desktop apps to npm** (e.g., `@leanspec/desktop-darwin-arm64`)?
+1. **Should we publish desktop apps to npm** (e.g., `@harnspec/desktop-darwin-arm64`)?
    - **Recommendation**: No, use GitHub Releases only
    - **Rationale**: Desktop apps are large (50-100MB), npm not ideal for this
    - **Alternative**: Auto-update via Tauri's built-in updater

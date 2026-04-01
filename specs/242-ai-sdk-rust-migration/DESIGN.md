@@ -20,7 +20,7 @@ This document contains the detailed design specifications for migrating from Ver
             │ ~420 lines protocol handling
             ↓
 ┌─────────────────────────┐
-│ Node.js AI Worker       │ ← @leanspec/ai-worker
+│ Node.js AI Worker       │ ← @harnspec/ai-worker
 │ (packages/ai-worker/)   │   Vercel AI SDK v6.0.39+
 │ ├─ streamText()         │   14 LeanSpec tools
 │ ├─ Tool execution       │   Requires Node.js v20+
@@ -29,6 +29,7 @@ This document contains the detailed design specifications for migrating from Ver
 ```
 
 **Problems**:
+
 - Users must have Node.js v20+ installed
 - Two separate processes with IPC overhead
 - Complex deployment (two runtimes)
@@ -51,6 +52,7 @@ This document contains the detailed design specifications for migrating from Ver
 ```
 
 **Benefits**:
+
 - ✅ No Node.js dependency
 - ✅ Single binary deployment
 - ✅ Zero IPC overhead
@@ -337,6 +339,7 @@ struct ChatRequest {
 ### Migration Impact Analysis
 
 **Files to Delete** (~1,200 LOC):
+
 - ❌ `packages/ai-worker/` (entire package)
   - `src/worker.ts` (262 lines)
   - `src/tools/leanspec-tools.ts` (378 lines)
@@ -348,6 +351,7 @@ struct ChatRequest {
 - ❌ `rust/leanspec-http/src/handlers/chat_handler.rs` (IPC fallback logic)
 
 **Files to Create** (~1,500 LOC):
+
 - ✅ `rust/leanspec-core/src/ai_native/mod.rs` (~100 lines)
 - ✅ `rust/leanspec-core/src/ai_native/chat.rs` (~300 lines)
 - ✅ `rust/leanspec-core/src/ai_native/providers.rs` (~200 lines)
@@ -355,6 +359,7 @@ struct ChatRequest {
 - ✅ `rust/leanspec-core/src/ai_native/error.rs` (~100 lines)
 
 **Files to Update**:
+
 - 🔄 `rust/leanspec-core/Cargo.toml` (add async-openai, anthropic, schemars dependencies)
 - 🔄 `rust/leanspec-core/src/lib.rs` (export ai_native module)
 - 🔄 `rust/leanspec-http/src/handlers/chat_handler.rs` (use ai_native)
@@ -366,15 +371,17 @@ struct ChatRequest {
 ### Deployment Benefits
 
 **Before** (Node.js + Rust):
+
 ```dockerfile
 FROM node:20-slim
 COPY --from=rust-builder /app/target/release/leanspec-http /usr/local/bin/
-RUN npm install -g @leanspec/ai-worker
+RUN npm install -g @harnspec/ai-worker
 CMD ["leanspec-http"]
 # Size: ~140MB
 ```
 
 **After** (Pure Rust):
+
 ```dockerfile
 FROM debian:bookworm-slim
 COPY --from=rust-builder /app/target/release/leanspec-http /usr/local/bin/
@@ -383,10 +390,10 @@ CMD ["leanspec-http"]
 ```
 
 **Alpine (Static Build)**:
+
 ```dockerfile
 FROM scratch
 COPY --from=rust-builder /app/target/x86_64-unknown-linux-musl/release/leanspec-http /
 CMD ["/leanspec-http"]
 # Size: ~15MB (-89%)
 ```
-

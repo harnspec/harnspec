@@ -86,7 +86,7 @@ After implementation:
   "mcpServers": {
     "harnspec": {
       "command": "npx",
-      "args": ["-y", "@leanspec/mcp", "--project", "${PWD}"]
+      "args": ["-y", "@harnspec/mcp", "--project", "${PWD}"]
     }
   }
 }
@@ -99,7 +99,7 @@ After implementation:
   "mcpServers": {
     "harnspec": {
       "command": "npx",
-      "args": ["-y", "@leanspec/mcp", "--project", "/absolute/path/to/project"]
+      "args": ["-y", "@harnspec/mcp", "--project", "/absolute/path/to/project"]
     }
   }
 }

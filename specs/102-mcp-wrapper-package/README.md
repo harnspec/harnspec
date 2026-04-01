@@ -18,7 +18,7 @@ completed_at: '2025-11-18T03:29:28.816Z'
 completed: '2025-11-18'
 ---
 
-# @leanspec/mcp - MCP Server Integration Wrapper
+# @harnspec/mcp - MCP Server Integration Wrapper
 
 > **Status**: ✅ Complete · **Priority**: High · **Created**: 2025-11-18 · **Tags**: mcp, integration, npm-package, developer-experience
 
@@ -31,14 +31,14 @@ Create a lightweight CLI wrapper that makes `harnspec mcp` more discoverable and
 
 **Problem**: `harnspec` is a full-featured CLI tool. When users configure MCP servers in their IDE, they need to know to use `harnspec mcp`, which isn't obvious. Also, the package name `harnspec` doesn't clearly indicate MCP functionality.
 
-**Solution**: Ship `@leanspec/mcp` as a thin wrapper. IDEs can call `npx @leanspec/mcp` directly, which just delegates to `harnspec mcp`. This makes the MCP server more discoverable and the package name more intuitive.
+**Solution**: Ship `@harnspec/mcp` as a thin wrapper. IDEs can call `npx @harnspec/mcp` directly, which just delegates to `harnspec mcp`. This makes the MCP server more discoverable and the package name more intuitive.
 
 ## Design
 
 ### Package Structure
 
 ```
-@leanspec/mcp/
+@harnspec/mcp/
 ├── bin/
 │   └── leanspec-mcp.js   # Thin wrapper CLI
 ├── package.json          # Depends on harnspec
@@ -49,8 +49,8 @@ Create a lightweight CLI wrapper that makes `harnspec mcp` more discoverable and
 
 The package is a **simple passthrough**:
 
-1. User adds MCP server to their IDE config: `npx @leanspec/mcp`
-2. When IDE needs the server, npx auto-installs `@leanspec/mcp` and its `harnspec` dependency
+1. User adds MCP server to their IDE config: `npx @harnspec/mcp`
+2. When IDE needs the server, npx auto-installs `@harnspec/mcp` and its `harnspec` dependency
 3. Script delegates to: `harnspec mcp`
 4. MCP server starts and IDE can communicate with it
 
@@ -65,7 +65,7 @@ No interaction needed - the IDE handles everything.
   "mcpServers": {
     "leanspec": {
       "command": "npx",
-      "args": ["-y", "@leanspec/mcp"]
+      "args": ["-y", "@harnspec/mcp"]
     }
   }
 }
@@ -78,7 +78,7 @@ No interaction needed - the IDE handles everything.
   "cline.mcpServers": {
     "leanspec": {
       "command": "npx",
-      "args": ["-y", "@leanspec/mcp"]
+      "args": ["-y", "@harnspec/mcp"]
     }
   }
 }
@@ -91,7 +91,7 @@ No interaction needed - the IDE handles everything.
   "context_servers": {
     "leanspec": {
       "command": "npx",
-      "args": ["-y", "@leanspec/mcp"]
+      "args": ["-y", "@harnspec/mcp"]
     }
   }
 }
@@ -101,9 +101,9 @@ No interaction needed - the IDE handles everything.
 
 **Pure passthrough**: Just delegates to `harnspec mcp`, no logic needed.
 
-**Better naming**: `@leanspec/mcp` is more intuitive than `harnspec mcp` for MCP use cases.
+**Better naming**: `@harnspec/mcp` is more intuitive than `harnspec mcp` for MCP use cases.
 
-**Auto-install**: npx automatically installs both `@leanspec/mcp` and its `harnspec` dependency when needed.
+**Auto-install**: npx automatically installs both `@harnspec/mcp` and its `harnspec` dependency when needed.
 
 **No interaction**: MCP servers are called by IDEs, not by users directly. No wizard needed.
 
@@ -116,14 +116,14 @@ No interaction needed - the IDE handles everything.
 - [ ] Add `harnspec` as dependency in package.json
 - [ ] Create README with config examples for different IDEs
 - [ ] Test with Claude Desktop, Cline, Zed
-- [ ] Publish to npm as `@leanspec/mcp`
-- [ ] Update main docs with `@leanspec/mcp` examples
+- [ ] Publish to npm as `@harnspec/mcp`
+- [ ] Update main docs with `@harnspec/mcp` examples
 
 ## Test
 
-- [ ] Config with `npx @leanspec/mcp` works in Claude Desktop
-- [ ] Config with `npx @leanspec/mcp` works in Cline
-- [ ] Config with `npx @leanspec/mcp` works in Zed
+- [ ] Config with `npx @harnspec/mcp` works in Claude Desktop
+- [ ] Config with `npx @harnspec/mcp` works in Cline
+- [ ] Config with `npx @harnspec/mcp` works in Zed
 - [ ] Server starts correctly when IDE calls it
 - [ ] npx auto-installs dependencies on first run
 - [ ] Works on macOS, Windows, Linux
@@ -167,7 +167,7 @@ Users see this in the docs:
 >   "mcpServers": {
 >     "leanspec": {
 >       "command": "npx",
->       "args": ["-y", "@leanspec/mcp"]
+>       "args": ["-y", "@harnspec/mcp"]
 >     }
 >   }
 > }

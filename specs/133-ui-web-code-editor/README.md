@@ -21,11 +21,11 @@ updated_at: '2025-12-04T04:10:12.737Z'
 
 ## Overview
 
-Enhance `@leanspec/ui` with seamless external editor integration for editing spec files, agent instructions, and project configuration. Rather than building a web-based code editor, leverage the user's preferred local editor (VS Code, Cursor, Neovim, etc.).
+Enhance `@harnspec/ui` with seamless external editor integration for editing spec files, agent instructions, and project configuration. Rather than building a web-based code editor, leverage the user's preferred local editor (VS Code, Cursor, Neovim, etc.).
 
 ### Problem
 
-Users viewing specs in `@leanspec/ui` need to switch context when editing:
+Users viewing specs in `@harnspec/ui` need to switch context when editing:
 
 1. Find the spec file in their filesystem
 2. Open in their editor manually

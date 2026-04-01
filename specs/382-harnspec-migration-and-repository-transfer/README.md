@@ -32,7 +32,7 @@ The core renaming of package names and project structure has been completed as p
 ### 2. Branding and Naming (Final Polish)
 
 - [x] Rename the root project to `harnspec` in `package.json`.
-- [x] Update internal package names from `@leanspec` to `@harnspec`.
+- [x] Update internal package names from `@harnspec` to `@harnspec`.
 - [x] Update all repository URL references from `codervisor/harnspec` to `harnspec/harnspec` in `package.json`, `Cargo.toml`, and README.
 - [ ] Update `homepage` and `bugs` URLs in all packages.
 

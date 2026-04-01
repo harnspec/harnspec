@@ -389,13 +389,13 @@ async fn list_specs(...) -> Result<Json<SpecsResponse>, (StatusCode, Json<ErrorR
 
 ### Distribution Strategy
 
-**Package**: `@leanspec/http-server` npm package
+**Package**: `@harnspec/http-server` npm package
 
 - Contains platform-specific binaries (macOS, Linux, Windows)
-- Installed as dependency of `@leanspec/ui`
+- Installed as dependency of `@harnspec/ui`
 - Started automatically by `harnspec ui` command
 
-**Binary Location**: `node_modules/@leanspec/http-server/bin/leanspec-http`
+**Binary Location**: `node_modules/@harnspec/http-server/bin/leanspec-http`
 
 ### Related Specs
 

@@ -3,14 +3,16 @@
 **Use Case:** LeanSpec's own specs in monorepo
 
 **Data Flow:**
+
 ```
-specs/ directory → @leanspec/core → In-Memory Cache → Web App
+specs/ directory → @harnspec/core → In-Memory Cache → Web App
          ↓
    Single source of truth
    Git is the version control
 ```
 
 **Architecture:**
+
 ```typescript
 // packages/web/src/lib/specs/sources/filesystem-source.ts
 export class FilesystemSource implements SpecSource {
@@ -60,6 +62,7 @@ export class FilesystemSource implements SpecSource {
 ```
 
 **Pros:**
+
 - ✅ **Realtime sync**: Changes appear within cache TTL (60s)
 - ✅ **No database dependency**: Simpler deployment
 - ✅ **Fast**: In-memory cache keeps performance <100ms
@@ -67,11 +70,13 @@ export class FilesystemSource implements SpecSource {
 - ✅ **Works everywhere**: Dev, staging, production (Vercel)
 
 **Cons:**
+
 - ⚠️ Cache invalidation: TTL-based (not event-driven)
 - ⚠️ Cold starts: Cache empty after deployment
 - ⚠️ No cross-instance cache: Each Vercel function has own cache
 
 **Mitigation:**
+
 - Use Next.js `revalidate` for additional CDN caching
 - File watcher in dev mode for instant invalidation (optional)
 - Acceptable trade-off for simplicity

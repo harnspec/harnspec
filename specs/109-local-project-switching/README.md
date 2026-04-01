@@ -810,7 +810,7 @@ projectColors:
 **Integration Testing:**
 
 - ✅ Works with existing LeanSpec monorepo structure
-- ✅ Compatible with published `@leanspec/ui` package
+- ✅ Compatible with published `@harnspec/ui` package
 - ✅ Handles edge cases (missing projects, invalid paths)
 - ✅ Performance acceptable for 20+ projects
 

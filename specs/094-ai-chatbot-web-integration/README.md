@@ -36,7 +36,7 @@ transitions:
 
 ## Overview
 
-Add an **AI agentic system** to `@leanspec/ui` (Vite SPA) that uses native Rust AI tools to manage specs conversationally. Users can create, update, search, and orchestrate specs through natural language - no CLI or terminal required.
+Add an **AI agentic system** to `@harnspec/ui` (Vite SPA) that uses native Rust AI tools to manage specs conversationally. Users can create, update, search, and orchestrate specs through natural language - no CLI or terminal required.
 
 **Current implementation**: AI chat is handled in Rust via `leanspec-core/src/ai_native/` and streamed by `leanspec-http` at `/api/chat` (see spec 264 for the chat-server retirement).
 
@@ -50,7 +50,7 @@ Add an **AI agentic system** to `@leanspec/ui` (Vite SPA) that uses native Rust 
 
 ## Problem
 
-**The core gap**: `@leanspec/ui` is currently **partially interactive**. Users can browse and view specs, edit some metadata, but cannot create specs or perform complex operations without switching to CLI or VS Code.
+**The core gap**: `@harnspec/ui` is currently **partially interactive**. Users can browse and view specs, edit some metadata, but cannot create specs or perform complex operations without switching to CLI or VS Code.
 
 **Current limitations** (as of UI Vite SPA):
 
@@ -106,20 +106,20 @@ Browser (UI) via useChat
 - `rust/leanspec-core/src/ai_native/tools/mod.rs` - LeanSpec tool registry
 - `rust/leanspec-http/src/handlers/chat_handler.rs` - `/api/chat` SSE handler
 
-**Legacy note**: The Node.js `@leanspec/chat-server` plan below is deprecated and superseded by native Rust chat (spec 264).
+**Legacy note**: The Node.js `@harnspec/chat-server` plan below is deprecated and superseded by native Rust chat (spec 264).
 
 ### npm Package Details
 
-**Package Name**: `@leanspec/chat-server`
+**Package Name**: `@harnspec/chat-server`
 
 **Purpose**: Standalone Node.js server that provides AI chatbot capabilities via AI SDK
 
 **Package Structure**:
 
 ```
-@leanspec/chat-server/
+@harnspec/chat-server/
 ├── package.json
-│   ├── name: "@leanspec/chat-server"
+│   ├── name: "@harnspec/chat-server"
 │   ├── version: (synced with workspace root)
 │   ├── main: "dist/index.js"
 │   ├── bin: { "leanspec-chat": "dist/index.js" }
@@ -154,19 +154,19 @@ Browser (UI) via useChat
 
 ```bash
 # As standalone tool
-npm install -g @leanspec/chat-server
+npm install -g @harnspec/chat-server
 leanspec-chat  # Starts server
 
-# As dependency (used by @leanspec/ui)
-npm install @leanspec/chat-server
-node node_modules/@leanspec/chat-server/dist/index.js
+# As dependency (used by @harnspec/ui)
+npm install @harnspec/chat-server
+node node_modules/@harnspec/chat-server/dist/index.js
 ```
 
 **Relationship to Other Packages**:
 
-- `@leanspec/http-server` (Rust): Proxies `/api/chat` requests to this package
-- `@leanspec/ui` (Vite): optionalDependency, uses chat via HTTP proxy
-- `@leanspec/desktop` (Tauri): optionalDependency, starts as subprocess if AI features enabled
+- `@harnspec/http-server` (Rust): Proxies `/api/chat` requests to this package
+- `@harnspec/ui` (Vite): optionalDependency, uses chat via HTTP proxy
+- `@harnspec/desktop` (Tauri): optionalDependency, starts as subprocess if AI features enabled
 
 **Version Synchronization**:
 
@@ -220,7 +220,7 @@ packages/
 │   │   │   └── index.ts          # Tool registry
 │   │   └── prompts.ts            # System prompt
 │   ├── dist/index.js             # Built bundle
-│   ├── package.json              # Published to npm as @leanspec/chat-server
+│   ├── package.json              # Published to npm as @harnspec/chat-server
 │   └── tsconfig.json
 │
 ├── ui/src/                       # Vite SPA (consumes chat API)
@@ -242,7 +242,7 @@ Browser (UI)
   ↓ POST /api/chat { messages: [...] }
 Rust HTTP Server (:3030)
   ↓ Proxy via Unix socket or HTTP
-Node.js Chat Server (@leanspec/chat-server)
+Node.js Chat Server (@harnspec/chat-server)
   ↓ AI SDK streamText() with tools
 OpenAI/Claude/Deepseek API
   ↓ SSE stream response
@@ -451,7 +451,7 @@ Context economy: stay focused.`;
 
 ### Phase 9: Optional - Desktop Integration (Future)
 
-- [x] Add `@leanspec/chat-server` as optional dependency to desktop
+- [x] Add `@harnspec/chat-server` as optional dependency to desktop
 - [ ] Implement ChatServerManager in Rust for subprocess management
 - [ ] Add feature flag: `cargo build --features ai-chat`
 - [ ] Test: Desktop app with AI chat enabled
@@ -464,9 +464,9 @@ Context economy: stay focused.`;
 
 **Package Structure**:
 
-- `@leanspec/chat-server` - Standalone Node.js package (AI SDK + tools)
-- `@leanspec/http-server` - Rust HTTP server (proxies `/api/chat`)
-- `@leanspec/ui` - Vite SPA (optional dependency on chat-server)
+- `@harnspec/chat-server` - Standalone Node.js package (AI SDK + tools)
+- `@harnspec/http-server` - Rust HTTP server (proxies `/api/chat`)
+- `@harnspec/ui` - Vite SPA (optional dependency on chat-server)
 
 **Publishing Order**: Platform binaries → chat-server → main packages
 
@@ -509,8 +509,8 @@ MAX_STEPS=10
 - [ ] Chat-server package builds successfully in CI
 - [ ] Chat-server tests pass with mocked AI provider
 - [ ] Publishing order maintained: platform binaries → chat-server → main packages
-- [ ] Published `@leanspec/chat-server` installable globally
-- [ ] Workspace dependency resolution works: `@leanspec/ui` finds `@leanspec/chat-server`
+- [ ] Published `@harnspec/chat-server` installable globally
+- [ ] Workspace dependency resolution works: `@harnspec/ui` finds `@harnspec/chat-server`
 - [ ] Stable release workflow publishes all packages with same version
 
 ### Manual Testing
@@ -546,7 +546,7 @@ MAX_STEPS=10
 - ✅ Chat feels "instant" (streaming UX)
 - ✅ 80%+ accuracy on natural language queries
 - ✅ No crashes or errors in 100-message chat session
-- ⚠️ Legacy: npm publish for `@leanspec/chat-server` (deprecated by native Rust)
+- ⚠️ Legacy: npm publish for `@harnspec/chat-server` (deprecated by native Rust)
 - ✅ Works in local dev and desktop scenarios with native Rust chat
 
 ### Progress Notes

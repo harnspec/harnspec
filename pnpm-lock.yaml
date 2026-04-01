@@ -79,9 +79,6 @@ importers:
       '@harnspec/http-server':
         specifier: workspace:*
         version: link:../http-server
-      '@harnspec/mcp':
-        specifier: workspace:*
-        version: link:../mcp
       '@harnspec/ui':
         specifier: workspace:*
         version: link:../ui
@@ -12289,7 +12286,7 @@ snapshots:
 
   '@testing-library/dom@10.4.0':
     dependencies:
-      '@babel/code-frame': 7.27.1
+      '@babel/code-frame': 7.29.0
       '@babel/runtime': 7.28.4
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0

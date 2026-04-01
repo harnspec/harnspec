@@ -43,6 +43,7 @@ transitions:
 ### Current State Analysis
 
 **Next.js UI (`packages/ui/src/app/layout.tsx`)**:
+
 ```tsx
 // Single root layout wraps all pages
 <html>
@@ -63,6 +64,7 @@ transitions:
 ```
 
 **UI-Vite Current (`packages/ui-vite/src/`)**:
+
 ```tsx
 // App.tsx: Providers at root
 <ThemeProvider>
@@ -94,6 +96,7 @@ transitions:
 ### Proposed Architecture
 
 **Goals**:
+
 1. **Consistent Navigation**: Navigation bar present on ALL pages (app shell)
 2. **Conditional MainSidebar**: Only shown for project-scoped pages
 3. **Route Organization**: Group related routes logically, make layout composition explicit
@@ -135,16 +138,17 @@ transitions:
 1. **MinimalLayout**: Navigation only
    - Used for ProjectsPage (project selection)
    - Provides consistent app shell without project-specific sidebar
-   
+
 2. **Layout**: Navigation + MainSidebar
    - Used for all project-scoped routes (`/projects/:projectId/*`)
    - MainSidebar provides dashboard, specs, stats, settings navigation
-   
+
 3. **SpecsLayout**: Extends Layout with SpecsNavSidebar
    - Used for all specs routes (`/projects/:projectId/specs/*`)
    - SpecsNavSidebar provides spec list/search navigation
 
 **Router Structure**:
+
 ```tsx
 /                              -> Navigate to /projects/default
 /projects                      -> MinimalLayout (Navigation only)
@@ -162,6 +166,7 @@ transitions:
 ```
 
 **Benefits**:
+
 - Navigation bar consistent across ALL pages
 - MainSidebar only appears when viewing a specific project
 - SpecsNavSidebar visible on both list and detail pages (better UX)
@@ -173,6 +178,7 @@ transitions:
 #### 1. MinimalLayout Component (IMPLEMENTED)
 
 **Created** `components/MinimalLayout.tsx`:
+
 ```tsx
 // Provides Navigation only, without MainSidebar
 // Used for ProjectsPage where sidebar navigation doesn't make sense
@@ -187,6 +193,7 @@ export function MinimalLayout() {
 ```
 
 **Key points**:
+
 - Shares LayoutProvider with Layout for API consistency
 - Includes global keyboard shortcuts and error boundaries
 - No MainSidebar, but keeps Navigation for app shell consistency
@@ -194,6 +201,7 @@ export function MinimalLayout() {
 #### 2. Router Structure Change (IMPLEMENTED)
 
 **ProjectsPage now uses MinimalLayout**:
+
 ```tsx
 // Before: Standalone, no layout
 {
@@ -210,6 +218,7 @@ export function MinimalLayout() {
 ```
 
 **SpecsPage now uses SpecsLayout**:
+
 ```tsx
 // Before: No SpecsLayout for list view
 {
@@ -259,6 +268,7 @@ export function MinimalLayout() {
 ```
 
 **Impact**:
+
 - ProjectsPage gains Navigation bar for app shell consistency
 - SpecsPage gains SpecsNavSidebar (persistent across list ↔ detail navigation)
 - All pages now have Navigation (theme toggle, settings, etc.)
@@ -268,6 +278,7 @@ export function MinimalLayout() {
 ProjectsPage no longer needs standalone styling since MinimalLayout provides the app shell. The page now focuses on its content (project cards, search) rather than layout concerns.
 
 **Changes**:
+
 - Removed redundant `min-h-screen` wrapper (provided by MinimalLayout)
 - Kept page-specific header with search and "New Project" button
 - Added clarifying comment for back navigation (only shows when coming from a project)
@@ -294,6 +305,7 @@ const toggleSidebar = () => {
 ```
 
 **Solution A: Context (Recommended)**
+
 ```tsx
 // contexts/LayoutContext.tsx
 interface LayoutContextValue {
@@ -334,6 +346,7 @@ const { toggleMobileSidebar } = useLayout();
 ```
 
 **Solution B: State Lifting (Simpler, but less flexible)**
+
 ```tsx
 // Keep state in Layout, pass toggleMobileSidebar as prop to Navigation
 <Navigation onToggleSidebar={() => setMobileSidebarOpen(prev => !prev)} />
@@ -394,6 +407,7 @@ export function Layout() {
 ```
 
 **Benefits**:
+
 - Layout component simpler
 - Keyboard shortcuts state decoupled from layout state
 - Help dialog can be triggered from anywhere
@@ -407,6 +421,7 @@ export function Layout() {
 **Potential Issue**: SpecsPage might not need the full sidebar on list view
 
 **Solution**: Make SpecsNavSidebar behavior responsive:
+
 - On list view: Show as collapsible sidebar (optional: collapsed by default)
 - On detail view: Show as sidebar (optional: expanded by default)
 - Mobile: Always overlay
@@ -539,9 +554,9 @@ Alternatively, keep sidebar always expanded, let user collapse manually.
   - [x] Run linter and fix issues
 
 - [x] **Task 5.2**: Verify no regressions
-  - [x] Run typecheck: `pnpm --filter @leanspec/ui-vite typecheck`
-  - [x] Run build: `pnpm --filter @leanspec/ui-vite build`
-  - [x] Test in dev mode: `pnpm --filter @leanspec/ui-vite dev`
+  - [x] Run typecheck: `pnpm --filter @harnspec/ui-vite typecheck`
+  - [x] Run build: `pnpm --filter @harnspec/ui-vite build`
+  - [x] Test in dev mode: `pnpm --filter @harnspec/ui-vite dev`
 
 - [x] **Task 5.3**: Update Spec 193
   - [x] Link this spec as related
@@ -552,6 +567,7 @@ Alternatively, keep sidebar always expanded, let user collapse manually.
 ### Functional Tests
 
 #### Layout & Navigation
+
 - [x] MainSidebar renders on all `/projects/:projectId/*` routes
 - [x] Navigation bar renders on all project routes
 - [x] Mobile sidebar toggle button in Navigation opens/closes MainSidebar
@@ -560,6 +576,7 @@ Alternatively, keep sidebar always expanded, let user collapse manually.
 - [x] Project switcher in Navigation updates current project
 
 #### SpecsNavSidebar
+
 - [x] SpecsNavSidebar renders on `/projects/:projectId/specs` (list page)
 - [x] SpecsNavSidebar renders on `/projects/:projectId/specs/:specName` (detail page)
 - [x] Sidebar shows search input and filters
@@ -569,6 +586,7 @@ Alternatively, keep sidebar always expanded, let user collapse manually.
 - [x] Mobile: Sidebar shows as overlay with backdrop
 
 #### Keyboard Shortcuts
+
 - [x] Pressing `?` or `Cmd+/` opens keyboard shortcuts help
 - [x] Help dialog shows all shortcuts
 - [x] ESC or clicking outside closes help dialog
@@ -576,6 +594,7 @@ Alternatively, keep sidebar always expanded, let user collapse manually.
 - [x] Cmd+K / Ctrl+K opens quick search
 
 #### Context State Management
+
 - [x] LayoutContext provides `mobileSidebarOpen` and `toggleMobileSidebar`
 - [x] KeyboardShortcutsContext provides `showHelp` and `toggleHelp`
 - [x] No console errors about window object pollution
@@ -584,6 +603,7 @@ Alternatively, keep sidebar always expanded, let user collapse manually.
 ### Visual Tests
 
 #### Layout Structure
+
 - [x] Navigation bar fixed at top (height: 3.5rem)
 - [x] MainSidebar fixed on left (width: 240px desktop, overlay mobile)
 - [x] Main content area fills remaining space
@@ -591,12 +611,14 @@ Alternatively, keep sidebar always expanded, let user collapse manually.
 - [x] No layout shift when sidebar toggles
 
 #### SpecsLayout
+
 - [x] SpecsNavSidebar width: 280px when expanded
 - [x] Content area adjusts width when sidebar collapses
 - [x] Smooth transition animation
 - [x] No content jump when navigating list ↔ detail
 
 #### Responsive Behavior
+
 - [x] Mobile (<768px): Both sidebars show as overlays
 - [x] Tablet (768-1024px): MainSidebar fixed, SpecsNavSidebar collapsible
 - [x] Desktop (>1024px): Both sidebars fixed, SpecsNavSidebar expanded by default
@@ -605,6 +627,7 @@ Alternatively, keep sidebar always expanded, let user collapse manually.
 ### Integration Tests
 
 #### Router Composition
+
 - [x] `/projects/:projectId` renders Layout
 - [x] `/projects/:projectId/specs` renders Layout → SpecsLayout → SpecsPage
 - [x] `/projects/:projectId/specs/:specName` renders Layout → SpecsLayout → SpecDetailPage
@@ -613,6 +636,7 @@ Alternatively, keep sidebar always expanded, let user collapse manually.
 - [x] PageTransition animates between pages
 
 #### State Persistence
+
 - [x] MainSidebar collapse state persists in localStorage
 - [x] SpecsNavSidebar collapse state persists in localStorage
 - [x] Theme persists across route changes
@@ -621,6 +645,7 @@ Alternatively, keep sidebar always expanded, let user collapse manually.
 ### Comparison with Next.js UI
 
 #### Structure Parity
+
 - [x] Providers at top level (App.tsx ≈ layout.tsx)
 - [x] Navigation in layout (Layout.tsx ≈ layout.tsx)
 - [x] MainSidebar in layout (Layout.tsx ≈ layout.tsx)
@@ -628,6 +653,7 @@ Alternatively, keep sidebar always expanded, let user collapse manually.
 - [x] Specs-specific layout for specs routes
 
 #### Intentional Differences (Document)
+
 - [x] Next.js uses file-system routing, ui-vite uses programmatic routes
 - [x] Next.js has server components, ui-vite is pure client-side
 - [x] Next.js doesn't have SpecsNavSidebar yet (future feature)
@@ -646,18 +672,21 @@ Alternatively, keep sidebar always expanded, let user collapse manually.
 ### Must Have
 
 **Router Structure**:
+
 - [x] SpecsLayout wraps all `/specs/*` routes (list + detail)
 - [x] All project routes nested under Layout (Navigation + MainSidebar)
 - [x] Route definitions clear and well-commented
 - [x] No duplicate layout compositions
 
 **State Management**:
+
 - [x] LayoutContext manages mobile sidebar state
 - [x] KeyboardShortcutsContext manages shortcuts help dialog
 - [x] No `window` object hacks for component communication
 - [x] Context providers follow React best practices
 
 **Functionality**:
+
 - [x] All existing features work (navigation, sidebars, shortcuts)
 - [x] No regressions in behavior
 - [x] Mobile and desktop UX maintained
@@ -666,17 +695,20 @@ Alternatively, keep sidebar always expanded, let user collapse manually.
 ### Should Have
 
 **Code Quality**:
+
 - [x] Layout component <150 lines (moved state to contexts)
 - [x] Clear separation of concerns
 - [x] Consistent naming conventions
 - [x] JSDoc comments on contexts
 
 **Documentation**:
+
 - [x] Architecture explained in comments
 - [x] Intentional differences from Next.js documented
 - [x] Context usage patterns documented
 
 **Testing**:
+
 - [x] Manual testing checklist completed
 - [x] Comparison with Next.js UI done
 - [x] No console errors or warnings
@@ -684,12 +716,14 @@ Alternatively, keep sidebar always expanded, let user collapse manually.
 ### Nice to Have
 
 **Polish**:
+
 - [x] SpecsNavSidebar behavior optimized for list vs detail
 - [x] Smooth animations between all state transitions
 - [x] Error boundaries show helpful messages
 - [x] Loading states during route transitions
 
 **Future Improvements**:
+
 - [ ] Consider extracting more layout logic to contexts
 - [ ] Consider adding route-based breadcrumbs
 - [ ] Consider adding route transition animations
@@ -707,6 +741,7 @@ Alternatively, keep sidebar always expanded, let user collapse manually.
 ### Why Not Perfect Parity?
 
 Next.js and react-router have fundamentally different architectures:
+
 - Next.js: File-system routing, server components, automatic code splitting
 - React-router: Programmatic routing, client-side only, manual route definitions
 
@@ -715,6 +750,7 @@ Trying to force perfect parity would be counterproductive. Instead, we aim for *
 ### Alternative Approaches Considered
 
 **Approach A: Single Layout with Conditional Rendering**
+
 ```tsx
 // NOT RECOMMENDED
 function Layout() {
@@ -731,9 +767,11 @@ function Layout() {
   );
 }
 ```
+
 **Why NOT**: Makes Layout component complex, less modular, harder to maintain.
 
 **Approach B: Per-Page Layout Composition**
+
 ```tsx
 // NOT RECOMMENDED
 function SpecsPage() {
@@ -745,9 +783,11 @@ function SpecsPage() {
   );
 }
 ```
+
 **Why NOT**: Duplicates layout code in every page, easy to create inconsistencies.
 
 **Chosen Approach: Nested Layouts in Router** (CURRENT)
+
 ```tsx
 {
   element: <Layout />,
@@ -762,6 +802,7 @@ function SpecsPage() {
   ],
 }
 ```
+
 **Why YES**: Leverages react-router's nested routes, keeps components focused, easy to reason about.
 
 ### Related Specs
@@ -791,6 +832,7 @@ function SpecsPage() {
 ## Implementation Log
 
 ### 2025-01-07: Spec created
+
 - Analyzed current ui-vite layout and routing structure
 - Compared with Next.js UI implementation
 - Identified key differences and improvement opportunities
@@ -799,12 +841,15 @@ function SpecsPage() {
 - Created detailed implementation plan with clear success criteria
 
 ### 2026-01-07: Implementation completed
+
 **Phase 1: Context Extraction** (Completed)
+
 - ✅ Created `LayoutContext.tsx` with `mobileSidebarOpen` and `toggleMobileSidebar`
 - ✅ Created `KeyboardShortcutsContext.tsx` with `showHelp` and `toggleHelp`, including the `KeyboardShortcutsHelp` component
 - ✅ Updated `contexts/index.ts` to export new contexts
 
 **Phase 2: Layout Refactoring** (Completed)
+
 - ✅ Refactored `Layout.tsx` to use `LayoutProvider` and contexts
 - ✅ Removed `window.toggleMainSidebar` hack in favor of proper context-based communication
 - ✅ Extracted keyboard shortcuts state management from Layout to dedicated context
@@ -813,12 +858,14 @@ function SpecsPage() {
 - ✅ Maintained backward compatibility with MainSidebar component
 
 **Phase 3: Router Restructuring** (Completed)
+
 - ✅ Nested SpecsPage under SpecsLayout in router.tsx
 - ✅ Flattened `:specName` route (removed extra nesting level)
 - ✅ Added clear JSDoc comments explaining layout composition
 - ✅ Verified all routes resolve correctly with TypeScript checking
 
 **Phase 4-5: Testing & Cleanup** (Completed)
+
 - ✅ All TypeScript type checks passed
 - ✅ Production build successful (with expected large chunk warnings)
 - ✅ Fixed type import issues (`ReactNode` as type-only import)
@@ -826,6 +873,7 @@ function SpecsPage() {
 - ✅ Router has clear comments explaining layout nesting strategy
 
 **Key Improvements Achieved:**
+
 1. **Eliminated window hacks**: Replaced global window object communication with proper React context
 2. **Cleaner separation of concerns**: Layout state and keyboard shortcuts now in dedicated contexts
 3. **Consistent routing**: SpecsLayout now wraps ALL `/specs/*` routes (list + detail)
@@ -833,14 +881,15 @@ function SpecsPage() {
 5. **Type-safe**: All TypeScript checks pass with strict mode enabled
 
 **Technical Decisions:**
+
 - Kept `KeyboardShortcutsHelp` component inside context file (could be extracted if it grows)
 - Used `useMemo` in context providers for performance optimization
 - Layout component split into `LayoutContent` and `Layout` wrapper for cleaner provider usage
 - Router comments explain the nested layout pattern clearly
 
 **Files Changed:**
+
 - Created: `contexts/LayoutContext.tsx`, `contexts/KeyboardShortcutsContext.tsx`
 - Modified: `contexts/index.ts`, `App.tsx`, `components/Layout.tsx`, `components/Navigation.tsx`, `router.tsx`
 
 All acceptance criteria met. Ready for testing in development environment.
-

@@ -25,11 +25,11 @@ transitions:
 
 ## Overview
 
-Enhance `@leanspec/ui` to display project-level context beyond specs:
+Enhance `@harnspec/ui` to display project-level context beyond specs:
 
 ## Problem
 
-Currently `@leanspec/ui` only shows specs. Users have no visibility into:
+Currently `@harnspec/ui` only shows specs. Users have no visibility into:
 
 - **SOP/System Prompts**: `AGENTS.md`, other agent instructions
 - **Configuration**: `.harnspec` config file, project settings
@@ -138,10 +138,10 @@ Add new navigation item:
 
 ### Token Counting
 
-Reuse existing token counter from `@leanspec/core`:
+Reuse existing token counter from `@harnspec/core`:
 
 ```typescript
-import { countTokens } from '@leanspec/core/utils/token-counter';
+import { countTokens } from '@harnspec/core/utils/token-counter';
 ```
 
 Display token count per file and total for context budgeting.

@@ -22,7 +22,7 @@ transitions:
 
 ## Overview
 
-Enhance multi-tasking capabilities in both @leanspec/ui and Desktop app with advanced UI features to improve productivity for users managing multiple specs and projects simultaneously.
+Enhance multi-tasking capabilities in both @harnspec/ui and Desktop app with advanced UI features to improve productivity for users managing multiple specs and projects simultaneously.
 
 **Core enhancements:**
 

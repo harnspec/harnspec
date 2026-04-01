@@ -682,7 +682,7 @@ packages/ui/
 - [ ] **Create new `packages/ui-new` (Vite SPA)**
   - Vite + React + TypeScript setup
   - React Router for client-side navigation
-  - Import `@leanspec/ui-components`
+  - Import `@harnspec/ui-components`
   
 - [ ] **Implement project management UI**
   - ProjectSwitcher component (from ui-components)
@@ -858,8 +858,8 @@ packages/ui/
 
 ### Open Questions
 
-1. **Rust HTTP Server Distribution**: Should we bundle it with `@leanspec/ui` or as separate binary?
-   - **Decided**: Separate binary (`@leanspec/http-server` npm package with platform-specific binaries)
+1. **Rust HTTP Server Distribution**: Should we bundle it with `@harnspec/ui` or as separate binary?
+   - **Decided**: Separate binary (`@harnspec/http-server` npm package with platform-specific binaries)
    - **Rationale**: Cleaner separation, can version independently, easier CI/CD
 
 2. **Web UI Production Use Case**: Should we support web UI in production?

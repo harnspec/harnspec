@@ -24,6 +24,7 @@ Implement comprehensive E2E test suite for the LeanSpec UI (Next.js web applicat
 ### Current UI Test Coverage
 
 **Existing Tests** (8 test files):
+
 - ✅ `markdown-link.test.ts` - Link transformation logic
 - ✅ `mermaid-diagram.test.ts` - Diagram detection
 - ✅ `db/__tests__/queries.test.ts` - Database queries
@@ -34,6 +35,7 @@ Implement comprehensive E2E test suite for the LeanSpec UI (Next.js web applicat
 - ✅ `projects/__tests__/registry.test.ts` - Project registry
 
 **Missing Coverage**:
+
 - ❌ No E2E tests for user workflows
 - ❌ No browser interaction testing
 - ❌ No visual regression testing
@@ -43,6 +45,7 @@ Implement comprehensive E2E test suite for the LeanSpec UI (Next.js web applicat
 ### Why E2E Tests Matter
 
 The UI is a complex Next.js application with:
+
 1. **Real-time features** - Spec syncing, live updates
 2. **Multi-project management** - Project switching, registry
 3. **Complex interactions** - Dependency graphs, editing, navigation
@@ -50,6 +53,7 @@ The UI is a complex Next.js application with:
 5. **Internationalization** - Chinese/English switching
 
 Unit tests can't catch:
+
 - Navigation issues
 - Visual regressions
 - Real-time sync bugs
@@ -69,6 +73,7 @@ Unit tests can't catch:
 ## Critical User Workflows
 
 ### Core Workflows
+
 1. **Project Management**
    - Add new project
    - Switch between projects
@@ -115,6 +120,7 @@ Unit tests can't catch:
 ## Plan
 
 ### Phase 1: Test Framework Setup
+
 - [ ] Choose and install Playwright
 - [ ] Configure `playwright.config.ts`:
   - Test directory structure
@@ -138,6 +144,7 @@ Unit tests can't catch:
   - Artifact uploads
 
 ### Phase 2: Core Workflow Tests
+
 - [ ] **Project Management E2E** (`project-management.spec.ts`)
   - Add project from filesystem
   - Switch active project
@@ -166,6 +173,7 @@ Unit tests can't catch:
   - Back button navigation
 
 ### Phase 3: Advanced Features
+
 - [ ] **Dependencies Page E2E** (`dependencies.spec.ts`)
   - Load dependency graph page
   - DAG visualization renders correctly
@@ -196,6 +204,7 @@ Unit tests can't catch:
   - Empty columns display
 
 ### Phase 4: Real-time & Sync
+
 - [ ] **Real-time Updates** (`real-time-sync.spec.ts`)
   - File system watch triggers
   - Auto-refresh on external changes
@@ -211,6 +220,7 @@ Unit tests can't catch:
   - Concurrent project operations
 
 ### Phase 5: Visual & Accessibility
+
 - [ ] **Visual Regression** (`visual-regression.spec.ts`)
   - Spec list page snapshots (multiple states)
   - Spec detail snapshots (with diagrams)
@@ -230,6 +240,7 @@ Unit tests can't catch:
   - Form label associations
 
 ### Phase 6: Internationalization
+
 - [ ] **Language Switching** (`internationalization.spec.ts`)
   - Switch EN→ZH via language selector
   - Switch ZH→EN
@@ -245,6 +256,7 @@ Unit tests can't catch:
   - Font rendering
 
 ### Phase 7: Performance & Edge Cases
+
 - [ ] **Performance** (`performance.spec.ts`)
   - Large spec repository (100+ specs) load time
   - Large spec content (>5000 lines) render time
@@ -456,6 +468,7 @@ export function SpecList({ specs }: Props) {
 ```
 
 **Benefits**:
+
 - Stable selectors (won't break with CSS changes)
 - Clear test intent
 - Easy to find in tests
@@ -535,9 +548,9 @@ jobs:
           cache: 'pnpm'
       
       - run: pnpm install
-      - run: pnpm --filter @leanspec/ui build
+      - run: pnpm --filter @harnspec/ui build
       - run: npx playwright install --with-deps
-      - run: pnpm --filter @leanspec/ui test:e2e
+      - run: pnpm --filter @harnspec/ui test:e2e
       
       - uses: actions/upload-artifact@v4
         if: failure()
@@ -574,6 +587,7 @@ jobs:
 ### Incremental Implementation
 
 Start with highest-value tests first:
+
 1. Spec list and detail (core functionality)
 2. Project management (multi-project critical)
 3. Dependencies (unique feature)

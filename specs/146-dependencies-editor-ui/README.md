@@ -18,7 +18,7 @@ updated_at: 2026-02-02T08:13:59.949168745Z
 
 ## Overview
 
-Add inline dependencies editor to `@leanspec/ui` allowing users to add/remove spec dependencies (`depends_on`) directly from the spec detail view. Extracted from [spec 134](../134-ui-metadata-editing/) to track separately.
+Add inline dependencies editor to `@harnspec/ui` allowing users to add/remove spec dependencies (`depends_on`) directly from the spec detail view. Extracted from [spec 134](../134-ui-metadata-editing/) to track separately.
 
 ### Problem
 

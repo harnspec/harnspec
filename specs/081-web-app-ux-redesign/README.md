@@ -32,7 +32,7 @@ completed: '2025-11-17'
 
 ## Overview
 
-Comprehensive UX/UI redesign for the LeanSpec Web application (`@leanspec/web`) addressing critical layout, navigation, branding, and usability issues. This spec consolidates feedback from initial user testing and aims to create a professional, intuitive interface that aligns with LeanSpec's core principles.
+Comprehensive UX/UI redesign for the LeanSpec Web application (`@harnspec/web`) addressing critical layout, navigation, branding, and usability issues. This spec consolidates feedback from initial user testing and aims to create a professional, intuitive interface that aligns with LeanSpec's core principles.
 
 **⚠️ CRITICAL BLOCKER IDENTIFIED**: This spec is **blocked** by spec 082 (web-realtime-sync-architecture). The current database-seeding architecture has a fundamental flaw - no realtime updates from filesystem. Spec 082 proposes removing the database entirely and using direct filesystem reads with smart caching. **This must be resolved before continuing with UX redesign** to avoid building on unstable foundations.
 

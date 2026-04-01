@@ -105,11 +105,13 @@ This spec covers multiple layers (schema, backend, UI). Recommended implementati
 ## Technical Notes
 
 ### Current Architecture Gap
+
 - **Chat models** (`useModelsRegistry`): OpenAI/Anthropic/etc providers for LeanSpec's built-in chat. Configured in Settings → Models tab.
 - **Runner models**: Which AI model a runner CLI should use (e.g., `claude --model sonnet`). Currently unconfigured — no schema, no UI, no API.
 - The `InlineModelSelector` in session create dialog incorrectly bridges these two systems.
 
 ### Files to Modify
+
 - `rust/leanspec-core/src/sessions/runner.rs` — Add model fields to RunnerDefinition
 - `schemas/runners.json` — Add model-related properties
 - `packages/ui/src/components/settings/runner-settings-tab.tsx` — Add model config to runner dialog
@@ -118,12 +120,12 @@ This spec covers multiple layers (schema, backend, UI). Recommended implementati
 - `packages/ui/src/types/api.ts` — Update RunnerDefinition type
 - `rust/leanspec-http/` — Add model listing endpoint
 
-
 ### Progress Verification - 2026-03-04
 
 Verified against implementation, git history, and test runs.
 
 Completed and verified:
+
 - Runner filtering/ordering in session dialog: validated `listRunners` usage, `available===true` filtering, and default-first alphabetical sorting.
 - Runner model configuration end-to-end in UI + API + Rust + schema.
 - Model discovery endpoint `/api/runners/{id}/models` with command-binary validation, 10s timeout, defensive parsing, and 5m in-memory cache.
@@ -132,11 +134,13 @@ Completed and verified:
 - `ralph` removed from session create UI mode selection and session mode config map.
 
 Remaining gaps:
+
 - None. Previously pending items were completed: session runner filtering now mirrors settings availability semantics for runnable runners, pending validation is surfaced in the runner picker, and backend/session mode no longer depends on `ralph`.
 
 Test evidence:
+
 - `cargo test --manifest-path rust/Cargo.toml -p leanspec-http` -> pass
-- `pnpm --filter @leanspec/ui test` -> pass
+- `pnpm --filter @harnspec/ui test` -> pass
 
 ## Acceptance Criteria
 

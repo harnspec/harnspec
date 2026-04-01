@@ -26,14 +26,14 @@ completed: '2025-11-18'
 
 ## Overview
 
-**Problem**: Current `@leanspec/ui` tries to package `@leanspec/web`'s Next.js standalone build, which creates symlink and node_modules distribution failures. When users run `harnspec ui` via `pnpm dlx @leanspec/ui`, the published package can't resolve `next` dependency because:
+**Problem**: Current `@harnspec/ui` tries to package `@harnspec/web`'s Next.js standalone build, which creates symlink and node_modules distribution failures. When users run `harnspec ui` via `pnpm dlx @harnspec/ui`, the published package can't resolve `next` dependency because:
 
 - Standalone build uses pnpm symlinks that break when packaged
 - Symlink rewriting logic is complex and error-prone
 - Materializing symlinks hits broken symlink targets
 - The two-package separation adds unnecessary indirection
 
-**Solution**: Merge `@leanspec/web` directly into `@leanspec/ui` as a single publishable Next.js app package.
+**Solution**: Merge `@harnspec/web` directly into `@harnspec/ui` as a single publishable Next.js app package.
 
 ## Design
 
@@ -42,27 +42,27 @@ completed: '2025-11-18'
 **Before**:
 
 ```
-@leanspec/web (workspace-only)
+@harnspec/web (workspace-only)
   └─> Next.js app with standalone output
-@leanspec/ui (published)
-  └─> CLI wrapper + copies @leanspec/web standalone build
+@harnspec/ui (published)
+  └─> CLI wrapper + copies @harnspec/web standalone build
 ```
 
 **After**:
 
 ```
-@leanspec/ui (published)
+@harnspec/ui (published)
   └─> Next.js app + CLI entry point
 ```
 
 ### Implementation Strategy
 
-1. **Move all `@leanspec/web` source to `@leanspec/ui`**:
+1. **Move all `@harnspec/web` source to `@harnspec/ui`**:
    - `packages/ui/src/` ← all web app source
    - `packages/ui/public/` ← static assets
    - `packages/ui/next.config.ts`, etc.
 
-2. **Update `@leanspec/ui/package.json`**:
+2. **Update `@harnspec/ui/package.json`**:
    - Add Next.js dependencies
    - Keep existing CLI bin entry
    - Add Next.js build script
@@ -74,8 +74,8 @@ completed: '2025-11-18'
    - Dependencies bundled by Next.js standalone output
 
 4. **Update monorepo references**:
-   - Remove `@leanspec/web` from workspace
-   - Update `harnspec ui --dev` to use local `@leanspec/ui`
+   - Remove `@harnspec/web` from workspace
+   - Update `harnspec ui --dev` to use local `@harnspec/ui`
    - Update build pipelines
 
 ### Dev vs Prod Modes
@@ -85,7 +85,7 @@ completed: '2025-11-18'
 - Runs `next dev` directly in `packages/ui`
 - No standalone build needed
 
-**Prod mode** (published): `npx @leanspec/ui` or `harnspec ui`
+**Prod mode** (published): `npx @harnspec/ui` or `harnspec ui`
 
 - Runs pre-built standalone server
 - All dependencies bundled by Next.js
@@ -100,7 +100,7 @@ completed: '2025-11-18'
 - [ ] Update `packages/cli/src/commands/ui.ts` for new structure
 - [ ] Update monorepo build scripts
 - [ ] Archive/remove `packages/web/`
-- [ ] Test `pnpm dlx @leanspec/ui` flow
+- [ ] Test `pnpm dlx @harnspec/ui` flow
 - [ ] Update documentation
 
 ## Test
@@ -108,13 +108,13 @@ completed: '2025-11-18'
 - [ ] `harnspec ui --dev` works in monorepo
 - [ ] `pnpm pack` produces valid tarball
 - [ ] `pnpm dlx file:./tarball` successfully launches UI
-- [ ] Published `@leanspec/ui` resolves all dependencies
+- [ ] Published `@harnspec/ui` resolves all dependencies
 - [ ] No "Cannot find module 'next'" errors
 - [ ] Ctrl+C/Ctrl+D stop the UI cleanly (from earlier fix)
 - [ ] UI connects to filesystem specs correctly
 
 ## Notes
 
-**Rationale**: The two-package split was premature optimization. Next.js standalone output is designed to be self-contained and portable. Trying to repackage it breaks that model. By making `@leanspec/ui` the Next.js app itself, we leverage Next.js's built-in bundling and eliminate all symlink/node_modules issues.
+**Rationale**: The two-package split was premature optimization. Next.js standalone output is designed to be self-contained and portable. Trying to repackage it breaks that model. By making `@harnspec/ui` the Next.js app itself, we leverage Next.js's built-in bundling and eliminate all symlink/node_modules issues.
 
-**Breaking Changes**: None for users. The `harnspec ui` command and `npx @leanspec/ui` usage remain identical. Only internal package structure changes.
+**Breaking Changes**: None for users. The `harnspec ui` command and `npx @harnspec/ui` usage remain identical. Only internal package structure changes.

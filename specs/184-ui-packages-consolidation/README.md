@@ -70,7 +70,7 @@ packages/ai-worker
 
 - **Web**: Uses HTTP server (browser can't call Rust directly)
 - **Desktop**: Uses Tauri commands (direct Rust calls, no HTTP overhead)
-- **AI Chat**: Both platforms use `@leanspec/ai-worker` via IPC (spawned by Rust server)
+- **AI Chat**: Both platforms use `@harnspec/ai-worker` via IPC (spawned by Rust server)
 
 ### Key Decisions
 
@@ -100,7 +100,7 @@ packages/ai-worker
 **System Requirements**:
 
 - **Rust**: Backend server and core operations
-- **Node.js**: Required for AI chat features (via `@leanspec/ai-worker`)
+- **Node.js**: Required for AI chat features (via `@harnspec/ai-worker`)
   - Hard minimum: v20+ (works with EOL warning if v20-v21)
   - Recommended: v22+ (Jod LTS, no warnings)
   - Best: v24+ (Krypton LTS, maximum support until April 2028)

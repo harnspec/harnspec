@@ -24,13 +24,15 @@ transitions:
 ## Current Implementation State
 
 **Spec 237** (Rust IPC AI Chat Bridge) is **COMPLETE** and in production:
+
 - ✅ Rust HTTP server (`leanspec-http`) with Axum
-- ✅ Node.js AI worker (`@leanspec/ai-worker`) via IPC
+- ✅ Node.js AI worker (`@harnspec/ai-worker`) via IPC
 - ✅ IPC protocol via JSON Lines over stdin/stdout
 - ✅ Worker lifecycle management with health checks
 - ✅ Fallback to HTTP proxy if IPC unavailable
 
 **Spec 236** (Chat Config API Migration) is **COMPLETE**:
+
 - ✅ AI model config managed by Rust (not Node.js)
 - ✅ Config stored at `~/.leanspec/config/chat.json`
 - ✅ Node.js worker receives config via IPC
@@ -39,11 +41,13 @@ transitions:
 
 ## Overview
 
-**Problem**: Currently, LeanSpec uses the Vercel AI SDK (Node.js) through `@leanspec/ai-worker` to handle AI model interactions. This creates an architectural split:
+**Problem**: Currently, LeanSpec uses the Vercel AI SDK (Node.js) through `@harnspec/ai-worker` to handle AI model interactions. This creates an architectural split:
+
 - **Rust**: Core CLI, MCP server, HTTP server (fast, compiled, single binary)
 - **Node.js**: AI worker for LLM streaming (requires Node.js runtime, separate process)
 
 **Opportunity**: [aisdk.rs](https://aisdk.rs) is a Rust toolkit for building AI applications that is:
+
 - Provider-agnostic (OpenAI, Anthropic, Google, DeepSeek, etc.)
 - Type-safe with compile-time model/task validation
 - Compatible with Vercel AI SDK UI components
@@ -63,7 +67,7 @@ Current Architecture (Spec 237 - COMPLETED):
             │ IPC (stdin/stdout, JSON Lines)
             ↓
 ┌─────────────────────────┐
-│ Node.js AI Worker       │ ← @leanspec/ai-worker
+│ Node.js AI Worker       │ ← @harnspec/ai-worker
 │ (packages/ai-worker/)   │   Vercel AI SDK v6.0.39+
 │ ├─ streamText()         │   14 LeanSpec tools
 │ ├─ Tool execution       │   Requires Node.js v20+
@@ -88,6 +92,7 @@ Potential Architecture (Pure Rust):
 ### Benefits Analysis
 
 **Pros of Rust aisdk Migration**:
+
 1. **Pure Rust Stack**: Single language, single runtime
 2. **No Node.js Dependency**: Users don't need Node.js v20+ installed
 3. **Zero IPC Overhead**: Direct function calls instead of JSON Lines over stdio
@@ -100,6 +105,7 @@ Potential Architecture (Pure Rust):
 10. **Easier Testing**: Pure Rust integration tests
 
 **Cons of Rust aisdk Migration**:
+
 1. **Ecosystem Maturity**: aisdk.rs is newer than Vercel AI SDK
 2. **Provider Coverage**: May lag behind Vercel AI SDK for new providers
 3. **Community Size**: Smaller community, fewer examples
@@ -128,6 +134,7 @@ Potential Architecture (Pure Rust):
 ### Code Comparison
 
 **Current (Node.js + Vercel AI SDK)**:
+
 ```typescript
 // packages/ai-worker/src/worker.ts (262 lines)
 import { streamText, stepCountIs } from 'ai';
@@ -166,6 +173,7 @@ this.send({ type: 'done' });
 ```
 
 **Proposed (Pure Rust + aisdk.rs)**:
+
 ```rust
 // rust/leanspec-http/src/ai/chat.rs
 use aisdk::core::{LanguageModelRequest, LanguageModelStreamChunkType};
@@ -219,6 +227,7 @@ pub async fn chat_stream(
 ### Integration Points
 
 **HTTP Handler (Axum)**:
+
 ```rust
 // rust/leanspec-http/src/handlers/chat.rs
 use axum::response::sse::{Event, Sse};
@@ -239,6 +248,7 @@ pub async fn chat_handler(
 ```
 
 **No Worker Manager Needed**:
+
 ```rust
 // DELETE: rust/leanspec-http/src/ai/worker.rs (entire file)
 // DELETE: rust/leanspec-http/src/ai/manager.rs (entire file)
@@ -248,6 +258,7 @@ pub async fn chat_handler(
 ### Migration Complexity
 
 **Files to Change**:
+
 1. ✅ **Remove**: `packages/ai-worker/` (entire package - 378 lines in leanspec-tools.ts + 262 lines worker.ts)
 2. ✅ **Remove**: `rust/leanspec-http/src/ai/worker.rs` (420 lines IPC worker manager)
 3. ✅ **Remove**: `rust/leanspec-http/src/ai/manager.rs` (137 lines worker lifecycle)
@@ -260,6 +271,7 @@ pub async fn chat_handler(
 10. ⚠️ **Keep**: UI components (should work unchanged if SSE format matches)
 
 **Tools to Migrate** (14 tools in `leanspec-tools.ts`):
+
 1. `list_specs` - List specs with filters (status, priority, tags)
 2. `search_specs` - Search specs by query
 3. `get_spec` - Get spec details by name/number
@@ -275,6 +287,7 @@ pub async fn chat_handler(
 13. `update_subspec` - Update sub-spec file content
 
 **Estimated Effort**:
+
 - Remove IPC code: ~1,200 lines deleted (worker.rs + manager.rs + protocol.rs)
 - Add aisdk.rs integration: ~200 lines
 - Tool migration: ~400 lines (14 tools × ~30 lines each)
@@ -285,16 +298,19 @@ pub async fn chat_handler(
 ### Risk Assessment
 
 **High Risk**:
+
 - ❌ **UI Compatibility**: If SSE format differs, frontend breaks
 - ❌ **Provider APIs**: If aisdk.rs doesn't support needed features
 - ❌ **Production Bugs**: Early adopter issues in aisdk.rs
 
 **Medium Risk**:
+
 - ⚠️ **Performance**: Unknown if streaming is as fast as Node.js
 - ⚠️ **Memory**: Rust async runtime vs Node.js event loop
 - ⚠️ **Tool Execution**: Different execution model might have edge cases
 
 **Low Risk**:
+
 - ✅ **Compilation**: Type safety catches most issues
 - ✅ **Dependencies**: Rust crates are stable
 - ✅ **Rollback**: Can keep Node.js worker as fallback
@@ -302,6 +318,7 @@ pub async fn chat_handler(
 ### Testing Strategy
 
 **Must Verify**:
+
 1. ✅ OpenAI GPT-4o streaming works
 2. ✅ Anthropic Claude streaming works
 3. ✅ Google Gemini streaming works
@@ -314,6 +331,7 @@ pub async fn chat_handler(
 10. ✅ Memory usage under load
 
 **Test Plan**:
+
 ```rust
 #[cfg(test)]
 mod tests {
@@ -345,23 +363,25 @@ mod tests {
 ### Deployment Impact
 
 **Before** (with Node.js worker):
+
 ```bash
 # User needs Node.js v20+
 node --version  # v22.11.0
 
 # Install both packages
-npm install -g @leanspec/ui @leanspec/ai-worker
+npm install -g @harnspec/ui @harnspec/ai-worker
 
 # Run (spawns worker internally)
 leanspec-http
 ```
 
 **After** (pure Rust):
+
 ```bash
 # No Node.js needed!
 
 # Single binary install
-npm install -g @leanspec/ui
+npm install -g @harnspec/ui
 
 # Or direct binary download
 curl -fsSL https://leanspec.dev/install.sh | sh
@@ -371,10 +391,11 @@ leanspec-http
 ```
 
 **Docker**:
+
 ```dockerfile
 # Before: Multi-runtime
 FROM node:20-slim
-RUN npm install -g @leanspec/ui @leanspec/ai-worker
+RUN npm install -g @harnspec/ui @harnspec/ai-worker
 CMD ["leanspec-http"]
 
 # After: Minimal Rust-only
@@ -384,6 +405,7 @@ CMD ["leanspec-http"]
 ```
 
 **Size Comparison**:
+
 - Node.js base image: ~140MB
 - Debian slim + Rust binary: ~80MB (with OpenSSL)
 - Alpine + static Rust binary: ~15MB
@@ -392,6 +414,7 @@ CMD ["leanspec-http"]
 ### Alternative: Hybrid Approach
 
 **Option**: Keep Node.js worker as **optional fallback**:
+
 ```rust
 pub async fn chat_stream(...) -> Result<Stream> {
     // Try Rust aisdk first
@@ -408,11 +431,13 @@ pub async fn chat_stream(...) -> Result<Stream> {
 ```
 
 **Benefits**:
+
 - ✅ Best of both worlds
 - ✅ Gradual migration path
 - ✅ Handles edge cases
 
 **Drawbacks**:
+
 - ❌ More complexity
 - ❌ Still need to maintain both
 - ❌ Users still need Node.js for fallback
@@ -483,7 +508,7 @@ pub async fn chat_stream(...) -> Result<Stream> {
   - [ ] Update Docker images (use minimal base)
   - [ ] Publish new version
   - [ ] Announce pure Rust architecture
-  - [ ] Deprecate @leanspec/ai-worker package
+  - [ ] Deprecate @harnspec/ai-worker package
 
 ## Test
 
@@ -545,14 +570,16 @@ pub async fn chat_stream(...) -> Result<Stream> {
 ### aisdk.rs Maturity
 
 **GitHub Stats** (as of Jan 2026):
-- Repository: https://github.com/lazy-hq/aisdk
-- Crate: https://crates.io/crates/aisdk
+
+- Repository: <https://github.com/lazy-hq/aisdk>
+- Crate: <https://crates.io/crates/aisdk>
 - Stars: Need to check
 - Last commit: Need to check
 - Issues: Need to check
 - Version: Need to check
 
 **Pre-Implementation Check** (Phase 1):
+
 ```bash
 # Check if aisdk.rs is available on crates.io
 cargo search aisdk
@@ -566,12 +593,14 @@ cargo info aisdk  # Check latest version
 ```
 
 **Red Flags to Watch**:
+
 - ❌ No commits in 3+ months (abandoned)
 - ❌ Many open issues/PRs (maintenance issues)
 - ❌ <100 stars (very early)
 - ❌ Breaking changes in minor versions (unstable API)
 
 **Green Flags**:
+
 - ✅ Active development (commits within weeks)
 - ✅ Responsive maintainers
 - ✅ Clear documentation
@@ -581,11 +610,13 @@ cargo info aisdk  # Check latest version
 ### Provider Support
 
 **Currently Used** (must work):
+
 - ✅ OpenAI (GPT-4o, GPT-4o-mini)
 - ✅ Anthropic (Claude 3.5 Sonnet)
 - ✅ Google (Gemini 1.5 Pro)
 
 **Nice to Have**:
+
 - DeepSeek
 - Groq
 - OpenRouter (aggregator)
@@ -593,6 +624,7 @@ cargo info aisdk  # Check latest version
 ### System Prompt Handling
 
 Verify aisdk.rs handles system prompts correctly:
+
 - Single system message at start? ✅
 - Multiple system messages? Need to check
 - System message in middle of conversation? Need to check
@@ -600,6 +632,7 @@ Verify aisdk.rs handles system prompts correctly:
 ### Tool Call Format
 
 **Critical**: Tool call format must match what UI expects:
+
 ```typescript
 // Current format from Vercel AI SDK
 {
@@ -630,6 +663,7 @@ Must verify aisdk.rs produces equivalent format.
 **Blocks**: None (evaluation only)  
 **Blocked By**: None (can start immediately)  
 **Related Code**:
+
 - `packages/ai-worker/src/worker.ts` - Current Node.js implementation
 - `packages/ai-worker/src/tools/leanspec-tools.ts` - 14 tool definitions
 - `rust/leanspec-http/src/ai/worker.rs` - IPC worker manager (420 lines)
@@ -640,6 +674,7 @@ Must verify aisdk.rs produces equivalent format.
 ### Decision Criteria
 
 **Go ahead with full migration if**:
+
 - ✅ All 3 providers work correctly
 - ✅ Tool calls work with no changes to UI
 - ✅ SSE streaming format compatible
@@ -648,11 +683,13 @@ Must verify aisdk.rs produces equivalent format.
 - ✅ Clear migration path
 
 **Consider hybrid approach if**:
+
 - ⚠️ 1-2 minor compatibility issues fixable
 - ⚠️ Some edge cases need Node.js fallback
 - ⚠️ aisdk.rs lacks 1-2 non-critical features
 
 **Stay with Node.js if**:
+
 - ❌ Major compatibility blockers
 - ❌ Performance significantly worse
 - ❌ aisdk.rs appears abandoned
@@ -663,6 +700,7 @@ Must verify aisdk.rs produces equivalent format.
 ### Future: WASM Alternative
 
 If Rust migration succeeds, future possibility:
+
 - Compile aisdk.rs to WASM
 - Run in browser (client-side inference)
 - Or run in Desktop app (no server needed)
@@ -675,16 +713,19 @@ But that's a separate evaluation (out of scope for this spec).
 Based on actual codebase analysis (14 tools, 1,200 lines IPC code to remove):
 
 **Optimistic** (aisdk.rs works perfectly): 5-6 days
+
 - Phase 1-2 (Research): 1 day
 - Phase 4A (Full migration): 3 days
 - Phase 5-6 (Testing/Validation): 1-2 days
 
 **Realistic** (minor compatibility issues): 8-10 days
+
 - Phase 1-2 (Research): 1-2 days
 - Phase 4A (Full migration): 4-5 days (including tool edge cases)
 - Phase 5-6 (Testing/Validation): 2-3 days
 
 **Pessimistic** (major blockers found): Deferred to future
+
 - Document blockers and revisit in 3-6 months
 
 **Recommendation**: Start with Phase 1 (1 day PoC) to verify aisdk.rs works with our use case before committing to full migration.

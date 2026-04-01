@@ -26,7 +26,7 @@ The `packages/desktop` Tauri app has grown into a complex, platform-specific pac
 
 ### Build and dependency isolation
 
-- [x] Replace `workspace:*` dependency usage in desktop with publishable npm versions (starting with `@leanspec/ui`)
+- [x] Replace `workspace:*` dependency usage in desktop with publishable npm versions (starting with `@harnspec/ui`)
 - [ ] Verify desktop runs standalone with `pnpm install` and `pnpm dev:desktop` (or equivalent tauri dev command)
 - [x] Add independent desktop CI workflow (platform build matrix)
 
@@ -39,7 +39,7 @@ The `packages/desktop` Tauri app has grown into a complex, platform-specific pac
 ## Non-Goals
 
 - Rewriting or refactoring the desktop app itself
-- Changing the shared `@leanspec/ui` package
+- Changing the shared `@harnspec/ui` package
 - Changing desktop functionality or UX
 
 ## Design
@@ -52,8 +52,8 @@ The `packages/desktop` Tauri app has grown into a complex, platform-specific pac
 
 ### Dependency Strategy
 
-- `@leanspec/ui` is published to npm — replace `workspace:*` with a versioned npm reference
-- Remove `@leanspec/desktop` from the monorepo `pnpm-workspace.yaml` and `turbo.json`
+- `@harnspec/ui` is published to npm — replace `workspace:*` with a versioned npm reference
+- Remove `@harnspec/desktop` from the monorepo `pnpm-workspace.yaml` and `turbo.json`
 - Keep the desktop version in sync with harnspec releases via a manual bump or GitHub Actions trigger
 
 ### CI/CD
@@ -82,7 +82,7 @@ The new repo gets its own GitHub Actions workflows for:
 
 ### Standalone setup
 
-- [x] Replace `workspace:*` dep on `@leanspec/ui` with latest published npm version
+- [x] Replace `workspace:*` dep on `@harnspec/ui` with latest published npm version
 - [x] Verify `pnpm install` and `tauri dev` work standalone
 - [x] Set up GitHub Actions: `tauri build` matrix (macOS, Windows, Linux)
 - [x] Set up auto-updater artefact publishing workflow
@@ -109,7 +109,7 @@ The new repo gets its own GitHub Actions workflows for:
 - Implementation notes (2026-02-24):
   - Created and populated <https://github.com/codervisor/harnspec-desktop> with extracted desktop history rooted at repository root.
   - `git subtree split` repeatedly failed with `fatal: no new revisions were found`; extraction was completed via `git filter-branch --subdirectory-filter packages/desktop` in a fresh temp clone as a documented fallback.
-  - Updated standalone desktop repo to use published `@leanspec/ui` (`^0.2.24`), added independent workflows (`tauri-build.yml`, `tauri-updater-release.yml`), verified `pnpm install` and `pnpm tauri dev --help`.
+  - Updated standalone desktop repo to use published `@harnspec/ui` (`^0.2.24`), added independent workflows (`tauri-build.yml`, `tauri-updater-release.yml`), verified `pnpm install` and `pnpm tauri dev --help`.
   - Monorepo cleanup completed: removed `packages/desktop/`, removed desktop tasks/scripts/workflow references, and updated contributor/user docs to point at the new repo.
   - Monorepo validation command results: `pnpm build` ✅, `pnpm typecheck` ✅, `pnpm test` ✅, `pnpm lint` ❌ (pre-existing unrelated UI lint violations in `packages/ui`).
   - Global `harnspec validate` currently reports many pre-existing length/structure issues in other specs; spec-specific validation for this spec passed.

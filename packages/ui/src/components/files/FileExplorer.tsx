@@ -1,6 +1,6 @@
 /**
  * FileExplorer - collapsible directory tree for codebase browsing
- * Spec 246 - Codebase File Viewing in @leanspec/ui
+ * Spec 246 - Codebase File Viewing in @harnspec/ui
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';

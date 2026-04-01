@@ -90,8 +90,8 @@ Main Package (harnspec)
 
 **Same structure for MCP:**
 
-- Main: `@leanspec/mcp`
-- Platforms: `@leanspec/mcp-darwin-x64`, `@leanspec/mcp-darwin-arm64`, etc.
+- Main: `@harnspec/mcp`
+- Platforms: `@harnspec/mcp-darwin-x64`, `@harnspec/mcp-darwin-arm64`, etc.
 
 ### Main Package Configuration
 

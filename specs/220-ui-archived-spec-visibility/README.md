@@ -16,7 +16,7 @@ updated_at: 2026-02-01T15:39:34.312057Z
 
 ## Overview
 
-Currently, @leanspec/ui does not display archived specs in the navigation sidebar, and there's no way to view archived specs in the UI. This creates visibility gaps:
+Currently, @harnspec/ui does not display archived specs in the navigation sidebar, and there's no way to view archived specs in the UI. This creates visibility gaps:
 
 - Users cannot review archived specs without using CLI
 - Historical context is lost in the UI
@@ -46,11 +46,13 @@ Currently, @leanspec/ui does not display archived specs in the navigation sideba
 ### UI Components
 
 **Archived Spec Badge:**
+
 - Display prominently in spec detail header
 - Visual style: muted/secondary color scheme
 - Text: "Archived" or "Archived on [date]"
 
 **Filter Controls:**
+
 - Search page: "Include archived" checkbox
 - Board view: Optional "Show archived" toggle
 - Persist filter preference in local storage

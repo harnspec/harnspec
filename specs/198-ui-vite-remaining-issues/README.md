@@ -34,11 +34,13 @@ After implementing initial UI parity between Next.js and Vite apps in spec 193, 
 **Problem:** Both pages throw errors after routing changes to `/projects/:projectId` structure.
 
 **Likely Issues:**
+
 - API calls not handling project context correctly
 - Route params not being extracted properly
 - Missing `projectId` in URL patterns or components
 
 **Files Affected:**
+
 - `packages/ui-vite/src/pages/SpecDetailPage.tsx`
 - `packages/ui-vite/src/pages/DependenciesPage.tsx`
 
@@ -57,6 +59,7 @@ After implementing initial UI parity between Next.js and Vite apps in spec 193, 
 **Expected:** Consistent padding matching the Next.js UI (likely p-4 sm:p-6 or similar).
 
 **Files Affected:**
+
 - `packages/ui-vite/src/pages/SpecsPage.tsx`
 - Layout container for specs content
 
@@ -65,11 +68,13 @@ After implementing initial UI parity between Next.js and Vite apps in spec 193, 
 **Problem:** Cannot switch between projects using the project switcher component.
 
 **Likely Issues:**
+
 - Project context not updating route
 - Navigation not triggering on project selection
 - State/route sync issue between `ProjectContext` and router
 
 **Files Affected:**
+
 - Project switcher component (need to locate)
 - `packages/ui-vite/src/contexts/ProjectContext.tsx`
 
@@ -78,19 +83,22 @@ After implementing initial UI parity between Next.js and Vite apps in spec 193, 
 **Problem:** Error appears when creating a new project.
 
 **Likely Causes:**
+
 - Path validation logic too strict
 - API endpoint mismatch
 - Frontend not handling relative vs absolute paths correctly
 
 **Files Affected:**
+
 - Create project dialog/form component
 - API client validation
 
 ### 7. Missing Sorting Options Alignment
 
-**Problem:** Specs list sorting doesn't match `@leanspec/ui` functionality.
+**Problem:** Specs list sorting doesn't match `@harnspec/ui` functionality.
 
 **Expected:** Same sort options as Next.js:
+
 - ID (desc/asc)
 - Updated (desc)
 - Title (asc)
@@ -98,6 +106,7 @@ After implementing initial UI parity between Next.js and Vite apps in spec 193, 
 **Current State:** Either missing or not visible/functional.
 
 **Files Affected:**
+
 - `packages/ui-vite/src/pages/SpecsPage.tsx`
 - `packages/ui-vite/src/components/specs/SpecsFilters.tsx`
 
@@ -140,6 +149,7 @@ Test run: `pnpm -C packages/ui-vite test` (fails in `src/lib/api.test.ts` becaus
 These issues are blocking full UI-Vite parity and need to be resolved before considering spec 193 complete. Most are straightforward fixes once the root causes are identified.
 
 Priority order:
+
 1. Critical errors (spec detail, dependencies, create project)
 2. Navigation/routing (sidebar, project switcher)
 3. Polish (padding, sorting)

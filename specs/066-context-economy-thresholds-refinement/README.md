@@ -757,8 +757,8 @@ Using new rules: "✅ Good: Score 5/100 - well-structured, token count acceptabl
 
 **Build Status**:
 
-- `@leanspec/core` package builds successfully
-- `@leanspec/cli` package builds successfully
+- `@harnspec/core` package builds successfully
+- `@harnspec/cli` package builds successfully
 - `tokenx` dependency properly installed
 
 ### 🐛 Issues Found

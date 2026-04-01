@@ -16,7 +16,7 @@ completed_at: '2025-11-18T09:28:17.735Z'
 completed: '2025-11-18'
 ---
 
-# Fix @leanspec/ui standalone packaging issue
+# Fix @harnspec/ui standalone packaging issue
 
 > **Status**: ✅ Complete · **Priority**: High · **Created**: 2025-11-18 · **Tags**: packaging, bug-fix
 
@@ -25,7 +25,7 @@ completed: '2025-11-18'
 
 ## Overview
 
-The published `@leanspec/ui@0.2.4` package fails to run with error `Cannot find module 'next'`. This occurs because Next.js standalone build creates symlinks in `node_modules/`, but npm pack doesn't follow symlinks by default, resulting in missing dependencies in the published package.
+The published `@harnspec/ui@0.2.4` package fails to run with error `Cannot find module 'next'`. This occurs because Next.js standalone build creates symlinks in `node_modules/`, but npm pack doesn't follow symlinks by default, resulting in missing dependencies in the published package.
 
 **Root Cause**: The `files` field in `package.json` included `.next/standalone/node_modules/` which only contains symlinks pointing to `.next/standalone/node_modules/.pnpm/`. When npm packs the tarball, these symlinks aren't resolved.
 
@@ -51,10 +51,10 @@ This ensures actual dependency files (not just symlinks) are included in the pub
 
 **Version Alignment**: All packages bumped to `0.2.5`:
 
-- `@leanspec/ui`: 0.2.4 → 0.2.5
-- `@leanspec/core`: 0.2.4 → 0.2.5  
+- `@harnspec/ui`: 0.2.4 → 0.2.5
+- `@harnspec/core`: 0.2.4 → 0.2.5  
 - `harnspec`: 0.2.4 → 0.2.5
-- `@leanspec/mcp`: Already at 0.2.5
+- `@harnspec/mcp`: Already at 0.2.5
 
 ## Plan
 
@@ -68,13 +68,13 @@ This ensures actual dependency files (not just symlinks) are included in the pub
 
 **Verification Steps**:
 
-1. Build the UI package: `pnpm --filter @leanspec/ui build`
+1. Build the UI package: `pnpm --filter @harnspec/ui build`
 2. Pack locally: `npm pack --dry-run` and verify `next` module is included
 3. Test installation in separate directory:
 
    ```bash
    cd /tmp/test-leanspec-ui
-   npm install @leanspec/ui@0.2.5
+   npm install @harnspec/ui@0.2.5
    npx leanspec-ui --specs /path/to/specs
    ```
 

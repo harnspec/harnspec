@@ -23,6 +23,7 @@ updated_at: 2026-02-04T03:26:47.299248Z
 Currently, the UI requires manual refresh to see spec changes, or relies on cache TTL (60s default from spec 082). This creates a poor developer experience when actively working on specs.
 
 **Problem Statement:**
+
 - Spec changes in `specs/` directory don't appear in UI immediately
 - Cache TTL (60s) means up to 1-minute delay
 - Manual refresh required for immediate updates
@@ -32,6 +33,7 @@ Currently, the UI requires manual refresh to see spec changes, or relies on cach
 Implement true realtime sync that pushes spec changes from backend to frontend automatically, eliminating manual refresh.
 
 **User Experience:**
+
 1. User edits a spec file in their editor
 2. File watcher detects change within <1s
 3. Backend invalidates cache and pushes update via WebSocket/SSE
@@ -72,10 +74,12 @@ The architecture uses a three-tier approach with file watching, push communicati
 ### Technology Options
 
 **Backend File Watching:**
+
 - Rust: `notify` crate (cross-platform, efficient)
 - Node.js: `chokidar` (if using Node backend)
 
 **Push Communication:**
+
 1. **WebSocket** (bidirectional)
    - Pros: Full duplex, can send client actions
    - Cons: More complex state management
@@ -87,6 +91,7 @@ The architecture uses a three-tier approach with file watching, push communicati
    - Use case: Read-only updates (perfect for spec viewing)
 
 **Frontend Integration:**
+
 - React hooks for WebSocket/SSE connection
 - React Query or SWR for cache invalidation
 - Toast notifications for change awareness
@@ -96,6 +101,7 @@ The architecture uses a three-tier approach with file watching, push communicati
 See `IMPLEMENTATION.md` for detailed code examples, API specifications, and configuration options.
 
 Key implementation points:
+
 - Use Rust `notify` crate for cross-platform file watching
 - Broadcast channel for distributing events to SSE clients
 - React Query integration for automatic cache invalidation
@@ -106,18 +112,21 @@ Key implementation points:
 Handling edge cases and errors gracefully is critical for production reliability.
 
 ### File Watcher Edge Cases
+
 - Debounce rapid changes (e.g., VSCode auto-save)
 - Ignore temp files (.swp, ~, .tmp)
 - Handle file lock conflicts
 - Graceful degradation if watcher fails
 
 **SSE Connection:**
+
 - Auto-reconnect on connection loss
 - Exponential backoff for retries
 - Fallback to polling if SSE unavailable
 - Handle browser tab visibility (pause when hidden)
 
 **Performance:**
+
 - Max 100 concurrent SSE connections
 - Rate limit change events (max 10/sec)
 - Only send changes for watched specs
@@ -128,16 +137,19 @@ Handling edge cases and errors gracefully is critical for production reliability
 Understanding the performance implications helps with capacity planning.
 
 ### Backend Overhead
+
 - File watcher: ~5-10MB memory overhead
 - SSE connections: ~1KB per connection
 - CPU: Negligible (<1% with 100 connections)
 
 **Frontend:**
+
 - SSE connection: ~2KB memory
 - Network: ~1KB/min (keepalive pings)
 - Minimal battery impact
 
 **Comparison to Polling:**
+
 - Polling (10s interval): 6 requests/min
 - SSE: 1 connection, only data when changed
 - **Result: 90% reduction in unnecessary requests**
@@ -151,6 +163,7 @@ Understanding the performance implications helps with capacity planning.
 Implementation is broken into phases for incremental delivery:
 
 ### Phase 1: Backend Infrastructure
+
 - [ ] Research file watching libraries (Rust `notify` vs Node `chokidar`)
 - [ ] Implement backend file watcher service
   - [ ] Set up `notify` crate in rust/leanspec-http
@@ -171,8 +184,8 @@ Implementation is broken into phases for incremental delivery:
   - [ ] Add toast notifications for changes
   - [ ] Test with network interruptions
 - [ ] Integrate into UI packages
-  - [ ] Add to @leanspec/ui (Vite app)
-  - [ ] Add to @leanspec/desktop (Tauri app)
+  - [ ] Add to @harnspec/ui (Vite app)
+  - [ ] Add to @harnspec/desktop (Tauri app)
   - [ ] Add configuration options
   - [ ] Test in both dev and production builds
 - [ ] Add configuration options
@@ -191,6 +204,7 @@ Implementation is broken into phases for incremental delivery:
 - [ ] Update spec 082 with realtime sync info
 
 ### Phase 2: Frontend Integration
+
 - [ ] Create frontend SSE client hook
   - [ ] Implement useSpecSync() hook
   - [ ] Integrate with React Query for cache invalidation
@@ -198,12 +212,13 @@ Implementation is broken into phases for incremental delivery:
   - [ ] Add toast notifications for changes
   - [ ] Test with network interruptions
 - [ ] Integrate into UI packages
-  - [ ] Add to @leanspec/ui (Vite app)
-  - [ ] Add to @leanspec/desktop (Tauri app)
+  - [ ] Add to @harnspec/ui (Vite app)
+  - [ ] Add to @harnspec/desktop (Tauri app)
   - [ ] Add configuration options
   - [ ] Test in both dev and production builds
 
 ### Phase 3: Testing & Documentation
+
 - [ ] Performance testing
   - [ ] Test with 100 concurrent connections
   - [ ] Measure memory/CPU impact
@@ -222,6 +237,7 @@ Test plan covers functional, performance, and deployment scenarios.
 ### Functional Tests
 
 **File Watching:**
+
 - [ ] Detects spec file creation
 - [ ] Detects spec file modification
 - [ ] Detects spec file deletion
@@ -231,6 +247,7 @@ Test plan covers functional, performance, and deployment scenarios.
 - [ ] Works with subdirectories
 
 **SSE Connection:**
+
 - [ ] Client connects successfully
 - [ ] Receives change events
 - [ ] Auto-reconnects on disconnect
@@ -239,6 +256,7 @@ Test plan covers functional, performance, and deployment scenarios.
 - [ ] Graceful shutdown on server stop
 
 **Frontend Integration:**
+
 - [ ] Spec list auto-refreshes on change
 - [ ] Spec detail page auto-refreshes
 - [ ] Dependencies view updates
@@ -247,6 +265,7 @@ Test plan covers functional, performance, and deployment scenarios.
 - [ ] No duplicate invalidations
 
 **Edge Cases:**
+
 - [ ] Handles large spec files (>1MB)
 - [ ] Handles rapid changes (10+ per second)
 - [ ] Handles file lock conflicts
@@ -257,18 +276,21 @@ Test plan covers functional, performance, and deployment scenarios.
 ### Performance Tests
 
 **Backend:**
+
 - [ ] Memory usage <50MB with 100 connections
 - [ ] CPU usage <5% under normal load
 - [ ] Event latency <100ms from file change
 - [ ] No memory leaks over 24 hours
 
 **Frontend:**
+
 - [ ] SSE connection overhead <5KB
 - [ ] Reconnection completes <3s
 - [ ] No UI jank during updates
 - [ ] Battery impact negligible
 
 **Comparison:**
+
 - [ ] SSE uses 90% less bandwidth than polling
 - [ ] Updates appear 10x faster than cache TTL
 - [ ] Better UX than manual refresh
@@ -276,11 +298,13 @@ Test plan covers functional, performance, and deployment scenarios.
 ### Deployment Tests
 
 **Self-Hosted:**
+
 - [ ] Works with local specs/ directory
 - [ ] File watcher permissions correct
 - [ ] SSE works behind reverse proxy
 
 **Vercel (Serverless):**
+
 - [ ] ⚠️ File watching may not work in serverless
 - [ ] Fallback to cache TTL documented
 - [ ] Alternative: webhook-based sync
@@ -292,11 +316,13 @@ Additional context, considerations, and future plans for this feature.
 ### Dependencies
 
 **Depends On:**
+
 - Spec 082 (Web App Realtime Sync Architecture) - base caching layer
 - Spec 186 (Rust HTTP Server) - backend implementation
 - Spec 184 (Unified UI Architecture) - frontend integration
 
 **Enables:**
+
 - Better developer experience for spec editing
 - Live collaboration possibilities (future)
 - Real-time dashboard updates
@@ -328,18 +354,21 @@ Additional context, considerations, and future plans for this feature.
 ### Deployment Considerations
 
 **Vercel (Serverless):**
+
 - ⚠️ **Limitation**: File system is read-only in serverless functions
 - ⚠️ **File watching may not work** due to ephemeral nature
 - **Workaround**: Use webhook-based approach (spec 082 Phase 3)
 - **Alternative**: Deploy to long-running server (Fly.io, Railway)
 
 **Self-Hosted (Recommended):**
+
 - ✅ Full file system access
 - ✅ File watching works perfectly
 - ✅ Better for development environments
 - Use case: Desktop app, local UI server
 
 **Hybrid Approach:**
+
 - Detect environment at runtime
 - Enable file watching for self-hosted
 - Fall back to cache TTL for serverless
@@ -348,16 +377,19 @@ Additional context, considerations, and future plans for this feature.
 ### Security Considerations
 
 **Rate Limiting:**
+
 - Max 100 SSE connections per IP
 - Max 10 events per second per connection
 - Prevent DoS attacks
 
 **Authentication:**
+
 - SSE endpoint should require auth token
 - Validate token on connection
 - Support JWT or session-based auth
 
 **Data Exposure:**
+
 - Only send public spec data
 - Don't include sensitive metadata
 - Filter events based on user permissions
@@ -365,11 +397,13 @@ Additional context, considerations, and future plans for this feature.
 ### Future Enhancements
 
 **Phase 2:**
+
 - Live editing with conflict resolution
 - Multi-user presence indicators
 - Real-time collaboration features
 
 **Phase 3:**
+
 - Incremental spec parsing (only changed sections)
 - Binary diff for large specs
 - WebSocket upgrade for bidirectional features
@@ -385,12 +419,14 @@ Additional context, considerations, and future plans for this feature.
 ### Success Metrics
 
 **Quantitative:**
+
 - Latency: File change → UI update <1s (99th percentile)
 - Bandwidth: 90% reduction vs polling
 - Reliability: 99.9% uptime for SSE connections
 - Performance: <5% CPU overhead
 
 **Qualitative:**
+
 - No manual refresh needed
 - Instant feedback when editing specs
 - Seamless multi-tab experience

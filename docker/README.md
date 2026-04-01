@@ -90,7 +90,7 @@ ghcr.io/codervisor/leanspec:<version>   # e.g. 0.2.27
 
 The image uses a two-stage build:
 
-- **Builder stage** (`node:20-slim`): installs `@leanspec/http-linux-x64` and `@leanspec/ui` from npm
+- **Builder stage** (`node:20-slim`): installs `@harnspec/http-linux-x64` and `@harnspec/ui` from npm
 - **Runtime stage** (`debian:bookworm-slim`): copies only the Rust binary and pre-built UI static files — no Node at runtime
 
 No Rust compilation happens at build time.

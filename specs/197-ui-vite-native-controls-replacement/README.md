@@ -10,7 +10,8 @@ updated_at: 2026-01-12T08:21:19.326720992Z
 
 ## Overview
 
-Native form controls remain in UI-Vite (buttons, toggle options) while the Next.js UI uses shadcn/ui primitives via @leanspec/ui-components. This creates styling inconsistencies and duplicated interaction logic. Known native usages:
+Native form controls remain in UI-Vite (buttons, toggle options) while the Next.js UI uses shadcn/ui primitives via @harnspec/ui-components. This creates styling inconsistencies and duplicated interaction logic. Known native usages:
+
 - Filters: clear button in [packages/ui-vite/src/components/specs/SpecsFilters.tsx#L105](packages/ui-vite/src/components/specs/SpecsFilters.tsx#L105)
 - Toggles/menus: theme toggle options in [packages/ui-vite/src/components/ThemeToggle.tsx#L20](packages/ui-vite/src/components/ThemeToggle.tsx#L20); language list entries in [packages/ui-vite/src/components/LanguageSwitcher.tsx#L50](packages/ui-vite/src/components/LanguageSwitcher.tsx#L50)
 - Navigation lists: TOC items in [packages/ui-vite/src/components/spec-detail/TableOfContents.tsx#L33](packages/ui-vite/src/components/spec-detail/TableOfContents.tsx#L33); sub-spec tabs in [packages/ui-vite/src/components/spec-detail/SubSpecTabs.tsx#L97](packages/ui-vite/src/components/spec-detail/SubSpecTabs.tsx#L97); quick search trigger in [packages/ui-vite/src/components/QuickSearch.tsx#L132](packages/ui-vite/src/components/QuickSearch.tsx#L132)
@@ -23,14 +24,14 @@ Goal: align UI-Vite with shared shadcn/ui primitives, improving consistency, acc
 
 ## Design
 
-- Use @leanspec/ui-components primitives (Button, Select, Input, Command, Popover) for all form controls unless a semantic/native element is required for accessibility (e.g., true link vs button). 
-- For tab-like or list-item interactions, prefer Button variants (ghost, link) or Command items to maintain keyboard focus and aria attributes. 
-- Keep icon-only actions consistent with Button size/icon variants; ensure focus rings remain visible. 
+- Use @harnspec/ui-components primitives (Button, Select, Input, Command, Popover) for all form controls unless a semantic/native element is required for accessibility (e.g., true link vs button).
+- For tab-like or list-item interactions, prefer Button variants (ghost, link) or Command items to maintain keyboard focus and aria attributes.
+- Keep icon-only actions consistent with Button size/icon variants; ensure focus rings remain visible.
 - Avoid regressions in drag-and-drop areas (BoardView) by preserving draggable props while wrapping controls appropriately.
 
 ## Plan
 
-- [x] Finalize inventory of native controls in UI-Vite and map each to the appropriate @leanspec/ui-components primitive (Button/Command/Link) with accessibility notes.
+- [x] Finalize inventory of native controls in UI-Vite and map each to the appropriate @harnspec/ui-components primitive (Button/Command/Link) with accessibility notes.
 - [x] Replace native controls in filters, toggles, and menus (SpecsFilters, ThemeToggle, LanguageSwitcher, QuickSearch, TableOfContents, SubSpecTabs) with shared components and consistent aria labels.
 - [x] Update editors and utilities (TagsEditor, Layout shortcut modal, DirectoryPicker) to use Button variants while preserving keyboard navigation and scroll behaviors.
 - [x] Refactor SettingsPage project actions and BoardView archived toggles to use shared components; ensure popover/drag interactions remain intact.
@@ -43,9 +44,9 @@ Goal: align UI-Vite with shared shadcn/ui primitives, improving consistency, acc
 
 ## Notes
 
-- All native button elements have been replaced with Button components from @leanspec/ui-components
+- All native button elements have been replaced with Button components from @harnspec/ui-components
 - Used appropriate Button variants (ghost, secondary, outline) and sizes (sm, icon) to maintain visual consistency
 - Preserved all interactive behaviors including keyboard navigation, focus rings, and aria labels
 - Fixed tsconfig.json deprecation warning (ignoreDeprecations: "6.0" → "5.0")
 - Build and typecheck pass successfully
-- All Button components properly imported with cn utility from @leanspec/ui-components for className composition
+- All Button components properly imported with cn utility from @harnspec/ui-components for className composition
