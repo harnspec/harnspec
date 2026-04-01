@@ -190,7 +190,12 @@ fn build_ui_command(
         ),
         _ => {
             // npm v10 removed npx; prefer npm exec with package pinning.
-            let mut npm_args = vec!["exec".to_string(), "--yes".to_string(), "--package=@harnspec/ui".to_string(), "--".to_string()];
+            let mut npm_args = vec![
+                "exec".to_string(),
+                "--yes".to_string(),
+                "--package=@harnspec/ui".to_string(),
+                "--".to_string(),
+            ];
             npm_args.extend(ui_args);
             ("npm".to_string(), npm_args)
         }
@@ -233,4 +238,3 @@ mod tests {
         assert!(args.contains(&"@harnspec/ui".to_string()));
     }
 }
-

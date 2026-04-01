@@ -81,7 +81,7 @@ pub use spec_ops::{
     SpecLoader, SpecWriter, WriteError,
 };
 pub use types::{
-    CheckboxItem, CompletionVerificationResult, ErrorSeverity, IncompleteChildSpec, HarnSpecConfig,
+    CheckboxItem, CompletionVerificationResult, ErrorSeverity, HarnSpecConfig, IncompleteChildSpec,
     Progress, SpecFilterOptions, SpecFrontmatter, SpecInfo, SpecPriority, SpecStatus,
     StatusTransition, UmbrellaVerificationResult, ValidationError, ValidationResult,
 };

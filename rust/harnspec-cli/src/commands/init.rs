@@ -604,42 +604,20 @@ use crate::commands::skill::runner_to_skills_agent;
 
 fn handle_skills_install(
     install_skills: bool,
-    detections: &[AiDetection],
+    _detections: &[AiDetection],
 ) -> Result<(), Box<dyn Error>> {
     if !install_skills {
         return Ok(());
     }
 
-    // Convert detected AI tools to skills.sh agent names
-    let agents: Vec<String> = detections
-        .iter()
-        .filter(|d| d.detected)
-        .filter_map(|d| runner_to_skills_agent(&d.runner.id))
-        .map(|s| s.to_string())
-        .collect();
+    println!(
+        "\n{}",
+        "Injecting HarnSpec SDD methodology skills...".cyan()
+    );
 
-    println!("\n{}", "Installing agent skills...".cyan());
-    if !agents.is_empty() {
-        println!(
-            "{} Installing to detected tools: {}",
-            "•".cyan(),
-            agents.join(", ")
-        );
-    }
-
-    // Pass None if no agents detected (will install to all), otherwise pass the list
-    let agents_opt = if agents.is_empty() {
-        None
-    } else {
-        Some(agents.as_slice())
-    };
-
-    if let Err(err) = skill::install(agents_opt, true) {
-        println!("{} Failed to install agent skills: {}", "⚠".yellow(), err);
-        println!(
-            "{} You can retry with: npx skills add codervisor/harnspec --skill harnspec-sdd",
-            "•".cyan()
-        );
+    if let Err(err) = skill::install(None, true) {
+        println!("{} Failed to inject skills: {}", "⚠".yellow(), err);
+        println!("{} You can retry with: harnspec skills install", "•".cyan());
     }
 
     Ok(())

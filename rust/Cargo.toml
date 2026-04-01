@@ -18,7 +18,7 @@ homepage = "https://harnspec.github.io"
 license = "MIT AND Commons-Clause-1.0"
 repository = "https://github.com/harnspec/harnspec"
 rust-version = "1.80"
-version = "0.2.28"
+version = "0.0.1"
 
 [workspace.dependencies]
 # Core dependencies

@@ -1,6 +1,6 @@
 {
   "name": "harnspec",
-  "version": "0.2.28",
+  "version": "0.0.1",
   "private": true,
   "license": "MIT AND Commons-Clause-1.0",
   "packageManager": "pnpm@10.30.2",

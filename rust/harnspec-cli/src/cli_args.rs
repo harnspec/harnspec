@@ -629,10 +629,24 @@ pub(crate) enum Commands {
         action: SessionSubcommand,
     },
 
-    /// Manage AI runner configurations
-    Runner {
+    /// Manage AI agent skills
+    Skills {
         #[command(subcommand)]
-        action: RunnerSubcommand,
+        action: SkillSubcommand,
+    },
+}
+
+#[derive(Subcommand)]
+pub(crate) enum SkillSubcommand {
+    /// Install official HarnSpec skills to the current project
+    Install {
+        /// Agents to install to (e.g. claude, copilot, cursor)
+        #[arg(long, action = ArgAction::Append)]
+        agent: Vec<String>,
+
+        /// Skip confirmation prompts
+        #[arg(short, long)]
+        yes: bool,
     },
 }
 

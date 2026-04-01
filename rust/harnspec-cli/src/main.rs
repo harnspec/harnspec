@@ -7,7 +7,9 @@ use clap::Parser;
 use colored::Colorize;
 use std::process::ExitCode;
 
-use crate::cli_args::{Cli, Commands, GitSubcommand, RunnerSubcommand, SessionSubcommand};
+use crate::cli_args::{
+    Cli, Commands, GitSubcommand, RunnerSubcommand, SessionSubcommand, SkillSubcommand,
+};
 
 fn main() -> ExitCode {
     let cli = Cli::parse();
@@ -442,6 +444,16 @@ fn main() -> ExitCode {
             };
             commands::runner::run(cmd)
         }
+        Commands::Skills { action } => match action {
+            crate::cli_args::SkillSubcommand::Install { agent, yes } => {
+                let agents = if agent.is_empty() {
+                    None
+                } else {
+                    Some(&agent[..])
+                };
+                commands::skill::install(agents, yes)
+            }
+        },
         Commands::View { spec, raw } => commands::view::run(&specs_dir, &spec, raw, &cli.output),
     };
 

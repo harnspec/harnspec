@@ -4,9 +4,9 @@
 
 This project uses the Agent Skills framework for domain-specific guidance.
 
-### harnspec-sdd - Spec-Driven Development
+### harnspec - Spec-Driven Development methodology
 
-- **Location**: See your skills directory (installed via `harnspec skill install`, e.g., `.github/skills/harnspec-sdd/SKILL.md`)
+- **Location**: [.agents/skills/harnspec/SKILL.md](.agents/skills/harnspec/SKILL.md)
 - **Use when**: Working with specs, planning features, multi-step changes
 - **Key principle**: Run `board` or `search` before creating specs
 

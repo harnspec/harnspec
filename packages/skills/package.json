@@ -1,0 +1,26 @@
+{
+  "name": "@harnspec/skills",
+  "version": "0.0.1",
+  "description": "Official SDD methodology skills for HarnSpec",
+  "private": false,
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "harnspec-skills": "./bin/index.js"
+  },
+  "files": [
+    ".agents/skills/harnspec",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "harnspec",
+    "sdd",
+    "ai",
+    "agent",
+    "skills"
+  ]
+}

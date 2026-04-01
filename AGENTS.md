@@ -27,6 +27,7 @@ This project uses the Agent Skills framework for domain-specific guidance. **Rea
    - Key: Use `agent-browser` CLI instead of Playwright MCP for browser automation
 
 ## Project-Specific Rules
+0. "Chinese preferred" - 在对话交流的过程中，优先使用中文
 
 1. **Use pnpm** - Never npm or yarn. All package management uses pnpm.
 2. **DRY Principle** - Extract shared logic; avoid duplication.

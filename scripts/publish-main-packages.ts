@@ -179,6 +179,14 @@ async function publishMainPackages(dryRun: boolean, tag?: string): Promise<void>
     console.log(`  ✗ ${uiResult.package}: ${uiResult.error}`);
   }
 
+  const skillsResult = await publishPackage(path.join(PACKAGES_DIR, 'skills'), dryRun, tag);
+  results.push(skillsResult);
+  if (skillsResult.success) {
+    console.log(`  ✓ ${skillsResult.package}`);
+  } else {
+    console.log(`  ✗ ${skillsResult.package}: ${skillsResult.error}`);
+  }
+
   // Summary
   const successful = results.filter(r => r.success);
   const failed = results.filter(r => !r.success);

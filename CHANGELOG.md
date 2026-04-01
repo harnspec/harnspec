@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.1] - 2026-04-01
+
 ### Added
+
+- **Version Reset** — Restarted versioning from 0.0.1
 
 - **Documentation Deployment Pipeline** ([spec 383](https://harnspec.github.io/specs/383)) — Automated documentation publishing to `harnspec.github.io`
 

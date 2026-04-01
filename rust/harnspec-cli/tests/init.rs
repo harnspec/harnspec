@@ -30,10 +30,7 @@ fn test_init_fresh_project_with_yes_flag() {
     );
 
     // Verify directory structure
-    assert!(
-        dir_exists(&cwd.join(".harnspec")),
-        ".harnspec should exist"
-    );
+    assert!(dir_exists(&cwd.join(".harnspec")), ".harnspec should exist");
     assert!(dir_exists(&cwd.join("specs")), "specs should exist");
     assert!(
         file_exists(&cwd.join(".harnspec").join("config.json")),
@@ -364,11 +361,7 @@ fn test_regression_init_example_flag_is_handled() {
         "example directory should be created"
     );
     assert!(
-        file_exists(
-            &cwd.join("dark-theme")
-                .join(".harnspec")
-                .join("config.json")
-        ),
+        file_exists(&cwd.join("dark-theme").join(".harnspec").join("config.json")),
         "example should include HarnSpec config"
     );
     assert!(

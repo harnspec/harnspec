@@ -9,10 +9,7 @@ use tempfile::TempDir;
 use harnspec_http::{AppState, ProjectRegistry, ServerConfig};
 
 fn test_registry_file(temp_dir: &TempDir) -> std::path::PathBuf {
-    temp_dir
-        .path()
-        .join(".harnspec-test")
-        .join("projects.json")
+    temp_dir.path().join(".harnspec-test").join("projects.json")
 }
 
 /// Create a test project with some specs

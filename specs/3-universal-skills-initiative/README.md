@@ -30,6 +30,7 @@ Umbrella spec for the Agent Skills ecosystem initiative. This groups all work re
 | 222 - Cross-Tool Compatibility | Detection, installation, platform support | planned |
 | 282 - AGENTS.md Path References | Template substitution for skill paths | planned |
 | [Spec 2 - Skills Reorg](../2-reback-skills/README.md) | Distribute @harnspec/skills registry | in-progress |
+| [Spec 4 - Integrated Skills](../4-integrated-skills-management/README.md) | Integrated skills management via monorepo | planned |
 
 ## Design
 
