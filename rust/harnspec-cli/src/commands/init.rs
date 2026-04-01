@@ -599,9 +599,6 @@ fn decide_skill_install(options: &InitOptions) -> Result<bool, Box<dyn Error>> {
     Ok(confirm)
 }
 
-// Use the shared mapping from skill module
-use crate::commands::skill::runner_to_skills_agent;
-
 fn handle_skills_install(
     install_skills: bool,
     _detections: &[AiDetection],

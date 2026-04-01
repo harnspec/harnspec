@@ -634,6 +634,12 @@ pub(crate) enum Commands {
         #[command(subcommand)]
         action: SkillSubcommand,
     },
+
+    /// Manage AI runners
+    Runner {
+        #[command(subcommand)]
+        action: RunnerSubcommand,
+    },
 }
 
 #[derive(Subcommand)]

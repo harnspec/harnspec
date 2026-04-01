@@ -1,6 +1,7 @@
 use std::error::Error;
 use std::process::Command;
 
+/*
 /// Maps runner IDs to skills.sh agent names
 pub fn runner_to_skills_agent(runner_id: &str) -> Option<&'static str> {
     match runner_id {
@@ -17,12 +18,13 @@ pub fn runner_to_skills_agent(runner_id: &str) -> Option<&'static str> {
         _ => None,
     }
 }
+*/
 
 /// Install skills, optionally limited to specific agents.
 /// If agents is None or empty, installs to all agents (fallback).
 /// If skip_confirm is true, passes -y to skip interactive prompts.
-pub fn install(agents: Option<&[String]>, skip_confirm: bool) -> Result<(), Box<dyn Error>> {
-    let mut args = vec![
+pub fn install(_agents: Option<&[String]>, _skip_confirm: bool) -> Result<(), Box<dyn Error>> {
+    let args = vec![
         "@harnspec/skills@latest",
         "-y", // Skip npx prompt to install
     ];
@@ -32,10 +34,8 @@ pub fn install(agents: Option<&[String]>, skip_confirm: bool) -> Result<(), Box<
 
 fn run_npx(args: &[&str]) -> Result<(), Box<dyn Error>> {
     match Command::new("npx").args(args).status() {
-        Ok(status) if status.success() => return Ok(()),
-        Ok(status) => {
-            return Err(format!("npx {} exited with {status}", args.join(" ")).into());
-        }
+        Ok(status) if status.success() => Ok(()),
+        Ok(status) => Err(format!("npx {} exited with {status}", args.join(" ")).into()),
         Err(err) => {
             // npm v10 removed npx; fallback to npm exec with the same args
             if err.kind() == std::io::ErrorKind::NotFound {
@@ -56,7 +56,7 @@ fn run_npx(args: &[&str]) -> Result<(), Box<dyn Error>> {
                 }
                 return Err(format!("npm exec {} exited with {status}", args.join(" ")).into());
             }
-            return Err(format!("Failed to run npx (is Node.js installed?): {err}").into());
+            Err(format!("Failed to run npx (is Node.js installed?): {err}").into())
         }
     }
 }

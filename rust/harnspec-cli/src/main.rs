@@ -7,9 +7,7 @@ use clap::Parser;
 use colored::Colorize;
 use std::process::ExitCode;
 
-use crate::cli_args::{
-    Cli, Commands, GitSubcommand, RunnerSubcommand, SessionSubcommand, SkillSubcommand,
-};
+use crate::cli_args::{Cli, Commands, GitSubcommand, RunnerSubcommand, SessionSubcommand};
 
 fn main() -> ExitCode {
     let cli = Cli::parse();
