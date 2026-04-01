@@ -1,9 +1,0 @@
-
-> harnspec@0.2.28 typecheck D:\AI\Antipback\harnspec\lean-spec
-> turbo run typecheck "death_reason.txt"
-
-鈥?turbo 2.7.2
-  x Missing tasks in project
-  `->   x Could not find task `death_reason.txt` in project
-
-鈥塃LIFECYCLE鈥?Command failed with exit code 1.

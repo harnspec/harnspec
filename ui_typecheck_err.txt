@@ -1,4 +1,0 @@
-
-> @harnspec/ui@0.2.28 typecheck D:\AI\Antipback\harnspec\lean-spec\packages\ui
-> tsc --noEmit
-

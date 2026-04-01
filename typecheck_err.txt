@@ -1,6 +1,0 @@
-
-> docs-site@0.0.0 typecheck D:\AI\Antipback\harnspec\lean-spec\docs-site
-> tsc
-
-src/pages/index.tsx(6,30): error TS2307: Cannot find module '@site/src/components/HomepageFeatures' or its corresponding type declarations.
-鈥塃LIFECYCLE鈥?Command failed with exit code 2.
