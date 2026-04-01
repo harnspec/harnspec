@@ -91,9 +91,11 @@ importers:
 
   packages/mcp:
     dependencies:
-      harnspec:
+      '@harnspec/cli':
         specifier: workspace:*
         version: link:../cli
+
+  packages/skills: {}
 
   packages/ui:
     dependencies:
