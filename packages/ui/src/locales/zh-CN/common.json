@@ -3,7 +3,7 @@
     "home": "首页",
     "specs": "规范",
     "chat": "AI 聊天",
-    "chatDescription": "与 LeanSpec AI 对话",
+    "chatDescription": "与 HarnSpec AI 对话",
     "dependencies": "依赖关系",
     "stats": "统计",
     "context": "上下文",
@@ -32,9 +32,9 @@
     "toggleMenu": "切换菜单",
     "docsTooltip": "查看文档",
     "githubTooltip": "GitHub 仓库",
-    "logoAlt": "LeanSpec",
+    "logoAlt": "HarnSpec",
     "githubAlt": "GitHub",
-    "brandName": "LeanSpec",
+    "brandName": "HarnSpec",
     "openMenu": "打开菜单"
   },
   "search": {
@@ -277,12 +277,12 @@
     }
   },
   "chat": {
-    "title": "LeanSpec AI 聊天",
+    "title": "HarnSpec AI 聊天",
     "subtitle": "在浏览器内用对话管理规范。",
     "modelLabel": "模型",
     "clear": "清空",
     "empty": "可以请求列出、创建、更新或校验规范。",
-    "placeholder": "向 LeanSpec 发出管理规范的请求...",
+    "placeholder": "向 HarnSpec 发出管理规范的请求...",
     "helper": "示例：“列出所有规范”、“创建限流规范”、“将 082 标记为完成”。",
     "send": "发送",
     "thinking": "思考中...",
@@ -749,7 +749,7 @@
     },
     "appearance": {
       "theme": "主题",
-      "themeDescription": "选择 LeanSpec 的外观",
+      "themeDescription": "选择 HarnSpec 的外观",
       "light": "浅色",
       "lightDescription": "经典浅色主题",
       "dark": "深色",
@@ -790,7 +790,7 @@
     "createProject": "创建项目",
     "manageProjects": "管理项目",
     "selectProject": "选择项目",
-    "description": "管理你的 LeanSpec 工作区。",
+    "description": "管理你的 HarnSpec 工作区。",
     "colorLabel": "颜色",
     "validationFailed": "校验失败",
     "newProject": "新建项目",
@@ -804,7 +804,7 @@
     "completion": "完成度",
     "local": "本地",
     "noProjectsFound": "未找到项目",
-    "getStarted": "开始创建您的第一个 LeanSpec 项目。",
+    "getStarted": "开始创建您的第一个 HarnSpec 项目。",
     "searchPlaceholder": "搜索项目...",
     "errors": {
       "load": "无法加载项目",
@@ -815,7 +815,7 @@
   "projectsPage": {
     "title": "项目",
     "machineDescription": "来自 {{machine}} 的同步项目。",
-    "description": "管理你的 LeanSpec 工作区。"
+    "description": "管理你的 HarnSpec 工作区。"
   },
   "machines": {
     "title": "设备",
@@ -1033,7 +1033,7 @@
       "errorTitle": "无法加载规范",
       "errorDescription": "请重试或刷新项目。",
       "noSpecsTitle": "暂无规范",
-      "noSpecsDescription": "未找到任何规范。请在 LeanSpec 工作区添加后刷新。",
+      "noSpecsDescription": "未找到任何规范。请在 HarnSpec 工作区添加后刷新。",
       "noFiltersTitle": "没有匹配当前筛选条件的规范",
       "noFiltersDescription": "尝试清除筛选条件或调整搜索。"
     },
@@ -1216,7 +1216,7 @@
       },
       "config": {
         "title": "配置",
-        "description": "LeanSpec 项目配置与设置",
+        "description": "HarnSpec 项目配置与设置",
         "empty": "没有找到配置文件",
         "suggestion": "运行 'harnspec init' 生成配置文件"
       },
@@ -1456,7 +1456,7 @@
     "dialog": {
       "title": "校验: {{specName}}",
       "passTitle": "规范已通过校验",
-      "passBody": "该规范符合 LeanSpec 质量标准与结构要求。",
+      "passBody": "该规范符合 HarnSpec 质量标准与结构要求。",
       "passDescription": "所有质量检查均已通过。",
       "errorDescription": "发现 {{count}} 个需要关注的错误。",
       "suggestion": "建议：",
@@ -1468,7 +1468,7 @@
     "close": "关闭",
     "newSpec": {
       "title": "创建新规范",
-      "description": "通过 LeanSpec CLI 在当前项目中生成新的规范。",
+      "description": "通过 HarnSpec CLI 在当前项目中生成新的规范。",
       "slugLabel": "Spec slug",
       "slugPlaceholder": "例如 desktop-native-menu",
       "titleLabel": "显示标题（可选）",
@@ -1509,8 +1509,8 @@
       "openButton": "打开日志文件夹"
     },
     "about": {
-      "title": "关于 LeanSpec Desktop",
-      "description": "LeanSpec UI + 原生集成，专为多项目与自动化场景打造。",
+      "title": "关于 HarnSpec Desktop",
+      "description": "HarnSpec UI + 原生集成，专为多项目与自动化场景打造。",
       "version": "版本",
       "website": "网站",
       "support": "支持"

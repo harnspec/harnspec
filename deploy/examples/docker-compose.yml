@@ -1,10 +1,10 @@
 services:
-  leanspec:
-    image: ghcr.io/codervisor/leanspec:latest
+  harnspec:
+    image: ghcr.io/codervisor/harnspec:latest
     ports:
       - "3000:3000"
     volumes:
-      - leanspec-data:/home/leanspec/.harnspec
+      - harnspec-data:/home/harnspec/.harnspec
       # Mount project directories as needed:
       # - /path/to/project-a:/projects/project-a:ro
       # - /path/to/project-b:/projects/project-b:ro
@@ -12,4 +12,4 @@ services:
       - PORT=3000
 
 volumes:
-  leanspec-data:
+  harnspec-data:

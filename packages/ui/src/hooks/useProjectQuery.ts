@@ -5,7 +5,7 @@ import type { Project, ProjectValidationResponse, ProjectsResponse } from '../ty
 import { useMachineStore } from '../stores/machine';
 import { rehydrateProjectScopedStores } from '../lib/project-store-sync';
 
-const STORAGE_KEY = 'leanspec-current-project';
+const STORAGE_KEY = 'harnspec-current-project';
 
 export const projectKeys = {
   all: ['projects'] as const,

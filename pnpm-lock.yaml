@@ -30,13 +30,13 @@ importers:
 
   packages/cli:
     dependencies:
-      '@leanspec/http-server':
+      '@harnspec/http-server':
         specifier: ^0.2.28
         version: 0.2.28
-      '@leanspec/mcp':
+      '@harnspec/mcp':
         specifier: ^0.2.28
         version: 0.2.28
-      '@leanspec/ui':
+      '@harnspec/ui':
         specifier: ^0.2.28
         version: 0.2.28(@emotion/is-prop-valid@1.4.0)(@types/mdast@4.0.4)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(immer@11.1.0)(micromark-util-types@2.0.2)(micromark@4.0.2)(react-is@17.0.2)(typescript@5.9.3)(unified@11.0.5)(use-sync-external-store@1.6.0(react@19.2.3))(zod@3.25.76)
 
@@ -63,7 +63,7 @@ importers:
       '@exuanbo/file-icons-js':
         specifier: ^3.3.0
         version: 3.3.0
-      '@leanspec/http-server':
+      '@harnspec/http-server':
         specifier: workspace:*
         version: link:../http-server
       '@radix-ui/react-accordion':
@@ -798,77 +798,77 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@leanspec/cli-darwin-arm64@0.2.28':
+  '@harnspec/cli-darwin-arm64@0.2.28':
     resolution: {integrity: sha512-xXSlHJibcYvuJJhI0s81W3IVxvGbXy5G4TAWzQHp82ALLc6LK85T6tWP9JJVpNrohRURFBc6uToK1tLzKbvbDA==}
     cpu: [arm64]
     os: [darwin]
 
-  '@leanspec/cli-darwin-x64@0.2.28':
+  '@harnspec/cli-darwin-x64@0.2.28':
     resolution: {integrity: sha512-AfBqJUi5ZOsczv1aIbmdhgtuBG/OrSNv5TO1F6mJKgCBleuyHh+4bfk+gkipsDKpVhQqQMl4HIeCgmo3E/LL9A==}
     cpu: [x64]
     os: [darwin]
 
-  '@leanspec/cli-linux-x64@0.2.28':
+  '@harnspec/cli-linux-x64@0.2.28':
     resolution: {integrity: sha512-gb6+dDLeiatet5dL90+iVRMXfNgJlRpvhoDcrZYn6gPDT/neg5svo7Y7c8ww/+mhNf0xtSEr8C7TxrLLG/5+fg==}
     cpu: [x64]
     os: [linux]
 
-  '@leanspec/cli-windows-x64@0.2.28':
+  '@harnspec/cli-windows-x64@0.2.28':
     resolution: {integrity: sha512-uQxdztXSSEjF7m9jYpMFdaxOYYEPvUShblKZL351wuROaR4INxTldAy+GfgbfYXMqbFNf1gqYWSChtOxUhYsMw==}
     cpu: [x64]
     os: [win32]
 
-  '@leanspec/http-darwin-arm64@0.2.28':
+  '@harnspec/http-darwin-arm64@0.2.28':
     resolution: {integrity: sha512-CqE3hvs07ohjKqQFL9txEOxLXZFVifmhUim/OYxPH2QLUYyfjuq0aGFjEKnpv9g/zAOK23aH8kJz1pC5jIvgFw==}
     cpu: [arm64]
     os: [darwin]
 
-  '@leanspec/http-darwin-x64@0.2.28':
+  '@harnspec/http-darwin-x64@0.2.28':
     resolution: {integrity: sha512-cijvNjzd0kRi8xzzyNtlq+i4873D/n3QwEFVXW/RCD2YzuFohpAO6f0hDjn6UJFlFBSZEaqBCvJdD2qDU6Fkeg==}
     cpu: [x64]
     os: [darwin]
 
-  '@leanspec/http-linux-x64@0.2.28':
+  '@harnspec/http-linux-x64@0.2.28':
     resolution: {integrity: sha512-pK/1Msor8K/scUmfG6/yn3EPchitNYll/6H5X1WZxxCOJ1Fku8D2IRol7sSk0TyeYi+KAyxHEoEyaX/rUoQweA==}
     cpu: [x64]
     os: [linux]
 
-  '@leanspec/http-server@0.2.28':
+  '@harnspec/http-server@0.2.28':
     resolution: {integrity: sha512-v/PQXGcZRzX0hkprU4LURSmhFh1g+niFG2svJNXXUFAvhaBXdIRWDJB7BJPS+jjyWPE+tZuTM8vdyPScwWlvDA==}
     engines: {node: '>=20'}
     hasBin: true
 
-  '@leanspec/http-windows-x64@0.2.28':
+  '@harnspec/http-windows-x64@0.2.28':
     resolution: {integrity: sha512-C0TdG4TPPHabQqCTfn2bEJxBS8uZHHNYl2/dTazQDtVwaxu7cWpO8hJDmaszfIVdS2aiOHON+pOgPZ5pXZLeYQ==}
     cpu: [x64]
     os: [win32]
 
-  '@leanspec/mcp-darwin-arm64@0.2.28':
+  '@harnspec/mcp-darwin-arm64@0.2.28':
     resolution: {integrity: sha512-p1y5Bb8vqDOVtIR/t80E2yuGHYvqulpEvcHJLU5N79LVm9g/cCmCd+G9EdNI+IutRa0oVN7RXGT4DkCWFwEpXA==}
     cpu: [arm64]
     os: [darwin]
 
-  '@leanspec/mcp-darwin-x64@0.2.28':
+  '@harnspec/mcp-darwin-x64@0.2.28':
     resolution: {integrity: sha512-YLjq3S2qamBPwiXEEWisfY57/AfkOz8wJTI/MIC4u6F+h0Q7RlKhkwi4yoYBvXtMH9aqHk/gTHLv9j5Xhv1aWA==}
     cpu: [x64]
     os: [darwin]
 
-  '@leanspec/mcp-linux-x64@0.2.28':
+  '@harnspec/mcp-linux-x64@0.2.28':
     resolution: {integrity: sha512-mVZP8jezcXlzvth8l0i4dmPn8xY2gUECTfxcdo4tAw5D6fNk7O9jQKhoN6yR3fH/fP6PH861hFonz4wpB+bp1w==}
     cpu: [x64]
     os: [linux]
 
-  '@leanspec/mcp-windows-x64@0.2.28':
+  '@harnspec/mcp-windows-x64@0.2.28':
     resolution: {integrity: sha512-NGBWlMFWaAqIUnlq/8MW72iY1vC+LbtxVU7UAB4WLEgIpOQftyI0oUjo+ZERU1w333LJBRI45oGYTbJARqHkyg==}
     cpu: [x64]
     os: [win32]
 
-  '@leanspec/mcp@0.2.28':
+  '@harnspec/mcp@0.2.28':
     resolution: {integrity: sha512-QXKEhCsJUWPWgH6K5kFuuIQkyLkIpShNuoCfc43sfRWQFgPQhIIoxcR/RQbm5tJMQk0w8zJmcZP3rA/azdroBQ==}
     engines: {node: '>=20'}
     hasBin: true
 
-  '@leanspec/ui@0.2.28':
+  '@harnspec/ui@0.2.28':
     resolution: {integrity: sha512-qydprOjANUo/tRI+EVkHCfUnAsAnD7SH95ugx/s9uJRADZLUja9skTwXb3UqZvUt0WVl6tWyz3UpRaaZcJFc0g==}
     hasBin: true
 
@@ -5030,64 +5030,64 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@leanspec/cli-darwin-arm64@0.2.28':
+  '@harnspec/cli-darwin-arm64@0.2.28':
     optional: true
 
-  '@leanspec/cli-darwin-x64@0.2.28':
+  '@harnspec/cli-darwin-x64@0.2.28':
     optional: true
 
-  '@leanspec/cli-linux-x64@0.2.28':
+  '@harnspec/cli-linux-x64@0.2.28':
     optional: true
 
-  '@leanspec/cli-windows-x64@0.2.28':
+  '@harnspec/cli-windows-x64@0.2.28':
     optional: true
 
-  '@leanspec/http-darwin-arm64@0.2.28':
+  '@harnspec/http-darwin-arm64@0.2.28':
     optional: true
 
-  '@leanspec/http-darwin-x64@0.2.28':
+  '@harnspec/http-darwin-x64@0.2.28':
     optional: true
 
-  '@leanspec/http-linux-x64@0.2.28':
+  '@harnspec/http-linux-x64@0.2.28':
     optional: true
 
-  '@leanspec/http-server@0.2.28':
+  '@harnspec/http-server@0.2.28':
     optionalDependencies:
-      '@leanspec/http-darwin-arm64': 0.2.28
-      '@leanspec/http-darwin-x64': 0.2.28
-      '@leanspec/http-linux-x64': 0.2.28
-      '@leanspec/http-windows-x64': 0.2.28
+      '@harnspec/http-darwin-arm64': 0.2.28
+      '@harnspec/http-darwin-x64': 0.2.28
+      '@harnspec/http-linux-x64': 0.2.28
+      '@harnspec/http-windows-x64': 0.2.28
 
-  '@leanspec/http-windows-x64@0.2.28':
+  '@harnspec/http-windows-x64@0.2.28':
     optional: true
 
-  '@leanspec/mcp-darwin-arm64@0.2.28':
+  '@harnspec/mcp-darwin-arm64@0.2.28':
     optional: true
 
-  '@leanspec/mcp-darwin-x64@0.2.28':
+  '@harnspec/mcp-darwin-x64@0.2.28':
     optional: true
 
-  '@leanspec/mcp-linux-x64@0.2.28':
+  '@harnspec/mcp-linux-x64@0.2.28':
     optional: true
 
-  '@leanspec/mcp-windows-x64@0.2.28':
+  '@harnspec/mcp-windows-x64@0.2.28':
     optional: true
 
-  '@leanspec/mcp@0.2.28':
+  '@harnspec/mcp@0.2.28':
     dependencies:
       harnspec: 0.2.28
     optionalDependencies:
-      '@leanspec/mcp-darwin-arm64': 0.2.28
-      '@leanspec/mcp-darwin-x64': 0.2.28
-      '@leanspec/mcp-linux-x64': 0.2.28
-      '@leanspec/mcp-windows-x64': 0.2.28
+      '@harnspec/mcp-darwin-arm64': 0.2.28
+      '@harnspec/mcp-darwin-x64': 0.2.28
+      '@harnspec/mcp-linux-x64': 0.2.28
+      '@harnspec/mcp-windows-x64': 0.2.28
 
-  '@leanspec/ui@0.2.28(@emotion/is-prop-valid@1.4.0)(@types/mdast@4.0.4)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(immer@11.1.0)(micromark-util-types@2.0.2)(micromark@4.0.2)(react-is@17.0.2)(typescript@5.9.3)(unified@11.0.5)(use-sync-external-store@1.6.0(react@19.2.3))(zod@3.25.76)':
+  '@harnspec/ui@0.2.28(@emotion/is-prop-valid@1.4.0)(@types/mdast@4.0.4)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(immer@11.1.0)(micromark-util-types@2.0.2)(micromark@4.0.2)(react-is@17.0.2)(typescript@5.9.3)(unified@11.0.5)(use-sync-external-store@1.6.0(react@19.2.3))(zod@3.25.76)':
     dependencies:
       '@ai-sdk/react': 3.0.41(react@19.2.3)(zod@3.25.76)
       '@dagrejs/dagre': 1.1.8
       '@exuanbo/file-icons-js': 3.3.0
-      '@leanspec/http-server': 0.2.28
+      '@harnspec/http-server': 0.2.28
       '@radix-ui/react-accordion': 1.2.12(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@radix-ui/react-avatar': 1.1.11(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@radix-ui/react-collapsible': 1.1.12(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -7656,10 +7656,10 @@ snapshots:
 
   harnspec@0.2.28:
     optionalDependencies:
-      '@leanspec/cli-darwin-arm64': 0.2.28
-      '@leanspec/cli-darwin-x64': 0.2.28
-      '@leanspec/cli-linux-x64': 0.2.28
-      '@leanspec/cli-windows-x64': 0.2.28
+      '@harnspec/cli-darwin-arm64': 0.2.28
+      '@harnspec/cli-darwin-x64': 0.2.28
+      '@harnspec/cli-linux-x64': 0.2.28
+      '@harnspec/cli-windows-x64': 0.2.28
 
   levn@0.4.1:
     dependencies:

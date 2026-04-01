@@ -1,7 +1,7 @@
-# LeanSpec
+# HarnSpec
 
 <p align="center">
-  <img src="https://github.com/codervisor/harnspec-docs/blob/main/static/img/logo-with-bg.svg" alt="LeanSpec Logo" width="120" height="120">
+  <img src="https://github.com/codervisor/harnspec-docs/blob/main/static/img/logo-with-bg.svg" alt="HarnSpec Logo" width="120" height="120">
 </p>
 
 <p align="center">
@@ -12,20 +12,20 @@
 </p>
 
 <p align="center">
-  <a href="https://harnspec.gitub.io"><strong>Documentation</strong></a>
+  <a href="https://harnspec.github.io"><strong>Documentation</strong></a>
   •
-  <a href="https://harnspec.gitub.io/zh-Hans/docs/guide/"><strong>中文文档</strong></a>
+  <a href="https://harnspec.github.io/zh-Hans/docs/guide/"><strong>中文文档</strong></a>
   •
-  <a href="https://harnspec.gitub.io"><strong>Live Examples</strong></a>
+  <a href="https://harnspec.github.io"><strong>Live Examples</strong></a>
   •
-  <a href="https://harnspec.gitub.io/docs/tutorials/first-spec-with-ai"><strong>Tutorials</strong></a>
+  <a href="https://harnspec.github.io/docs/tutorials/first-spec-with-ai"><strong>Tutorials</strong></a>
 </p>
 
 ---
 
 **Ship faster with higher quality. Lean specs that both humans and AI understand.**
 
-LeanSpec brings agile principles to SDD (Spec-Driven Development)—small, focused documents (<2,000 tokens) that keep you and your AI aligned.
+HarnSpec brings agile principles to SDD (Spec-Driven Development)—small, focused documents (<2,000 tokens) that keep you and your AI aligned.
 
 ---
 
@@ -48,19 +48,19 @@ harnspec stats    # Project metrics
 harnspec ui       # Web UI at localhost:3000
 ```
 
-**Next:** [Your First Spec with AI](https://harnspec.gitub.io/docs/tutorials/first-spec-with-ai) (10 min tutorial)
+**Next:** [Your First Spec with AI](https://harnspec.github.io/docs/tutorials/first-spec-with-ai) (10 min tutorial)
 
 ---
 
-## Why LeanSpec?
+## Why HarnSpec?
 
-**High velocity + High quality.** Other SDD frameworks add process overhead (multi-step workflows, rigid templates). Vibe coding is fast but chaotic (no shared understanding). LeanSpec hits the sweet spot:
+**High velocity + High quality.** Other SDD frameworks add process overhead (multi-step workflows, rigid templates). Vibe coding is fast but chaotic (no shared understanding). HarnSpec hits the sweet spot:
 
 - **Fast iteration** - Living documents that grow with your code
 - **AI performance** - Small specs = better AI output (context rot is real)
 - **Always current** - Lightweight enough that you actually update them
 
-📖 [Compare with Spec Kit, OpenSpec, Kiro →](https://harnspec.gitub.io/docs/guide/why-leanspec)
+📖 [Compare with Spec Kit, OpenSpec, Kiro →](https://harnspec.github.io/docs/guide/why-harnspec)
 
 ---
 
@@ -71,14 +71,14 @@ Works with any AI coding assistant via MCP or CLI:
 ```json
 {
   "mcpServers": {
-    "harnspec": { "command": "npx", "args": ["@leanspec/mcp"] }
+    "harnspec": { "command": "npx", "args": ["@harnspec/mcp"] }
   }
 }
 ```
 
 **Compatible with:** VS Code Copilot, Claude Code, Gemini CLI, Cursor, Windsurf, Kiro CLI, Kimi CLI, Qodo CLI, Amp, Trae Agent, Qwen Code, Droid, and more.
 
-📖 [Full AI integration guide →](https://harnspec.gitub.io/docs/guide/usage/ai-coding-workflow)
+📖 [Full AI integration guide →](https://harnspec.github.io/docs/guide/usage/ai-coding-workflow)
 
 ---
 
@@ -94,7 +94,7 @@ harnspec skill install
 npx skills add codervisor/harnspec -y
 ```
 
-This installs the **leanspec-sdd** skill which teaches AI agents:
+This installs the **harnspec-sdd** skill which teaches AI agents:
 
 - When to create specs vs. implement directly
 - How to discover existing specs before creating new ones
@@ -103,7 +103,7 @@ This installs the **leanspec-sdd** skill which teaches AI agents:
 
 **Compatible with:** Claude Code, Cursor, Windsurf, GitHub Copilot, and other [Agent Skills](https://skills.sh/) compatible tools.
 
-📖 [View skill documentation →](skills/leanspec-sdd/SKILL.md)
+📖 [View skill documentation →](skills/harnspec-sdd/SKILL.md)
 
 ---
 
@@ -206,7 +206,7 @@ See [package.json](package.json) for all available scripts.
 
 ## Documentation
 
-📖 [Full Documentation](https://harnspec.gitub.io) · [CLI Reference](https://harnspec.gitub.io/docs/reference/cli) · [First Principles](https://harnspec.gitub.io/docs/advanced/first-principles) · [FAQ](https://harnspec.gitub.io/docs/faq) · [中文文档](https://harnspec.gitub.io/zh-Hans/)
+📖 [Full Documentation](https://harnspec.github.io) · [CLI Reference](https://harnspec.github.io/docs/reference/cli) · [First Principles](https://harnspec.github.io/docs/advanced/first-principles) · [FAQ](https://harnspec.github.io/docs/faq) · [中文文档](https://harnspec.github.io/zh-Hans/)
 
 ## Community
 
@@ -216,9 +216,9 @@ See [package.json](package.json) for all available scripts.
 
 ### Contact Me | 联系我
 
-If you find LeanSpec helpful, feel free to add me on WeChat (note "LeanSpec") to join the discussion group.
+If you find HarnSpec helpful, feel free to add me on WeChat (note "HarnSpec") to join the discussion group.
 
-如果您觉得 LeanSpec 对您有帮助，欢迎添加微信（备注 "LeanSpec"）加入交流群。
+如果您觉得 HarnSpec 对您有帮助，欢迎添加微信（备注 "HarnSpec"）加入交流群。
 
 <p align="center">
   <img src="https://github.com/codervisor/harnspec-docs/blob/main/static/img/qr-code.png" alt="WeChat Contact | 微信联系" height="280">

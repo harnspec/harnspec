@@ -1,13 +1,13 @@
 {
   "name": "api-refactor-demo",
   "version": "1.0.0",
-  "description": "Monolithic Node.js app for LeanSpec Tutorial 3",
+  "description": "Monolithic Node.js app for HarnSpec Tutorial 3",
   "type": "module",
   "scripts": {
     "start": "node src/app.js",
     "dev": "node --watch src/app.js"
   },
-  "keywords": ["leanspec", "tutorial", "demo"],
+  "keywords": ["harnspec", "tutorial", "demo"],
   "author": "",
   "license": "MIT",
   "dependencies": {

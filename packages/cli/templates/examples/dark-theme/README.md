@@ -42,7 +42,7 @@ npm start
 
 Add dark theme support with automatic switching based on system preferences. Follow the tutorial and ask your AI assistant:
 
-> "Help me add dark theme support to this admin dashboard using LeanSpec. It should automatically switch based on the user's system theme preference."
+> "Help me add dark theme support to this admin dashboard using HarnSpec. It should automatically switch based on the user's system theme preference."
 
 The AI will guide you through:
 

@@ -19,7 +19,7 @@ export type { DraftStatusConfig } from "./DraftStatusConfig";
 export type { FrontmatterResponse } from "./FrontmatterResponse";
 export type { HealthResponse } from "./HealthResponse";
 export type { HierarchyNode } from "./HierarchyNode";
-export type { LeanSpecConfig } from "./LeanSpecConfig";
+export type { HarnSpecConfig } from "./HarnSpecConfig";
 export type { ListSpecsQuery } from "./ListSpecsQuery";
 export type { ListSpecsResponse } from "./ListSpecsResponse";
 export type { MetadataUpdate } from "./MetadataUpdate";

@@ -2,7 +2,7 @@
 
 ## Overview
 
-LeanSpec supports internationalization for both the Web App and CLI. Currently supported languages:
+HarnSpec supports internationalization for both the Web App and CLI. Currently supported languages:
 - English (en)
 - Chinese (zh-CN)
 
@@ -133,7 +133,7 @@ Following the terminology glossary in `docs-site/i18n/zh-Hans/TERMINOLOGY_GLOSSA
 
 - **Always keep in English:**
   - Spec
-  - LeanSpec
+  - HarnSpec
   - CLI
   - Token
   - README
@@ -201,5 +201,5 @@ pnpm test src/lib/i18n/config.test.ts
 
 - [react-i18next Documentation](https://react.i18next.com/)
 - [i18next Documentation](https://www.i18next.com/)
-- [LeanSpec Terminology Glossary](../../docs-site/i18n/zh-Hans/TERMINOLOGY_GLOSSARY.md)
+- [HarnSpec Terminology Glossary](../../docs-site/i18n/zh-Hans/TERMINOLOGY_GLOSSARY.md)
 - [Translation Style Guide](../../docs-site/i18n/zh-Hans/TRANSLATION_STYLE_GUIDE.md)

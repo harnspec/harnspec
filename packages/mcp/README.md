@@ -1,8 +1,8 @@
-# @leanspec/mcp
+# @harnspec/mcp
 
-> MCP server integration wrapper for LeanSpec
+> MCP server integration wrapper for HarnSpec
 
-This package provides a simple entry point for using LeanSpec as an [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server with AI assistants like Claude Desktop, Cline, and Zed.
+This package provides a simple entry point for using HarnSpec as an [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server with AI assistants like Claude Desktop, Cline, and Zed.
 
 ## Quick Start
 
@@ -13,9 +13,9 @@ Most MCP-compatible tools use this standard configuration format:
 ```json
 {
   "mcpServers": {
-    "leanspec": {
+    "harnspec": {
       "command": "npx",
-      "args": ["-y", "@leanspec/mcp"]
+      "args": ["-y", "@harnspec/mcp"]
     }
   }
 }
@@ -70,11 +70,11 @@ Refer to your tool's documentation for the configuration file location. Most use
 
 ## What is MCP?
 
-The Model Context Protocol (MCP) is an open protocol that standardizes how AI applications connect to data sources and tools. LeanSpec's MCP server lets AI assistants read and manage your project specifications directly.
+The Model Context Protocol (MCP) is an open protocol that standardizes how AI applications connect to data sources and tools. HarnSpec's MCP server lets AI assistants read and manage your project specifications directly.
 
 ## Available Tools
 
-The LeanSpec MCP server provides these tools to AI assistants:
+The HarnSpec MCP server provides these tools to AI assistants:
 
 ### Core Spec Management (12 tools)
 
@@ -95,9 +95,9 @@ Note: Additional utility commands (`files`, `archive`, `backfill`, `check`, `ana
 
 ## How It Works
 
-This package is a lightweight wrapper that delegates to the `harnspec mcp` command. When you use `npx @leanspec/mcp`, it:
+This package is a lightweight wrapper that delegates to the `harnspec mcp` command. When you use `npx @harnspec/mcp`, it:
 
-1. Automatically installs `@leanspec/mcp` and its `harnspec` dependency
+1. Automatically installs `@harnspec/mcp` and its `harnspec` dependency
 2. Runs `harnspec mcp` to start the MCP server
 3. Your IDE communicates with the server via stdio
 
@@ -106,7 +106,7 @@ No manual installation or setup required!
 ## Requirements
 
 - Node.js 20 or higher
-- A LeanSpec project (specs directory with specifications)
+- A HarnSpec project (specs directory with specifications)
 
 ## Troubleshooting
 

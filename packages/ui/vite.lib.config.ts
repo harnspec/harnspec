@@ -26,7 +26,7 @@ export default defineConfig({
     emptyOutDir: false,
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'LeanSpecUI',
+      name: 'HarnSpecUI',
       formats: ['es'],
       fileName: () => 'lib/index.js',
     },

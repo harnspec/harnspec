@@ -1,14 +1,14 @@
 {
-  "name": "@leanspec/mcp",
+  "name": "@harnspec/mcp",
   "version": "0.2.28",
   "deprecated": true,
-  "description": "DEPRECATED: MCP server integration wrapper for LeanSpec",
+  "description": "DEPRECATED: MCP server integration wrapper for HarnSpec",
   "type": "module",
-  "bin": "./bin/leanspec-mcp.js",
+  "bin": "./bin/harnspec-mcp.js",
   "keywords": [
     "mcp",
     "model-context-protocol",
-    "leanspec",
+    "harnspec",
     "spec",
     "ai",
     "agent"

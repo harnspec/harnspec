@@ -139,7 +139,7 @@ export class HttpBackendAdapter implements BackendAdapter {
       ...options,
       headers: {
         'Content-Type': 'application/json',
-        ...(this.machineId ? { 'X-LeanSpec-Machine': this.machineId } : {}),
+        ...(this.machineId ? { 'X-HarnSpec-Machine': this.machineId } : {}),
         ...(syncApiKey ? { 'X-API-Key': syncApiKey } : {}),
         ...options?.headers,
       },

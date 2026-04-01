@@ -28,7 +28,7 @@ export const useSearchStore = create<SearchState>()(
       clearRecentSearches: () => set({ recentSearches: [] }),
     }),
     {
-      name: 'leanspec-recent-searches',
+      name: 'harnspec-recent-searches',
       storage: createJSONStorage(() => createProjectScopedStorage()),
       partialize: (state) => ({
         recentSearches: state.recentSearches,
@@ -39,5 +39,5 @@ export const useSearchStore = create<SearchState>()(
 
 // Migrate global search history to project-scoped
 if (typeof window !== 'undefined') {
-  migrateToProjectScoped('leanspec-recent-searches');
+  migrateToProjectScoped('harnspec-recent-searches');
 }

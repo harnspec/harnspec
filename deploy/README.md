@@ -1,6 +1,6 @@
 # Cloud Deployment Guide
 
-LeanSpec can be deployed to any cloud platform that supports Docker containers.
+HarnSpec can be deployed to any cloud platform that supports Docker containers.
 
 ## Quick Start
 
@@ -9,9 +9,9 @@ LeanSpec can be deployed to any cloud platform that supports Docker containers.
 ```bash
 docker run -d \
   -p 3000:3000 \
-  -v leanspec-data:/home/leanspec/.harnspec \
-  -e LEANSPEC_API_KEY=your-secret-key \
-  ghcr.io/codervisor/leanspec:latest
+  -v harnspec-data:/home/harnspec/.harnspec \
+  -e HARNSPEC_API_KEY=your-secret-key \
+  ghcr.io/codervisor/harnspec:latest
 ```
 
 Or use the example docker-compose file:
@@ -25,7 +25,7 @@ cd deploy/examples && docker compose up -d
 ```bash
 cp deploy/fly.toml .
 fly launch --copy-config
-fly secrets set LEANSPEC_API_KEY=your-secret-key
+fly secrets set HARNSPEC_API_KEY=your-secret-key
 fly deploy
 ```
 
@@ -33,13 +33,13 @@ fly deploy
 
 1. Connect your GitHub repo
 2. Railway auto-detects `railway.json`
-3. Set `LEANSPEC_API_KEY` in the Railway dashboard
-4. Add a volume mounted at `/data` and set `LEANSPEC_DATA_DIR=/data`
+3. Set `HARNSPEC_API_KEY` in the Railway dashboard
+4. Add a volume mounted at `/data` and set `HARNSPEC_DATA_DIR=/data`
 
 ### Render
 
 1. Create a new Blueprint from `deploy/render.yaml`
-2. Render auto-generates `LEANSPEC_API_KEY`
+2. Render auto-generates `HARNSPEC_API_KEY`
 3. Persistent disk is configured automatically
 
 ## Environment Variables
@@ -47,14 +47,14 @@ fly deploy
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `PORT` | `3000` | Server port |
-| `LEANSPEC_HOST` | `127.0.0.1` | Bind address (use `0.0.0.0` in containers) |
-| `LEANSPEC_DATA_DIR` | `~/.harnspec` | Persistent data directory |
-| `LEANSPEC_API_KEY` | _(none)_ | Bearer token for API authentication |
-| `LEANSPEC_LOG_FORMAT` | `text` | `text` or `json` for structured logging |
-| `LEANSPEC_LOG_LEVEL` | `info` | Log verbosity |
-| `LEANSPEC_CORS_ORIGINS` | _(allow all)_ | Comma-separated allowed origins |
-| `LEANSPEC_UI_DIST` | _(auto)_ | Path to UI static files |
-| `LEANSPEC_PROJECT_SOURCES` | `local,github` | Enabled project sources (comma-separated: `local`, `github`) |
+| `HARNSPEC_HOST` | `127.0.0.1` | Bind address (use `0.0.0.0` in containers) |
+| `HARNSPEC_DATA_DIR` | `~/.harnspec` | Persistent data directory |
+| `HARNSPEC_API_KEY` | _(none)_ | Bearer token for API authentication |
+| `HARNSPEC_LOG_FORMAT` | `text` | `text` or `json` for structured logging |
+| `HARNSPEC_LOG_LEVEL` | `info` | Log verbosity |
+| `HARNSPEC_CORS_ORIGINS` | _(allow all)_ | Comma-separated allowed origins |
+| `HARNSPEC_UI_DIST` | _(auto)_ | Path to UI static files |
+| `HARNSPEC_PROJECT_SOURCES` | `local,github` | Enabled project sources (comma-separated: `local`, `github`) |
 
 ## Health Checks
 
@@ -73,7 +73,7 @@ No Node.js runtime is required. The image is ~30MB compressed.
 ┌─────────────────────────────┐
 │  Cloud Platform (Fly/Railway/Render)  │
 │  ┌───────────────────────┐  │
-│  │  leanspec-http binary │  │
+│  │  harnspec-http binary │  │
 │  │  ├── REST API         │  │
 │  │  ├── Static UI files  │  │
 │  │  └── SQLite DB        │  │
@@ -81,7 +81,7 @@ No Node.js runtime is required. The image is ~30MB compressed.
 │  ┌───────────────────────┐  │
 │  │  Persistent Volume    │  │
 │  │  └── /data/           │  │
-│  │      ├── leanspec.db  │  │
+│  │      ├── harnspec.db  │  │
 │  │      ├── config.json  │  │
 │  │      └── projects.json│  │
 │  └───────────────────────┘  │

@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Publish main packages (harnspec and @leanspec/mcp)
+ * Publish main packages (harnspec and @harnspec/mcp)
  * 
  * This script publishes the main CLI and MCP packages that have 
  * optional dependencies on the platform-specific binary packages.
@@ -105,12 +105,12 @@ async function verifyPlatformPackages(): Promise<boolean> {
 
   // Check a subset of platform packages to verify they're available
   const packagesToCheck = [
-    '@leanspec/cli-darwin-arm64',
-    '@leanspec/cli-linux-x64',
-    '@leanspec/mcp-darwin-arm64',
-    '@leanspec/mcp-linux-x64',
-    '@leanspec/http-darwin-arm64',
-    '@leanspec/http-linux-x64',
+    '@harnspec/cli-darwin-arm64',
+    '@harnspec/cli-linux-x64',
+    '@harnspec/mcp-darwin-arm64',
+    '@harnspec/mcp-linux-x64',
+    '@harnspec/http-darwin-arm64',
+    '@harnspec/http-linux-x64',
   ];
 
   for (const pkg of packagesToCheck) {
@@ -200,7 +200,7 @@ async function publishMainPackages(dryRun: boolean, tag?: string): Promise<void>
     console.log('\n✅ Main packages published successfully!');
     console.log('\n🎉 Release complete! Users can now install with:');
     console.log('   npm install -g harnspec');
-    console.log('   npm install -g @leanspec/mcp');
+    console.log('   npm install -g @harnspec/mcp');
   }
 }
 

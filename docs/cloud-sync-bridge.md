@@ -1,16 +1,16 @@
 # Cloud Sync Bridge Setup
 
-> **⚠️ DEPRECATED**: The Sync Bridge package (`leanspec-sync-bridge`) has been deprecated and is no longer actively maintained. It has been excluded from the Cargo workspace. This documentation is kept for historical reference only.
+> **⚠️ DEPRECATED**: The Sync Bridge package (`harnspec-sync-bridge`) has been deprecated and is no longer actively maintained. It has been excluded from the Cargo workspace. This documentation is kept for historical reference only.
 
 ## Overview
 
-The Sync Bridge connects a local LeanSpec workspace to the cloud UI. The local filesystem remains the source of truth. The bridge streams snapshots and deltas to the cloud and applies explicit metadata edits from the cloud to the local files.
+The Sync Bridge connects a local HarnSpec workspace to the cloud UI. The local filesystem remains the source of truth. The bridge streams snapshots and deltas to the cloud and applies explicit metadata edits from the cloud to the local files.
 
 ## Setup
 
 1. **Start the cloud API**
 
-   Ensure the LeanSpec HTTP server is running and reachable over HTTPS:
+   Ensure the HarnSpec HTTP server is running and reachable over HTTPS:
 
    - Base URL: `https://your-cloud-host`
    - Sync endpoints: `/api/sync/*`
@@ -18,12 +18,12 @@ The Sync Bridge connects a local LeanSpec workspace to the cloud UI. The local f
 2. **Provision authentication**
 
    - **Device flow (default):** No API key required. The bridge will request a device code and prompt you to authorize.
-   - **API key (optional):** Set `LEANSPEC_SYNC_API_KEY` on the server and pass `--api-key` to the bridge.
+   - **API key (optional):** Set `HARNSPEC_SYNC_API_KEY` on the server and pass `--api-key` to the bridge.
 
 3. **Run the bridge**
 
    ```bash
-   leanspec-sync-bridge \
+   harnspec-sync-bridge \
      --server-url https://your-cloud-host \
      --project /path/to/project-a \
      --project /path/to/project-b
@@ -47,7 +47,7 @@ All Sync Bridge traffic must use HTTPS in production. The bridge rejects plain H
 
 When using API keys:
 
-1. Generate a new key and set `LEANSPEC_SYNC_API_KEY` on the server.
+1. Generate a new key and set `HARNSPEC_SYNC_API_KEY` on the server.
 2. Update bridges with `--api-key <new-key>` or update `~/.harnspec/bridge.json`.
 3. Restart bridge instances to pick up the new key.
 4. Revoke old keys by removing them from server configuration.

@@ -98,7 +98,7 @@ export const useSpecsPreferencesStore = create<SpecsPreferencesState>()(
       }),
     }),
     {
-      name: 'leanspec:specs:preferences',
+      name: 'harnspec:specs:preferences',
       storage: createJSONStorage(() => createProjectScopedStorage()),
       partialize: (state) => ({
         statusFilter: state.statusFilter,
@@ -117,7 +117,7 @@ export const useSpecsPreferencesStore = create<SpecsPreferencesState>()(
 
 // Migrate global preferences to project-scoped on first load
 if (typeof window !== 'undefined') {
-  migrateToProjectScoped('leanspec:specs:preferences');
+  migrateToProjectScoped('harnspec:specs:preferences');
 }
 
 // ============================================================================
@@ -138,7 +138,7 @@ export const useSpecsSidebarStore = create<SpecsSidebarState>()(
       toggleCollapsed: () => set((state) => ({ collapsed: !state.collapsed })),
     }),
     {
-      name: 'leanspec:ui:sidebarCollapsed',
+      name: 'harnspec:ui:sidebarCollapsed',
       storage: createJSONStorage(() => createProjectScopedStorage()),
     }
   )
@@ -146,5 +146,5 @@ export const useSpecsSidebarStore = create<SpecsSidebarState>()(
 
 // Migrate global sidebar state to project-scoped
 if (typeof window !== 'undefined') {
-  migrateToProjectScoped('leanspec:ui:sidebarCollapsed');
+  migrateToProjectScoped('harnspec:ui:sidebarCollapsed');
 }

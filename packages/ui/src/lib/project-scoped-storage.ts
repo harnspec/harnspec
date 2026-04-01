@@ -21,7 +21,7 @@
  */
 import type { StateStorage } from 'zustand/middleware';
 
-const PROJECT_ID_KEY = 'leanspec-current-project';
+const PROJECT_ID_KEY = 'harnspec-current-project';
 
 /**
  * Gets the current project ID from localStorage.

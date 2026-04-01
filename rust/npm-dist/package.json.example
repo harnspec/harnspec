@@ -23,7 +23,7 @@
   "author": "Marvin Zhang",
   "bin": {
     "harnspec": "./bin/harnspec.js",
-    "leanspec-mcp": "./bin/leanspec-mcp.js"
+    "harnspec-mcp": "./bin/harnspec-mcp.js"
   },
   "files": [
     "bin/",
@@ -32,11 +32,11 @@
     "LICENSE"
   ],
   "optionalDependencies": {
-    "@leanspec/darwin-x64": "0.3.0",
-    "@leanspec/darwin-arm64": "0.3.0",
-    "@leanspec/linux-x64": "0.3.0",
-    "@leanspec/linux-arm64": "0.3.0",
-    "@leanspec/win32-x64": "0.3.0"
+    "@harnspec/darwin-x64": "0.3.0",
+    "@harnspec/darwin-arm64": "0.3.0",
+    "@harnspec/linux-x64": "0.3.0",
+    "@harnspec/linux-arm64": "0.3.0",
+    "@harnspec/win32-x64": "0.3.0"
   },
   "engines": {
     "node": ">=18"

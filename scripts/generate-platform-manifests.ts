@@ -31,18 +31,18 @@ interface BinaryConfig {
 
 const BINARY_CONFIG: Record<string, BinaryConfig> = {
   'harnspec': {
-    packagePrefix: '@leanspec/cli',
-    description: 'LeanSpec CLI',
+    packagePrefix: '@harnspec/cli',
+    description: 'HarnSpec CLI',
     packagePath: 'cli',
   },
-  'leanspec-mcp': {
-    packagePrefix: '@leanspec/mcp',
-    description: 'LeanSpec MCP Server',
+  'harnspec-mcp': {
+    packagePrefix: '@harnspec/mcp',
+    description: 'HarnSpec MCP Server',
     packagePath: 'mcp',
   },
-  'leanspec-http': {
-    packagePrefix: '@leanspec/http',
-    description: 'LeanSpec HTTP Server',
+  'harnspec-http': {
+    packagePrefix: '@harnspec/http',
+    description: 'HarnSpec HTTP Server',
     packagePath: 'http-server',
   },
 };
@@ -163,7 +163,7 @@ async function main() {
   const version = await resolveTargetVersion();
   console.log(`Version: ${version}\n`);
 
-  const binaries = ['harnspec', 'leanspec-mcp', 'leanspec-http'];
+  const binaries = ['harnspec', 'harnspec-mcp', 'harnspec-http'];
 
   for (const platformKey of PLATFORMS) {
     console.log(`Platform: ${platformKey}`);

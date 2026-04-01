@@ -1,6 +1,6 @@
 # AI Agent Instructions
 
-## Project: LeanSpec
+## Project: HarnSpec
 
 Lightweight spec methodology for AI-powered development.
 
@@ -10,14 +10,14 @@ This project uses the Agent Skills framework for domain-specific guidance. **Rea
 
 ### Core Skills
 
-1. **leanspec** - Spec-Driven Development methodology
-   - Install: `npx skills add codervisor/skills@leanspec`
+1. **harnspec** - Spec-Driven Development methodology
+   - Install: `npx skills add codervisor/skills@harnspec`
    - Source: [codervisor/skills](https://github.com/codervisor/skills)
    - Use when: Working with specs, planning features, multi-step changes
    - Key: Run `board` or `search` before creating specs
 
-2. **leanspec-development** - Development, commands, publishing, CI/CD, and runner research
-   - Location: [.agents/skills/leanspec-development/SKILL.md](.agents/skills/leanspec-development/SKILL.md)
+2. **harnspec-development** - Development, commands, publishing, CI/CD, and runner research
+   - Location: [.agents/skills/harnspec-development/SKILL.md](.agents/skills/harnspec-development/SKILL.md)
    - Use when: Contributing code, running tests, publishing, CI/CD, or looking up commands
    - Key: Always use `pnpm`, follow DRY principle
 

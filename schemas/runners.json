@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "LeanSpec Runners Configuration",
+  "title": "HarnSpec Runners Configuration",
   "type": "object",
   "additionalProperties": false,
   "properties": {

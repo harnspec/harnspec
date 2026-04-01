@@ -52,7 +52,7 @@ describe('i18n configuration', () => {
 
   it('should persist language choice to localStorage', async () => {
     await i18n.changeLanguage('zh-CN');
-    const stored = localStorage.getItem('leanspec-language');
+    const stored = localStorage.getItem('harnspec-language');
     expect(stored).toBe('zh-CN');
   });
 });

@@ -15,7 +15,7 @@ export const useDisplayStore = create<DisplayState>()(
       setDisplayMode: (newMode) => set({ displayMode: newMode }),
     }),
     {
-      name: 'leanspec-display-mode',
+      name: 'harnspec-display-mode',
     }
   )
 );

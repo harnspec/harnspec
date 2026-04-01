@@ -36,7 +36,7 @@ export const useChatPreferencesStore = create<ChatPreferencesState>()(
       setSelectedModel: (model) => set({ selectedModel: model }),
     }),
     {
-      name: 'leanspec:chat:preferences',
+      name: 'harnspec:chat:preferences',
       partialize: (state) => ({
         selectedModel: state.selectedModel,
       }),

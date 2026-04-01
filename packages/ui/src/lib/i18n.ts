@@ -34,7 +34,7 @@ i18n
     detection: {
       order: ['localStorage', 'navigator'],
       caches: ['localStorage'],
-      lookupLocalStorage: 'leanspec-language',
+      lookupLocalStorage: 'harnspec-language',
     },
     interpolation: {
       escapeValue: false,
@@ -44,7 +44,7 @@ i18n
 // Persist language preference for environments without detector cache writes
 i18n.on('languageChanged', (lng) => {
   if (typeof localStorage !== 'undefined') {
-    localStorage.setItem('leanspec-language', lng);
+    localStorage.setItem('harnspec-language', lng);
   }
 });
 

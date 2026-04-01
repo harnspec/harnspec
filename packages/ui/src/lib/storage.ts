@@ -1,23 +1,23 @@
 
 export const STORAGE_KEYS = {
   // Global UI Preferences
-  THEME: 'leanspec:ui:theme',
-  SIDEBAR_COLLAPSED: 'leanspec:ui:sidebarCollapsed',
-  HIERARCHY_VIEW: 'leanspec:ui:hierarchyView',
-  SHOW_ARCHIVED: 'leanspec:ui:showArchived',
+  THEME: 'harnspec:ui:theme',
+  SIDEBAR_COLLAPSED: 'harnspec:ui:sidebarCollapsed',
+  HIERARCHY_VIEW: 'harnspec:ui:hierarchyView',
+  SHOW_ARCHIVED: 'harnspec:ui:showArchived',
   
   // Sidebar Filters
-  SIDEBAR_FILTER_STATUS: 'leanspec:sidebar:filters:status',
-  SIDEBAR_FILTER_PRIORITY: 'leanspec:sidebar:filters:priority',
-  SIDEBAR_FILTER_TAGS: 'leanspec:sidebar:filters:tags',
-  SIDEBAR_SORT: 'leanspec:sidebar:sort',
-  SIDEBAR_EXPANDED_IDS: 'leanspec:sidebar:expandedNodes',
+  SIDEBAR_FILTER_STATUS: 'harnspec:sidebar:filters:status',
+  SIDEBAR_FILTER_PRIORITY: 'harnspec:sidebar:filters:priority',
+  SIDEBAR_FILTER_TAGS: 'harnspec:sidebar:filters:tags',
+  SIDEBAR_SORT: 'harnspec:sidebar:sort',
+  SIDEBAR_EXPANDED_IDS: 'harnspec:sidebar:expandedNodes',
   
   // Specs Page Preferences
-  PAGE_PREFERENCES: 'leanspec:page:preferences', // Keeping the object structure for now to minimize refactor risk unless simpler
+  PAGE_PREFERENCES: 'harnspec:page:preferences', // Keeping the object structure for now to minimize refactor risk unless simpler
   
   // Transient (Session Storage)
-  SIDEBAR_SCROLL: 'leanspec:ui:sidebarScroll',
+  SIDEBAR_SCROLL: 'harnspec:ui:sidebarScroll',
 } as const;
 
 export type StorageKey = typeof STORAGE_KEYS[keyof typeof STORAGE_KEYS];

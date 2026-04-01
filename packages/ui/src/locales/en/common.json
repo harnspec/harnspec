@@ -6,7 +6,7 @@
     "home": "Home",
     "specs": "Specs",
     "chat": "AI Chat",
-    "chatDescription": "Talk with LeanSpec AI",
+    "chatDescription": "Talk with HarnSpec AI",
     "dependencies": "Dependencies",
     "stats": "Stats",
     "context": "Context",
@@ -30,9 +30,9 @@
     "toggleMenu": "Toggle menu",
     "docsTooltip": "Documentation",
     "githubTooltip": "GitHub repository",
-    "logoAlt": "LeanSpec",
+    "logoAlt": "HarnSpec",
     "githubAlt": "GitHub",
-    "brandName": "LeanSpec",
+    "brandName": "HarnSpec",
     "openMenu": "Open menu"
   },
   "search": {
@@ -280,12 +280,12 @@
     }
   },
   "chat": {
-    "title": "LeanSpec AI Chat",
+    "title": "HarnSpec AI Chat",
     "subtitle": "Manage specs conversationally without leaving the browser.",
     "modelLabel": "Model",
     "clear": "Clear",
     "empty": "Ask me to list, create, update, or validate specs.",
-    "placeholder": "Ask LeanSpec to manage your specs...",
+    "placeholder": "Ask HarnSpec to manage your specs...",
     "helper": "Tips: “List all specs”, “Create a spec for rate limiting”, “Mark 082 complete”.",
     "send": "Send",
     "thinking": "Thinking...",
@@ -749,7 +749,7 @@
     },
     "appearance": {
       "theme": "Theme",
-      "themeDescription": "Choose how LeanSpec looks to you",
+      "themeDescription": "Choose how HarnSpec looks to you",
       "light": "Light",
       "lightDescription": "Classic light theme",
       "dark": "Dark",
@@ -790,7 +790,7 @@
     "createProject": "Create Project",
     "manageProjects": "Manage Projects",
     "selectProject": "Select Project",
-    "description": "Manage your LeanSpec workspaces.",
+    "description": "Manage your HarnSpec workspaces.",
     "colorLabel": "Color",
     "validationFailed": "Validation failed",
     "newProject": "New Project",
@@ -804,7 +804,7 @@
     "completion": "Completion",
     "local": "Local",
     "noProjectsFound": "No projects found",
-    "getStarted": "Get started by creating your first LeanSpec project.",
+    "getStarted": "Get started by creating your first HarnSpec project.",
     "searchPlaceholder": "Search projects...",
     "errors": {
       "load": "Failed to load projects",
@@ -815,7 +815,7 @@
   "projectsPage": {
     "title": "Projects",
     "machineDescription": "Projects synced from {{machine}}.",
-    "description": "Manage your LeanSpec projects and workspaces."
+    "description": "Manage your HarnSpec projects and workspaces."
   },
   "machines": {
     "title": "Machines",
@@ -1033,7 +1033,7 @@
       "errorTitle": "Unable to load specs",
       "errorDescription": "Please try again or refresh your project.",
       "noSpecsTitle": "No specs yet",
-      "noSpecsDescription": "We could not find any specs for this project. Add a spec in your LeanSpec workspace, then refresh to see it here.",
+      "noSpecsDescription": "We could not find any specs for this project. Add a spec in your HarnSpec workspace, then refresh to see it here.",
       "noFiltersTitle": "No specs match your filters",
       "noFiltersDescription": "Try clearing filters or adjusting your search to see more specs."
     },
@@ -1217,7 +1217,7 @@
       },
       "config": {
         "title": "Configuration",
-        "description": "LeanSpec project configuration and settings",
+        "description": "HarnSpec project configuration and settings",
         "empty": "No configuration found",
         "suggestion": "Run 'harnspec init' to create a config file"
       },
@@ -1457,7 +1457,7 @@
     "dialog": {
       "title": "Validation: {{specName}}",
       "passTitle": "Spec Validated",
-      "passBody": "This spec meets all LeanSpec quality standards and structure requirements.",
+      "passBody": "This spec meets all HarnSpec quality standards and structure requirements.",
       "passDescription": "All quality checks passed successfully.",
       "errorDescription": "Found {{count}} errors that require attention.",
       "suggestion": "Suggestion:",
@@ -1469,7 +1469,7 @@
     "close": "Close",
     "newSpec": {
       "title": "Create New Spec",
-      "description": "Generate a new spec inside the active project with the LeanSpec CLI.",
+      "description": "Generate a new spec inside the active project with the HarnSpec CLI.",
       "slugLabel": "Spec slug",
       "slugPlaceholder": "e.g. desktop-native-menu",
       "titleLabel": "Display title (optional)",
@@ -1510,8 +1510,8 @@
       "openButton": "Open log folder"
     },
     "about": {
-      "title": "About LeanSpec Desktop",
-      "description": "LeanSpec UI with native integrations for local projects and automation.",
+      "title": "About HarnSpec Desktop",
+      "description": "HarnSpec UI with native integrations for local projects and automation.",
       "version": "Version",
       "website": "Website",
       "support": "Support"

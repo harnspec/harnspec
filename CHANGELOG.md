@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **TUI Multi-Project Management** ([spec 372](https://harnspec.gitub.io/specs/372)) — Switch between and manage multiple projects from the TUI
-- **TUI Sidebar Navigation & Tree View** ([spec 371](https://harnspec.gitub.io/specs/371)) — Sidebar with sort/filter controls and hierarchical tree view for specs
+- **TUI Multi-Project Management** ([spec 372](https://harnspec.github.io/specs/372)) — Switch between and manage multiple projects from the TUI
+- **TUI Sidebar Navigation & Tree View** ([spec 371](https://harnspec.github.io/specs/371)) — Sidebar with sort/filter controls and hierarchical tree view for specs
 - **TUI Board View Enhancements** — Collapsible board groups with sort indicator, TOC overlay, and scrollbars
 - **TUI Vertical Scrollbars** — Scrollbar widgets in list, board, and detail views
 - **TUI Theme Overhaul** — Modern theme with Unicode symbols and RGB color palette
@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - **Default TUI View** — Default view changed from Board to List
-- **MCP Deprecation** — Removed MCP integration and deprecated `leanspec-mcp` package
+- **MCP Deprecation** — Removed MCP integration and deprecated `harnspec-mcp` package
 
 ### Fixed
 
@@ -42,24 +42,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Interactive TUI for Spec Management** ([spec 369](https://harnspec.gitub.io/specs/369)) - Terminal UI built with Ratatui for managing specs from the command line
+- **Interactive TUI for Spec Management** ([spec 369](https://harnspec.github.io/specs/369)) - Terminal UI built with Ratatui for managing specs from the command line
   - Sidebar navigation with keyboard shortcuts and markdown rendering
   - Spec list, detail, and status management views
 - **GitHub Repo Import UI** - Import specs from GitHub repositories in the cloud deployment interface
-- **GitHub Integration** ([specs 361-366](https://harnspec.gitub.io/specs/361)) - Detect and manage specs from connected GitHub repos
+- **GitHub Integration** ([specs 361-366](https://harnspec.github.io/specs/361)) - Detect and manage specs from connected GitHub repos
   - Cloud deployment readiness checks
   - GitHub-sourced spec detection and synchronization
 - **Extended CLI Flags** - Richer spec creation and update options
   - `--content`, `--file`, `--assignee` flags for `create` command
   - `--description` for `create` and `--expected-hash` for `update`
-- **Docker Deployment** ([spec 317](https://harnspec.gitub.io/specs/317)) - Self-hosted leanspec UI via Docker
+- **Docker Deployment** ([spec 317](https://harnspec.github.io/specs/317)) - Self-hosted harnspec UI via Docker
   - Multi-arch builds (amd64 + ARM64) with native ARM64 runner
   - Non-root container execution with documented project mounting and data persistence
 
 ### Changed
 
 - **Artifacts Sub-Tree** - Deprecates flat subspec display in favor of an artifacts sub-tree concept
-- **Skill Architecture** - Removes harnspec skill subcommand and project-scoped skill install; leanspec-sdd skill now uses CLI only (no MCP dependency)
+- **Skill Architecture** - Removes harnspec skill subcommand and project-scoped skill install; harnspec-sdd skill now uses CLI only (no MCP dependency)
 - **Skills Reorganization** - Consolidates and reorganizes agent skills layout
 
 ### Fixed
@@ -81,22 +81,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Git Worktree Session Isolation** ([spec 358](https://harnspec.gitub.io/specs/358)) - Isolates parallel agent sessions using Git worktrees
+- **Git Worktree Session Isolation** ([spec 358](https://harnspec.github.io/specs/358)) - Isolates parallel agent sessions using Git worktrees
   - Worktree lifecycle management with status tracking (created, running, completed, merging, merged, conflict, abandoned)
   - Merge strategies: auto-merge, squash, pull request, manual
-  - Registry persistence via `.leanspec-worktrees/registry.json` with garbage collection
+  - Registry persistence via `.harnspec-worktrees/registry.json` with garbage collection
   - CLI commands for `merge`, `cleanup`, and `gc` operations
   - Branch removal fix for streamlined worktree cleanup
-- **Shell-Based Runner Execution** ([spec 357](https://harnspec.gitub.io/specs/357)) - Structured `run_direct` functionality with protocol overrides and model specifications
+- **Shell-Based Runner Execution** ([spec 357](https://harnspec.github.io/specs/357)) - Structured `run_direct` functionality with protocol overrides and model specifications
   - Per-runner `protocol` field supporting `acp` and `shell` execution modes
   - `CreateSessionOptions` struct for cleaner session creation parameter passing
   - Project-scoped memory support in session management
-- **Dynamic Runner Model Discovery** ([spec 353](https://harnspec.gitub.io/specs/353)) - Replaces hardcoded `available_models` with `model_providers` in runner schema
+- **Dynamic Runner Model Discovery** ([spec 353](https://harnspec.github.io/specs/353)) - Replaces hardcoded `available_models` with `model_providers` in runner schema
   - `resolve_runner_models()` fetches agentic-capable models from models.dev providers
   - Filters to text I/O models with tool_call support; excludes embedding/audio-only
   - Bundled registry fallback for offline use
   - API endpoint for per-runner dynamic model lists
-- **KaTeX Math Rendering** ([spec 354](https://harnspec.gitub.io/specs/354)) - Adds LaTeX math rendering to spec detail markdown
+- **KaTeX Math Rendering** ([spec 354](https://harnspec.github.io/specs/354)) - Adds LaTeX math rendering to spec detail markdown
   - `remarkMath` and `rehypeKatex` plugins for `$...$` and `$$...$$` syntax
 - **Session Create Preferences** - Persists model selection per runner across sessions
   - Zustand store backed by localStorage with `setModelForRunner`/`getModelForRunner`
@@ -135,7 +135,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Sessions UX Overhaul** ([spec 348](https://harnspec.gitub.io/specs/348)) - New `SessionsPopover` with model selection, status indicators, and toast notifications
+- **Sessions UX Overhaul** ([spec 348](https://harnspec.github.io/specs/348)) - New `SessionsPopover` with model selection, status indicators, and toast notifications
 - **Spec Search Backend** - Backend-driven search with relevance ranking and enriched query support
 - **Prompt Input Refactor** - Splits monolithic prompt input into modular `core`, `context`, `hooks`, and compound components
 - **Generated TypeScript Bindings** - Expands generated API types for sessions, runners, stats, and validation with pre-push verification
@@ -162,7 +162,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Prompt-First Session Creation** ([spec 337](https://harnspec.gitub.io/specs/337)) - Redesigns session creation as a prompt-first experience
+- **Prompt-First Session Creation** ([spec 337](https://harnspec.github.io/specs/337)) - Redesigns session creation as a prompt-first experience
   - `SpecContextTrigger` and `SpecContextChips` components for attaching spec context
   - Reusable spec-context pattern shared between sessions and chat
   - Transparent, customizable prompt defaults replacing hidden system templates
@@ -185,31 +185,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Automated migration for existing spec data
   - Optimized spec loading via enhanced `spec_loader`
 
-- **CLI Relationship Commands** ([spec 335](https://harnspec.gitub.io/specs/335)) - New Rust CLI commands for spec hierarchy and dependencies
+- **CLI Relationship Commands** ([spec 335](https://harnspec.github.io/specs/335)) - New Rust CLI commands for spec hierarchy and dependencies
   - `children` command to list child specs of a given parent
   - `deps` command to list dependencies and dependents of a spec
   - `list` command now supports `--parent` filter for hierarchy traversal
   - `create` command gains `--parent` and `--depends-on` options for relationship creation
 
-- **SDD Skill Documentation Overhaul** ([spec 335](https://harnspec.gitub.io/specs/335)) - Aligned skill documentation with actual CLI capabilities
+- **SDD Skill Documentation Overhaul** ([spec 335](https://harnspec.github.io/specs/335)) - Aligned skill documentation with actual CLI capabilities
   - Rewritten SKILL.md with relationship management details and best practices
   - Replaced COMMANDS.md/EXAMPLES.md with lowercase `commands.md`/`examples.md` references
   - Expanded MCP relationship tools with full CRUD operations (`link`, `unlink`, `set_parent`, `list_children`)
 
-- **ACP Sessions Integration** ([spec 330](https://harnspec.gitub.io/specs/330)) - Agent-Client-Protocol support for interactive AI sessions
+- **ACP Sessions Integration** ([spec 330](https://harnspec.github.io/specs/330)) - Agent-Client-Protocol support for interactive AI sessions
   - Human-in-the-loop permission response handling in UI and backend
   - Resume session functionality for paused ACP sessions
   - New `AcpConversation` component for structured agent interactions
   - Session streaming via `session-stream.ts` for real-time updates
 
-- **Files Page** ([spec 331](https://harnspec.gitub.io/specs/331)) - Full-featured file browser in web UI
+- **Files Page** ([spec 331](https://harnspec.github.io/specs/331)) - Full-featured file browser in web UI
   - `FileExplorer` component with tree navigation and tab management
   - `CodeViewer` with syntax highlighting and sticky line numbers
   - File search with support for ignored files
   - Material-style file icons via `@exuanbo/file-icons-js`
   - File browsing API endpoints in Rust HTTP server
 
-- **Session Context Redesign** ([spec 328](https://harnspec.gitub.io/specs/328)) - Multi-spec and multi-prompt session support
+- **Session Context Redesign** ([spec 328](https://harnspec.github.io/specs/328)) - Multi-spec and multi-prompt session support
   - Sessions can now reference multiple specs and prompts
   - `SearchableSelect` and `SpecSearchSelect` reusable components
   - Enhanced `SessionCreateDialog` with searchable spec selection
@@ -224,7 +224,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **CLI Template Loading** - Template loading in Rust CLI `create` command
   - Loads and applies templates during spec creation (PR #139)
 
-- **Advanced Search Refactoring** ([spec 313](https://harnspec.gitub.io/specs/313)) - Modular search architecture in Rust
+- **Advanced Search Refactoring** ([spec 313](https://harnspec.github.io/specs/313)) - Modular search architecture in Rust
   - Split monolithic `search.rs` into `filters`, `fuzzy`, `query`, and `scorer` modules
   - MCP search tool integration tests
 
@@ -233,7 +233,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Desktop Package Migrated** ([spec 325](https://harnspec.gitub.io/specs/325)) - Moved desktop app to separate repository
+- **Desktop Package Migrated** ([spec 325](https://harnspec.github.io/specs/325)) - Moved desktop app to separate repository
   - Removed entire `packages/desktop` directory (Tauri source, components, hooks, styles)
   - Removed `desktop-build.yml` GitHub Actions workflow
   - Updated packages README to reflect new architecture
@@ -266,7 +266,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Tool Registry for LeanSpec AI** - New hook infrastructure for AI tool management
+- **Tool Registry for HarnSpec AI** - New hook infrastructure for AI tool management
   - `useChatConfig` and models registry hooks
 
 - **Auto Title Generation** - Automatic title generation for chat conversations
@@ -300,16 +300,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Organize Prompt** - New AI prompt for managing specs relationships, status, and priority
 
-- **Docker Deployment** - Support and documentation for deploying LeanSpec UI via Docker
+- **Docker Deployment** - Support and documentation for deploying HarnSpec UI via Docker
   - Vite favicon plugin for development build support
 
 ### Changed
 
-- **UI Components Consolidation** ([spec 314](https://harnspec.gitub.io/specs/314)) - Major refactoring of UI package
+- **UI Components Consolidation** ([spec 314](https://harnspec.github.io/specs/314)) - Major refactoring of UI package
   - Phase 1: DRY elimination with consolidated badge config and removed duplicates
   - Phase 2: Renamed 80 component files to kebab-case naming convention
-  - Removed `@leanspec/ui-components` package entirely
-  - Updated all import paths to use `@/library` instead of `@leanspec/ui-components`
+  - Removed `@harnspec/ui-components` package entirely
+  - Updated all import paths to use `@/library` instead of `@harnspec/ui-components`
 
 - **Chat Transport Enhancements** - Dynamic body values and improved provider compatibility
 
@@ -353,24 +353,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **AI Chat Model Whitelisting** ([spec 307](https://harnspec.gitub.io/specs/307)) - Control which models appear in the chat selector
+- **AI Chat Model Whitelisting** ([spec 307](https://harnspec.github.io/specs/307)) - Control which models appear in the chat selector
   - New `enabledModels` field in chat config to filter model list per provider
   - Smart default selection uses first configured provider's tool-enabled model
   - Fixed provider mismatch bug ("missing API key for provider: OpenAI" when using OpenRouter)
   - Loading state shown while registry initializes
 
-- **AI Chat Conversation History** ([spec 308](https://harnspec.gitub.io/specs/308)) - Fixed missing conversation history in web UI
+- **AI Chat Conversation History** ([spec 308](https://harnspec.github.io/specs/308)) - Fixed missing conversation history in web UI
   - Fixed "first message before session" race condition in layout sidebar
   - Added empty state UI for when no conversations exist
   - Conversations now properly persist and load across page refreshes
 
-- **Models.dev Integration** ([spec 302](https://harnspec.gitub.io/specs/302)) - Default model registry for automatic AI model discovery
+- **Models.dev Integration** ([spec 302](https://harnspec.github.io/specs/302)) - Default model registry for automatic AI model discovery
   - Uses models.dev API as source of truth for available AI models
   - Auto-detects configured API keys and shows only usable providers
   - Caches model data locally with 24h TTL and offline fallback
   - Shows model capabilities (tool_call, reasoning, vision) with context window info
 
-- **Settings Page Optimization** ([spec 306](https://harnspec.gitub.io/specs/306)) - Comprehensive UX improvements
+- **Settings Page Optimization** ([spec 306](https://harnspec.github.io/specs/306)) - Comprehensive UX improvements
   - Settings sidebar matches MainSidebar icon-only collapse pattern
   - Search, filter, and sort for AI providers and runners
   - Display mode toggle (Wide/Normal) in Appearance settings
@@ -379,7 +379,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **UI Layout Alignment** ([spec 305](https://harnspec.gitub.io/specs/305)) - Consistent layout across all pages
+- **UI Layout Alignment** ([spec 305](https://harnspec.github.io/specs/305)) - Consistent layout across all pages
   - Shared page container with min-w-4xl desktop width
   - Centered column with consistent padding and max-w-7xl
   - Horizontal scroll behavior for sidebars
@@ -394,7 +394,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Model selector initializes from registry defaults instead of hardcoded values
 - Status and priority editors sync with prop changes correctly
 - Icon swap for normal/wide modes in WideModeToggle component
-- Clippy errors in leanspec-http resolved
+- Clippy errors in harnspec-http resolved
 - Better error handling for undefined response in `listAvailableRunners`
 - jiti version updated in dependencies
 
@@ -407,7 +407,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Optimistic updates with immediate API sync
   - Works in both ListView and BoardView components
 
-- **Structured Spec Hierarchy Management** ([spec 250](https://harnspec.gitub.io/specs/250)) - Parent-child relationships for umbrella specs
+- **Structured Spec Hierarchy Management** ([spec 250](https://harnspec.github.io/specs/250)) - Parent-child relationships for umbrella specs
   - New `parent` field in frontmatter for organizational grouping (distinct from `depends_on` technical dependencies)
   - Auto-detection of umbrella specs (specs with children get umbrella indicator)
   - `harnspec list --hierarchy` - Tree view showing parent-child nesting
@@ -417,24 +417,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Hierarchy validation: circular parent detection, orphan detection, status consistency checks
   - UI list view: `groupByParent` toggle with collapsible tree groups
   - UI board view: de-emphasized child specs, auto-collapse after 3 children with "[+X more]" toggle
-  - **Related specs:** [252](https://harnspec.gitub.io/specs/252), [253](https://harnspec.gitub.io/specs/253), [254](https://harnspec.gitub.io/specs/254), [258](https://harnspec.gitub.io/specs/258)
+  - **Related specs:** [252](https://harnspec.github.io/specs/252), [253](https://harnspec.github.io/specs/253), [254](https://harnspec.github.io/specs/254), [258](https://harnspec.github.io/specs/258)
 
-- **Unified Relationships Editing UI** ([spec 253](https://harnspec.gitub.io/specs/253)) - ADO-style relationship management
+- **Unified Relationships Editing UI** ([spec 253](https://harnspec.github.io/specs/253)) - ADO-style relationship management
   - Single "Relationships" panel replacing separate buttons
   - Inline editing for all relationship types: parent, children, depends_on, required_by
   - ADO-style searchable spec picker dropdown
 
-- **Streamlined Relationship Commands** ([spec 254](https://harnspec.gitub.io/specs/254)) - Unified CLI/MCP interface
+- **Streamlined Relationship Commands** ([spec 254](https://harnspec.github.io/specs/254)) - Unified CLI/MCP interface
   - New `harnspec rel` command for all relationship operations (view/add/rm)
   - MCP `relationships` tool unifying all relationship operations
   - Deprecation notices on old `link`, `unlink`, `set-parent`, `deps`, `children` commands
 
-- **Write-Time Relationship Validation** ([spec 257](https://harnspec.gitub.io/specs/257)) - Prevent invalid relationship states
+- **Write-Time Relationship Validation** ([spec 257](https://harnspec.github.io/specs/257)) - Prevent invalid relationship states
   - Parent/dependency cycle detection with clear error messages
   - Hierarchy/dependency conflict detection
 
 - **UI Enhancements**
-  - Storage utilities consolidation with unified hooks ([spec 271](https://harnspec.gitub.io/specs/271))
+  - Storage utilities consolidation with unified hooks ([spec 271](https://harnspec.github.io/specs/271))
   - Wide mode toggle for compact/expanded list views
   - Archived specs visibility toggle in filters
   - Enhanced markdown rendering with code block copy button and table styling
@@ -442,25 +442,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Spec edit history viewer via git integration
   - Responsive sidebar visibility with resize observer
 
-- **UI Utilities Consolidation** ([spec 261](https://harnspec.gitub.io/specs/261)) - Deduplicated shared code into `@leanspec/ui-components`
+- **UI Utilities Consolidation** ([spec 261](https://harnspec.github.io/specs/261)) - Deduplicated shared code into `@harnspec/ui-components`
 
 ### Changed
 
-- **Chat Server Retired** ([spec 264](https://harnspec.gitub.io/specs/264)) - AI now fully native in Rust
-  - Removed `@leanspec/chat-server` package completely
+- **Chat Server Retired** ([spec 264](https://harnspec.github.io/specs/264)) - AI now fully native in Rust
+  - Removed `@harnspec/chat-server` package completely
   - AI chat handled natively using `async-openai` and `anthropic` Rust crates
 
-- **Token Validation Performance** ([spec 270](https://harnspec.gitub.io/specs/270)) - Lazy static singletons for TokenCounter and validators
+- **Token Validation Performance** ([spec 270](https://harnspec.github.io/specs/270)) - Lazy static singletons for TokenCounter and validators
 
-- **Technical Debt Refactoring** ([spec 259](https://harnspec.gitub.io/specs/259))
-  - Type definitions consolidated ([spec 262](https://harnspec.gitub.io/specs/262))
-  - Rust spec handler consolidated ([spec 263](https://harnspec.gitub.io/specs/263))
-  - Config standardization ([spec 265](https://harnspec.gitub.io/specs/265))
+- **Technical Debt Refactoring** ([spec 259](https://harnspec.github.io/specs/259))
+  - Type definitions consolidated ([spec 262](https://harnspec.github.io/specs/262))
+  - Rust spec handler consolidated ([spec 263](https://harnspec.github.io/specs/263))
+  - Config standardization ([spec 265](https://harnspec.github.io/specs/265))
   - Hierarchy icon updated from Umbrella to FolderTree
 
-- **Status-Only Archiving** ([spec 256](https://harnspec.gitub.io/specs/256)) - Archiving now only sets `status: archived` (no file move)
+- **Status-Only Archiving** ([spec 256](https://harnspec.github.io/specs/256)) - Archiving now only sets `status: archived` (no file move)
 
-- **Rust Monorepo Architecture Refactoring** - Sessions, storage, and AI modules consolidated into leanspec-core
+- **Rust Monorepo Architecture Refactoring** - Sessions, storage, and AI modules consolidated into harnspec-core
 
 ### Fixed
 
@@ -482,8 +482,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **AI Chat Configuration Improvements** ([spec 224](https://harnspec.gitub.io/specs/224)) - Full multi-provider support and settings UI
-  - Configuration-driven AI model management via `~/.leanspec/chat-config.json`
+- **AI Chat Configuration Improvements** ([spec 224](https://harnspec.github.io/specs/224)) - Full multi-provider support and settings UI
+  - Configuration-driven AI model management via `~/.harnspec/chat-config.json`
   - Support for OpenAI, Anthropic, Deepseek, OpenRouter and any OpenAI-compatible API
   - ModelPicker component for quick provider/model selection in chat header
   - Full Settings page with CRUD operations for providers and models
@@ -492,22 +492,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Default provider/model/maxSteps configuration
   - i18n support (English and Chinese) for all settings UI
 
-- **IPC-Based AI Chat Bridge** ([spec 237](https://harnspec.gitub.io/specs/237)) - Unified Rust HTTP server with AI worker
+- **IPC-Based AI Chat Bridge** ([spec 237](https://harnspec.github.io/specs/237)) - Unified Rust HTTP server with AI worker
   - Single server process (Rust manages Node.js AI worker via IPC)
   - JSON Lines protocol for stdin/stdout communication
   - Automatic worker spawning on first chat request
   - Node.js version detection with tiered warnings (v20 EOL warning, v22+ recommended)
   - Graceful degradation when Node.js unavailable
-  - Environment variables: `LEANSPEC_NO_AI`, `LEANSPEC_NODE_PATH`, `LEANSPEC_AI_WORKER`
+  - Environment variables: `HARNSPEC_NO_AI`, `HARNSPEC_NODE_PATH`, `HARNSPEC_AI_WORKER`
 
-- **UI Component Consolidation** ([spec 238](https://harnspec.gitub.io/specs/238)) - Unified component library
-  - Consolidated all shadcn/ui components into `@leanspec/ui-components`
-  - Integrated ai-elements wrappers (48 components) into `@leanspec/ui-components`
-  - Cleaner architecture: `@leanspec/ui` focuses on application logic, `@leanspec/ui-components` on reusable components
+- **UI Component Consolidation** ([spec 238](https://harnspec.github.io/specs/238)) - Unified component library
+  - Consolidated all shadcn/ui components into `@harnspec/ui-components`
+  - Integrated ai-elements wrappers (48 components) into `@harnspec/ui-components`
+  - Cleaner architecture: `@harnspec/ui` focuses on application logic, `@harnspec/ui-components` on reusable components
   - Added comprehensive Radix UI and ai-elements peer dependencies
 
 - **HTTP Server Auto-Installation** - Seamless UI startup experience
-  - `@leanspec/ui` automatically installs `@leanspec/http-server` if not present
+  - `@harnspec/ui` automatically installs `@harnspec/http-server` if not present
   - Delete confirmation dialogs for providers and models in settings
 
 - **GitHub Actions Skills** - New documentation for CI/CD workflow management
@@ -550,7 +550,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Critical**: Fixed EACCES permission error for platform binaries
   - npm doesn't preserve file permissions when installing packages
   - Added postinstall scripts to all platform packages (CLI, MCP, HTTP) to set execute permissions
-  - Fixes error: `spawn leanspec-http EACCES` when running `npx @leanspec/ui`
+  - Fixes error: `spawn harnspec-http EACCES` when running `npx @harnspec/ui`
   - All Unix binaries now automatically get execute permissions (0o755) after installation
 
 ## [0.2.17] - 2026-01-15
@@ -558,7 +558,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **Critical**: Fixed `workspace:*` dependencies in published packages
-  - Version 0.2.15 of `@leanspec/http-server` was published with unresolved workspace protocol references
+  - Version 0.2.15 of `@harnspec/http-server` was published with unresolved workspace protocol references
   - This caused installation failures: `npm error Unsupported URL Type "workspace:": workspace:*`
   - All packages now properly resolve workspace dependencies before publishing
   - Platform packages (CLI, MCP, HTTP) optionalDependencies now correctly reference versioned packages
@@ -624,7 +624,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Multi-project architecture refactoring** ([spec 151](https://harnspec.gitub.io/specs/151)) - Deep architectural improvements
+- **Multi-project architecture refactoring** ([spec 151](https://harnspec.github.io/specs/151)) - Deep architectural improvements
   - Unified routing: All routes now use `/projects/[id]/*` structure (single-project uses 'default' ID)
   - Consolidated specs service replacing separate filesystem-source and multi-project-source
   - Single code path for spec operations (no more mode-specific branching)
@@ -635,7 +635,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Better compatibility with web standards
   - Improved parsing performance
   - Easier programmatic manipulation
-- **Dependency graph enhancements** ([spec 154](https://harnspec.gitub.io/specs/154)) - Enhanced dependency visualizations
+- **Dependency graph enhancements** ([spec 154](https://harnspec.github.io/specs/154)) - Enhanced dependency visualizations
   - Icon-based status/priority indicators (Clock, PlayCircle, CheckCircle2, Archive)
   - Color-coded backgrounds for quick status recognition
   - Level indicators (L1, L2, L3) showing dependency depth
@@ -679,38 +679,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Notes
 
-**Version 0.2.11** focuses on stabilizing the Next.js-based `@leanspec/ui` with architectural improvements and bug fixes. This prepares for **version 0.3.0**, which will introduce the major Rust-based CLI/MCP/Web/Desktop migration with:
+**Version 0.2.11** focuses on stabilizing the Next.js-based `@harnspec/ui` with architectural improvements and bug fixes. This prepares for **version 0.3.0**, which will introduce the major Rust-based CLI/MCP/Web/Desktop migration with:
 
 - Unified Rust codebase for all platforms (CLI, MCP server, HTTP server, Desktop app)
 - Native performance improvements
 - Cross-platform binaries via GitHub Actions CI/CD  
 - Simplified distribution with scoped npm packages
-- New framework-agnostic UI component library (`@leanspec/ui-components`)
-- Lightweight Vite-based SPA (`@leanspec/ui-vite`) replacing Next.js
-- See [spec 181](https://harnspec.gitub.io/specs/181) for Rust migration details
+- New framework-agnostic UI component library (`@harnspec/ui-components`)
+- Lightweight Vite-based SPA (`@harnspec/ui-vite`) replacing Next.js
+- See [spec 181](https://harnspec.github.io/specs/181) for Rust migration details
 
 ## [0.2.10] - 2025-12-05
 
 ### Added
 
-- **Inline metadata editing in Web UI** ([spec 134](https://harnspec.gitub.io/specs/134)) - Edit spec metadata directly in the browser
+- **Inline metadata editing in Web UI** ([spec 134](https://harnspec.github.io/specs/134)) - Edit spec metadata directly in the browser
   - Status dropdown with color-coded badges (planned, in-progress, complete, archived)
   - Priority selector (low, medium, high, critical)
   - Tags editor with add/remove functionality and autocomplete suggestions
   - Inline dependency editor with add/remove support
   - Optimistic updates with automatic rollback on error
   - Works in both filesystem and multi-project modes
-- **MCP config auto-setup during init** ([spec 145](https://harnspec.gitub.io/specs/145)) - Automatic MCP configuration
+- **MCP config auto-setup during init** ([spec 145](https://harnspec.github.io/specs/145)) - Automatic MCP configuration
   - `harnspec init` now offers to configure MCP for detected AI tools
   - Supports Claude Code (`.mcp.json`), VS Code (`.vscode/mcp.json`), Cursor (`.cursor/mcp.json`)
   - Generates correct MCP config entries with proper absolute paths
   - Zero manual configuration needed after init for workspace-local tools
-- **Backfill command bootstrap mode** ([spec 144](https://harnspec.gitub.io/specs/144)) - Robust migration support
+- **Backfill command bootstrap mode** ([spec 144](https://harnspec.github.io/specs/144)) - Robust migration support
   - New `--bootstrap` flag creates frontmatter for specs without any
   - Auto-infers `status` and `created` from git history
   - Supports legacy formats (ADR, RFC, inline metadata like `**Status**: Complete`)
   - Maps ADR statuses: accepted→complete, proposed→planned, superseded→archived
-- **Multi-project management UI improvements** ([spec 141](https://harnspec.gitub.io/specs/141)) - Enhanced project management
+- **Multi-project management UI improvements** ([spec 141](https://harnspec.github.io/specs/141)) - Enhanced project management
   - "Manage Projects" option in project switcher dropdown for quick access
   - Inline project name editing on /projects page
   - Color picker for project customization
@@ -718,7 +718,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Multi-project mode improvements** ([spec 142](https://harnspec.gitub.io/specs/142), [spec 149](https://harnspec.gitub.io/specs/149)) - Critical UX fixes
+- **Multi-project mode improvements** ([spec 142](https://harnspec.github.io/specs/142), [spec 149](https://harnspec.github.io/specs/149)) - Critical UX fixes
   - All navigation links now use project-scoped URLs (`/projects/[id]/specs`)
   - Added SSR for multi-project dependencies, stats, and context pages
   - Projects page has dedicated layout without sidebar (cleaner management UX)
@@ -753,7 +753,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Project-wide dependency visualization** ([spec 137](https://harnspec.gitub.io/specs/137)) - New `/dependencies` page in Web UI
+- **Project-wide dependency visualization** ([spec 137](https://harnspec.github.io/specs/137)) - New `/dependencies` page in Web UI
   - Bird's-eye view of entire project's dependency structure using DAG layout
   - Interactive ReactFlow graph with zoom/pan controls
   - Click nodes to navigate directly to spec details
@@ -768,7 +768,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Simplified spec relationships** ([spec 139](https://harnspec.gitub.io/specs/139)) - Removed `related` field, keeping only `depends_on`
+- **Simplified spec relationships** ([spec 139](https://harnspec.github.io/specs/139)) - Removed `related` field, keeping only `depends_on`
   - **Breaking**: `related` field is deprecated and will be ignored
   - Cleaner DAG-only visualization (no more cluttered network graphs)
   - Simpler mental model: every edge means "blocking dependency"
@@ -779,7 +779,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- **Chinese/Unicode spec name support** ([spec 135](https://harnspec.gitub.io/specs/135)) - Fixed sequence number detection for non-ASCII spec names
+- **Chinese/Unicode spec name support** ([spec 135](https://harnspec.github.io/specs/135)) - Fixed sequence number detection for non-ASCII spec names
   - Specs with Chinese characters (e.g., `001-测试`) now correctly detected
   - Japanese, Korean, and other Unicode scripts supported
 - **Spec frontmatter validation** - Fixed YAML parsing errors from orphaned array items in some specs
@@ -789,7 +789,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Safe re-initialization workflow** ([spec 127](https://harnspec.gitub.io/specs/127)) - Improved `harnspec init` for existing projects
+- **Safe re-initialization workflow** ([spec 127](https://harnspec.github.io/specs/127)) - Improved `harnspec init` for existing projects
   - New `-f, --force` flag to force re-initialization (resets config, preserves specs)
   - Interactive strategy selection when project is already initialized:
     - **Upgrade configuration** (recommended) - Merges config with latest defaults, preserves all user content
@@ -800,12 +800,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Shows spec count when re-initializing to inform user's decision
   - Confirmation required for destructive "full reset" option
   - Auto-creates AGENTS.md if missing during init
-- **MCP `link` and `unlink` tools** ([spec 129](https://harnspec.gitub.io/specs/129)) - Manage spec relationships directly from AI agents
+- **MCP `link` and `unlink` tools** ([spec 129](https://harnspec.github.io/specs/129)) - Manage spec relationships directly from AI agents
   - `link` tool: Add `depends_on` or `related` relationships between specs
   - `unlink` tool: Remove relationships with type filtering and `--all` support
   - Enables AI agents to maintain spec dependencies without CLI commands
   - Bidirectional link updates for `related` relationships
-- **Project context visibility in Web UI** ([spec 131](https://harnspec.gitub.io/specs/131)) - View project files from the web interface
+- **Project context visibility in Web UI** ([spec 131](https://harnspec.github.io/specs/131)) - View project files from the web interface
   - New `/context` page showing AGENTS.md, README.md, and project configuration
   - File viewer with syntax highlighting and search functionality
   - Quick links to open files in VS Code editor
@@ -813,14 +813,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Focus mode in spec detail view** - Distraction-free reading experience
   - Toggle button to hide sidebar and expand content area
   - Cleaner layout for reviewing spec content
-- **Directory-based template support** ([spec 128](https://harnspec.gitub.io/specs/128)) - Enhanced template handling
+- **Directory-based template support** ([spec 128](https://harnspec.github.io/specs/128)) - Enhanced template handling
   - Templates can now be organized in subdirectories
   - Improved `harnspec templates` listing with better organization
   - Support for custom template directories
 
 ### Changed
 
-- **Testing infrastructure overhaul** ([spec 130](https://harnspec.gitub.io/specs/130)) - Comprehensive test strategy documentation
+- **Testing infrastructure overhaul** ([spec 130](https://harnspec.github.io/specs/130)) - Comprehensive test strategy documentation
   - New regression test template for consistent test patterns
   - Spec lifecycle tests for create/update/archive workflows
   - E2E test improvements for AGENTS.md handling
@@ -835,13 +835,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **AI tool auto-detection** ([spec 126](https://harnspec.gitub.io/specs/126)) - Smart defaults for `harnspec init`
+- **AI tool auto-detection** ([spec 126](https://harnspec.github.io/specs/126)) - Smart defaults for `harnspec init`
   - Auto-detect installed AI CLI tools (Aider, Claude, Codex, Copilot, Cursor, Droid, Gemini, OpenCode, Windsurf)
   - Detection via CLI commands, config directories, and environment variables
   - Shows detected tools with reasons before AI tools prompt
   - Pre-selects detected tools in checkbox for better UX
   - Fallback to `copilot` only (AGENTS.md) when nothing detected
-- **MCP-first agent experience** ([spec 121](https://harnspec.gitub.io/specs/121)) - Enhanced AI agent workflow with better SDD compliance
+- **MCP-first agent experience** ([spec 121](https://harnspec.github.io/specs/121)) - Enhanced AI agent workflow with better SDD compliance
   - Multi-tool symlink support: `harnspec init` now creates tool-specific symlinks (CLAUDE.md, GEMINI.md → AGENTS.md)
   - New `--agent-tools` flag for non-interactive mode (`--agent-tools all`, `--agent-tools claude,gemini`, `--agent-tools none`)
   - MCP-first AGENTS.md rewrite emphasizing MCP tools as primary method over CLI
@@ -849,14 +849,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - New MCP prompt: `create-spec` - Guided spec creation workflow with dependency linking
   - Stale spec warnings in board output
   - SDD Workflow Checkpoints section in AGENTS.md
-- **Dependency alignment validation** ([spec 122](https://harnspec.gitub.io/specs/122)) - Automated detection of content/frontmatter misalignment
+- **Dependency alignment validation** ([spec 122](https://harnspec.github.io/specs/122)) - Automated detection of content/frontmatter misalignment
   - New `--check-deps` flag for `harnspec validate` command
   - `DependencyAlignmentValidator` scans spec content for references to other specs
   - Detects patterns like "spec 045", "depends on", "related to", "builds on", etc.
   - Outputs actionable fix commands (e.g., `harnspec link <spec> --related 045`)
   - MCP `validate` tool now supports `checkDeps` option
   - Added Core Rule #8 in AGENTS.md: "ALWAYS link spec dependencies"
-- **Advanced search capabilities** ([spec 124](https://harnspec.gitub.io/specs/124)) - Enhanced search for power users
+- **Advanced search capabilities** ([spec 124](https://harnspec.github.io/specs/124)) - Enhanced search for power users
   - Cross-field term matching: queries now find specs where terms appear across any fields
   - Boolean operators support: `AND`, `OR`, `NOT` for complex queries
   - Field-specific search: `status:in-progress`, `tag:api`, `priority:high`, `assignee:name`
@@ -865,21 +865,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Combined query syntax: `tag:api status:planned created:>2025-11`
   - Search syntax help in `harnspec search --help`
   - Query guidance for AI agents in AGENTS.md and MCP tool descriptions
-- **Native diagram rendering in Web UI** ([spec 119](https://harnspec.gitub.io/specs/119)) - Mermaid diagram support in spec detail view
+- **Native diagram rendering in Web UI** ([spec 119](https://harnspec.github.io/specs/119)) - Mermaid diagram support in spec detail view
   - Client-side Mermaid rendering for flowcharts, sequence diagrams, class diagrams, etc.
   - Dark mode theme support with automatic theme switching
   - Error handling with fallback to code block display
   - Lazy loading for optimal bundle size (only loads when diagrams present)
-- **Parallel spec implementation workflow** ([spec 118](https://harnspec.gitub.io/specs/118)) - Documentation for concurrent spec development
+- **Parallel spec implementation workflow** ([spec 118](https://harnspec.github.io/specs/118)) - Documentation for concurrent spec development
   - Git worktrees pattern for working on multiple specs simultaneously
   - Patterns for solo developers, teams, and experimental work
   - Best practices for worktree naming, branch strategy, and cleanup
   - Added to AGENTS.md FAQ section
-- **AI coding agent integration** ([spec 123](https://harnspec.gitub.io/specs/123)) - Enhanced workflow for remote coding agents
+- **AI coding agent integration** ([spec 123](https://harnspec.github.io/specs/123)) - Enhanced workflow for remote coding agents
   - Support for GitHub Copilot Coding Agent, OpenAI Codex Cloud, and similar tools
   - Guidance for spec-driven task delegation to cloud agents
   - Best practices for parallel development with remote agents
-- **Onboarding project context clarity** ([spec 125](https://harnspec.gitub.io/specs/125)) - Improved first-use experience
+- **Onboarding project context clarity** ([spec 125](https://harnspec.github.io/specs/125)) - Improved first-use experience
   - Clearer guidance on workspace context for AI agents
   - Enhanced AGENTS.md with project-specific context sections
 
@@ -900,13 +900,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Example projects scaffold** ([spec 114](https://harnspec.gitub.io/specs/114)) - Quick-start tutorial projects with `harnspec init --example`
+- **Example projects scaffold** ([spec 114](https://harnspec.github.io/specs/114)) - Quick-start tutorial projects with `harnspec init --example`
   - Three complete example projects: dark-theme, dashboard-widgets, api-refactor
   - Instant setup with dependencies and realistic starter code
   - `harnspec examples` command to list available examples
   - Interactive selection mode for scaffolding
-  - Automatic LeanSpec initialization in scaffolded projects
-- **Chinese translation quality guidelines** ([spec 115](https://harnspec.gitub.io/specs/115)) - Professional localization standards
+  - Automatic HarnSpec initialization in scaffolded projects
+- **Chinese translation quality guidelines** ([spec 115](https://harnspec.github.io/specs/115)) - Professional localization standards
   - Comprehensive translation guidelines in `docs-site/AGENTS.md`
   - Translation glossary with 40+ technical terms
   - Natural Chinese expression patterns for technical content
@@ -923,7 +923,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Template system simplification** ([spec 117](https://harnspec.gitub.io/specs/117)) - Removed template engine for direct maintenance
+- **Template system simplification** ([spec 117](https://harnspec.github.io/specs/117)) - Removed template engine for direct maintenance
   - Eliminated Handlebars build layer and 15+ component files
   - Consolidated to 2 templates: `standard` (default) and `detailed` (sub-specs demo)
   - Shared AGENTS.md across templates for consistency
@@ -932,9 +932,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- **Example project initialization** ([spec 116](https://harnspec.gitub.io/specs/116)) - Fixed missing LeanSpec files in scaffolded examples
-  - `harnspec init --example` now properly initializes LeanSpec (AGENTS.md, .harnspec/, specs/)
-  - All LeanSpec CLI commands now work in scaffolded example projects
+- **Example project initialization** ([spec 116](https://harnspec.github.io/specs/116)) - Fixed missing HarnSpec files in scaffolded examples
+  - `harnspec init --example` now properly initializes HarnSpec (AGENTS.md, .harnspec/, specs/)
+  - All HarnSpec CLI commands now work in scaffolded example projects
   - Tutorial workflows function correctly out of the box
 
 ### Technical
@@ -948,24 +948,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **`@leanspec/mcp` standalone package** ([spec 102](https://harnspec.gitub.io/specs/102)) - Dedicated npm package for MCP server integration
-  - Simpler onboarding: Use `npx @leanspec/mcp` directly in IDE configs
+- **`@harnspec/mcp` standalone package** ([spec 102](https://harnspec.github.io/specs/102)) - Dedicated npm package for MCP server integration
+  - Simpler onboarding: Use `npx @harnspec/mcp` directly in IDE configs
   - Better discoverability: Package name clearly indicates MCP functionality
   - Zero-config setup: Just copy-paste config snippet for Claude Desktop, Cline, or Zed
-  - Automatic dependency management: npx handles installation of both `@leanspec/mcp` and `harnspec`
+  - Automatic dependency management: npx handles installation of both `@harnspec/mcp` and `harnspec`
   - Pure passthrough design: Delegates to `harnspec mcp` with no additional logic
-- **Enhanced dependency commands** ([spec 99](https://harnspec.gitub.io/specs/99)) - Improved CLI and MCP tools for managing spec relationships
+- **Enhanced dependency commands** ([spec 99](https://harnspec.github.io/specs/99)) - Improved CLI and MCP tools for managing spec relationships
   - Better dependency graph visualization
   - Enhanced `link` and `unlink` commands for managing `depends_on` and `related` fields
   - Improved error handling and validation for circular dependencies
-- **GitHub Action for automated publishing** ([spec 16](https://harnspec.gitub.io/specs/16) - partial implementation) - CI/CD workflow for dev releases
-  - Automated `@leanspec/mcp` publishing on npm with version suffix
+- **GitHub Action for automated publishing** ([spec 16](https://harnspec.github.io/specs/16) - partial implementation) - CI/CD workflow for dev releases
+  - Automated `@harnspec/mcp` publishing on npm with version suffix
   - Pre-release checks and validations
   - Package preparation scripts for handling workspace dependencies
 
 ### Changed
 
-- **UI Package Consolidation** ([spec 103](https://harnspec.gitub.io/specs/103)) - Merged `@leanspec/web` into `@leanspec/ui` for simpler architecture
+- **UI Package Consolidation** ([spec 103](https://harnspec.github.io/specs/103)) - Merged `@harnspec/web` into `@harnspec/ui` for simpler architecture
   - Single publishable Next.js app package instead of separate web + wrapper packages
   - Eliminated complex symlink handling and node_modules distribution issues
   - Simplified CLI launcher with direct Next.js standalone server execution
@@ -978,7 +978,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- **`@leanspec/ui` packaging issue** ([spec 104](https://harnspec.gitub.io/specs/104)) - Fixed "Cannot find module 'next'" error in published package
+- **`@harnspec/ui` packaging issue** ([spec 104](https://harnspec.github.io/specs/104)) - Fixed "Cannot find module 'next'" error in published package
   - Root cause: npm pack doesn't follow symlinks by default, so `node_modules/` symlinks in standalone build weren't resolved
   - Solution: Include actual pnpm store location (`.next/standalone/node_modules/.pnpm/`) in published files
   - Package now correctly bundles all Next.js dependencies (~18.3 MB compressed, 65 MB unpacked)
@@ -1002,9 +1002,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- **CLI `harnspec ui` pnpm flow** ([spec 87](https://harnspec.gitub.io/specs/87)) - Removed `pnpm dlx --prefer-offline` forcing offline cache, so the UI command now fetches `@leanspec/ui` on demand and no longer fails when the package is missing locally.
+- **CLI `harnspec ui` pnpm flow** ([spec 87](https://harnspec.github.io/specs/87)) - Removed `pnpm dlx --prefer-offline` forcing offline cache, so the UI command now fetches `@harnspec/ui` on demand and no longer fails when the package is missing locally.
 - **Web filesystem relationship parsing** - UI development mode now respects the `SPECS_DIR` environment variable, so relationships and sub-spec counts resolve correctly when serving specs from an external workspace (fixes ENOENT errors when pointing the UI at another repo).
-- **Web sidebar scroll position drift** ([spec 101](https://harnspec.gitub.io/specs/101)) - Eliminated scroll position jumping during navigation
+- **Web sidebar scroll position drift** ([spec 101](https://harnspec.github.io/specs/101)) - Eliminated scroll position jumping during navigation
   - Fixed React 19 `useSyncExternalStore` infinite loop by stabilizing server snapshot references
   - Isolated scroll persistence to prevent global store re-renders on every scroll event
   - Implemented component-local scroll management with `useIsomorphicLayoutEffect` for flicker-free restoration
@@ -1015,7 +1015,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Sidebar shows sub-spec count (e.g., "+3") for specs with additional markdown files
   - Added `getSpecsWithSubSpecCount()` function for efficient sub-spec counting
   - Enhanced `SidebarSpec` type to include `subSpecsCount` field
-- **`@leanspec/ui` package build** - Fixed static asset bundling for npm distribution
+- **`@harnspec/ui` package build** - Fixed static asset bundling for npm distribution
   - Changed from symlinks to copying static assets into standalone build
   - Ensures Next.js static files and public assets are included in published package
   - Fixed 404 errors for `/_next/static/*` and `/public/*` assets
@@ -1025,13 +1025,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **`harnspec ui` command** ([spec 87](https://harnspec.gitub.io/specs/87)) - Launch web interface directly from CLI
+- **`harnspec ui` command** ([spec 87](https://harnspec.github.io/specs/87)) - Launch web interface directly from CLI
   - Monorepo mode: Auto-detects and runs local web package
   - Package manager auto-detection (pnpm/yarn/npm)
   - Port validation and configuration
   - Auto-opens browser with graceful shutdown
   - Support for both filesystem and database-backed modes
-- **Web App Performance Optimizations** ([spec 83](https://harnspec.gitub.io/specs/83)) - Dramatically improved navigation speed
+- **Web App Performance Optimizations** ([spec 83](https://harnspec.github.io/specs/83)) - Dramatically improved navigation speed
   - Hybrid rendering: Server-side initial load, client-side navigation
   - Navigation latency reduced from 600ms-1.2s to <100ms
   - API routes with aggressive caching and prefetching
@@ -1073,12 +1073,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Template Engine for AGENTS.md** ([spec 73](https://harnspec.gitub.io/specs/73)) - Dynamic template system for maintaining AGENTS.md with mechanical transformations
-- **Intelligent Search Engine** ([spec 75](https://harnspec.gitub.io/specs/75)) - Relevance-ranked search with TF-IDF scoring and content-based ranking
-- **Programmatic Spec Management** ([spec 59](https://harnspec.gitub.io/specs/59), Phase 1-2) - `analyze`, `split`, `compact` commands for automated spec restructuring
-- **Programmatic Spec Relationships** ([spec 76](https://harnspec.gitub.io/specs/76)) - CLI and MCP tools for managing `depends_on` and `related` fields
-- **Sub-spec Template System** ([spec 78](https://harnspec.gitub.io/specs/78)) - Documentation for creating and managing multi-file spec structures
-- **Archiving Strategy** ([spec 77](https://harnspec.gitub.io/specs/77)) - Documentation for proper spec archival workflows
+- **Template Engine for AGENTS.md** ([spec 73](https://harnspec.github.io/specs/73)) - Dynamic template system for maintaining AGENTS.md with mechanical transformations
+- **Intelligent Search Engine** ([spec 75](https://harnspec.github.io/specs/75)) - Relevance-ranked search with TF-IDF scoring and content-based ranking
+- **Programmatic Spec Management** ([spec 59](https://harnspec.github.io/specs/59), Phase 1-2) - `analyze`, `split`, `compact` commands for automated spec restructuring
+- **Programmatic Spec Relationships** ([spec 76](https://harnspec.github.io/specs/76)) - CLI and MCP tools for managing `depends_on` and `related` fields
+- **Sub-spec Template System** ([spec 78](https://harnspec.github.io/specs/78)) - Documentation for creating and managing multi-file spec structures
+- **Archiving Strategy** ([spec 77](https://harnspec.github.io/specs/77)) - Documentation for proper spec archival workflows
 
 ### Changed
 
@@ -1094,9 +1094,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### In Progress
 
-- [Spec 59](https://harnspec.gitub.io/specs/59) (Programmatic Management) - Phases 1-2 complete, remaining phases in progress
-- [Spec 72](https://harnspec.gitub.io/specs/72) (AI Agent First-Use Workflow) - Planning stage
-- [Spec 74](https://harnspec.gitub.io/specs/74) (Content at Creation) - Specification stage
+- [Spec 59](https://harnspec.github.io/specs/59) (Programmatic Management) - Phases 1-2 complete, remaining phases in progress
+- [Spec 72](https://harnspec.github.io/specs/72) (AI Agent First-Use Workflow) - Planning stage
+- [Spec 74](https://harnspec.github.io/specs/74) (Content at Creation) - Specification stage
 
 ## [0.2.1] - 2025-11-13
 
@@ -1105,7 +1105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Token counting commands (`harnspec tokens`) for LLM context management
 - Token-based validation thresholds replacing line-count metrics
 - Chinese (zh-Hans) translations for documentation site
-- UI/UX enhancements for LeanSpec Web including dark theme improvements
+- UI/UX enhancements for HarnSpec Web including dark theme improvements
 
 ### Fixed
 
@@ -1116,7 +1116,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Complexity validation now uses token-based thresholds ([spec 71](https://harnspec.gitub.io/specs/71))
+- Complexity validation now uses token-based thresholds ([spec 71](https://harnspec.github.io/specs/71))
 - Web package downgraded to Tailwind v3 for better compatibility
 - Enhanced spec detail pages with timeline and metadata display
 
@@ -1124,7 +1124,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 **🎉 Official Public Release - Production Ready**
 
-This is the official v0.2.0 release, treating v0.1.x as alpha versions. LeanSpec is now production-ready for teams and solo developers.
+This is the official v0.2.0 release, treating v0.1.x as alpha versions. HarnSpec is now production-ready for teams and solo developers.
 
 ### Highlights
 
@@ -1199,7 +1199,7 @@ This is the official v0.2.0 release, treating v0.1.x as alpha versions. LeanSpec
 
 ### Philosophy & Methodology
 
-This release operationalizes LeanSpec's five first principles:
+This release operationalizes HarnSpec's five first principles:
 
 1. **Context Economy** - Fit in working memory (<300 lines target, 400 max)
 2. **Signal-to-Noise Maximization** - Every word informs decisions
@@ -1297,7 +1297,7 @@ Built with dogfooding: 63 specs written, 28 archived, all following our own prin
 
 ### Philosophy
 
-This UAT release operationalizes LeanSpec's five first principles:
+This UAT release operationalizes HarnSpec's five first principles:
 
 1. **Context Economy** - Specs fit in working memory (<400 lines)
 2. **Signal-to-Noise** - Every word informs decisions
@@ -1307,23 +1307,23 @@ This UAT release operationalizes LeanSpec's five first principles:
 
 **Notable Completed Specs in this Release:**
 
-- [063](https://harnspec.gitub.io/specs/63): Migration from existing tools
-- [062](https://harnspec.gitub.io/specs/62): Documentation information architecture v2
-- [061](https://harnspec.gitub.io/specs/61): AI-assisted spec writing
-- [060](https://harnspec.gitub.io/specs/60): Core concepts coherence
-- [058](https://harnspec.gitub.io/specs/58): Docs overview polish
-- [057](https://harnspec.gitub.io/specs/57): Docs validation comprehensive
-- [056](https://harnspec.gitub.io/specs/56): Docs site accuracy audit
-- [055](https://harnspec.gitub.io/specs/55): README redesign (AI-first)
-- [054](https://harnspec.gitub.io/specs/54): Validate output (lint-style)
-- [052](https://harnspec.gitub.io/specs/52): Branding assets
-- [051](https://harnspec.gitub.io/specs/51): First principles documentation
-- [049](https://harnspec.gitub.io/specs/49): LeanSpec first principles foundation
-- [048](https://harnspec.gitub.io/specs/48): Spec complexity analysis
-- [047](https://harnspec.gitub.io/specs/47): Git backfill timestamps
-- [046](https://harnspec.gitub.io/specs/46): Stats dashboard refactor
-- [045](https://harnspec.gitub.io/specs/45): Unified dashboard
-- [044](https://harnspec.gitub.io/specs/44): Spec relationships clarity
+- [063](https://harnspec.github.io/specs/63): Migration from existing tools
+- [062](https://harnspec.github.io/specs/62): Documentation information architecture v2
+- [061](https://harnspec.github.io/specs/61): AI-assisted spec writing
+- [060](https://harnspec.github.io/specs/60): Core concepts coherence
+- [058](https://harnspec.github.io/specs/58): Docs overview polish
+- [057](https://harnspec.github.io/specs/57): Docs validation comprehensive
+- [056](https://harnspec.github.io/specs/56): Docs site accuracy audit
+- [055](https://harnspec.github.io/specs/55): README redesign (AI-first)
+- [054](https://harnspec.github.io/specs/54): Validate output (lint-style)
+- [052](https://harnspec.github.io/specs/52): Branding assets
+- [051](https://harnspec.github.io/specs/51): First principles documentation
+- [049](https://harnspec.github.io/specs/49): HarnSpec first principles foundation
+- [048](https://harnspec.github.io/specs/48): Spec complexity analysis
+- [047](https://harnspec.github.io/specs/47): Git backfill timestamps
+- [046](https://harnspec.github.io/specs/46): Stats dashboard refactor
+- [045](https://harnspec.github.io/specs/45): Unified dashboard
+- [044](https://harnspec.github.io/specs/44): Spec relationships clarity
 
 **Testing:**
 
@@ -1382,7 +1382,7 @@ This UAT release operationalizes LeanSpec's five first principles:
 
 ### Changed
 
-**BREAKING: `lspec validate` output format redesigned** ([spec 54](https://harnspec.gitub.io/specs/54))
+**BREAKING: `lspec validate` output format redesigned** ([spec 54](https://harnspec.github.io/specs/54))
 
 - Output now follows mainstream lint tool conventions (ESLint, TypeScript, Prettier)
 - File-centric grouping: All issues for a spec are shown together

@@ -3,16 +3,16 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 
 const API_PROXY_TARGET =
-  process.env.LEANSPEC_API_URL || process.env.VITE_API_URL || 'http://localhost:3000';
+  process.env.HARNSPEC_API_URL || process.env.VITE_API_URL || 'http://localhost:3000';
 
 /**
  * Swaps the favicon based on mode:
  * - Dev server (`pnpm dev`): uses dev favicons
- * - Dev build (`LEANSPEC_DEV_BUILD=true`): uses dev favicons for npm dev publish
+ * - Dev build (`HARNSPEC_DEV_BUILD=true`): uses dev favicons for npm dev publish
  * - Production build: uses standard favicons
  */
 function faviconPlugin(): Plugin {
-  const isDevBuild = process.env.LEANSPEC_DEV_BUILD === 'true';
+  const isDevBuild = process.env.HARNSPEC_DEV_BUILD === 'true';
 
   return {
     name: 'harnspec-favicon',
@@ -52,7 +52,7 @@ export default defineConfig({
   define: {
     // Make environment variables available
     __API_URL__: JSON.stringify(process.env.VITE_API_URL || ''),
-    // Flag for dev builds (local dev server or LEANSPEC_DEV_BUILD=true)
-    __DEV_BUILD__: JSON.stringify(process.env.LEANSPEC_DEV_BUILD === 'true'),
+    // Flag for dev builds (local dev server or HARNSPEC_DEV_BUILD=true)
+    __DEV_BUILD__: JSON.stringify(process.env.HARNSPEC_DEV_BUILD === 'true'),
   },
 })

@@ -132,7 +132,7 @@ async function validatePlatformBinaries(): Promise<boolean> {
       'mcp',
       'binaries',
       platform,
-      `leanspec-mcp${mcpExt}`
+      `harnspec-mcp${mcpExt}`
     );
     const mcpCheck = await checkBinary(mcpBinaryPath, platform);
     checks.push(mcpCheck);
@@ -152,7 +152,7 @@ async function validatePlatformBinaries(): Promise<boolean> {
       'http-server',
       'binaries',
       platform,
-      `leanspec-http${httpExt}`
+      `harnspec-http${httpExt}`
     );
     const httpCheck = await checkBinary(httpBinaryPath, platform);
     checks.push(httpCheck);

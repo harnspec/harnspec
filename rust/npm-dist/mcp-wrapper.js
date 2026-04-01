@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * LeanSpec MCP Server Binary Wrapper
+ * HarnSpec MCP Server Binary Wrapper
  * 
  * This script detects the current platform and architecture,
  * then spawns the appropriate Rust MCP binary.
@@ -37,7 +37,7 @@ function getBinaryName() {
   }
   
   const ext = platform === 'win32' ? '.exe' : '';
-  return `leanspec-mcp-${os}-${cpu}${ext}`;
+  return `harnspec-mcp-${os}-${cpu}${ext}`;
 }
 
 // Find the binary
@@ -45,7 +45,7 @@ function findBinary() {
   const binaryName = getBinaryName();
   
   // Try platform-specific package first
-  const platformPkg = `@leanspec/${platform}-${arch}`;
+  const platformPkg = `@harnspec/${platform}-${arch}`;
   try {
     const pkgPath = require.resolve(`${platformPkg}/bin/${binaryName}`);
     return pkgPath;
@@ -60,7 +60,7 @@ function findBinary() {
   }
   
   throw new Error(
-    `Could not find LeanSpec MCP binary for ${platform}-${arch}.\n` +
+    `Could not find HarnSpec MCP binary for ${platform}-${arch}.\n` +
     `Please ensure the platform-specific package is installed:\n` +
     `  npm install ${platformPkg}`
   );
@@ -75,12 +75,12 @@ try {
     stdio: 'inherit',
     env: {
       ...process.env,
-      LEANSPEC_SPECS_DIR: process.env.LEANSPEC_SPECS_DIR || 'specs'
+      HARNSPEC_SPECS_DIR: process.env.HARNSPEC_SPECS_DIR || 'specs'
     }
   });
   
   child.on('error', (err) => {
-    console.error(`Failed to start LeanSpec MCP: ${err.message}`);
+    console.error(`Failed to start HarnSpec MCP: ${err.message}`);
     process.exit(1);
   });
   

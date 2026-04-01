@@ -1,17 +1,17 @@
 {
-  "name": "@leanspec/http-server",
+  "name": "@harnspec/http-server",
   "version": "0.2.28",
-  "description": "Rust HTTP server for LeanSpec UI",
+  "description": "Rust HTTP server for HarnSpec UI",
   "type": "module",
   "bin": {
-    "leanspec-http": "./bin/leanspec-http.js"
+    "harnspec-http": "./bin/harnspec-http.js"
   },
   "scripts": {
-    "dev": "RUST_BACKTRACE=1 LEANSPEC_DEBUG=1 LEANSPEC_DEV_MODE=1 nodemon --watch ./binaries --ignore '*.js' --ignore '*.json' --delay 1 --exec 'node ./bin/leanspec-http.js -v --no-open'",
+    "dev": "RUST_BACKTRACE=1 HARNSPEC_DEBUG=1 HARNSPEC_DEV_MODE=1 nodemon --watch ./binaries --ignore '*.js' --ignore '*.json' --delay 1 --exec 'node ./bin/harnspec-http.js -v --no-open'",
     "typecheck": "echo 'No TypeScript source to check'"
   },
   "keywords": [
-    "leanspec",
+    "harnspec",
     "http",
     "server",
     "api",

@@ -1,6 +1,6 @@
-# Contributing to LeanSpec
+# Contributing to HarnSpec
 
-Thanks for your interest in contributing! LeanSpec is about keeping things lean, so our contribution process is too.
+Thanks for your interest in contributing! HarnSpec is about keeping things lean, so our contribution process is too.
 
 ## Quick Start
 
@@ -33,7 +33,7 @@ pnpm typecheck    # Type check all packages (with caching)
 
 ## Running the Web UI
 
-LeanSpec uses a unified HTTP server architecture where the Rust server serves both the API and UI on a single port (3000).
+HarnSpec uses a unified HTTP server architecture where the Rust server serves both the API and UI on a single port (3000).
 
 ### Development Mode
 
@@ -41,7 +41,7 @@ LeanSpec uses a unified HTTP server architecture where the Rust server serves bo
 
 ```bash
 # Terminal 1: Start Rust HTTP server (API on port 3000)
-cd rust/leanspec-http
+cd rust/harnspec-http
 cargo run
 
 # Terminal 2: Start Vite dev server (UI on port 5173 with HMR)
@@ -59,7 +59,7 @@ cd packages/ui
 pnpm build
 
 # Run unified server (serves both UI and API on port 3000)
-cd rust/leanspec-http
+cd rust/harnspec-http
 cargo run
 ```
 
@@ -67,15 +67,15 @@ Visit `http://localhost:3000` to see the UI served directly by Rust.
 
 ### Production Mode
 
-In production, `npx @leanspec/ui` starts a single Rust HTTP server that serves both the built UI (static files) and API endpoints on port 3000:
+In production, `npx @harnspec/ui` starts a single Rust HTTP server that serves both the built UI (static files) and API endpoints on port 3000:
 
 ```bash
-npx @leanspec/ui
+npx @harnspec/ui
 # or
-npx @leanspec/ui --port 3001 --no-open
+npx @harnspec/ui --port 3001 --no-open
 ```
 
-All CLI arguments are passed through to the Rust server. See `leanspec-http --help` for all options.
+All CLI arguments are passed through to the Rust server. See `harnspec-http --help` for all options.
 
 ## Version Management
 
@@ -84,8 +84,8 @@ All packages in the monorepo maintain synchronized versions automatically. The r
 **Packages:**
 
 - `harnspec` (CLI package - wrapper for Rust binary)
-- `@leanspec/ui` (web UI package)
-- `@leanspec/mcp` (MCP server wrapper)
+- `@harnspec/ui` (web UI package)
+- `@harnspec/mcp` (MCP server wrapper)
 - Desktop app repository: <https://github.com/codervisor/harnspec-desktop>
 
 ### Automated Version Sync
@@ -113,7 +113,7 @@ The script:
 
 1. Update version in **root `package.json` only**
 2. Run `pnpm sync-versions` (or it runs automatically with `pre-release`)
-3. Update cross-package dependencies if needed (e.g., `@leanspec/mcp` → `harnspec`)
+3. Update cross-package dependencies if needed (e.g., `@harnspec/mcp` → `harnspec`)
 4. Run `pnpm build` to verify all packages build successfully
 5. Run `pnpm pre-release` to run full validation suite
    - Includes: sync-versions, typecheck, tests, build, and validate with `--warnings-only`
@@ -189,8 +189,8 @@ This project uses [Turborepo](https://turbo.build/) to manage the monorepo with 
 **Packages:**
 
 - `packages/cli` - CLI wrapper for Rust binary (published as `harnspec`)
-- `packages/mcp` - MCP server wrapper (published as `@leanspec/mcp`)
-- `packages/ui` - Web UI bundle (published as `@leanspec/ui`)
+- `packages/mcp` - MCP server wrapper (published as `@harnspec/mcp`)
+- `packages/ui` - Web UI bundle (published as `@harnspec/ui`)
 - Desktop app repository: <https://github.com/codervisor/harnspec-desktop>
 - `docs-site/` - Git subtree merged from `codervisor/harnspec-docs` (Docusaurus)
 
@@ -204,7 +204,7 @@ This project uses [Turborepo](https://turbo.build/) to manage the monorepo with 
 
 ```bash
 turbo run build --filter=harnspec
-turbo run build --filter=@leanspec/ui
+turbo run build --filter=@harnspec/ui
 ```
 
 **Rust Development:**
@@ -225,7 +225,7 @@ When building for production/publishing, the UI must be built **before** Rust bi
 
 ```bash
 # 1. Build UI first
-pnpm --filter @leanspec/ui build
+pnpm --filter @harnspec/ui build
 
 # 2. Build Rust (HTTP server will include UI dist)
 cd rust && cargo build --release
@@ -276,13 +276,13 @@ E2E tests use helpers from `e2e-helpers.ts` to:
 
 ## Rust -> TypeScript Type Bindings
 
-LeanSpec exports selected Rust types into `packages/ui/src/types/generated/`.
+HarnSpec exports selected Rust types into `packages/ui/src/types/generated/`.
 
 When you change exported Rust API structs, regenerate bindings:
 
 ```bash
 cd rust
-cargo test export_bindings -p leanspec-http
+cargo test export_bindings -p harnspec-http
 ```
 
 Then verify generated files are committed:
@@ -341,7 +341,7 @@ Run `pnpm format` before committing.
 
 ## Philosophy
 
-Keep changes aligned with LeanSpec first principles (see [specs/049-leanspec-first-principles](specs/049-leanspec-first-principles)):
+Keep changes aligned with HarnSpec first principles (see [specs/049-harnspec-first-principles](specs/049-harnspec-first-principles)):
 
 1. **Context Economy** - Specs must fit in working memory (<400 lines)
 2. **Signal-to-Noise Maximization** - Every word informs decisions

@@ -43,7 +43,7 @@ export const useLayoutStore = create<LayoutState>()(
       toggleSettingsSidebar: () => set((state) => ({ settingsSidebarCollapsed: !state.settingsSidebarCollapsed })),
     }),
     {
-      name: 'leanspec:layout',
+      name: 'harnspec:layout',
       partialize: (state) => ({
         isWideMode: state.isWideMode,
         mainSidebarCollapsed: state.mainSidebarCollapsed,

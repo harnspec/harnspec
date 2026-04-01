@@ -43,25 +43,25 @@ function writePackageJson(pkgPath: string, pkg: PackageJson): void {
 function resolveWorkspaceVersion(depName: string): string | null {
   // Map package names to their paths in the monorepo
   const pkgMap: Record<string, string> = {
-    '@leanspec/http-server': 'packages/http-server/package.json',
-    '@leanspec/ui': 'packages/ui/package.json',
-    '@leanspec/mcp': 'packages/mcp/package.json',
+    '@harnspec/http-server': 'packages/http-server/package.json',
+    '@harnspec/ui': 'packages/ui/package.json',
+    '@harnspec/mcp': 'packages/mcp/package.json',
     'harnspec': 'packages/cli/package.json',
     // CLI platform packages
-    '@leanspec/cli-darwin-x64': 'packages/cli/binaries/darwin-x64/package.json',
-    '@leanspec/cli-darwin-arm64': 'packages/cli/binaries/darwin-arm64/package.json',
-    '@leanspec/cli-linux-x64': 'packages/cli/binaries/linux-x64/package.json',
-    '@leanspec/cli-windows-x64': 'packages/cli/binaries/windows-x64/package.json',
+    '@harnspec/cli-darwin-x64': 'packages/cli/binaries/darwin-x64/package.json',
+    '@harnspec/cli-darwin-arm64': 'packages/cli/binaries/darwin-arm64/package.json',
+    '@harnspec/cli-linux-x64': 'packages/cli/binaries/linux-x64/package.json',
+    '@harnspec/cli-windows-x64': 'packages/cli/binaries/windows-x64/package.json',
     // MCP platform packages
-    '@leanspec/mcp-darwin-x64': 'packages/mcp/binaries/darwin-x64/package.json',
-    '@leanspec/mcp-darwin-arm64': 'packages/mcp/binaries/darwin-arm64/package.json',
-    '@leanspec/mcp-linux-x64': 'packages/mcp/binaries/linux-x64/package.json',
-    '@leanspec/mcp-windows-x64': 'packages/mcp/binaries/windows-x64/package.json',
+    '@harnspec/mcp-darwin-x64': 'packages/mcp/binaries/darwin-x64/package.json',
+    '@harnspec/mcp-darwin-arm64': 'packages/mcp/binaries/darwin-arm64/package.json',
+    '@harnspec/mcp-linux-x64': 'packages/mcp/binaries/linux-x64/package.json',
+    '@harnspec/mcp-windows-x64': 'packages/mcp/binaries/windows-x64/package.json',
     // HTTP server platform packages
-    '@leanspec/http-darwin-x64': 'packages/http-server/binaries/darwin-x64/package.json',
-    '@leanspec/http-darwin-arm64': 'packages/http-server/binaries/darwin-arm64/package.json',
-    '@leanspec/http-linux-x64': 'packages/http-server/binaries/linux-x64/package.json',
-    '@leanspec/http-windows-x64': 'packages/http-server/binaries/windows-x64/package.json',
+    '@harnspec/http-darwin-x64': 'packages/http-server/binaries/darwin-x64/package.json',
+    '@harnspec/http-darwin-arm64': 'packages/http-server/binaries/darwin-arm64/package.json',
+    '@harnspec/http-linux-x64': 'packages/http-server/binaries/linux-x64/package.json',
+    '@harnspec/http-windows-x64': 'packages/http-server/binaries/windows-x64/package.json',
   };
 
   const pkgPath = pkgMap[depName];

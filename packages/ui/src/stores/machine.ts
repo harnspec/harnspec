@@ -16,7 +16,7 @@ interface MachineState {
   isMachineAvailable: () => boolean;
 }
 
-const STORAGE_KEY = 'leanspec-current-machine';
+const STORAGE_KEY = 'harnspec-current-machine';
 
 export const useMachineStore = create<MachineState>((set, get) => ({
   machines: [],

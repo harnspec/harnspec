@@ -1,7 +1,7 @@
 /**
  * TanStack Query Client Configuration - PoC
  *
- * Centralized query client with sensible defaults for LeanSpec UI.
+ * Centralized query client with sensible defaults for HarnSpec UI.
  */
 import { QueryClient } from '@tanstack/react-query';
 

@@ -16,12 +16,12 @@ export const useSessionsSidebarStore = create<SessionsSidebarState>()(
       toggleCollapsed: () => set((state) => ({ collapsed: !state.collapsed })),
     }),
     {
-      name: 'leanspec:ui:sessionsSidebarCollapsed',
+      name: 'harnspec:ui:sessionsSidebarCollapsed',
       storage: createJSONStorage(() => createProjectScopedStorage()),
     }
   )
 );
 
 if (typeof window !== 'undefined') {
-  migrateToProjectScoped('leanspec:ui:sessionsSidebarCollapsed');
+  migrateToProjectScoped('harnspec:ui:sessionsSidebarCollapsed');
 }

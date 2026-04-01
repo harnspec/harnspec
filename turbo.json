@@ -23,7 +23,7 @@
       "cache": false,
       "persistent": true,
       "passThroughEnv": [
-        "LEANSPEC_API_URL",
+        "HARNSPEC_API_URL",
         "VITE_API_URL",
         "OPENAI_API_KEY",
         "ANTHROPIC_API_KEY",
@@ -54,7 +54,7 @@
       "cache": false,
       "persistent": true,
       "passThroughEnv": [
-        "LEANSPEC_API_URL",
+        "HARNSPEC_API_URL",
         "VITE_API_URL",
         "OPENAI_API_KEY",
         "ANTHROPIC_API_KEY",

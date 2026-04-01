@@ -1,17 +1,17 @@
 [workspace]
 exclude = [
-  "leanspec-sync-bridge", # deprecated
-  "leanspec-mcp",         # deprecated
+  "harnspec-sync-bridge", # deprecated
+  "harnspec-mcp",         # deprecated
 ]
 members = [
-  "leanspec-core",
-  "leanspec-cli",
-  "leanspec-http",
+  "harnspec-core",
+  "harnspec-cli",
+  "harnspec-http",
 ]
 resolver = "2"
 
 [workspace.package]
-authors = ["LeanSpec Contributors"]
+authors = ["HarnSpec Contributors"]
 description = "Lightweight spec methodology for AI-powered development"
 edition = "2021"
 homepage = "https://harnspec.dev"

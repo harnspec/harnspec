@@ -6,7 +6,7 @@ import { ChatApi } from './chat-api';
 import { useChatMessages, chatKeys } from '../hooks/useChatQuery';
 import { useQueryClient } from '@tanstack/react-query';
 
-interface UseLeanSpecChatOptions {
+interface UseHarnSpecChatOptions {
   /** Provider ID (e.g., 'openai', 'anthropic') */
   providerId?: string;
   /** Model ID (e.g., 'gpt-4o', 'claude-sonnet-4-5') */
@@ -15,7 +15,7 @@ interface UseLeanSpecChatOptions {
   threadId?: string;
 }
 
-export function useLeanSpecChat(options: UseLeanSpecChatOptions = {}) {
+export function useHarnSpecChat(options: UseHarnSpecChatOptions = {}) {
   const { currentProject } = useCurrentProject();
   const messagesRef = useRef<UIMessage[]>([]);
   const [initialMessages, setInitialMessages] = useState<UIMessage[]>([]);
@@ -91,7 +91,7 @@ export function useLeanSpecChat(options: UseLeanSpecChatOptions = {}) {
       }
     },
     onError: (error) => {
-      console.error('[LeanSpec Chat] Error:', error);
+      console.error('[HarnSpec Chat] Error:', error);
     },
   });
 
@@ -116,7 +116,7 @@ export function useLeanSpecChat(options: UseLeanSpecChatOptions = {}) {
         providerId: options.providerId,
         modelId: options.modelId,
       }).catch((error) => {
-        console.warn('[LeanSpec Chat] Failed to clear messages:', error);
+        console.warn('[HarnSpec Chat] Failed to clear messages:', error);
       });
     }
   }, [chatHook, options.modelId, options.providerId, options.threadId]);

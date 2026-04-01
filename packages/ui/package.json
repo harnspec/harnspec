@@ -1,10 +1,10 @@
 {
-  "name": "@leanspec/ui",
+  "name": "@harnspec/ui",
   "version": "0.2.28",
-  "description": "LeanSpec web UI launcher for visual spec management (Vite SPA)",
+  "description": "HarnSpec web UI launcher for visual spec management (Vite SPA)",
   "type": "module",
   "bin": {
-    "leanspec-ui": "./bin/leanspec-ui.js"
+    "harnspec-ui": "./bin/harnspec-ui.js"
   },
   "files": [
     "bin/",
@@ -34,7 +34,7 @@
     "@ai-sdk/react": "^3.0.41",
     "@dagrejs/dagre": "^1.1.8",
     "@exuanbo/file-icons-js": "^3.3.0",
-    "@leanspec/http-server": "workspace:*",
+    "@harnspec/http-server": "workspace:*",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-collapsible": "^1.1.12",
@@ -130,7 +130,7 @@
     "vitest": "^4.0.18"
   },
   "keywords": [
-    "leanspec",
+    "harnspec",
     "spec",
     "documentation",
     "ui",

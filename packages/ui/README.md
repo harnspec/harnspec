@@ -1,12 +1,12 @@
-# @leanspec/ui
+# @harnspec/ui
 
-Primary Vite-based Single Page Application for LeanSpec spec management (web + desktop).
+Primary Vite-based Single Page Application for HarnSpec spec management (web + desktop).
 
 ## Overview
 
-This is a lightweight, fast SPA built with Vite. It provides a modern UI for viewing and managing LeanSpec specifications.
+This is a lightweight, fast SPA built with Vite. It provides a modern UI for viewing and managing HarnSpec specifications.
 
-**Unified Server Architecture**: The UI is served by the Rust HTTP server on port 3000. When you run `npx @leanspec/ui`, it starts a single process that serves both the static UI files and the API endpoints. This provides:
+**Unified Server Architecture**: The UI is served by the Rust HTTP server on port 3000. When you run `npx @harnspec/ui`, it starts a single process that serves both the static UI files and the API endpoints. This provides:
 - Single port (default: 3000)
 - Same-origin API requests (no CORS needed)
 - Better performance (no Node.js HTTP server overhead)
@@ -16,19 +16,19 @@ This is a lightweight, fast SPA built with Vite. It provides a modern UI for vie
 
 ```bash
 # Start the unified HTTP server
-npx @leanspec/ui
+npx @harnspec/ui
 
 # Custom port and host
-npx @leanspec/ui --port 3001 --host 0.0.0.0
+npx @harnspec/ui --port 3001 --host 0.0.0.0
 
 # Auto-add project
-npx @leanspec/ui --project /path/to/specs
+npx @harnspec/ui --project /path/to/specs
 
 # Read-only mode
-npx @leanspec/ui --readonly
+npx @harnspec/ui --readonly
 
 # All CLI arguments are passed to the Rust HTTP server
-npx @leanspec/ui --help
+npx @harnspec/ui --help
 ```
 
 Visit `http://localhost:3000` to access the UI.
@@ -38,7 +38,7 @@ Visit `http://localhost:3000` to access the UI.
 - **Build Tool**: Vite 7 (fast HMR, optimized builds)
 - **Framework**: React 19 + TypeScript 5
 - **Routing**: React Router 7 (client-side)
-- **Components**: Shared UI library exported from `@leanspec/ui`
+- **Components**: Shared UI library exported from `@harnspec/ui`
 - **Styling**: Tailwind CSS 3
 - **Backend**: Same-origin API served by the Rust HTTP server at `http://localhost:3000`
 
@@ -59,7 +59,7 @@ For fast UI development with Hot Module Replacement:
 
 ```bash
 # Terminal 1: Start Rust HTTP server (API on port 3000)
-cd rust/leanspec-http
+cd rust/harnspec-http
 cargo run
 
 # Terminal 2: Start Vite dev server (UI on port 5173)
@@ -78,7 +78,7 @@ To test the unified server locally:
 pnpm build
 
 # Start unified server (serves UI + API on port 3000)
-cd ../../rust/leanspec-http
+cd ../../rust/harnspec-http
 cargo run
 ```
 
@@ -109,7 +109,7 @@ If you need to change where the dev proxy points, use a server-only env var:
 
 ```bash
 # .env.local (used by Vite dev server only)
-LEANSPEC_API_URL=http://localhost:3000
+HARNSPEC_API_URL=http://localhost:3000
 ```
 
 With this setup the browser still talks to a single origin (the Vite origin) because all API calls are made to `/api`.

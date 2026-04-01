@@ -50,7 +50,7 @@ npm start
 
 Refactor the HTTP logic into a clean, reusable API client. Follow the tutorial and ask your AI assistant:
 
-> "Help me refactor this app using LeanSpec. I want to extract a reusable API client module that centralizes all the HTTP logic."
+> "Help me refactor this app using HarnSpec. I want to extract a reusable API client module that centralizes all the HTTP logic."
 
 The AI will guide you through:
 

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# stop-leanspec-processes.sh
-# Stops all running harnspec and leanspec-mcp processes
+# stop-harnspec-processes.sh
+# Stops all running harnspec and harnspec-mcp processes
 # Useful before rebuilding or when processes are stuck
 
 echo "🔍 Looking for harnspec processes..."
 
 # Find all harnspec related processes (excluding this script and grep)
-PIDS=$(ps aux | grep -E "harnspec|leanspec-mcp" | grep -v grep | grep -v "stop-leanspec-processes" | awk '{print $2}')
+PIDS=$(ps aux | grep -E "harnspec|harnspec-mcp" | grep -v grep | grep -v "stop-harnspec-processes" | awk '{print $2}')
 
 if [ -z "$PIDS" ]; then
   echo "✅ No harnspec processes found"
@@ -14,7 +14,7 @@ if [ -z "$PIDS" ]; then
 fi
 
 echo "🛑 Found processes to stop:"
-ps aux | grep -E "harnspec|leanspec-mcp" | grep -v grep | grep -v "stop-leanspec-processes"
+ps aux | grep -E "harnspec|harnspec-mcp" | grep -v grep | grep -v "stop-harnspec-processes"
 echo ""
 
 for PID in $PIDS; do
@@ -26,7 +26,7 @@ done
 sleep 1
 
 # Check if any survived
-REMAINING=$(ps aux | grep -E "harnspec|leanspec-mcp" | grep -v grep | grep -v "stop-leanspec-processes" | wc -l)
+REMAINING=$(ps aux | grep -E "harnspec|harnspec-mcp" | grep -v grep | grep -v "stop-harnspec-processes" | wc -l)
 
 if [ "$REMAINING" -gt 0 ]; then
   echo "⚠️  Some processes didn't stop, force killing..."

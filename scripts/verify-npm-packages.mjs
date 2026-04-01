@@ -31,18 +31,18 @@ const PLATFORMS = [
 const PACKAGES = {
   'harnspec': {
     main: 'harnspec',
-    platformPrefix: '@leanspec/cli',
+    platformPrefix: '@harnspec/cli',
     binary: 'harnspec'
   },
-  '@leanspec/mcp': {
-    main: '@leanspec/mcp',
-    platformPrefix: '@leanspec/mcp',
-    binary: 'leanspec-mcp'
+  '@harnspec/mcp': {
+    main: '@harnspec/mcp',
+    platformPrefix: '@harnspec/mcp',
+    binary: 'harnspec-mcp'
   },
-  '@leanspec/http-server': {
-    main: '@leanspec/http-server',
-    platformPrefix: '@leanspec/http',
-    binary: 'leanspec-http'
+  '@harnspec/http-server': {
+    main: '@harnspec/http-server',
+    platformPrefix: '@harnspec/http',
+    binary: 'harnspec-http'
   }
 };
 

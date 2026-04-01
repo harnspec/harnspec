@@ -45,7 +45,7 @@ npm run dev
 
 Add three new widgets to the dashboard. Follow the tutorial and ask your AI assistant:
 
-> "Help me add three new widgets to this dashboard using LeanSpec: Recent Activity Feed, Performance Metrics, and Quick Actions Panel."
+> "Help me add three new widgets to this dashboard using HarnSpec: Recent Activity Feed, Performance Metrics, and Quick Actions Panel."
 
 The AI will guide you through:
 

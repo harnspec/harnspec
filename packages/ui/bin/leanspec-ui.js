@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * LeanSpec UI Launcher
+ * HarnSpec UI Launcher
  *
  * This script starts the Rust HTTP server and serves the embedded UI
  * from the same process and port.
@@ -23,18 +23,18 @@ if (!existsSync(DIST_DIR)) {
   console.error('Error: UI build not found!');
   console.error('Expected directory:', DIST_DIR);
   console.error('');
-  console.error('The @leanspec/ui package must be built before running.');
+  console.error('The @harnspec/ui package must be built before running.');
   console.error('This is typically done during the npm publish process.');
   process.exit(1);
 }
 
 /**
- * Try to resolve @leanspec/http-server from multiple locations
+ * Try to resolve @harnspec/http-server from multiple locations
  */
 function resolveHttpServer() {
   // Try local resolution first
   try {
-    return require.resolve('@leanspec/http-server/bin/leanspec-http.js');
+    return require.resolve('@harnspec/http-server/bin/harnspec-http.js');
   } catch {
     // Continue to try other locations
   }
@@ -48,10 +48,10 @@ function resolveHttpServer() {
     if (npmRoot.status === 0 && npmRoot.stdout) {
       const globalPath = join(
         npmRoot.stdout.trim(), 
-        '@leanspec', 
+        '@harnspec', 
         'http-server', 
         'bin', 
-        'leanspec-http.js'
+        'harnspec-http.js'
       );
       if (existsSync(globalPath)) {
         return globalPath;
@@ -65,20 +65,20 @@ function resolveHttpServer() {
 }
 
 /**
- * Auto-install @leanspec/http-server globally using npm
+ * Auto-install @harnspec/http-server globally using npm
  */
 function installHttpServer() {
-  console.log('📦 @leanspec/http-server not found, installing globally...');
+  console.log('📦 @harnspec/http-server not found, installing globally...');
   console.log('');
   
-  // Get the version of @leanspec/ui to match
+  // Get the version of @harnspec/ui to match
   const uiPkg = JSON.parse(
     require('fs').readFileSync(join(__dirname, '..', 'package.json'), 'utf8')
   );
   const version = uiPkg.version;
   const packageSpec = version.includes('dev') 
-    ? '@leanspec/http-server@dev' 
-    : `@leanspec/http-server@^${version}`;
+    ? '@harnspec/http-server@dev' 
+    : `@harnspec/http-server@^${version}`;
   
   // Install globally so it persists across npx runs
   const result = spawnSync('npm', ['install', '-g', packageSpec], {
@@ -88,15 +88,15 @@ function installHttpServer() {
   
   if (result.status !== 0) {
     console.error('');
-    console.error('Failed to auto-install @leanspec/http-server');
+    console.error('Failed to auto-install @harnspec/http-server');
     console.error('');
     console.error('Please install manually:');
-    console.error('  npm install -g @leanspec/http-server');
+    console.error('  npm install -g @harnspec/http-server');
     process.exit(1);
   }
   
   console.log('');
-  console.log('✅ @leanspec/http-server installed globally');
+  console.log('✅ @harnspec/http-server installed globally');
   console.log('');
 }
 
@@ -107,8 +107,8 @@ if (!httpServerPath) {
   httpServerPath = resolveHttpServer();
   
   if (!httpServerPath) {
-    console.error('Error: Failed to resolve @leanspec/http-server after installation');
-    console.error('Please try installing manually: npm install -g @leanspec/http-server');
+    console.error('Error: Failed to resolve @harnspec/http-server after installation');
+    console.error('Please try installing manually: npm install -g @harnspec/http-server');
     process.exit(1);
   }
 }
@@ -116,24 +116,24 @@ if (!httpServerPath) {
 // Start the Rust HTTP server (serves API + UI)
 let httpServerProcess;
 
-console.log('🚀 Starting LeanSpec HTTP server...');
+console.log('🚀 Starting HarnSpec HTTP server...');
 const args = process.argv.slice(2);
 
 // Validate httpServerPath before spawning
 if (!httpServerPath || !existsSync(httpServerPath)) {
   console.error('Error: HTTP server script not found at:', httpServerPath);
   console.error('');
-  console.error('This usually means @leanspec/http-server was not installed correctly.');
+  console.error('This usually means @harnspec/http-server was not installed correctly.');
   console.error('');
   console.error('Try reinstalling:');
-  console.error('  npm install -g @leanspec/http-server@latest');
+  console.error('  npm install -g @harnspec/http-server@latest');
   process.exit(1);
 }
 
 // Use process.execPath to ensure Node.js is found correctly on all platforms
 httpServerProcess = spawn(process.execPath, [httpServerPath, ...args], {
   stdio: 'inherit',
-  env: { ...process.env, LEANSPEC_UI_DIST: DIST_DIR }
+  env: { ...process.env, HARNSPEC_UI_DIST: DIST_DIR }
 });
 
 httpServerProcess.on('error', (err) => {
@@ -143,7 +143,7 @@ httpServerProcess.on('error', (err) => {
   console.error('Error code:', err.code);
   console.error('');
   console.error('Try reinstalling:');
-  console.error('  npm install -g @leanspec/http-server@latest');
+  console.error('  npm install -g @harnspec/http-server@latest');
   process.exit(1);
 });
 

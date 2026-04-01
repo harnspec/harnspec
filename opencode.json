@@ -1,11 +1,11 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
-    "leanspec": {
+    "harnspec": {
       "type": "local",
       "command": [
         "npx",
-        "@leanspec/mcp"
+        "@harnspec/mcp"
       ]
     }
   }

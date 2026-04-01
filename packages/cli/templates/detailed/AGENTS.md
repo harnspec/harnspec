@@ -10,7 +10,7 @@
 2. **Search for related work** → Use `search` tool before creating new specs
 3. **Never create files manually** → Always use `create` tool for new specs
 
-> **Why?** Skipping discovery creates duplicate work. Manual file creation breaks LeanSpec tooling.
+> **Why?** Skipping discovery creates duplicate work. Manual file creation breaks HarnSpec tooling.
 
 ## 🔧 Managing Specs
 
@@ -115,4 +115,4 @@ Validation checks:
 
 ---
 
-**Remember:** LeanSpec tracks what you're building. Keep specs in sync with your work!
+**Remember:** HarnSpec tracks what you're building. Keep specs in sync with your work!

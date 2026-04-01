@@ -118,7 +118,7 @@ jobs:
 
       - name: Export TypeScript bindings
         working-directory: rust
-        run: cargo test export_bindings -p leanspec-http
+        run: cargo test export_bindings -p harnspec-http
 
       - name: Verify generated TypeScript bindings are committed
         run: git diff --exit-code -- packages/ui/src/types/generated

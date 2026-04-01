@@ -26,7 +26,7 @@ export const useSessionCreatePreferencesStore = create<SessionCreatePreferencesS
       getModelForRunner: (runnerId) => get().modelByRunner[runnerId],
     }),
     {
-      name: 'leanspec:session-create:preferences',
+      name: 'harnspec:session-create:preferences',
       partialize: (state) => ({
         modelByRunner: state.modelByRunner,
       }),

@@ -5,8 +5,8 @@
  * This script ensures all Rust packages use the same version as the root package.json. It updates:
  * - Rust workspace version in rust/Cargo.toml
  * - CLI platform packages (harnspec-darwin-x64, etc.)
- * - MCP platform packages (@leanspec/mcp-darwin-x64, etc.)
- * - HTTP server platform packages (@leanspec/http-darwin-x64, etc.)
+ * - MCP platform packages (@harnspec/mcp-darwin-x64, etc.)
+ * - HTTP server platform packages (@harnspec/http-darwin-x64, etc.)
  * 
  * Usage:
  *   pnpm sync-versions:rust [--dry-run]
@@ -54,25 +54,25 @@ const PACKAGE_FAMILIES: PackageFamily[] = [
     key: 'cli',
     label: 'CLI',
     packageDir: path.join(PACKAGES_DIR, 'cli', 'binaries'),
-    packagePrefix: '@leanspec/cli',
+    packagePrefix: '@harnspec/cli',
     binaryName: 'harnspec',
-    description: 'LeanSpec CLI binary'
+    description: 'HarnSpec CLI binary'
   },
   {
     key: 'mcp',
     label: 'MCP',
     packageDir: path.join(PACKAGES_DIR, 'mcp', 'binaries'),
-    packagePrefix: '@leanspec/mcp',
-    binaryName: 'leanspec-mcp',
-    description: 'LeanSpec MCP server binary'
+    packagePrefix: '@harnspec/mcp',
+    binaryName: 'harnspec-mcp',
+    description: 'HarnSpec MCP server binary'
   },
   {
     key: 'http',
     label: 'HTTP',
     packageDir: path.join(PACKAGES_DIR, 'http-server', 'binaries'),
-    packagePrefix: '@leanspec/http',
-    binaryName: 'leanspec-http',
-    description: 'LeanSpec HTTP server binary'
+    packagePrefix: '@harnspec/http',
+    binaryName: 'harnspec-http',
+    description: 'HarnSpec HTTP server binary'
   }
 ];
 

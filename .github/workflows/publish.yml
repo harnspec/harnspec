@@ -35,9 +35,9 @@ jobs:
         run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Build UI
-        run: pnpm --filter @leanspec/ui build
+        run: pnpm --filter @harnspec/ui build
         env:
-          LEANSPEC_DEV_BUILD: ${{ github.event_name == 'workflow_dispatch' && inputs.dev == true && 'true' || 'false' }}
+          HARNSPEC_DEV_BUILD: ${{ github.event_name == 'workflow_dispatch' && inputs.dev == true && 'true' || 'false' }}
 
       - name: Upload UI dist artifact
         uses: actions/upload-artifact@v4
@@ -93,15 +93,15 @@ jobs:
       - name: Sync Rust workspace version
         shell: bash
         env:
-          LEANSPEC_VERSION: ${{ steps.version.outputs.version }}
+          HARNSPEC_VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
           node <<'NODE'
           const fs = require('fs');
 
-          const version = process.env.LEANSPEC_VERSION;
+          const version = process.env.HARNSPEC_VERSION;
           if (!version) {
-            console.error('Missing LEANSPEC_VERSION');
+            console.error('Missing HARNSPEC_VERSION');
             process.exit(1);
           }
 
@@ -132,24 +132,24 @@ jobs:
 
       - name: Build CLI binary
         working-directory: rust
-        run: cargo build --release --target ${{ matrix.target }} --package leanspec-cli
+        run: cargo build --release --target ${{ matrix.target }} --package harnspec-cli
 
       - name: Build MCP binary
         working-directory: rust
-        run: cargo build --release --target ${{ matrix.target }} --package leanspec-mcp
+        run: cargo build --release --target ${{ matrix.target }} --package harnspec-mcp
 
       - name: Build HTTP server binary
         working-directory: rust
-        run: cargo build --release --target ${{ matrix.target }} --package leanspec-http
+        run: cargo build --release --target ${{ matrix.target }} --package harnspec-http
 
       - name: Verify HTTP server binary version
         shell: bash
         env:
-          LEANSPEC_VERSION: ${{ steps.version.outputs.version }}
+          HARNSPEC_VERSION: ${{ steps.version.outputs.version }}
         run: |
           set -euo pipefail
-          expected="$LEANSPEC_VERSION"
-          bin="rust/target/${{ matrix.target }}/release/leanspec-http"
+          expected="$HARNSPEC_VERSION"
+          bin="rust/target/${{ matrix.target }}/release/harnspec-http"
           if [ "${{ runner.os }}" = "Windows" ]; then
             bin="${bin}.exe"
           fi
@@ -170,12 +170,12 @@ jobs:
 
           if [ "${{ runner.os }}" = "Windows" ]; then
             cp rust/target/${{ matrix.target }}/release/harnspec.exe dist/${{ matrix.platform }}/
-            cp rust/target/${{ matrix.target }}/release/leanspec-mcp.exe dist/${{ matrix.platform }}/
-            cp rust/target/${{ matrix.target }}/release/leanspec-http.exe dist/${{ matrix.platform }}/
+            cp rust/target/${{ matrix.target }}/release/harnspec-mcp.exe dist/${{ matrix.platform }}/
+            cp rust/target/${{ matrix.target }}/release/harnspec-http.exe dist/${{ matrix.platform }}/
           else
             cp rust/target/${{ matrix.target }}/release/harnspec dist/${{ matrix.platform }}/
-            cp rust/target/${{ matrix.target }}/release/leanspec-mcp dist/${{ matrix.platform }}/
-            cp rust/target/${{ matrix.target }}/release/leanspec-http dist/${{ matrix.platform }}/
+            cp rust/target/${{ matrix.target }}/release/harnspec-mcp dist/${{ matrix.platform }}/
+            cp rust/target/${{ matrix.target }}/release/harnspec-http dist/${{ matrix.platform }}/
           fi
 
           echo "=== Prepared artifacts ==="
@@ -315,12 +315,12 @@ jobs:
           fi
 
           packages=(
-            "@leanspec/cli-darwin-arm64"
-            "@leanspec/cli-linux-x64"
-            "@leanspec/mcp-darwin-arm64"
-            "@leanspec/mcp-linux-x64"
-            "@leanspec/http-darwin-arm64"
-            "@leanspec/http-linux-x64"
+            "@harnspec/cli-darwin-arm64"
+            "@harnspec/cli-linux-x64"
+            "@harnspec/mcp-darwin-arm64"
+            "@harnspec/mcp-linux-x64"
+            "@harnspec/http-darwin-arm64"
+            "@harnspec/http-linux-x64"
           )
 
           echo "Waiting 30 seconds before checking to allow all packages to finish publishing..."

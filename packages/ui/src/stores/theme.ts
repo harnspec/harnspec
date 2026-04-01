@@ -12,7 +12,7 @@ import { create } from 'zustand';
 
 export type Theme = 'light' | 'dark' | 'system';
 
-export const STORAGE_KEY = 'leanspec-theme';
+export const STORAGE_KEY = 'harnspec-theme';
 
 function getSystemTheme(): 'light' | 'dark' {
   if (typeof window === 'undefined' || !window.matchMedia) return 'light';

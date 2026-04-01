@@ -1,0 +1,784 @@
+//! Spec-related API types for request/response serialization
+
+use chrono::{DateTime, Utc};
+use harnspec_core::io::hash_content;
+use harnspec_core::{
+    global_frontmatter_validator, global_structure_validator, global_token_count_validator,
+    global_token_counter, SpecInfo, SpecPriority, SpecStats, SpecStatus, TokenStatus,
+    ValidationResult,
+};
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+use ts_rs::TS;
+
+/// Lightweight spec for list views
+#[derive(Debug, Clone, Serialize, Deserialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct SpecSummary {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub project_id: Option<String>,
+    pub id: String,
+    pub spec_number: Option<u32>,
+    pub spec_name: String,
+    pub title: Option<String>,
+    pub status: String,
+    pub priority: Option<String>,
+    pub tags: Vec<String>,
+    pub assignee: Option<String>,
+    pub created_at: Option<DateTime<Utc>>,
+    pub updated_at: Option<DateTime<Utc>>,
+    pub completed_at: Option<DateTime<Utc>>,
+    pub file_path: String,
+    pub depends_on: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub parent: Option<String>,
+    #[serde(default)]
+    pub children: Vec<String>,
+    #[serde(default)]
+    pub required_by: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub content_hash: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub token_count: Option<usize>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub token_status: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub validation_status: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub relationships: Option<SpecRelationships>,
+}
+
+impl From<&SpecInfo> for SpecSummary {
+    fn from(spec: &SpecInfo) -> Self {
+        // Compute token count from spec content
+        let counter = global_token_counter();
+        let token_result = counter.count_spec(&spec.content);
+        let token_status_str = match token_result.status {
+            TokenStatus::Optimal => "optimal",
+            TokenStatus::Good => "good",
+            TokenStatus::Warning => "warning",
+            TokenStatus::Excessive => "critical",
+        };
+
+        // Compute validation status
+        let fm_validator = global_frontmatter_validator();
+        let struct_validator = global_structure_validator();
+        let token_validator = global_token_count_validator();
+
+        let mut validation_result = ValidationResult::new(&spec.path);
+        validation_result.merge(fm_validator.validate(spec));
+        validation_result.merge(struct_validator.validate(spec));
+        validation_result.merge(token_validator.validate(spec));
+
+        let validation_status_str = if validation_result.errors.is_empty() {
+            "pass"
+        } else if validation_result
+            .errors
+            .iter()
+            .any(|e| e.severity == harnspec_core::ErrorSeverity::Error)
+        {
+            "fail"
+        } else {
+            "warn"
+        };
+
+        Self {
+            project_id: None,
+            id: spec.path.clone(),
+            spec_number: spec.number(),
+            spec_name: spec.path.clone(),
+            title: Some(spec.title.clone()),
+            status: spec.frontmatter.status.to_string(),
+            priority: spec.frontmatter.priority.map(|p| p.to_string()),
+            tags: spec.frontmatter.tags.clone(),
+            assignee: spec.frontmatter.assignee.clone(),
+            created_at: spec.frontmatter.created_at,
+            updated_at: spec.frontmatter.updated_at,
+            completed_at: spec.frontmatter.completed_at,
+            file_path: spec.file_path.to_string_lossy().to_string(),
+            depends_on: spec.frontmatter.depends_on.clone(),
+            parent: spec.frontmatter.parent.clone(),
+            children: Vec::new(),
+            required_by: Vec::new(), // Will be computed when needed
+            content_hash: Some(hash_content(&spec.content)),
+            token_count: Some(token_result.total),
+            token_status: Some(token_status_str.to_string()),
+            validation_status: Some(validation_status_str.to_string()),
+            relationships: None,
+        }
+    }
+}
+
+impl SpecSummary {
+    pub fn from_without_computed(spec: &SpecInfo) -> Self {
+        Self {
+            project_id: None,
+            id: spec.path.clone(),
+            spec_number: spec.number(),
+            spec_name: spec.path.clone(),
+            title: Some(spec.title.clone()),
+            status: spec.frontmatter.status.to_string(),
+            priority: spec.frontmatter.priority.map(|p| p.to_string()),
+            tags: spec.frontmatter.tags.clone(),
+            assignee: spec.frontmatter.assignee.clone(),
+            created_at: spec.frontmatter.created_at,
+            updated_at: spec.frontmatter.updated_at,
+            completed_at: spec.frontmatter.completed_at,
+            file_path: spec.file_path.to_string_lossy().to_string(),
+            depends_on: spec.frontmatter.depends_on.clone(),
+            parent: spec.frontmatter.parent.clone(),
+            children: Vec::new(),
+            required_by: Vec::new(),
+            content_hash: Some(hash_content(&spec.content)),
+            token_count: None,
+            token_status: None,
+            validation_status: None,
+            relationships: None,
+        }
+    }
+
+    pub fn with_project_id(mut self, project_id: &str) -> Self {
+        self.project_id = Some(project_id.to_string());
+        self
+    }
+
+    pub fn with_relationships(mut self, required_by: Vec<String>) -> Self {
+        self.required_by = required_by.clone();
+        self.relationships = Some(SpecRelationships {
+            depends_on: self.depends_on.clone(),
+            required_by: Some(required_by),
+        });
+        self
+    }
+}
+
+/// Full spec detail for view
+#[derive(Debug, Clone, Serialize, Deserialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct SpecDetail {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub project_id: Option<String>,
+    pub id: String,
+    pub spec_number: Option<u32>,
+    pub spec_name: String,
+    pub title: Option<String>,
+    pub status: String,
+    pub priority: Option<String>,
+    pub tags: Vec<String>,
+    pub assignee: Option<String>,
+    pub content_md: String,
+    pub created_at: Option<DateTime<Utc>>,
+    pub updated_at: Option<DateTime<Utc>>,
+    pub completed_at: Option<DateTime<Utc>>,
+    pub file_path: String,
+    pub depends_on: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub parent: Option<String>,
+    #[serde(default)]
+    pub children: Vec<String>,
+    #[serde(default)]
+    pub required_by: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub content_hash: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub token_count: Option<usize>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub token_status: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub validation_status: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub relationships: Option<SpecRelationships>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sub_specs: Option<Vec<SubSpec>>,
+}
+
+/// Raw spec content response
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct SpecRawResponse {
+    pub content: String,
+    pub content_hash: String,
+    pub file_path: String,
+}
+
+/// Request to update raw spec content
+#[derive(Debug, Clone, Deserialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct SpecRawUpdateRequest {
+    pub content: String,
+    pub expected_content_hash: Option<String>,
+}
+
+/// Request to toggle checklist items in a spec
+#[derive(Debug, Clone, Deserialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct ChecklistToggleRequest {
+    pub toggles: Vec<ChecklistToggleItem>,
+    pub expected_content_hash: Option<String>,
+    /// Optional sub-spec filename (e.g., "IMPLEMENTATION.md")
+    pub subspec: Option<String>,
+}
+
+/// A single checklist toggle item
+#[derive(Debug, Clone, Deserialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct ChecklistToggleItem {
+    pub item_text: String,
+    pub checked: bool,
+}
+
+/// Response from checklist toggle
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct ChecklistToggleResponse {
+    pub success: bool,
+    pub content_hash: String,
+    pub toggled: Vec<ChecklistToggledResult>,
+}
+
+/// Result of a single checklist toggle
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct ChecklistToggledResult {
+    pub item_text: String,
+    pub checked: bool,
+    pub line: usize,
+}
+
+/// Create spec request
+#[derive(Debug, Clone, Deserialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct CreateSpecRequest {
+    pub name: String,
+    pub title: Option<String>,
+    pub status: Option<String>,
+    pub priority: Option<String>,
+    pub tags: Option<Vec<String>>,
+    pub assignee: Option<String>,
+    pub depends_on: Option<Vec<String>>,
+    pub template: Option<String>,
+    pub content: Option<String>,
+}
+
+impl From<&SpecInfo> for SpecDetail {
+    fn from(spec: &SpecInfo) -> Self {
+        // Compute token count from spec content
+        let counter = global_token_counter();
+        let token_result = counter.count_spec(&spec.content);
+        let token_status_str = match token_result.status {
+            TokenStatus::Optimal => "optimal",
+            TokenStatus::Good => "good",
+            TokenStatus::Warning => "warning",
+            TokenStatus::Excessive => "critical",
+        };
+
+        // Compute validation status
+        let fm_validator = global_frontmatter_validator();
+        let struct_validator = global_structure_validator();
+        let token_validator = global_token_count_validator();
+
+        let mut validation_result = ValidationResult::new(&spec.path);
+        validation_result.merge(fm_validator.validate(spec));
+        validation_result.merge(struct_validator.validate(spec));
+        validation_result.merge(token_validator.validate(spec));
+
+        let validation_status_str = if validation_result.errors.is_empty() {
+            "pass"
+        } else if validation_result
+            .errors
+            .iter()
+            .any(|e| e.severity == harnspec_core::ErrorSeverity::Error)
+        {
+            "fail"
+        } else {
+            "warn"
+        };
+
+        Self {
+            project_id: None,
+            id: spec.path.clone(),
+            spec_number: spec.number(),
+            spec_name: spec.path.clone(),
+            title: Some(spec.title.clone()),
+            status: spec.frontmatter.status.to_string(),
+            priority: spec.frontmatter.priority.map(|p| p.to_string()),
+            tags: spec.frontmatter.tags.clone(),
+            assignee: spec.frontmatter.assignee.clone(),
+            content_md: spec.content.clone(),
+            created_at: spec.frontmatter.created_at,
+            updated_at: spec.frontmatter.updated_at,
+            completed_at: spec.frontmatter.completed_at,
+            file_path: spec.file_path.to_string_lossy().to_string(),
+            depends_on: spec.frontmatter.depends_on.clone(),
+            parent: spec.frontmatter.parent.clone(),
+            children: Vec::new(),
+            required_by: Vec::new(), // Will be computed when needed
+            content_hash: Some(hash_content(&spec.content)),
+            token_count: Some(token_result.total),
+            token_status: Some(token_status_str.to_string()),
+            validation_status: Some(validation_status_str.to_string()),
+            relationships: None,
+            sub_specs: None,
+        }
+    }
+}
+
+impl SpecDetail {
+    pub fn with_project_id(mut self, project_id: String) -> Self {
+        self.project_id = Some(project_id);
+        self
+    }
+}
+
+/// Spec relationships container
+#[derive(Debug, Clone, Serialize, Deserialize, Default, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct SpecRelationships {
+    pub depends_on: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub required_by: Option<Vec<String>>,
+}
+
+/// Sub-spec metadata for spec detail payloads
+#[derive(Debug, Clone, Serialize, Deserialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct SubSpec {
+    pub name: String,
+    pub file: String,
+    pub content: String,
+}
+
+/// Response for list specs endpoint
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct ListSpecsResponse {
+    pub specs: Vec<SpecSummary>,
+    pub total: usize,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub next_cursor: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub project_id: Option<String>,
+    /// Pre-built hierarchy tree (only when hierarchy=true query param)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub hierarchy: Option<Vec<HierarchyNode>>,
+}
+
+/// Hierarchical node for tree view - pre-computed server-side for performance
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct HierarchyNode {
+    #[serde(flatten)]
+    #[ts(flatten)]
+    pub spec: SpecSummary,
+    pub child_nodes: Vec<HierarchyNode>,
+}
+
+/// Query parameters for list specs
+#[derive(Debug, Clone, Deserialize, Default, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct ListSpecsQuery {
+    pub status: Option<String>,
+    pub priority: Option<String>,
+    pub tags: Option<String>,
+    pub assignee: Option<String>,
+    pub limit: Option<usize>,
+    pub offset: Option<usize>,
+    pub cursor: Option<String>,
+    /// When true, return pre-built hierarchy tree structure for performance
+    #[serde(default)]
+    pub hierarchy: Option<bool>,
+}
+
+/// Response for search endpoint
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct SearchResponse {
+    pub results: Vec<SpecSummary>,
+    pub total: usize,
+    pub query: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub project_id: Option<String>,
+}
+
+/// Request body for search
+#[derive(Debug, Clone, Deserialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct SearchRequest {
+    pub query: String,
+    #[serde(default)]
+    pub filters: Option<SearchFilters>,
+    #[serde(rename = "projectId", default)]
+    pub project_id: Option<String>,
+}
+
+/// Search filters
+#[derive(Debug, Clone, Deserialize, Default, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct SearchFilters {
+    pub status: Option<String>,
+    pub priority: Option<String>,
+    pub tags: Option<Vec<String>>,
+}
+
+/// Statistics response
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct StatsResponse {
+    pub total_projects: usize,
+    pub total_specs: usize,
+    pub specs_by_status: Vec<StatusCountItem>,
+    pub specs_by_priority: Vec<PriorityCountItem>,
+    pub completion_rate: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub project_id: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct StatusCountItem {
+    pub status: String,
+    pub count: usize,
+}
+
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct PriorityCountItem {
+    pub priority: String,
+    pub count: usize,
+}
+
+impl StatsResponse {
+    pub fn from_project_stats(stats: SpecStats, project_id: &str) -> Self {
+        let specs_by_status = vec![
+            StatusCountItem {
+                status: "draft".to_string(),
+                count: *stats.by_status.get(&SpecStatus::Draft).unwrap_or(&0),
+            },
+            StatusCountItem {
+                status: "planned".to_string(),
+                count: *stats.by_status.get(&SpecStatus::Planned).unwrap_or(&0),
+            },
+            StatusCountItem {
+                status: "in-progress".to_string(),
+                count: *stats.by_status.get(&SpecStatus::InProgress).unwrap_or(&0),
+            },
+            StatusCountItem {
+                status: "complete".to_string(),
+                count: *stats.by_status.get(&SpecStatus::Complete).unwrap_or(&0),
+            },
+            StatusCountItem {
+                status: "archived".to_string(),
+                count: *stats.by_status.get(&SpecStatus::Archived).unwrap_or(&0),
+            },
+        ];
+
+        let specs_by_priority = vec![
+            PriorityCountItem {
+                priority: "low".to_string(),
+                count: *stats.by_priority.get(&SpecPriority::Low).unwrap_or(&0),
+            },
+            PriorityCountItem {
+                priority: "medium".to_string(),
+                count: *stats.by_priority.get(&SpecPriority::Medium).unwrap_or(&0),
+            },
+            PriorityCountItem {
+                priority: "high".to_string(),
+                count: *stats.by_priority.get(&SpecPriority::High).unwrap_or(&0),
+            },
+            PriorityCountItem {
+                priority: "critical".to_string(),
+                count: *stats.by_priority.get(&SpecPriority::Critical).unwrap_or(&0),
+            },
+        ];
+
+        Self {
+            total_projects: 1,
+            total_specs: stats.total,
+            specs_by_status,
+            specs_by_priority,
+            completion_rate: stats.completion_percentage(),
+            project_id: Some(project_id.to_string()),
+        }
+    }
+}
+
+/// Dependency graph response
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct DependencyResponse {
+    pub spec: SpecSummary,
+    pub depends_on: Vec<SpecSummary>,
+    pub required_by: Vec<SpecSummary>,
+}
+
+/// Project-level dependency graph
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct DependencyGraphResponse {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub project_id: Option<String>,
+    pub nodes: Vec<DependencyNode>,
+    pub edges: Vec<DependencyEdge>,
+}
+
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct DependencyNode {
+    pub id: String,
+    pub name: String,
+    pub number: u32,
+    pub status: String,
+    pub priority: String,
+    pub tags: Vec<String>,
+}
+
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct DependencyEdge {
+    pub source: String,
+    pub target: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub r#type: Option<String>,
+}
+
+/// Validation result
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct ValidationResponse {
+    pub is_valid: bool,
+    pub errors: Vec<ValidationError>,
+}
+
+/// Spec token response
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct SpecTokenResponse {
+    pub token_count: usize,
+    pub token_status: String,
+    pub token_breakdown: TokenBreakdown,
+}
+
+/// Section token count for h2 sections
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct SectionTokenCount {
+    pub heading: String,
+    pub tokens: usize,
+}
+
+/// Detailed content breakdown
+#[derive(Debug, Clone, Serialize, Default, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct DetailedBreakdown {
+    /// Tokens in code blocks
+    pub code_blocks: usize,
+    /// Tokens in checklists (- [ ] items)
+    pub checklists: usize,
+    /// Tokens in plain prose/text
+    pub prose: usize,
+    /// Tokens per h2 section
+    pub sections: Vec<SectionTokenCount>,
+}
+
+/// Token breakdown for a spec
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct TokenBreakdown {
+    pub frontmatter: usize,
+    pub content: usize,
+    pub title: usize,
+    /// Detailed breakdown by content type
+    pub detailed: DetailedBreakdown,
+}
+
+/// Spec validation response
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct SpecValidationResponse {
+    pub status: String,
+    pub errors: Vec<SpecValidationError>,
+}
+
+/// Spec validation error
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct SpecValidationError {
+    pub severity: String,
+    pub message: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub line: Option<usize>,
+    #[serde(rename = "type")]
+    pub r#type: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub suggestion: Option<String>,
+}
+
+/// Batch metadata request
+#[derive(Debug, Clone, Deserialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct BatchMetadataRequest {
+    pub spec_names: Vec<String>,
+}
+
+/// Batch metadata response - tokens and validation for multiple specs
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct BatchMetadataResponse {
+    pub specs: HashMap<String, SpecMetadata>,
+}
+
+/// Metadata for a single spec (tokens + validation)
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct SpecMetadata {
+    pub token_count: usize,
+    pub token_status: String,
+    pub validation_status: String,
+}
+
+/// Project validation summary
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct ProjectValidationResponse {
+    pub project_id: String,
+    pub path: String,
+    pub validation: ProjectValidationSummary,
+}
+
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct ProjectValidationSummary {
+    pub is_valid: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub specs_dir: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct ValidationError {
+    pub severity: String,
+    pub message: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub spec: Option<String>,
+}
+
+impl From<&harnspec_core::ValidationError> for ValidationError {
+    fn from(error: &harnspec_core::ValidationError) -> Self {
+        Self {
+            severity: error.severity.to_string(),
+            message: error.message.clone(),
+            spec: None,
+        }
+    }
+}
+
+/// Metadata update request
+#[derive(Debug, Clone, Deserialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct MetadataUpdate {
+    pub status: Option<String>,
+    pub priority: Option<String>,
+    pub tags: Option<Vec<String>>,
+    pub assignee: Option<String>,
+    #[serde(default)]
+    pub add_depends_on: Option<Vec<String>>,
+    #[serde(default)]
+    pub remove_depends_on: Option<Vec<String>>,
+    pub parent: Option<Option<String>>,
+    pub expected_content_hash: Option<String>,
+    /// Skip completion verification when setting status to complete
+    #[serde(default)]
+    pub force: Option<bool>,
+}
+
+/// Metadata update response
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct UpdateMetadataResponse {
+    pub success: bool,
+    pub spec_id: String,
+    pub frontmatter: FrontmatterResponse,
+}
+
+/// Frontmatter response for API
+#[derive(Debug, Clone, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
+pub struct FrontmatterResponse {
+    pub status: String,
+    pub created: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub priority: Option<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub tags: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub depends_on: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub parent: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub assignee: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub created_at: Option<DateTime<Utc>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub updated_at: Option<DateTime<Utc>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub completed_at: Option<DateTime<Utc>>,
+}
+
+impl From<&harnspec_core::SpecFrontmatter> for FrontmatterResponse {
+    fn from(fm: &harnspec_core::SpecFrontmatter) -> Self {
+        Self {
+            status: fm.status.to_string(),
+            created: fm.created.clone(),
+            priority: fm.priority.map(|p| p.to_string()),
+            tags: fm.tags.clone(),
+            depends_on: fm.depends_on.clone(),
+            parent: fm.parent.clone(),
+            assignee: fm.assignee.clone(),
+            created_at: fm.created_at,
+            updated_at: fm.updated_at,
+            completed_at: fm.completed_at,
+        }
+    }
+}

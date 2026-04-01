@@ -325,9 +325,9 @@ export interface ContextFile {
 }
 
 /**
- * LeanSpec configuration (from .harnspec/config.json)
+ * HarnSpec configuration (from .harnspec/config.json)
  */
-export interface LeanSpecConfig {
+export interface HarnSpecConfig {
   template?: string;
   specsDir?: string;
   draftStatus?: {
@@ -353,7 +353,7 @@ export interface ProjectContext {
   agentInstructions: ContextFile[];  // AGENTS.md, GEMINI.md, etc.
   config: {
     file: ContextFile | null;        // .harnspec/config.json
-    parsed: LeanSpecConfig | null;   // Parsed config object
+    parsed: HarnSpecConfig | null;   // Parsed config object
   };
   projectDocs: ContextFile[];        // README.md, CONTRIBUTING.md, etc.
   totalTokens: number;

@@ -1,23 +1,23 @@
-# Render deployment blueprint for LeanSpec
+# Render deployment blueprint for HarnSpec
 # Docs: https://docs.render.com/blueprint-spec
 
 services:
   - type: web
-    name: leanspec
+    name: harnspec
     runtime: image
     image:
-      url: ghcr.io/codervisor/leanspec:latest
+      url: ghcr.io/codervisor/harnspec:latest
     envVars:
-      - key: LEANSPEC_DATA_DIR
+      - key: HARNSPEC_DATA_DIR
         value: /data
-      - key: LEANSPEC_LOG_FORMAT
+      - key: HARNSPEC_LOG_FORMAT
         value: json
-      - key: LEANSPEC_API_KEY
+      - key: HARNSPEC_API_KEY
         generateValue: true
       - key: PORT
         value: "3000"
     healthCheckPath: /health/ready
     disk:
-      name: leanspec-data
+      name: harnspec-data
       mountPath: /data
       sizeGB: 1

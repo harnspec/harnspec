@@ -4,6 +4,6 @@ import type { ConfigStructure } from "./ConfigStructure";
 import type { DraftStatusConfig } from "./DraftStatusConfig";
 
 /**
- * LeanSpec configuration structure
+ * HarnSpec configuration structure
  */
-export type LeanSpecConfig = { template: string | null, specsDir: string | null, structure: ConfigStructure | null, features: ConfigFeatures | null, draftStatus: DraftStatusConfig | null, templates: { [key in string]?: string } | null, };
+export type HarnSpecConfig = { template: string | null, specsDir: string | null, structure: ConfigStructure | null, features: ConfigFeatures | null, draftStatus: DraftStatusConfig | null, templates: { [key in string]?: string } | null, };

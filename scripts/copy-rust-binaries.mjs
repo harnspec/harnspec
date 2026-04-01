@@ -39,18 +39,18 @@ const ALL_PLATFORMS = Object.keys(PLATFORM_INFO);
 const BINARY_CONFIG = {
   'harnspec': {
     packagePath: 'cli',
-    packagePrefix: '@leanspec/cli',
-    description: 'LeanSpec CLI binary'
+    packagePrefix: '@harnspec/cli',
+    description: 'HarnSpec CLI binary'
   },
-  'leanspec-mcp': {
+  'harnspec-mcp': {
     packagePath: 'mcp',
-    packagePrefix: '@leanspec/mcp',
-    description: 'LeanSpec MCP server binary'
+    packagePrefix: '@harnspec/mcp',
+    description: 'HarnSpec MCP server binary'
   },
-  'leanspec-http': {
+  'harnspec-http': {
     packagePath: 'http-server',
-    packagePrefix: '@leanspec/http',
-    description: 'LeanSpec HTTP server binary'
+    packagePrefix: '@harnspec/http',
+    description: 'HarnSpec HTTP server binary'
   }
 };
 
@@ -152,7 +152,7 @@ try {
 
     const files = new Set(existingPkg.files || []);
     files.add('postinstall.js');
-    if (binaryName === 'leanspec-http') {
+    if (binaryName === 'harnspec-http') {
       files.add('ui-dist');
       files.add('ui-dist/**');
     }
@@ -182,7 +182,7 @@ try {
     os: [platformInfo.os],
     cpu: [platformInfo.cpu],
     main: binaryFileName,
-    files: binaryName === 'leanspec-http'
+    files: binaryName === 'harnspec-http'
       ? [binaryFileName, 'postinstall.js', 'ui-dist', 'ui-dist/**']
       : [binaryFileName, 'postinstall.js'],
     scripts: {
@@ -288,7 +288,7 @@ async function copyBinary(binaryName, platformKey, version, useDebug = false) {
 
   console.log(`✅ Copied ${binaryName} to ${config.packagePath}/binaries/${platformKey}/`);
 
-  if (binaryName === 'leanspec-http') {
+  if (binaryName === 'harnspec-http') {
     await copyUiDist(destDir);
   }
   return true;
@@ -320,7 +320,7 @@ async function main() {
 
   console.log(`🔧 Copying Rust binaries (${useDebug ? 'debug' : 'release'})...\n`);
 
-  const binaries = ['harnspec', 'leanspec-mcp', 'leanspec-http'];
+  const binaries = ['harnspec', 'harnspec-mcp', 'harnspec-http'];
 
   if (copyAll) {
     console.log('📦 Copying all platforms (requires cross-compiled binaries)\n');

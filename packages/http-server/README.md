@@ -1,6 +1,6 @@
-# @leanspec/http-server
+# @harnspec/http-server
 
-High-performance Rust HTTP server for LeanSpec UI.
+High-performance Rust HTTP server for HarnSpec UI.
 
 ## Features
 
@@ -15,7 +15,7 @@ High-performance Rust HTTP server for LeanSpec UI.
 ## Installation
 
 ```bash
-npm install @leanspec/http-server
+npm install @harnspec/http-server
 ```
 
 ## Usage
@@ -23,7 +23,7 @@ npm install @leanspec/http-server
 ### As a standalone server
 
 ```bash
-npx leanspec-http
+npx harnspec-http
 ```
 
 Options:
@@ -40,10 +40,10 @@ For improved developer experience, set environment variables to enable detailed 
 
 ```bash
 # Enable debug mode with verbose logging
-LEANSPEC_DEBUG=1 LEANSPEC_DEV_MODE=1 npx leanspec-http -v
+HARNSPEC_DEBUG=1 HARNSPEC_DEV_MODE=1 npx harnspec-http -v
 
 # Or use RUST_LOG for fine-grained control
-RUST_LOG=leanspec_http=debug,tower_http=debug npx leanspec-http
+RUST_LOG=harnspec_http=debug,tower_http=debug npx harnspec-http
 ```
 
 In dev mode, the server provides:
@@ -68,7 +68,7 @@ In dev mode, the server provides:
 ```javascript
 import { spawn } from 'child_process';
 
-const server = spawn('leanspec-http', ['--port', '3000']);
+const server = spawn('harnspec-http', ['--port', '3000']);
 ```
 
 ## Configuration

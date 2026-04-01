@@ -1,23 +1,23 @@
-# LeanSpec Rust Implementation
+# HarnSpec Rust Implementation
 
-This directory contains the Rust implementation of LeanSpec's core functionality, CLI, and MCP server.
+This directory contains the Rust implementation of HarnSpec's core functionality, CLI, and MCP server.
 
 ## Architecture
 
 ```
 rust/
 ├── Cargo.toml              # Workspace configuration
-├── leanspec-core/          # Core library crate
+├── harnspec-core/          # Core library crate
 │   └── src/
 │       ├── types/          # Data types (SpecInfo, SpecFrontmatter, etc.)
 │       ├── parsers/        # Frontmatter parsing
 │       ├── validators/     # Validation logic
 │       └── utils/          # Utilities (dependency graph, token counter, etc.)
-├── leanspec-cli/           # CLI binary crate
+├── harnspec-cli/           # CLI binary crate
 │   └── src/
 │       ├── main.rs         # CLI entry point
 │       └── commands/       # Command implementations
-├── leanspec-mcp/           # MCP server binary crate
+├── harnspec-mcp/           # MCP server binary crate
 │   └── src/
 │       ├── main.rs         # MCP server entry point
 │       ├── protocol.rs     # JSON-RPC protocol handling

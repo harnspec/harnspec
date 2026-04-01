@@ -1,14 +1,14 @@
-# LeanSpec Packages
+# HarnSpec Packages
 
-This directory contains the LeanSpec monorepo packages.
+This directory contains the HarnSpec monorepo packages.
 
 ## Structure
 
 ```
 packages/
 ├── cli/               - harnspec: CLI wrapper for Rust binary
-├── mcp/               - @leanspec/mcp: MCP server wrapper
-└── ui/                - @leanspec/ui: Primary Vite SPA (web + desktop + shared UI library)
+├── mcp/               - @harnspec/mcp: MCP server wrapper
+└── ui/                - @harnspec/ui: Primary Vite SPA (web + desktop + shared UI library)
 ```
 
 ## Architecture (Vite + Rust)
@@ -16,11 +16,11 @@ packages/
 ```
 ┌─────────────────┐              ┌────────────────────────┐
 │   Web App       │──────► HTTP ►│ Rust HTTP server       │
-│  @leanspec/ui   │              │ @leanspec/http-server  │
+│  @harnspec/ui   │              │ @harnspec/http-server  │
 └─────────────────┘              └────────────────────────┘
 
 ┌─────────────────┐
-│   CLI / MCP     │──────► Rust binaries (leanspec-cli/mcp)
+│   CLI / MCP     │──────► Rust binaries (harnspec-cli/mcp)
 └─────────────────┘
 ```
 
@@ -48,32 +48,32 @@ node scripts/copy-rust-binaries.mjs
 node bin/harnspec.js --version
 ```
 
-## @leanspec/mcp
+## @harnspec/mcp
 
 **MCP server integration wrapper.**
 
 Delegates to the Rust MCP binary and makes MCP setup discoverable.
 
 ```bash
-npx -y @leanspec/mcp
+npx -y @harnspec/mcp
 ```
 
 See [MCP Integration docs](https://harnspec.dev/docs/guide/usage/ai-assisted/mcp-integration).
 
-## @leanspec/ui (Vite SPA)
+## @harnspec/ui (Vite SPA)
 
 Primary web UI package:
 
 - Vite 7 + React 19 + TypeScript 5
-- Shared components exported from `@leanspec/ui`
+- Shared components exported from `@harnspec/ui`
 - Served by Rust HTTP server or bundled in Tauri
 
 ### Development
 
 ```bash
-pnpm --filter @leanspec/ui dev       # Vite dev server
-pnpm --filter @leanspec/ui build     # build SPA assets
-pnpm --filter @leanspec/ui preview   # preview production build
+pnpm --filter @harnspec/ui dev       # Vite dev server
+pnpm --filter @harnspec/ui build     # build SPA assets
+pnpm --filter @harnspec/ui preview   # preview production build
 ```
 
 ## Desktop Repository
@@ -91,7 +91,7 @@ pnpm build
 Build specific package:
 
 ```bash
-pnpm --filter @leanspec/ui build
+pnpm --filter @harnspec/ui build
 ```
 
 ## Testing
@@ -103,7 +103,7 @@ pnpm test
 Run tests for a package:
 
 ```bash
-pnpm --filter @leanspec/ui test
+pnpm --filter @harnspec/ui test
 ```
 
 ## Publishing
@@ -111,8 +111,8 @@ pnpm --filter @leanspec/ui test
 Published packages:
 
 - `harnspec` - CLI (wrapper + Rust binary via optional dependencies)
-- `@leanspec/mcp` - MCP server wrapper
-- `@leanspec/ui` - Vite SPA bundle
+- `@harnspec/mcp` - MCP server wrapper
+- `@harnspec/ui` - Vite SPA bundle
 
 Platform-specific binary packages (published separately):
 

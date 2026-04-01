@@ -55,7 +55,7 @@ async function verifyPlatformPackages(version: string): Promise<boolean> {
 
   for (const pkg of PACKAGES) {
     for (const platform of PLATFORMS) {
-      const packageName = `@leanspec/${pkg}-${platform}`;
+      const packageName = `@harnspec/${pkg}-${platform}`;
       checks.push(checkPackageExists(packageName, version));
     }
   }
@@ -100,7 +100,7 @@ async function verifyPlatformPackages(version: string): Promise<boolean> {
 async function verifyMainPackages(version: string): Promise<boolean> {
   console.log(`\n🔍 Verifying main packages for version: ${version}\n`);
 
-  const mainPackages = ['harnspec', '@leanspec/mcp'];
+  const mainPackages = ['harnspec', '@harnspec/mcp'];
   const checks = mainPackages.map(pkg => checkPackageExists(pkg, version));
   const results = await Promise.all(checks);
 
@@ -145,7 +145,7 @@ async function checkOptionalDependencies(packageName: string, version: string): 
     // Check if all platforms are included
     const expectedPrefixes = packageName === 'harnspec' ?
       PLATFORMS.map(p => `harnspec-${p}`) :
-      PLATFORMS.map(p => `@leanspec/mcp-${p}`);
+      PLATFORMS.map(p => `@harnspec/mcp-${p}`);
 
     const missing = expectedPrefixes.filter(prefix =>
       !Object.keys(optDeps).some(dep => dep.includes(prefix))
@@ -169,7 +169,7 @@ async function main() {
   const version = args[0] || 'latest';
 
   console.log('═'.repeat(60));
-  console.log('  LeanSpec npm Package Verification');
+  console.log('  HarnSpec npm Package Verification');
   console.log('═'.repeat(60));
   console.log('');
 
@@ -179,7 +179,7 @@ async function main() {
 
     // Check optionalDependencies configuration
     await checkOptionalDependencies('harnspec', version);
-    await checkOptionalDependencies('@leanspec/mcp', version);
+    await checkOptionalDependencies('@harnspec/mcp', version);
 
     console.log('\n' + '═'.repeat(60));
 
@@ -189,10 +189,10 @@ async function main() {
       console.log('Users can install with:');
       if (version === 'latest') {
         console.log('  npm install -g harnspec');
-        console.log('  npm install -g @leanspec/mcp');
+        console.log('  npm install -g @harnspec/mcp');
       } else {
         console.log(`  npm install -g harnspec@${version}`);
-        console.log(`  npm install -g @leanspec/mcp@${version}`);
+        console.log(`  npm install -g @harnspec/mcp@${version}`);
       }
       console.log('═'.repeat(60));
       process.exit(0);

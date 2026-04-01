@@ -1,14 +1,14 @@
 {
   "name": "dashboard-widgets-demo",
   "version": "1.0.0",
-  "description": "React Dashboard for LeanSpec Tutorial 2",
+  "description": "React Dashboard for HarnSpec Tutorial 2",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
   },
-  "keywords": ["leanspec", "tutorial", "demo"],
+  "keywords": ["harnspec", "tutorial", "demo"],
   "author": "",
   "license": "MIT",
   "dependencies": {

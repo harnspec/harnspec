@@ -1,16 +1,16 @@
-# Fly.io deployment configuration for LeanSpec
+# Fly.io deployment configuration for HarnSpec
 # Deploy: fly launch --copy-config
 # Docs: https://fly.io/docs/reference/configuration/
 
-app = "leanspec"
+app = "harnspec"
 primary_region = "iad"
 
 [build]
-  image = "ghcr.io/codervisor/leanspec:latest"
+  image = "ghcr.io/codervisor/harnspec:latest"
 
 [env]
-  LEANSPEC_DATA_DIR = "/data"
-  LEANSPEC_LOG_FORMAT = "json"
+  HARNSPEC_DATA_DIR = "/data"
+  HARNSPEC_LOG_FORMAT = "json"
   PORT = "3000"
 
 [http_service]
@@ -36,5 +36,5 @@ primary_region = "iad"
       path = "/health/ready"
 
 [mounts]
-  source = "leanspec_data"
+  source = "harnspec_data"
   destination = "/data"

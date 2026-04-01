@@ -25,9 +25,9 @@ interface PackageConfig {
 }
 
 const PACKAGES: PackageConfig[] = [
-  { packagePath: 'packages/cli', packagePrefix: '@leanspec/cli' },
-  { packagePath: 'packages/mcp', packagePrefix: '@leanspec/mcp' },
-  { packagePath: 'packages/http-server', packagePrefix: '@leanspec/http' },
+  { packagePath: 'packages/cli', packagePrefix: '@harnspec/cli' },
+  { packagePath: 'packages/mcp', packagePrefix: '@harnspec/mcp' },
+  { packagePath: 'packages/http-server', packagePrefix: '@harnspec/http' },
 ];
 
 interface PackageJson {
