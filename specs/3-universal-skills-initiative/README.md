@@ -31,6 +31,7 @@ Umbrella spec for the Agent Skills ecosystem initiative. This groups all work re
 | 282 - AGENTS.md Path References | Template substitution for skill paths | planned |
 | [Spec 2 - Skills Reorg](../2-reback-skills/README.md) | Distribute @harnspec/skills registry | in-progress |
 | [Spec 4 - Integrated Skills](../4-integrated-skills-management/README.md) | Integrated skills management via monorepo | planned |
+| [Spec 5 - Automated Demo Validation](../5-automated-demo-validation/README.md) | Automated validation of core CLI and SDD workflow | planned |
 
 ## Design
 
