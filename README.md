@@ -21,6 +21,9 @@
   <a href="https://harnspec.github.io/docs/tutorials/first-spec-with-ai"><strong>Tutorials</strong></a>
 </p>
 
+> [!IMPORTANT]
+> This project is a fork of [codervisor/lean-spec](https://github.com/codervisor/lean-spec). Following the fork, the [Commons Clause](LICENSE) license condition was added to the original MIT license to ensure the project's sustainability while remaining open for community use.
+
 ---
 
 **Ship faster with higher quality. Lean specs that both humans and AI understand.**
