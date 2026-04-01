@@ -36,12 +36,12 @@ packages/cli/binaries/*/harnspec
 packages/cli/binaries/*/harnspec.exe
 packages/cli/binaries/*/package.json
 packages/cli/binaries/*/postinstall.js
-packages/mcp/binaries/*/leanspec-mcp
-packages/mcp/binaries/*/leanspec-mcp.exe
+packages/mcp/binaries/*/harnspec-mcp
+packages/mcp/binaries/*/harnspec-mcp.exe
 packages/mcp/binaries/*/package.json
 packages/mcp/binaries/*/postinstall.js
-packages/http-server/binaries/*/leanspec-http
-packages/http-server/binaries/*/leanspec-http.exe
+packages/http-server/binaries/*/harnspec-http
+packages/http-server/binaries/*/harnspec-http.exe
 packages/http-server/binaries/*/package.json
 packages/http-server/binaries/*/postinstall.js
 packages/http-server/binaries/**/ui-dist
@@ -57,8 +57,8 @@ GEMINI.md
 *.local.code-workspace
 
 # Sessions
-.leanspec/sessions/
-.leanspec-worktrees/
+.harnspec/sessions/
+.harnspec-worktrees/
 
 # Aider
 .aider*

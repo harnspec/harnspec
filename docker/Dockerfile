@@ -14,20 +14,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libssl3 \
   && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /usr/local/lib/node_modules/@harnspec/${PLATFORM_PKG}/leanspec-http /usr/local/bin/leanspec-http
+COPY --from=builder /usr/local/lib/node_modules/@harnspec/${PLATFORM_PKG}/harnspec-http /usr/local/bin/harnspec-http
 COPY --from=builder /usr/local/lib/node_modules/@harnspec/ui/dist /app/ui-dist
 
 # Non-root user
-RUN groupadd -r leanspec && useradd -r -g leanspec -m -d /home/leanspec leanspec
+RUN groupadd -r harnspec && useradd -r -g harnspec -m -d /home/harnspec harnspec
 
-ENV LEANSPEC_UI_DIST=/app/ui-dist
-ENV HOME=/home/leanspec
-ENV LEANSPEC_LOG_FORMAT=json
+ENV harnspec_UI_DIST=/app/ui-dist
+ENV HOME=/home/harnspec
+ENV harnspec_LOG_FORMAT=json
 
 EXPOSE 3000
 
-USER leanspec
+USER harnspec
 
 # --no-open: skip browser launch (not available in containers)
 # --host 0.0.0.0: bind all interfaces so Docker port mapping works
-ENTRYPOINT ["leanspec-http", "--no-open", "--host", "0.0.0.0"]
+ENTRYPOINT ["harnspec-http", "--no-open", "--host", "0.0.0.0"]

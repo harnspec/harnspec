@@ -2113,7 +2113,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "leanspec-cli"
+name = "harnspec-cli"
 version = "0.2.28"
 dependencies = [
  "assert_cmd",
@@ -2122,7 +2122,7 @@ dependencies = [
  "colored",
  "dialoguer",
  "indicatif",
- "leanspec-core",
+ "harnspec-core",
  "notify",
  "predicates",
  "pretty_assertions",
@@ -2138,7 +2138,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "leanspec-core"
+name = "harnspec-core"
 version = "0.2.28"
 dependencies = [
  "anthropic",
@@ -2172,7 +2172,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "leanspec-http"
+name = "harnspec-http"
 version = "0.2.28"
 dependencies = [
  "async-stream",
@@ -2183,7 +2183,7 @@ dependencies = [
  "dirs",
  "futures-util",
  "ignore",
- "leanspec-core",
+ "harnspec-core",
  "notify",
  "reqwest 0.12.28",
  "serde",

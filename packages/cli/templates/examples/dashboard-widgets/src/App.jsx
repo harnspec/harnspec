@@ -6,7 +6,7 @@ function App() {
     <div className="app">
       <header>
         <h1>Analytics Dashboard</h1>
-        <p>Demo for LeanSpec Tutorial 2</p>
+        <p>Demo for harnspec Tutorial 2</p>
       </header>
       <Dashboard />
     </div>

@@ -33,10 +33,10 @@ if command -v cargo >/dev/null 2>&1; then
   
   echo ""
   echo "🔗 Verifying generated TypeScript bindings are up-to-date..."
-  cargo test export_bindings -p leanspec-http --manifest-path rust/Cargo.toml 2>/dev/null
+  cargo test export_bindings -p harnspec-http --manifest-path rust/Cargo.toml 2>/dev/null
   if ! git diff --quiet -- packages/ui/src/types/generated; then
     echo "❌ Generated TypeScript bindings are out of date!"
-    echo "   Run: cd rust && cargo test export_bindings -p leanspec-http"
+    echo "   Run: cd rust && cargo test export_bindings -p harnspec-http"
     echo "   Then commit the updated files in packages/ui/src/types/generated/"
     exit 1
   fi
