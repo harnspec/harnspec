@@ -63,8 +63,8 @@ export function QuickSearch() {
       }
     };
 
-    window.addEventListener('leanspec:desktop-menu', handler as EventListener);
-    return () => window.removeEventListener('leanspec:desktop-menu', handler as EventListener);
+    window.addEventListener('harnspec:desktop-menu', handler as EventListener);
+    return () => window.removeEventListener('harnspec:desktop-menu', handler as EventListener);
   }, []);
 
   const fuse = useMemo(

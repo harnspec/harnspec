@@ -26,7 +26,7 @@ export function AppearanceSettingsTab() {
 
   const handleLanguageChange = (locale: string) => {
     i18n.changeLanguage(locale);
-    localStorage.setItem('leanspec-locale', locale);
+    localStorage.setItem('harnspec-locale', locale);
   };
 
   const themes: Array<{ value: 'light' | 'dark' | 'system'; icon: typeof Sun; label: string; description: string }> = [

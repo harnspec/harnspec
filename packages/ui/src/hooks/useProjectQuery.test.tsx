@@ -72,7 +72,7 @@ describe('useProjectQuery', () => {
   });
 
   it('derives current project from sessionStorage', async () => {
-    sessionStorage.setItem('leanspec-current-project', 'p2');
+    sessionStorage.setItem('harnspec-current-project', 'p2');
     const queryClient = createQueryClient();
     const wrapper = createWrapper(queryClient);
 
@@ -95,9 +95,9 @@ describe('useProjectQuery', () => {
     });
 
     expect(mockedApi.setCurrentProjectId).toHaveBeenCalledWith('p1');
-    expect(sessionStorage.getItem('leanspec-current-project')).toBe('p1');
+    expect(sessionStorage.getItem('harnspec-current-project')).toBe('p1');
     expect(invalidateSpy).toHaveBeenCalledWith({
-      queryKey: projectKeys.list('leanspec-current-project'),
+      queryKey: projectKeys.list('harnspec-current-project'),
     });
   });
 });

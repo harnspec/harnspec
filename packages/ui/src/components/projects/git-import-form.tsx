@@ -26,7 +26,7 @@ export function GitImportForm({ onSuccess, onCancel }: GitImportFormProps) {
     try {
       const result = await api.detectGitSpecs(repo.trim());
       if (!result) {
-        setError('No LeanSpec specs found in this repository. Make sure it has a `specs/` directory with numbered spec folders.');
+        setError('No HarnSpec specs found in this repository. Make sure it has a `specs/` directory with numbered spec folders.');
       } else {
         setDetected(result);
       }

@@ -221,7 +221,7 @@ interface BoardGroupExtendedProps extends BoardGroupProps {
 
 function BoardGroup({ parentName, specs, parentSpec, basePath, onTokenClick, onValidationClick, onPriorityChange, canEdit, draggingId, onDragStart, onDragEnd }: BoardGroupExtendedProps) {
   // Session storage key
-  const storageKey = `leanspec_board_expanded_${parentName}`;
+  const storageKey = `harnspec_board_expanded_${parentName}`;
 
   // Default expanded if few children, otherwise collapsed
   const defaultExpanded = specs.length <= COLLAPSE_THRESHOLD;

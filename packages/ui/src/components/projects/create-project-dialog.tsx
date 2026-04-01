@@ -91,7 +91,7 @@ export function CreateProjectDialog({ open, onOpenChange, initialTab }: CreatePr
           <DialogTitle>{t('createProject.title')}</DialogTitle>
           <DialogDescription>
             {tab === 'git'
-              ? 'Connect a Git repository containing LeanSpec specs.'
+              ? 'Connect a Git repository containing HarnSpec specs.'
               : mode === 'picker'
                 ? t('createProject.descriptionPicker')
                 : t('createProject.descriptionManual')}

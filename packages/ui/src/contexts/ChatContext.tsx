@@ -37,12 +37,12 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
 
   // Global preferences (same across all projects)
-  const [isOpen, setIsOpen] = useLocalStorage<boolean>('leanspec.chat.isOpen', false);
-  const [sidebarWidth, setSidebarWidth] = useLocalStorage<number>('leanspec.chat.sidebarWidth', 400);
+  const [isOpen, setIsOpen] = useLocalStorage<boolean>('harnspec.chat.isOpen', false);
+  const [sidebarWidth, setSidebarWidth] = useLocalStorage<number>('harnspec.chat.sidebarWidth', 400);
 
   // Project-scoped preferences (different per project)
-  const [showHistory, setShowHistory] = useProjectScopedStorage<boolean>('leanspec.chat.historyExpanded', false);
-  const [activeConversationId, setActiveConversationId] = useProjectScopedStorage<string | null>('leanspec.chat.activeConversationId', null);
+  const [showHistory, setShowHistory] = useProjectScopedStorage<boolean>('harnspec.chat.historyExpanded', false);
+  const [activeConversationId, setActiveConversationId] = useProjectScopedStorage<string | null>('harnspec.chat.activeConversationId', null);
   const { data: conversations = [] } = useChatThreads(currentProject?.id ?? null);
   const { createThread, deleteThread } = useChatThreadMutations(currentProject?.id ?? null);
 

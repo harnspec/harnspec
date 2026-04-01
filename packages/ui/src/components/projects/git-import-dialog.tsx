@@ -26,7 +26,7 @@ export function GitImportDialog({ open, onOpenChange }: GitImportDialogProps) {
             Import from Git
           </DialogTitle>
           <DialogDescription>
-            Connect a Git repository containing LeanSpec specs.
+            Connect a Git repository containing HarnSpec specs.
           </DialogDescription>
         </DialogHeader>
 
