@@ -22,7 +22,8 @@ The documentation site (Docusaurus) needs its deployment pipeline adjusted to pu
 -   [x] Integrated `docs-site` into the workspace.
 -   [x] Verified that `pnpm docs:build` works correctly from the root.
 -   [x] Created the GitHub Action `.github/workflows/docs.yml`.
--   [ ] Waiting for `DOCUMENTATION_DEPLOY_TOKEN` to be configured in GitHub Secrets for automated deployment.
+-   [x] Updated `pnpm-lock.yaml` to include `docs-site` and fixed 404 errors for internal dependencies.
+-   [ ] Waiting for the next CI run to confirm success.
 
 ## Objectives
 
