@@ -15,7 +15,7 @@ import { ResizeHandle } from './resize-handle';
 import { ChatContainer } from './chat-container';
 import { ChatHistory } from './chat-history';
 import { InlineModelSelector } from './inline-model-selector';
-import { useLeanSpecChat } from '../../lib/use-chat';
+import { useHardSpecChat } from '../../lib/use-chat';
 import { useModelsRegistry } from '../../lib/use-models-registry';
 import { useAutoTitle } from '../../hooks/useAutoTitle';
 import { useChatPreferencesStore } from '../../stores/chat-preferences';
@@ -59,7 +59,7 @@ export function ChatSidebar() {
     isLoading,
     error,
     reload,
-  } = useLeanSpecChat({
+  } = useHardSpecChat({
     providerId: effectiveModel?.providerId ?? '',
     modelId: effectiveModel?.modelId ?? '',
     threadId: activeConversationId || undefined

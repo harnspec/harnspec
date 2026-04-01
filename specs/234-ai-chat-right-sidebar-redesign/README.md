@@ -277,7 +277,7 @@ const systemMessage = useMemo(() => {
 }, [spec]);
 
 // Pass to chat hook
-const { messages, sendMessage } = useLeanSpecChat({
+const { messages, sendMessage } = useHardSpecChat({
   // ...
   systemMessage,
 });
@@ -382,7 +382,7 @@ packages/ui/src/components/
 - [ ] Adjust tool call display for sidebar constraints
 - [ ] Implement auto-scroll to latest message
 - [ ] Loading states and error handling
-- [ ] Integrate with existing `useLeanSpecChat` hook
+- [ ] Integrate with existing `useHardSpecChat` hook
 
 ### Phase 4: Remove Chat Page (1 day)
 

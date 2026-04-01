@@ -32,12 +32,14 @@ LeanSpec currently stores chat messages in browser localStorage (key: `leanspec-
 4. **Performance**: Fast retrieval and efficient storage
 
 **Why now?**
+
 - Current localStorage implementation is fragile (size limits, no error handling, single global history)
 - Users need chat history to persist reliably across sessions and device crashes
 - Desktop application requires proper file-system based storage
 - Foundation for future features (search, analytics, export, cloud sync)
 
 **Current State:**
+
 - Chat persistence not yet implemented (localStorage version was never published)
 - Need proper storage solution from the start
 - Must support desktop/MCP/HTTP contexts
@@ -82,6 +84,7 @@ LeanSpec currently stores chat messages in browser localStorage (key: `leanspec-
 ```
 
 **Storage Location:**
+
 - Linux/macOS: `~/.leanspec/chat.db` (or `$XDG_DATA_HOME/leanspec/chat.db`)
 - Windows: `%APPDATA%\leanspec\chat.db`
 
@@ -92,6 +95,7 @@ We need a robust local storage solution that works across desktop and web contex
 #### Option A: SQLite (Recommended)
 
 **Pros:**
+
 - **Capacity**: Gigabytes of storage (file-system based)
 - **Performance**: Mature database with indexes, transactions, and query optimization
 - **Reliability**: ACID compliance, battle-tested for decades
@@ -100,17 +104,20 @@ We need a robust local storage solution that works across desktop and web contex
 - **Backup**: Single file can be easily backed up/restored
 
 **Cons:**
+
 - **Bundle size**: sql.js (WASM) adds ~2MB to web bundle
 - **Complexity**: Requires schema migrations, connection management
 - **Web limitations**: WASM performance overhead compared to native
 
 **Implementation Paths:**
+
 - **All contexts**: Use native Rust SQLite backend via HTTP API
 - **Desktop/MCP/HTTP**: Native Rust implementation with `rusqlite`
 - **UI**: Communicate with Rust backend via HTTP/REST API
 - **No Node.js SQLite adapter**: Avoid the ai-sdk compromise by keeping all backend logic in Rust
 
 **Database Schema:**
+
 ```sql
 -- conversations table
 CREATE TABLE conversations (
@@ -159,6 +166,7 @@ CREATE TABLE sync_metadata (
 #### Recommendation: Rust-Only Backend with SQLite
 
 **Primary Storage: SQLite via Rust Backend**
+
 - Use native SQLite on all platforms (via Rust)
 - Store database at `~/.leanspec/chat.db` (XDG_DATA_HOME on Linux)
 - Single file, easy to backup by copying the database file
@@ -166,6 +174,7 @@ CREATE TABLE sync_metadata (
 - No Node.js SQLite dependencies - pure Rust implementation
 
 **API Communication Pattern:**
+
 ```typescript
 // UI calls Rust backend
 interface ChatAPI {
@@ -195,17 +204,20 @@ class RustChatBackend implements ChatAPI {
 #### 2. Cloud Storage (Phase 2: Optional Enhancement)
 
 **Option A: LeanSpec Cloud (Future, via sync-bridge)**
+
 - **Integration**: Use existing sync infrastructure (see specs/142-cloud-sync-mvp)
 - **Auth**: OAuth device flow (already implemented)
 - **Endpoint**: `POST /api/v1/chat/conversations`
 - **Encryption**: Client-side encryption before upload (optional, privacy-focused)
 
 **Option B: Third-party (e.g., Firebase, Supabase)**
+
 - **Pros**: Ready-made real-time sync
 - **Cons**: External dependency, privacy concerns
 - **Decision**: Use LeanSpec Cloud for better integration
 
 **Cloud Sync Strategy:**
+
 ```typescript
 // Sync on events:
 // 1. After each message completion (debounced)
@@ -266,6 +278,7 @@ interface ConversationMetadata {
 ### UI Components
 
 **New Conversations Sidebar:**
+
 ```
 ┌─────────────────────────────────────┐
 │ 📝 Conversations                    │
@@ -289,6 +302,7 @@ interface ConversationMetadata {
 ```
 
 **Settings Panel:**
+
 - Enable/disable cloud sync
 - Auto-archive after N days
 - Export conversations (JSON/Markdown)
@@ -314,7 +328,7 @@ interface ConversationMetadata {
   - Error handling and logging
   - Ensure cross-platform compatibility (Linux/macOS/Windows)
 
-- [x] **1.3 Update useLeanSpecChat Hook**
+- [x] **1.3 Update useHardSpecChat Hook**
   - Replace localStorage calls with Rust backend API
   - Add conversation management functions (create, list, delete)
   - Implement auto-save on message completion
@@ -512,23 +526,27 @@ describe('Rust Chat Backend API', () => {
 ### Storage Size Considerations
 
 **Current Approach (localStorage):**
+
 - Average message: ~500 bytes (text only)
 - 5MB limit → ~10,000 messages max
 - Single JSON blob → slow parsing for large histories
 - Browser-only, not suitable for desktop apps
 
 **SQLite Approach:**
+
 - Average message: ~500 bytes
 - No practical size limit (file-system based)
 - Indexed queries → fast even with 100,000+ messages
 - Works on desktop, web (WASM), server
 
 **Growth Projection:**
+
 - Typical user: 10-20 messages/day → 7,300 messages/year → ~3.6MB/year
 - Power user: 100 messages/day → 73,000 messages/year → ~36MB/year
 - SQLite handles multi-GB databases efficiently
 
 **Database Size Management:**
+
 - Auto-vacuum on close to reclaim deleted space
 - Soft-delete old conversations (mark as archived)
 - Provide "compact database" command for manual cleanup
@@ -537,12 +555,14 @@ describe('Rust Chat Backend API', () => {
 ### Privacy Considerations
 
 **Local Storage:**
+
 - Data stored in SQLite file at `~/.leanspec/chat.db`
 - Standard file permissions apply (user-only read/write)
 - File can be encrypted with full-disk encryption
 - Easy to backup (single file) or delete (remove file)
 
 **Cloud Storage:**
+
 - Optional feature (user must explicitly enable)
 - Data can be client-side encrypted before upload
 - Add data retention policy (e.g., auto-delete after 90 days)
@@ -566,21 +586,25 @@ The UI will communicate with the Rust backend via HTTP/REST API, providing clean
 **SQLite Library Choices:**
 
 **Rust:**
+
 - `rusqlite` - Synchronous, lightweight, easier API, good for all contexts
 - **Recommendation:** Use `rusqlite` for simplicity and bundle size
 
 **UI to Backend Communication:**
+
 - HTTP/REST API for all chat operations
 - No need for Node.js SQLite libraries
 - Clean separation: UI (React/TypeScript) ↔ Backend (Rust)
 
 **Database Location:**
+
 - Follow XDG Base Directory Specification on Linux
 - Use `dirs` crate (Rust) or `env-paths` (Node.js) for cross-platform paths
 - Create directory if it doesn't exist
 - Handle permission errors gracefully
 
 **Connection Management:**
+
 - Use single connection per process (SQLite is file-locked)
 - Enable WAL mode for better concurrency: `PRAGMA journal_mode=WAL`
 - Set busy timeout: `PRAGMA busy_timeout=5000`
@@ -589,16 +613,19 @@ The UI will communicate with the Rust backend via HTTP/REST API, providing clean
 ### Alternative Approaches Considered
 
 **1. Browser IndexedDB (Original Plan)**
+
 - Pros: No dependencies, built into browsers
 - Cons: Browser-only, quota limits, not suitable for desktop/MCP
 - Decision: Rejected in favor of SQLite for desktop-first approach
 
 **2. Embedded Key-Value Store (e.g., sled, redb)**
+
 - Pros: Pure Rust, fast, embedded
 - Cons: No SQL, manual indexing, less mature
 - Decision: SQLite more mature and widely supported
 
 **4. Remote Database (PostgreSQL, MongoDB)**
+
 - Pros: Powerful queries, scalable
 - Cons: Requires server always running, network dependency
 - Decision: Keep local-first with optional cloud sync
@@ -608,16 +635,19 @@ The UI will communicate with the Rust backend via HTTP/REST API, providing clean
 **Phase 1 (SQLite):**
 
 **Rust:**
+
 - `rusqlite` - SQLite bindings for Rust (~50KB overhead)
 - `serde_json` - JSON serialization for metadata
 - `dirs` - Cross-platform directory paths
 - `axum` or `actix-web` - HTTP server framework for API endpoints
 
 **UI (TypeScript/React):**
+
 - Fetch API for HTTP communication with Rust backend
 - No SQLite dependencies in Node.js/UI layer
 
 **Phase 2 (Cloud Sync):**
+
 - Existing sync-bridge infrastructure (spec 142)
 - Backend conversation API endpoints (new)
 - Compression library for large payloads (e.g., `flate2` for Rust, `zlib` for Node.js)

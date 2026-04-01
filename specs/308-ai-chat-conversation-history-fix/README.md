@@ -26,6 +26,7 @@ transitions:
 Users cannot see or access their historical AI chat conversations in the web UI. While the backend infrastructure for chat persistence exists (SQLite storage, REST API endpoints), the frontend experience doesn't reliably display past conversations, making it impossible for users to continue previous chats or reference past interactions.
 
 **Why now?**
+
 - Core AI chat functionality is incomplete without history access
 - Users lose context between sessions, reducing productivity
 - Implementation infrastructure exists but integration is broken/incomplete
@@ -33,12 +34,14 @@ Users cannot see or access their historical AI chat conversations in the web UI.
 ## Problem Analysis
 
 **Current State:**
+
 - Backend: SQLite storage at `~/.leanspec/chat.db` with sessions/messages tables
 - API: REST endpoints at `/api/chat/sessions` (list, create, get, delete)
 - Frontend: `ChatHistory.tsx` component with conversation sidebar
 - State: `ChatContext.tsx` manages conversation state via `useLocalStorage`
 
 **Potential Issues (to investigate):**
+
 1. Conversations not loading on initial render
 2. History panel collapsed by default (discoverability)
 3. Session messages not loading when selecting conversation
@@ -48,12 +51,14 @@ Users cannot see or access their historical AI chat conversations in the web UI.
 ## Design
 
 ### Key Files
+
 - [packages/ui/src/contexts/ChatContext.tsx](../../packages/ui/src/contexts/ChatContext.tsx) - State management
 - [packages/ui/src/components/chat/ChatHistory.tsx](../../packages/ui/src/components/chat/ChatHistory.tsx) - History UI
 - [packages/ui/src/lib/chat-api.ts](../../packages/ui/src/lib/chat-api.ts) - API client
 - [rust/leanspec-http/src/handlers/chat_sessions.rs](../../rust/leanspec-http/src/handlers/chat_sessions.rs) - Backend handlers
 
 ### Fixes Required
+
 1. **Auto-initialize conversation** - Create session on first message if none active
 2. **Persist messages** - Auto-save after each message exchange
 3. **Load on selection** - Fetch messages when user selects a conversation
@@ -63,21 +68,25 @@ Users cannot see or access their historical AI chat conversations in the web UI.
 ## Plan
 
 ### Phase 1: Diagnose
+
 - [ ] Confirm which UI is the target for history (Layout sidebar vs Chat page). Layout uses [packages/ui/src/components/chat/ChatSidebar.tsx](packages/ui/src/components/chat/ChatSidebar.tsx); the Chat page uses [packages/ui/src/pages/ChatPage.tsx](packages/ui/src/pages/ChatPage.tsx) with [packages/ui/src/components/chat/sidebar/ChatSidebar.tsx](packages/ui/src/components/chat/sidebar/ChatSidebar.tsx).
 - [ ] Verify `/api/chat/sessions?projectId=...` returns sessions for the active project in [packages/ui/src/lib/chat-api.ts](packages/ui/src/lib/chat-api.ts).
 
 ### Phase 2: Frontend Fixes
+
 - [ ] Ensure conversations load on open/mount and project change in the chosen UI (currently only loads when the sidebar opens in [packages/ui/src/contexts/ChatContext.tsx](packages/ui/src/contexts/ChatContext.tsx)).
 - [ ] Fix the “first message before session id” issue in the layout sidebar: replace the inline `createConversation` + send flow with a pending-message approach (like [packages/ui/src/pages/ChatPage.tsx](packages/ui/src/pages/ChatPage.tsx)) in [packages/ui/src/components/chat/ChatSidebar.tsx](packages/ui/src/components/chat/ChatSidebar.tsx).
-- [ ] Load messages when selecting a conversation by relying on `useLeanSpecChat`’s `threadId` change behavior in [packages/ui/src/lib/use-chat.ts](packages/ui/src/lib/use-chat.ts).
+- [ ] Load messages when selecting a conversation by relying on `useHardSpecChat`’s `threadId` change behavior in [packages/ui/src/lib/use-chat.ts](packages/ui/src/lib/use-chat.ts).
 - [ ] Make history visible by default or add a clear call-to-action (either wire [packages/ui/src/components/chat/ChatHistory.tsx](packages/ui/src/components/chat/ChatHistory.tsx) into the sidebar UI or ensure the Chat page’s sidebar is discoverable).
 
 ### Phase 3: Session Management
+
 - [ ] Create sessions before first message and ensure messages are persisted after send (guard against `threadId` being undefined).
 - [ ] Update session title/preview and refresh thread list after message save (use [packages/ui/src/lib/chat-api.ts](packages/ui/src/lib/chat-api.ts)).
 - [ ] Keep active session ID consistent across refreshes (local storage or URL param as appropriate).
 
 ### Phase 4: UX Improvements
+
 - [ ] Empty state with “Start a conversation” prompt (sidebar and/or Chat page).
 - [ ] Show message preview in conversation list (already available via `preview` in [packages/ui/src/lib/chat-api.ts](packages/ui/src/lib/chat-api.ts)).
 - [ ] Sort conversations by most recent in the UI if backend ordering is not guaranteed.
@@ -111,10 +120,11 @@ Users cannot see or access their historical AI chat conversations in the web UI.
 ### Implementation Summary
 
 **Completed:**
+
 - ✅ Identified Chat page as primary UI (works correctly)
 - ✅ Fixed "first message before session" bug in Layout sidebar by implementing pending message pattern
 - ✅ Verified conversations load on mount and project change (Chat page already working)
-- ✅ Confirmed messages load when selecting conversation via `useLeanSpecChat` hook
+- ✅ Confirmed messages load when selecting conversation via `useHardSpecChat` hook
 - ✅ Sessions already created before first message in Chat page
 - ✅ Messages persist after send via `onFinish` callback in `use-chat.ts`
 - ✅ Active session kept across refreshes via localStorage
@@ -123,9 +133,10 @@ Users cannot see or access their historical AI chat conversations in the web UI.
 - ✅ Conversation rename already available in Chat page sidebar
 
 **Key Findings:**
+
 - The Chat page (`/pages/ChatPage.tsx`) already had proper conversation history management
 - The Layout sidebar (`/components/chat/ChatSidebar.tsx`) had the "send before session created" race condition
 - Backend API (`/api/chat/sessions`) works correctly
-- The `useLeanSpecChat` hook properly loads messages on thread change
+- The `useHardSpecChat` hook properly loads messages on thread change
 
 The conversation history functionality is now complete and working as expected.

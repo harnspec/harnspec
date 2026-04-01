@@ -23,6 +23,7 @@ transitions:
 Improve the AI chat sidebar UX with better history access, automatic title generation, keyboard shortcuts, settings navigation, and an improved loading indicator.
 
 **Why now?**
+
 - Chat history is buried in the conversation selector dropdown, reducing discoverability
 - Chat titles remain "Untitled Chat" forever, making history useless for navigation
 - Power users need keyboard shortcuts for efficient chat workflow
@@ -32,12 +33,14 @@ Improve the AI chat sidebar UX with better history access, automatic title gener
 ## Current State
 
 The chat sidebar ([ChatSidebar.tsx](../../packages/ui/src/components/chat/ChatSidebar.tsx)) has:
+
 - `ConversationSelector` dropdown combining title display and history access
 - Plus button for new chat
 - Settings gear icon (non-functional)
 - Close button
 
 Loading indicator ([ChatContainer.tsx](../../packages/ui/src/components/chat/ChatContainer.tsx)):
+
 - Currently shows a centered spinning `Loader` component
 - Appears after messages when `isLoading` is true
 - No contextual styling or typing indicator pattern
@@ -46,7 +49,7 @@ Loading indicator ([ChatContainer.tsx](../../packages/ui/src/components/chat/Cha
 
 ### Existing Chat Sidebar Context
 
-- The sidebar used in the app layout is [packages/ui/src/components/chat/ChatSidebar.tsx](../../packages/ui/src/components/chat/ChatSidebar.tsx). It is mounted in [packages/ui/src/components/Layout.tsx](../../packages/ui/src/components/Layout.tsx) and uses `useLeanSpecChat`.
+- The sidebar used in the app layout is [packages/ui/src/components/chat/ChatSidebar.tsx](../../packages/ui/src/components/chat/ChatSidebar.tsx). It is mounted in [packages/ui/src/components/Layout.tsx](../../packages/ui/src/components/Layout.tsx) and uses `useHardSpecChat`.
 - A separate, full-page chat UI exists at [packages/ui/src/pages/ChatPage.tsx](../../packages/ui/src/pages/ChatPage.tsx) with its own sidebar component. This spec should only affect the layout sidebar unless explicitly extended.
 
 ### Conversation History UI (Already Built)
@@ -95,6 +98,7 @@ Loading indicator ([ChatContainer.tsx](../../packages/ui/src/components/chat/Cha
 **Method:** Use LLM to generate a concise title (5-7 words max) based on query
 
 Implementation approach:
+
 - Add title generation API endpoint or use inline inference
 - Call after first message exchange completes
 - Update conversation in backend with generated title
@@ -121,7 +125,7 @@ Fallback: If generation fails, use first 50 chars of user message
 **Current:** Gear icon has no functionality  
 **Proposed:** Navigate to Settings page, AI Models tab
 
-- Settings page: `/settings` 
+- Settings page: `/settings`
 - AI Models tab: `/settings?tab=models` or `/settings#models`
 - Use existing navigation (React Router or Next.js router)
 
@@ -131,6 +135,7 @@ Fallback: If generation fails, use first 50 chars of user message
 **Proposed:** Assistant-style thinking bubble with animated dots
 
 Design:
+
 - Show as an assistant message bubble (left-aligned with avatar)
 - Use animated "typing dots" pattern (3 dots pulsing)
 - Optional: Add text like "Thinking..." or "Generating..."
@@ -143,6 +148,7 @@ Design:
 ```
 
 Benefits:
+
 - Clearer that AI is processing (not system loading)
 - Consistent visual language with chat messages
 - Less jarring than centered spinner
@@ -151,29 +157,34 @@ Benefits:
 ## Plan
 
 ### Phase 1: History Button UI
+
 - [ ] Extract title display from `ConversationSelector` dropdown in [packages/ui/src/components/chat/ChatSidebar.tsx](../../packages/ui/src/components/chat/ChatSidebar.tsx)
 - [ ] Add dedicated history button (`History` icon from `lucide-react`) next to the new chat button
 - [ ] Reuse [packages/ui/src/components/chat/ChatHistory.tsx](../../packages/ui/src/components/chat/ChatHistory.tsx) as the history panel (popover or slide-out)
 - [ ] Wire the button to `toggleHistory()` from [packages/ui/src/contexts/ChatContext.tsx](../../packages/ui/src/contexts/ChatContext.tsx)
 
 ### Phase 2: Auto Title Generation
+
 - [ ] Extract shared auto-title logic from [packages/ui/src/pages/ChatPage.tsx](../../packages/ui/src/pages/ChatPage.tsx) into a reusable helper/hook
 - [ ] Trigger title generation after the first assistant response when the thread title is still `New Chat`
 - [ ] Use `ChatApi.updateThread()` to persist the generated title (no new backend endpoint today)
 - [ ] Fallback: first 50 chars of the initial user message if generation fails
 
 ### Phase 3: Keyboard Shortcuts
+
 - [ ] Extend `useGlobalShortcuts()` in [packages/ui/src/hooks/useKeyboardShortcuts.ts](../../packages/ui/src/hooks/useKeyboardShortcuts.ts) with new chat actions
 - [ ] Implement toggle, focus, new conversation, history shortcuts (avoid conflicts with existing `Ctrl/Cmd+Shift+I`)
 - [ ] Add tooltips showing shortcuts on hover for buttons in [packages/ui/src/components/chat/ChatSidebar.tsx](../../packages/ui/src/components/chat/ChatSidebar.tsx)
 - [ ] Ensure shortcuts do not fire when typing in inputs or textareas
 
 ### Phase 4: Settings Navigation
+
 - [ ] Add `onClick` handler to settings button in [packages/ui/src/components/chat/ChatSidebar.tsx](../../packages/ui/src/components/chat/ChatSidebar.tsx)
 - [ ] Navigate to `/settings/ai` (global AI models/settings)
 - [ ] Ensure the models tab exists in [packages/ui/src/layouts/SettingsLayout.tsx](../../packages/ui/src/layouts/SettingsLayout.tsx)
 
 ### Phase 5: Loading Indicator Improvement
+
 - [ ] Create `ThinkingIndicator` component (suggested: [packages/ui/src/components/chat/ThinkingIndicator.tsx](../../packages/ui/src/components/chat/ThinkingIndicator.tsx))
 - [ ] Style as assistant message bubble using `Message`/`MessageContent` patterns from [packages/ui/src/components/chat/ChatMessage.tsx](../../packages/ui/src/components/chat/ChatMessage.tsx)
 - [ ] Replace `Loader` usage in [packages/ui/src/components/chat/ChatContainer.tsx](../../packages/ui/src/components/chat/ChatContainer.tsx)
@@ -203,7 +214,6 @@ Benefits:
 
 - 2026-02-06: Verified in code: history button + popover using `ChatHistory` with `toggleHistory`, static title display in sidebar header, `ThinkingIndicator` replaces loader, `useAutoTitle` hook with `/api/chat/generate-title`, shortcuts for toggle/focus/new/history plus input guard.
 - Pending: settings gear routes to `/settings?tab=models` (no tab handling; spec calls for AI settings route), missing `Escape` shortcut to close sidebar, no tests found for history panel/auto-title/shortcuts/mobile access/layout shift, tests not run.
-
 
 - 2026-02-06: Updated settings gear route to `/settings/models`, added Escape shortcut to close sidebar, added tests for `ChatHistory`, `useAutoTitle`, and Escape shortcut handling.
 

@@ -39,11 +39,12 @@ This spec addresses multiple UX issues with the AI chat model selector in the Le
 **Root Cause Analysis**:
 
 In `ChatPage.tsx`:
+
 - `INITIAL_DEFAULT_MODEL` is hardcoded to `{ providerId: 'openai', modelId: 'gpt-4o' }`
 - `selectedModel` state starts with this hardcoded default
 - The `useEffect` that syncs `selectedModel` with `defaultSelection` only runs when the initial model doesn't exist or provider isn't configured
 - When user selects a model in InlineModelSelector, `selectedModel` is updated correctly
-- **BUT**: The `useLeanSpecChat` hook uses `selectedModel.providerId` and `selectedModel.modelId` for the transport
+- **BUT**: The `useHardSpecChat` hook uses `selectedModel.providerId` and `selectedModel.modelId` for the transport
 - When creating a new thread, `ChatApi.createThread()` is called with the current `selectedModel`
 - The thread is created with correct model info
 - However, the chat transport is created with potentially stale values if react state hasn't synchronized
@@ -51,6 +52,7 @@ In `ChatPage.tsx`:
 **The Critical Bug**: When the page loads and `useModelsRegistry` returns its `defaultSelection`, the code only updates `selectedModel` if it still equals `INITIAL_DEFAULT_MODEL`. But if the user changes the model before registry loads, this check passes incorrectly.
 
 Additionally, looking at `providers.rs`:
+
 ```rust
 let provider = config.providers.iter()
     .find(|p| p.id == provider_id)
@@ -84,6 +86,7 @@ When `enabledModels` is defined for a provider, filter the models list to only s
 ### 2. Smart Default Selection
 
 Improve `use-models-registry.ts` and `ChatPage.tsx`:
+
 - Remove hardcoded `INITIAL_DEFAULT_MODEL`
 - Compute default from registry immediately on first load
 - If persisted selection is unavailable (provider unconfigured or model removed), fall back to first available tool-enabled model
@@ -91,10 +94,12 @@ Improve `use-models-registry.ts` and `ChatPage.tsx`:
 ### 3. Provider Mismatch Bug Fix
 
 The bug occurs because:
+
 1. `selectedModel` state initialization doesn't wait for registry
 2. When user selects a model, the transport might be using stale values
 
 **Fix Strategy**:
+
 - Initialize `selectedModel` as `null` and show loading state until registry is ready
 - Use `useMemo` to compute transport config from stable state
 - Add validation that `selectedModel.providerId` matches a configured provider before sending
@@ -102,6 +107,7 @@ The bug occurs because:
 ### 4. Model Icons
 
 Add provider icons to `InlineModelSelector`:
+
 - Use a mapping of provider IDs to SVG icons or emoji representations
 - Display provider icon before model name
 
@@ -136,6 +142,7 @@ Add provider icons to `InlineModelSelector`:
 ### Implementation Summary
 
 **Completed:**
+
 - ✅ Extended Rust `ChatSettings` struct to include `enabledModels` field (optional HashMap)
 - ✅ Updated TypeScript types to match new schema
 - ✅ Implemented model filtering in `use-models-registry.ts` based on `enabledModels` configuration
