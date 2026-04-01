@@ -1,5 +1,5 @@
 {
-  "name": "harnspec",
+  "name": "@harnspec/cli",
   "version": "0.2.28",
   "description": "Specification-driven development made simple",
   "type": "module",

@@ -31,7 +31,7 @@
     "LICENSE"
   ],
   "dependencies": {
-    "harnspec": "workspace:*"
+    "@harnspec/cli": "workspace:*"
   },
   "engines": {
     "node": ">=20"

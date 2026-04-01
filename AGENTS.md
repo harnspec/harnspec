@@ -11,8 +11,8 @@ This project uses the Agent Skills framework for domain-specific guidance. **Rea
 ### Core Skills
 
 1. **harnspec** - Spec-Driven Development methodology
-   - Install: `npx skills add codervisor/skills@harnspec`
-   - Source: [codervisor/skills](https://github.com/codervisor/skills)
+   - Install: `npx skills add harnspec/skills@harnspec`
+   - Source: [harnspec/skills](https://github.com/harnspec/skills)
    - Use when: Working with specs, planning features, multi-step changes
    - Key: Run `board` or `search` before creating specs
 

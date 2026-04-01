@@ -6,8 +6,7 @@
 
 <p align="center">
   <a href="https://github.com/harnspec/harnspec/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/harnspec/harnspec/ci.yml?branch=main" alt="CI Status"></a>
-  <a href="https://www.npmjs.com/package/harnspec"><img src="https://img.shields.io/npm/v/harnspec.svg" alt="npm version"></a>
-  <a href="https://www.npmjs.com/package/harnspec"><img src="https://img.shields.io/npm/dm/harnspec.svg" alt="npm downloads"></a>
+  <a href="https://www.npmjs.com/package/@harnspec/cli"><img src="https://img.shields.io/npm/v/@harnspec/cli.svg?label=npm%20%40harnspec%2Fcli" alt="npm version"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT%20with%20Commons%20Clause-red.svg" alt="License"></a>
 </p>
 
@@ -40,7 +39,8 @@ npx harnspec init --example dark-theme
 cd dark-theme && npm install && npm start
 
 # Or add to your existing project
-npm install -g harnspec && harnspec init
+# Install with the @harnspec scope
+npm install -g @harnspec/cli && harnspec init
 ```
 
 **Visualize your project:**
@@ -74,7 +74,7 @@ Works with any AI coding assistant via MCP or CLI:
 ```json
 {
   "mcpServers": {
-    "harnspec": { "command": "npx", "args": ["@harnspec/mcp"] }
+    "harnspec": { "command": "npx", "args": ["-y", "@harnspec/cli", "mcp"] }
   }
 }
 ```
@@ -94,10 +94,10 @@ Teach your AI assistant the Spec-Driven Development methodology:
 harnspec skill install
 
 # Or directly via skills.sh
-npx skills add codervisor/harnspec -y
+npx skills add harnspec/skills@harnspec -y
 ```
 
-This installs the **harnspec-sdd** skill which teaches AI agents:
+This installs the **harnspec** skill which teaches AI agents:
 
 - When to create specs vs. implement directly
 - How to discover existing specs before creating new ones
@@ -106,7 +106,7 @@ This installs the **harnspec-sdd** skill which teaches AI agents:
 
 **Compatible with:** Claude Code, Cursor, Windsurf, GitHub Copilot, and other [Agent Skills](https://skills.sh/) compatible tools.
 
-📖 [View skill documentation →](skills/harnspec-sdd/SKILL.md)
+📖 [View skill documentation →](.agents/skills/harnspec/SKILL.md)
 
 ---
 
@@ -120,10 +120,10 @@ This installs the **harnspec-sdd** skill which teaches AI agents:
 | **🎨 Web UI**        | `harnspec ui` - browser-based dashboard                                                          |
 | **📈 Project Stats** | `harnspec stats` - health metrics and bottleneck detection                                       |
 | **🤖 AI-Native**     | MCP server + CLI for AI assistants                                                                |
-| **🖥️ Desktop App**   | Desktop app repo: [codervisor/harnspec-desktop](https://github.com/codervisor/harnspec-desktop) |
+| **🖥️ Desktop App**   | Desktop app repo: [harnspec/harnspec-desktop](https://github.com/harnspec/harnspec-desktop) |
 
 <p align="center">
-  <img src="https://github.com/codervisor/harnspec-docs/blob/main/static/img/ui/ui-board-view.png" alt="Kanban Board View" width="800">
+  <img src="https://github.com/harnspec/harnspec-docs/blob/main/static/img/ui/ui-board-view.png" alt="Kanban Board View" width="800">
 </p>
 
 ---
@@ -155,7 +155,7 @@ rustc --version  # Should be 1.70 or higher (dev only)
 
 The desktop application has moved to a dedicated repository:
 
-- <https://github.com/codervisor/harnspec-desktop>
+- <https://github.com/harnspec/harnspec-desktop>
 
 Use that repository for desktop development, CI, and release workflows.
 
@@ -213,7 +213,7 @@ See [package.json](package.json) for all available scripts.
 
 ## Community
 
-💬 [Discussions](https://github.com/codervisor/harnspec/discussions) · 🐛 [Issues](https://github.com/codervisor/harnspec/issues) · 🤝 [Contributing](CONTRIBUTING.md) · 📋 [Changelog](CHANGELOG.md) · 📄 [LICENSE](LICENSE)
+💬 [Discussions](https://github.com/harnspec/harnspec/discussions) · 🐛 [Issues](https://github.com/harnspec/harnspec/issues) · 🤝 [Contributing](CONTRIBUTING.md) · 📋 [Changelog](CHANGELOG.md) · 📄 [LICENSE](LICENSE)
 
 ---
 
@@ -224,5 +224,5 @@ If you find HarnSpec helpful, feel free to add me on WeChat (note "HarnSpec") to
 如果您觉得 HarnSpec 对您有帮助，欢迎添加微信（备注 "HarnSpec"）加入交流群。
 
 <p align="center">
-  <img src="https://github.com/codervisor/harnspec-docs/blob/main/static/img/qr-code.png" alt="WeChat Contact | 微信联系" height="280">
+  <img src="https://github.com/harnspec/harnspec-docs/blob/main/static/img/qr-code.png" alt="WeChat Contact | 微信联系" height="280">
 </p>
