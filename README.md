@@ -69,17 +69,14 @@ harnspec ui       # Web UI at localhost:3000
 
 ## AI Integration
 
-Works with any AI coding assistant via MCP or CLI:
+HarnSpec is designed to be used with any AI coding assistant (Claude Code, Cursor, Windsurf, GitHub Copilot, Aider, etc.) via the **CLI + Agent Skills** approach.
 
-```json
-{
-  "mcpServers": {
-    "harnspec": { "command": "npx", "args": ["-y", "@harnspec/cli", "mcp"] }
-  }
-}
+Teach your AI assistant the methodology using:
+```bash
+harnspec skill install
 ```
 
-**Compatible with:** VS Code Copilot, Claude Code, Gemini CLI, Cursor, Windsurf, Kiro CLI, Kimi CLI, Qodo CLI, Amp, Trae Agent, Qwen Code, Droid, and more.
+AI agents can then use `harnspec` CLI tools directly to manage your project board and specs.
 
 📖 [Full AI integration guide →](https://harnspec.github.io/docs/guide/usage/ai-coding-workflow)
 
@@ -119,7 +116,7 @@ This installs the **harnspec** skill which teaches AI agents:
 | **🔗 Dependencies**  | Track spec relationships with `depends_on` and `related`                                          |
 | **🎨 Web UI**        | `harnspec ui` - browser-based dashboard                                                          |
 | **📈 Project Stats** | `harnspec stats` - health metrics and bottleneck detection                                       |
-| **🤖 AI-Native**     | MCP server + CLI for AI assistants                                                                |
+| **🤖 AI-Native**     | CLI-first with Agent Skills                                                                |
 | **🖥️ Desktop App**   | Desktop app repo: [harnspec/harnspec-desktop](https://github.com/harnspec/harnspec-desktop) |
 
 <p align="center">
@@ -138,7 +135,7 @@ This installs the **harnspec** skill which teaches AI agents:
 ### Development
 
 - **Node.js**: `>= 20.0.0`
-- **Rust**: `>= 1.70` (for building CLI/MCP/HTTP binaries)
+- **Rust**: `>= 1.70` (for building CLI/HTTP binaries)
 - **pnpm**: `>= 10.0.0`
 
 **Quick Check:**

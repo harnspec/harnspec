@@ -12,21 +12,21 @@
 
 ## 🔧 Managing Specs
 
-### MCP Tools (Preferred) with CLI Fallback
+### HarnSpec CLI Tools
 
-| Action         | MCP Tool   | CLI Fallback                                   |
-| -------------- | ---------- | ---------------------------------------------- |
-| Project status | `board`    | `harnspec board`                              |
-| List specs     | `list`     | `harnspec list`                               |
-| Search specs   | `search`   | `harnspec search "query"`                     |
-| View spec      | `view`     | `harnspec view <spec>`                        |
-| Create spec    | `create`   | `harnspec create <name>`                      |
-| Update spec    | `update`   | `harnspec update <spec> --status <status>`    |
-| Link specs     | `link`     | `harnspec link <spec> --depends-on <other>`   |
-| Unlink specs   | `unlink`   | `harnspec unlink <spec> --depends-on <other>` |
-| Dependencies   | `deps`     | `harnspec deps <spec>`                        |
-| Token count    | `tokens`   | `harnspec tokens <spec>`                      |
-| Validate specs | `validate` | `harnspec validate`                           |
+| Action         | CLI Command                                   |
+| -------------- | ---------------------------------------------- |
+| Project status | `harnspec board`                              |
+| List specs     | `harnspec list`                               |
+| Search specs   | `harnspec search "query"`                     |
+| View spec      | `harnspec view <spec>`                        |
+| Create spec    | `harnspec create <name>`                      |
+| Update spec    | `harnspec update <spec> --status <status>`    |
+| Link specs     | `harnspec link <spec> --depends-on <other>`   |
+| Unlink specs   | `harnspec unlink <spec> --depends-on <other>` |
+| Dependencies   | `harnspec deps <spec>`                        |
+| Token count    | `harnspec tokens <spec>`                      |
+| Validate specs | `harnspec validate`                           |
 
 ## ⚠️ Core Rules
 
@@ -43,7 +43,7 @@
 | ❌ Don't                             | ✅ Do Instead                                |
 | ----------------------------------- | ------------------------------------------- |
 | Create spec files manually          | Use `create` tool                           |
-| Skip discovery                      | Run `board` and `search` first              |
+| Skip discovery                      | Run `harnspec board` and `harnspec search` first |
 | Leave status as "planned"           | Update to `in-progress` before coding       |
 | Edit frontmatter manually           | Use `update` tool                           |
 | Complete spec without documentation | Document progress, prompts, learnings first |
