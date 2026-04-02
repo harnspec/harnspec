@@ -48,7 +48,6 @@ const sidebars: SidebarsConfig = {
           ],
         },
         'guide/visual-mode',
-        'guide/usage/mcp-integration',
         'guide/usage/spec-structure',
         {
           type: 'category',
@@ -99,7 +98,6 @@ const sidebars: SidebarsConfig = {
     'reference/cli',
     'reference/config',
     'reference/frontmatter',
-    'reference/mcp-server',
     'reference/ui-package',
   ],
 };

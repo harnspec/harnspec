@@ -75,7 +75,7 @@ export default function HomepageFeatures(): ReactNode {
                 <Translate
                   id="homepage.feature.aiNative.description"
                   description="AI-Native feature description">
-                  Works seamlessly with Cursor, GitHub Copilot, Aider, and Claude Desktop (via MCP). 
+                  Works seamlessly with Cursor, GitHub Copilot, Aider, and Claude Desktop. 
                   AI agents can read, search, and implement from your specs—no manual context switching.
                 </Translate>
               </p>
@@ -143,7 +143,7 @@ export default function HomepageFeatures(): ReactNode {
                 <Translate
                   id="homepage.feature.tooling.description"
                   description="Rich Tooling feature description">
-                  CLI for workflow automation. MCP server for AI agents. VS Code extension. 
+                  CLI for workflow automation. Agent Skills for AI agents. VS Code extension. 
                   GitHub Actions for CI/CD. Extensible and composable toolchain.
                 </Translate>
               </p>

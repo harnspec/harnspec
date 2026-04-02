@@ -18,7 +18,7 @@ import { promisify } from 'node:util';
 const execAsync = promisify(exec);
 
 const PLATFORMS = ['darwin-x64', 'darwin-arm64', 'linux-x64', 'windows-x64'];
-const PACKAGES = ['cli', 'mcp'];
+const PACKAGES = ['cli', 'http'];
 
 interface PackageInfo {
   name: string;
@@ -64,7 +64,7 @@ async function verifyPlatformPackages(version: string): Promise<boolean> {
 
   // Group by package type
   const cliResults = results.filter(r => r.name.includes('cli'));
-  const mcpResults = results.filter(r => r.name.includes('mcp'));
+  const httpResults = results.filter(r => r.name.includes('http'));
 
   let allGood = true;
 
@@ -81,8 +81,8 @@ async function verifyPlatformPackages(version: string): Promise<boolean> {
     }
   }
 
-  console.log('\n📦 MCP Platform Packages:');
-  for (const result of mcpResults) {
+  console.log('\n📦 HTTP Platform Packages:');
+  for (const result of httpResults) {
     if (result.exists) {
       console.log(`  ✅ ${result.name}@${result.version}`);
     } else {
@@ -100,7 +100,7 @@ async function verifyPlatformPackages(version: string): Promise<boolean> {
 async function verifyMainPackages(version: string): Promise<boolean> {
   console.log(`\n🔍 Verifying main packages for version: ${version}\n`);
 
-  const mainPackages = ['harnspec', '@harnspec/mcp'];
+  const mainPackages = ['harnspec', '@harnspec/http'];
   const checks = mainPackages.map(pkg => checkPackageExists(pkg, version));
   const results = await Promise.all(checks);
 
@@ -145,7 +145,7 @@ async function checkOptionalDependencies(packageName: string, version: string): 
     // Check if all platforms are included
     const expectedPrefixes = packageName === 'harnspec' ?
       PLATFORMS.map(p => `harnspec-${p}`) :
-      PLATFORMS.map(p => `@harnspec/mcp-${p}`);
+      PLATFORMS.map(p => `@harnspec/http-${p}`);
 
     const missing = expectedPrefixes.filter(prefix =>
       !Object.keys(optDeps).some(dep => dep.includes(prefix))
@@ -179,7 +179,7 @@ async function main() {
 
     // Check optionalDependencies configuration
     await checkOptionalDependencies('harnspec', version);
-    await checkOptionalDependencies('@harnspec/mcp', version);
+    await checkOptionalDependencies('@harnspec/http', version);
 
     console.log('\n' + '═'.repeat(60));
 
@@ -189,10 +189,10 @@ async function main() {
       console.log('Users can install with:');
       if (version === 'latest') {
         console.log('  npm install -g harnspec');
-        console.log('  npm install -g @harnspec/mcp');
+        console.log('  npm install -g @harnspec/http');
       } else {
         console.log(`  npm install -g harnspec@${version}`);
-        console.log(`  npm install -g @harnspec/mcp@${version}`);
+        console.log(`  npm install -g @harnspec/http@${version}`);
       }
       console.log('═'.repeat(60));
       process.exit(0);

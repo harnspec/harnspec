@@ -1,7 +1,6 @@
 [workspace]
 exclude = [
   "harnspec-sync-bridge", # deprecated
-  "harnspec-mcp",         # deprecated
 ]
 members = [
   "harnspec-core",

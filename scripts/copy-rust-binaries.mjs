@@ -42,11 +42,6 @@ const BINARY_CONFIG = {
     packagePrefix: '@harnspec/cli',
     description: 'HarnSpec CLI binary'
   },
-  'harnspec-mcp': {
-    packagePath: 'mcp',
-    packagePrefix: '@harnspec/mcp',
-    description: 'HarnSpec MCP server binary'
-  },
   'harnspec-http': {
     packagePath: 'http-server',
     packagePrefix: '@harnspec/http',
@@ -320,7 +315,7 @@ async function main() {
 
   console.log(`🔧 Copying Rust binaries (${useDebug ? 'debug' : 'release'})...\n`);
 
-  const binaries = ['harnspec', 'harnspec-mcp', 'harnspec-http'];
+  const binaries = ['harnspec', 'harnspec-http'];
 
   if (copyAll) {
     console.log('📦 Copying all platforms (requires cross-compiled binaries)\n');

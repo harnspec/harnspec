@@ -34,11 +34,6 @@ const PACKAGES = {
     platformPrefix: '@harnspec/cli',
     binary: 'harnspec'
   },
-  '@harnspec/mcp': {
-    main: '@harnspec/mcp',
-    platformPrefix: '@harnspec/mcp',
-    binary: 'harnspec-mcp'
-  },
   '@harnspec/http-server': {
     main: '@harnspec/http-server',
     platformPrefix: '@harnspec/http',

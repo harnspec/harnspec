@@ -147,14 +147,6 @@ async function publishPlatformPackages(dryRun: boolean, tag?: string): Promise<v
     });
   }
 
-  // MCP platform packages
-  for (const platform of PLATFORMS) {
-    packagesToPublish.push({
-      type: 'MCP',
-      dir: path.join(PACKAGES_DIR, 'mcp', 'binaries', platform)
-    });
-  }
-
   // HTTP server platform packages
   for (const platform of PLATFORMS) {
     packagesToPublish.push({
@@ -176,7 +168,6 @@ async function publishPlatformPackages(dryRun: boolean, tag?: string): Promise<v
   // Group and display results by type
   const groupedResults: Record<string, PublishResult[]> = {
     CLI: [],
-    MCP: [],
     HTTP: []
   };
 

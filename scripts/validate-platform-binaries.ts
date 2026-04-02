@@ -2,7 +2,7 @@
 /**
  * Validate that all platform binaries exist before publishing
  * 
- * This script checks that all required binaries for CLI, MCP, and HTTP server
+ * This script checks that all required binaries for CLI and HTTP server
  * are present in the expected directories for all platforms.
  * 
  * Usage:
@@ -103,7 +103,6 @@ async function validatePlatformBinaries(): Promise<boolean> {
   for (const platform of PLATFORMS) {
     const isWindows = platform.startsWith('windows');
     const cliExt = isWindows ? '.exe' : '';
-    const mcpExt = isWindows ? '.exe' : '';
     const httpExt = isWindows ? '.exe' : '';
 
     // Check CLI binary
@@ -123,26 +122,6 @@ async function validatePlatformBinaries(): Promise<boolean> {
     } else {
       const reason = cliCheck.exists ? 'INVALID HEADER' : 'MISSING';
       console.log(`❌ CLI ${platform}: ${reason}`);
-      allValid = false;
-    }
-
-    // Check MCP binary
-    const mcpBinaryPath = path.join(
-      PACKAGES_DIR,
-      'mcp',
-      'binaries',
-      platform,
-      `harnspec-mcp${mcpExt}`
-    );
-    const mcpCheck = await checkBinary(mcpBinaryPath, platform);
-    checks.push(mcpCheck);
-
-    if (mcpCheck.exists && mcpCheck.headerValid) {
-      const sizeKB = ((mcpCheck.size || 0) / 1024).toFixed(1);
-      console.log(`✅ MCP ${platform}: ${sizeKB} KB`);
-    } else {
-      const reason = mcpCheck.exists ? 'INVALID HEADER' : 'MISSING';
-      console.log(`❌ MCP ${platform}: ${reason}`);
       allValid = false;
     }
 
