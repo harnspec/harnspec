@@ -238,7 +238,7 @@ pub fn write_test_runner(cwd: &Path, runner_id: &str) {
     fs::create_dir_all(&lean_spec_dir).expect("Failed to create .harnspec dir");
     let runners_json = format!(
         r#"{{
-  "$schema": "https://harnspec.dev/schemas/runners.json",
+  "$schema": "https://harnspec.github.io/schemas/runners.json",
   "runners": {{
     "{runner_id}": {{
       "name": "Test Runner",

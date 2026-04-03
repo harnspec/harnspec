@@ -135,54 +135,7 @@ pub(crate) enum Commands {
     },
 
     /// Create a new spec
-    Create {
-        /// Spec name (e.g., "my-feature")
-        name: String,
-
-        /// Spec title
-        #[arg(short, long)]
-        title: Option<String>,
-
-        /// Template to use
-        #[arg(short = 'T', long)]
-        template: Option<String>,
-
-        /// Initial status
-        #[arg(short, long)]
-        status: Option<String>,
-
-        /// Priority level
-        #[arg(short, long, default_value = "medium")]
-        priority: String,
-
-        /// Tags (comma-separated)
-        #[arg(long)]
-        tags: Option<String>,
-
-        /// Parent umbrella spec path or number
-        #[arg(long)]
-        parent: Option<String>,
-
-        /// Spec(s) this new spec depends on
-        #[arg(long = "depends-on", num_args = 1..)]
-        depends_on: Vec<String>,
-
-        /// Full markdown content for the spec body (may include frontmatter)
-        #[arg(long, allow_hyphen_values = true)]
-        content: Option<String>,
-
-        /// Read spec content from a file path (takes precedence over --content)
-        #[arg(short, long)]
-        file: Option<String>,
-
-        /// Assignee for the spec
-        #[arg(short, long)]
-        assignee: Option<String>,
-
-        /// Short description (inserted into template body under the title)
-        #[arg(long)]
-        description: Option<String>,
-    },
+    Create(Box<CreateParams>),
 
     /// List example projects
     Examples,
@@ -289,43 +242,7 @@ pub(crate) enum Commands {
     },
 
     /// Run a configured runner from the current project
-    Run {
-        /// Inline prompt to send to the runner
-        #[arg(short = 'p', long)]
-        prompt: Option<String>,
-
-        /// Spec IDs to attach as context (repeatable: --spec 028 --spec 320)
-        #[arg(long, action = clap::ArgAction::Append)]
-        spec: Vec<String>,
-
-        /// Runner ID to use (defaults to configured default runner)
-        #[arg(long)]
-        runner: Option<String>,
-
-        /// Override the runner model if supported
-        #[arg(long)]
-        model: Option<String>,
-
-        /// Show the composed command without executing it
-        #[arg(long)]
-        dry_run: bool,
-
-        /// Force ACP protocol for this invocation
-        #[arg(long)]
-        acp: bool,
-
-        /// Run the session inside a dedicated git worktree
-        #[arg(long)]
-        worktree: bool,
-
-        /// Run each provided spec in parallel worktrees
-        #[arg(long)]
-        parallel: bool,
-
-        /// Merge strategy to use for worktree sessions
-        #[arg(long)]
-        merge_strategy: Option<String>,
-    },
+    Run(Box<RunParams>),
 
     /// List all specs with optional filtering
     List {
@@ -521,79 +438,7 @@ pub(crate) enum Commands {
     },
 
     /// Update a spec's frontmatter
-    Update {
-        /// Spec path(s) or number(s)
-        #[arg(required = true, num_args = 1..)]
-        specs: Vec<String>,
-
-        /// New status
-        #[arg(short, long)]
-        status: Option<String>,
-
-        /// New priority
-        #[arg(short, long)]
-        priority: Option<String>,
-
-        /// New assignee
-        #[arg(short, long)]
-        assignee: Option<String>,
-
-        /// Add tags
-        #[arg(long)]
-        add_tags: Option<String>,
-
-        /// Remove tags
-        #[arg(long)]
-        remove_tags: Option<String>,
-
-        /// Replace text (repeatable: --replace "old" "new")
-        #[arg(long = "replace", num_args = 2, value_names = ["OLD", "NEW"], action = ArgAction::Append)]
-        replacements: Vec<String>,
-
-        /// Replace all matches (applies to all --replace entries)
-        #[arg(long, conflicts_with = "match_first")]
-        match_all: bool,
-
-        /// Replace first match only (applies to all --replace entries)
-        #[arg(long, conflicts_with = "match_all")]
-        match_first: bool,
-
-        /// Check checklist item (repeatable)
-        #[arg(long, action = ArgAction::Append)]
-        check: Vec<String>,
-
-        /// Uncheck checklist item (repeatable)
-        #[arg(long, action = ArgAction::Append)]
-        uncheck: Vec<String>,
-
-        /// Section heading to update
-        #[arg(long)]
-        section: Option<String>,
-
-        /// Replace content for section
-        #[arg(long, conflicts_with_all = ["append", "prepend"])]
-        section_content: Option<String>,
-
-        /// Append content to section
-        #[arg(long, conflicts_with = "section_content")]
-        append: Option<String>,
-
-        /// Prepend content to section
-        #[arg(long, conflicts_with = "section_content")]
-        prepend: Option<String>,
-
-        /// Replace full body content (frontmatter preserved)
-        #[arg(long)]
-        content: Option<String>,
-
-        /// Skip completion verification or stage skipping guard (draft -> in-progress/complete)
-        #[arg(short, long)]
-        force: bool,
-
-        /// Expected content hash for optimistic concurrency (fails if content changed)
-        #[arg(long = "expected-hash")]
-        expected_hash: Option<String>,
-    },
+    Update(Box<UpdateParams>),
 
     /// Validate specs for issues
     Validate {
@@ -640,6 +485,170 @@ pub(crate) enum Commands {
         #[command(subcommand)]
         action: RunnerSubcommand,
     },
+}
+
+#[derive(Parser)]
+pub(crate) struct CreateParams {
+    /// Spec name (e.g., "my-feature")
+    pub(crate) name: String,
+
+    /// Spec title
+    #[arg(short, long)]
+    pub(crate) title: Option<String>,
+
+    /// Template to use
+    #[arg(short = 'T', long)]
+    pub(crate) template: Option<String>,
+
+    /// Initial status
+    #[arg(short, long)]
+    pub(crate) status: Option<String>,
+
+    /// Priority level
+    #[arg(short, long, default_value = "medium")]
+    pub(crate) priority: String,
+
+    /// Tags (comma-separated)
+    #[arg(long)]
+    pub(crate) tags: Option<String>,
+
+    /// Parent umbrella spec path or number
+    #[arg(long)]
+    pub(crate) parent: Option<String>,
+
+    /// Spec(s) this new spec depends on
+    #[arg(long = "depends-on", num_args = 1..)]
+    pub(crate) depends_on: Vec<String>,
+
+    /// Full markdown content for the spec body (may include frontmatter)
+    #[arg(long, allow_hyphen_values = true)]
+    pub(crate) content: Option<String>,
+
+    /// Read spec content from a file path (takes precedence over --content)
+    #[arg(short, long)]
+    pub(crate) file: Option<String>,
+
+    /// Assignee for the spec
+    #[arg(short, long)]
+    pub(crate) assignee: Option<String>,
+
+    /// Short description (inserted into template body under the title)
+    #[arg(long)]
+    pub(crate) description: Option<String>,
+}
+
+#[derive(Parser)]
+pub(crate) struct RunParams {
+    /// Inline prompt to send to the runner
+    #[arg(short = 'p', long)]
+    pub(crate) prompt: Option<String>,
+
+    /// Spec IDs to attach as context (repeatable: --spec 028 --spec 320)
+    #[arg(long, action = clap::ArgAction::Append)]
+    pub(crate) spec: Vec<String>,
+
+    /// Runner ID to use (defaults to configured default runner)
+    #[arg(long)]
+    pub(crate) runner: Option<String>,
+
+    /// Override the runner model if supported
+    #[arg(long)]
+    pub(crate) model: Option<String>,
+
+    /// Show the composed command without executing it
+    #[arg(long)]
+    pub(crate) dry_run: bool,
+
+    /// Force ACP protocol for this invocation
+    #[arg(long)]
+    pub(crate) acp: bool,
+
+    /// Run the session inside a dedicated git worktree
+    #[arg(long)]
+    pub(crate) worktree: bool,
+
+    /// Run each provided spec in parallel worktrees
+    #[arg(long)]
+    pub(crate) parallel: bool,
+
+    /// Merge strategy to use for worktree sessions
+    #[arg(long)]
+    pub(crate) merge_strategy: Option<String>,
+}
+
+#[derive(Parser)]
+pub(crate) struct UpdateParams {
+    /// Spec path(s) or number(s)
+    #[arg(required = true, num_args = 1..)]
+    pub(crate) specs: Vec<String>,
+
+    /// New status
+    #[arg(short, long)]
+    pub(crate) status: Option<String>,
+
+    /// New priority
+    #[arg(short, long)]
+    pub(crate) priority: Option<String>,
+
+    /// New assignee
+    #[arg(short, long)]
+    pub(crate) assignee: Option<String>,
+
+    /// Add tags
+    #[arg(long)]
+    pub(crate) add_tags: Option<String>,
+
+    /// Remove tags
+    #[arg(long)]
+    pub(crate) remove_tags: Option<String>,
+
+    /// Replace text (repeatable: --replace "old" "new")
+    #[arg(long = "replace", num_args = 2, value_names = ["OLD", "NEW"], action = ArgAction::Append)]
+    pub(crate) replacements: Vec<String>,
+
+    /// Replace all matches (applies to all --replace entries)
+    #[arg(long, conflicts_with = "match_first")]
+    pub(crate) match_all: bool,
+
+    /// Replace first match only (applies to all --replace entries)
+    #[arg(long, conflicts_with = "match_all")]
+    pub(crate) match_first: bool,
+
+    /// Check checklist item (repeatable)
+    #[arg(long, action = ArgAction::Append)]
+    pub(crate) check: Vec<String>,
+
+    /// Uncheck checklist item (repeatable)
+    #[arg(long, action = ArgAction::Append)]
+    pub(crate) uncheck: Vec<String>,
+
+    /// Section heading to update
+    #[arg(long)]
+    pub(crate) section: Option<String>,
+
+    /// Replace content for section
+    #[arg(long, conflicts_with_all = ["append", "prepend"])]
+    pub(crate) section_content: Option<String>,
+
+    /// Append content to section
+    #[arg(long, conflicts_with = "section_content")]
+    pub(crate) append: Option<String>,
+
+    /// Prepend content to section
+    #[arg(long, conflicts_with = "section_content")]
+    pub(crate) prepend: Option<String>,
+
+    /// Replace full body content (frontmatter preserved)
+    #[arg(long)]
+    pub(crate) content: Option<String>,
+
+    /// Skip completion verification or stage skipping guard (draft -> in-progress/complete)
+    #[arg(short, long)]
+    pub(crate) force: bool,
+
+    /// Expected content hash for optimistic concurrency (fails if content changed)
+    #[arg(long = "expected-hash")]
+    pub(crate) expected_hash: Option<String>,
 }
 
 #[derive(Subcommand)]

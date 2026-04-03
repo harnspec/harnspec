@@ -1,6 +1,6 @@
 # Dark Theme Demo
 
-> **Tutorial**: [Adding Dark Theme Support](https://harnspec.dev/docs/tutorials/adding-dark-theme)
+> **Tutorial**: [Adding Dark Theme Support](https://harnspec.github.io/docs/tutorials/adding-dark-theme)
 
 ## Scenario
 

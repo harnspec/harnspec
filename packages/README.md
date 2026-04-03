@@ -58,7 +58,7 @@ Delegates to the Rust MCP binary and makes MCP setup discoverable.
 npx -y @harnspec/mcp
 ```
 
-See [MCP Integration docs](https://harnspec.dev/docs/guide/usage/ai-assisted/mcp-integration).
+See [MCP Integration docs](https://harnspec.github.io/docs/guide/usage/ai-assisted/mcp-integration).
 
 ## @harnspec/ui (Vite SPA)
 

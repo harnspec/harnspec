@@ -16,7 +16,7 @@ use std::process::Stdio;
 use tokio::process::Command;
 use ts_rs::TS;
 
-pub const RUNNERS_SCHEMA_URL: &str = "https://harnspec.dev/schemas/runners.json";
+pub const RUNNERS_SCHEMA_URL: &str = "https://harnspec.github.io/schemas/runners.json";
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct RunnerConfig {

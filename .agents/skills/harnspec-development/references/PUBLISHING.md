@@ -117,7 +117,7 @@ npm install @harnspec/ui@dev
    
    ### 🔗 Links
    - [npm: harnspec](https://www.npmjs.com/package/harnspec)
-   - [Documentation](https://harnspec.dev)
+   - [Documentation](https://harnspec.github.io)
    - [Full Changelog](https://github.com/codervisor/harnspec/blob/main/CHANGELOG.md)
    EOF
    
@@ -129,7 +129,7 @@ npm install @harnspec/ui@dev
 - Users discover new versions through GitHub releases
 - Release notes provide context that CHANGELOG.md alone doesn't
 
-12. **Verify**:
+1. **Verify**:
 
 - `npm view harnspec version` to confirm CLI publication
 - `npm view @harnspec/mcp version` to confirm MCP publication

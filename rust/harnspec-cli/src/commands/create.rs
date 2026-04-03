@@ -216,9 +216,14 @@ fn apply_variables(
         content = content.replace("tags: []", &format!("tags:\n{}", tags_yaml));
     }
 
-    // Add created_at timestamp to frontmatter
-    let frontmatter_end = content.find("---\n\n").ok_or("Invalid template format")?;
-    content.insert_str(frontmatter_end, &format!("created_at: '{}'\n", created_at));
+    // Find the second "---" delimiter after the first one
+    let second_dash_pos = content[3..]
+        .find("---")
+        .map(|pos| pos + 3)
+        .ok_or("Invalid template format: Could not find frontmatter delimiters (---)")?;
+
+    // Insert created_at before the second "---"
+    content.insert_str(second_dash_pos, &format!("created_at: '{}'\n", created_at));
 
     Ok(content)
 }

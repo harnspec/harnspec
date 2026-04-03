@@ -242,7 +242,7 @@ impl Default for SyncSettings {
 }
 
 fn default_verification_url() -> String {
-    "https://app.harnspec.dev/device".to_string()
+    "https://app.harnspec.github.io/device".to_string()
 }
 
 fn default_device_code_ttl() -> u64 {

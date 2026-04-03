@@ -1,6 +1,6 @@
 # Dashboard Widgets Demo
 
-> **Tutorial**: [Managing Multiple Features](https://harnspec.dev/docs/tutorials/multiple-features)
+> **Tutorial**: [Managing Multiple Features](https://harnspec.github.io/docs/tutorials/multiple-features)
 
 ## Scenario
 

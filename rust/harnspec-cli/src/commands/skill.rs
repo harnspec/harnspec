@@ -1,62 +1,47 @@
+use colored::Colorize;
 use std::error::Error;
-use std::process::Command;
+use std::fs;
 
-/*
-/// Maps runner IDs to skills.sh agent names
-pub fn runner_to_skills_agent(runner_id: &str) -> Option<&'static str> {
-    match runner_id {
-        "claude" => Some("claude-code"),
-        "copilot" => Some("github-copilot"),
-        "cursor" => Some("cursor"),
-        "gemini" => Some("gemini-cli"),
-        "codex" => Some("codex"),
-        "cline" => Some("cline"),
-        "continue" => Some("continue"),
-        "windsurf" => Some("windsurf"),
-        "aider" => Some("aider"),
-        "opencode" => Some("opencode"),
-        _ => None,
-    }
-}
-*/
+/// Embedded HarnSpec methodology skills
+const HARNSPEC_SKILL_MD: &str = include_str!("../../templates/skills/harnspec/SKILL.md");
+
+/// Collection of reference files associated with the skill
+const REF_BEST_PRACTICES: &str =
+    include_str!("../../templates/skills/harnspec/references/best-practices.md");
+const REF_COMMANDS: &str = include_str!("../../templates/skills/harnspec/references/commands.md");
+const REF_EXAMPLES: &str = include_str!("../../templates/skills/harnspec/references/examples.md");
+const REF_WORKFLOW: &str = include_str!("../../templates/skills/harnspec/references/workflow.md");
 
 /// Install skills, optionally limited to specific agents.
 /// If agents is None or empty, installs to all agents (fallback).
 /// If skip_confirm is true, passes -y to skip interactive prompts.
 pub fn install(_agents: Option<&[String]>, _skip_confirm: bool) -> Result<(), Box<dyn Error>> {
-    let args = vec![
-        "@harnspec/skills@latest",
-        "-y", // Skip npx prompt to install
-    ];
+    let root = std::env::current_dir()?;
+    let skill_root = root.join(".agents").join("skills").join("harnspec");
+    let ref_dir = skill_root.join("references");
 
-    run_npx(&args)
-}
-
-fn run_npx(args: &[&str]) -> Result<(), Box<dyn Error>> {
-    match Command::new("npx").args(args).status() {
-        Ok(status) if status.success() => Ok(()),
-        Ok(status) => Err(format!("npx {} exited with {status}", args.join(" ")).into()),
-        Err(err) => {
-            // npm v10 removed npx; fallback to npm exec with the same args
-            if err.kind() == std::io::ErrorKind::NotFound {
-                let mut npm_args = vec!["exec".to_string(), "--yes".to_string()];
-                // `npx foo --bar` becomes `npm exec --yes -- foo --bar`
-                npm_args.push("--".to_string());
-                npm_args.extend(args.iter().map(|s| s.to_string()));
-
-                let status = Command::new("npm")
-                    .args(&npm_args)
-                    .status()
-                    .map_err(|err| {
-                        format!("Failed to run npm exec (is Node.js installed?): {err}")
-                    })?;
-
-                if status.success() {
-                    return Ok(());
-                }
-                return Err(format!("npm exec {} exited with {status}", args.join(" ")).into());
-            }
-            Err(format!("Failed to run npx (is Node.js installed?): {err}").into())
-        }
+    // 1. Ensure directories exist
+    if !skill_root.exists() {
+        fs::create_dir_all(&skill_root)?;
     }
+    if !ref_dir.exists() {
+        fs::create_dir_all(&ref_dir)?;
+    }
+
+    // 2. Write main SKILL.md
+    fs::write(skill_root.join("SKILL.md"), HARNSPEC_SKILL_MD)?;
+
+    // 3. Write reference documents
+    fs::write(ref_dir.join("best-practices.md"), REF_BEST_PRACTICES)?;
+    fs::write(ref_dir.join("commands.md"), REF_COMMANDS)?;
+    fs::write(ref_dir.join("examples.md"), REF_EXAMPLES)?;
+    fs::write(ref_dir.join("workflow.md"), REF_WORKFLOW)?;
+
+    println!(
+        "{} Officially injected HarnSpec SDD methodology skills (with references).",
+        "✓".green()
+    );
+    println!("{} Skills location: {}", "•".cyan(), skill_root.display());
+
+    Ok(())
 }

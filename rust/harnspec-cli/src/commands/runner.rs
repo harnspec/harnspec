@@ -170,7 +170,7 @@ fn ensure_config_file(path: &Path) -> Result<(), Box<dyn Error>> {
     }
 
     let template = RunnersFile {
-        schema: Some("https://harnspec.dev/schemas/runners.json".to_string()),
+        schema: Some("https://harnspec.github.io/schemas/runners.json".to_string()),
         runners: HashMap::new(),
         default: None,
     };

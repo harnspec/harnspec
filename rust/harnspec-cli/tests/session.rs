@@ -297,7 +297,7 @@ fn test_run_command_dry_run_prints_composed_command_with_model_override() {
     write_runners_json(
         cwd,
         r#"{
-  "$schema": "https://harnspec.dev/schemas/runners.json",
+  "$schema": "https://harnspec.github.io/schemas/runners.json",
   "runners": {
     "copilot": {
       "command": "echo"
@@ -378,7 +378,7 @@ fn test_run_command_acp_dry_run_forces_acp_protocol() {
     write_runners_json(
         cwd,
         r#"{
-  "$schema": "https://harnspec.dev/schemas/runners.json",
+  "$schema": "https://harnspec.github.io/schemas/runners.json",
   "runners": {
     "copilot": {
       "command": "echo"
@@ -504,7 +504,7 @@ fn test_run_command_worktree_merges_and_cleans_up() {
     write_runners_json(
         cwd,
         r#"{
-    "$schema": "https://harnspec.dev/schemas/runners.json",
+    "$schema": "https://harnspec.github.io/schemas/runners.json",
     "runners": {
         "worktree-shell": {
             "command": "sh",
@@ -556,7 +556,7 @@ fn test_failed_worktree_session_can_be_cleaned_up() {
     write_runners_json(
         cwd,
         r#"{
-    "$schema": "https://harnspec.dev/schemas/runners.json",
+    "$schema": "https://harnspec.github.io/schemas/runners.json",
     "runners": {
         "failing-worktree": {
             "command": "sh",
@@ -621,7 +621,7 @@ fn test_parallel_run_uses_multiple_worktrees() {
     write_runners_json(
         cwd,
         r#"{
-    "$schema": "https://harnspec.dev/schemas/runners.json",
+    "$schema": "https://harnspec.github.io/schemas/runners.json",
     "runners": {
         "parallel-shell": {
             "command": "sh",

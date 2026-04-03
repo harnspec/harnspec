@@ -130,7 +130,10 @@ fn run_standard_init(specs_dir: &str, options: InitOptions) -> Result<(), Box<dy
         "harnspec create my-feature".cyan()
     );
     println!("  2. View the board: {}", "harnspec board".cyan());
-    println!("  3. Read the docs: {}", "https://harnspec.dev".cyan());
+    println!(
+        "  3. Read the docs: {}",
+        "https://harnspec.github.io".cyan()
+    );
 
     Ok(())
 }
@@ -316,7 +319,7 @@ Each spec lives in a numbered directory with a `README.md` file:
 
 ## Learn More
 
-Visit [harnspec.dev](https://harnspec.dev) for documentation.
+Visit [harnspec.github.io](https://harnspec.github.io) for documentation.
 "#;
         fs::write(&specs_readme, readme_content)?;
         println!("{} Created specs README", "✓".green());

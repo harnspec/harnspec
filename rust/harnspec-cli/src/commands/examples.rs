@@ -31,7 +31,10 @@ pub fn run(output_format: &str) -> Result<(), Box<dyn Error>> {
     println!("To clone an example:");
     println!("  {}", "git clone <url> <directory>".cyan());
     println!();
-    println!("Learn more at: {}", "https://harnspec.dev/examples".cyan());
+    println!(
+        "Learn more at: {}",
+        "https://harnspec.github.io/examples".cyan()
+    );
 
     Ok(())
 }
@@ -57,7 +60,7 @@ fn get_example_projects() -> Vec<ExampleProject> {
         ExampleProject {
             name: "sdd-tutorial".to_string(),
             description: "Step-by-step tutorial for Spec-Driven Development".to_string(),
-            url: "https://harnspec.dev/tutorials/getting-started".to_string(),
+            url: "https://harnspec.github.io/tutorials/getting-started".to_string(),
             tags: vec!["tutorial".to_string(), "beginner".to_string()],
         },
     ]

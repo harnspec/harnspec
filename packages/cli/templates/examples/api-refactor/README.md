@@ -1,6 +1,6 @@
 # API Refactor Demo
 
-> **Tutorial**: [Refactoring with Specs](https://harnspec.dev/docs/tutorials/refactoring-specs)
+> **Tutorial**: [Refactoring with Specs](https://harnspec.github.io/docs/tutorials/refactoring-specs)
 
 ## Scenario
 
