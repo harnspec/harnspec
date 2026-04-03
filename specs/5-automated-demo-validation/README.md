@@ -1,5 +1,5 @@
 ---
-status: planned
+status: complete
 created: 2026-04-01
 priority: high
 tags:
@@ -17,7 +17,7 @@ parent: 3-universal-skills-initiative
 ## 概述 (Overview)
 
 ### 问题 (Problem)
-随着 HarnSpec 项目功能的不断丰富，核心指令（如 `init`, `skills install`, `spec` 管理等）在不同环境下的一致性和稳定性变得至关重要。手动测试这些核心流程不仅耗时且容易遗漏回归问题。此外，为了确保 SDD（Spec-Driven Development）方法论的有效执行，需要一套自动化的验证方案来模拟真实的用户开发流程。
+随着 HarnSpec 项目功能的不断丰富，核心指令（如 `init`, `skills install`, `spec` 管理等）在不同环境下的一致性和稳定性变得至关重要。手动测试 these 核心流程不仅耗时且容易遗漏回归问题。此外，为了确保 SDD（Spec-Driven Development）方法论的有效执行，需要一套自动化的验证方案来模拟真实的用户开发流程。
 
 ### Goals (目标)
 1. **自动化验证流程**：在根目录下生成 demo 项目，通过脚本自动化执行 HarnSpec 核心指令。
@@ -50,25 +50,25 @@ parent: 3-universal-skills-initiative
 ## 实施计划 (Plan)
 
 ### 第一阶段：测试基座建设
-- [ ] 创建自动化测试脚本 `scripts/validate-demo.mjs`。
-- [ ] 实现 demo 项目的初始化与清理逻辑。
+- [x] 创建自动化测试脚本 `scripts/validate-demo.mjs`。
+- [x] 实现 demo 项目的初始化与清理逻辑。
 
 ### 第二阶段：核心指令自动化
-- [ ] 编写打包逻辑验证测试。
-- [ ] 编写 `harnspec init` 与 `skills install` 的自动化断言。
+- [x] 编写打包逻辑验证测试。
+- [x] 编写 `harnspec init` 与 `skills install` 的自动化断言。
 
 ### 第三阶段：Spec 管理深度测试
-- [ ] 编写涵盖创建、更新、关联、拆分的完整 spec 链条测试。
-- [ ] 记录并验证指令执行的日志。
+- [x] 编写涵盖创建、更新、关联、拆分的完整 spec 链条测试。
+- [x] 记录并验证指令执行的日志。
 
 ### 第四阶段：界面冒烟测试
-- [ ] 实现针对 TUI 和 UI 服务的快速启动验证。
+- [x] 实现针对 TUI 和 UI 服务的快速启动验证。
 
 ## 验收标准 (Acceptance Criteria)
-- [ ] 运行自动化测试脚本后，所有指令均能产生预期的文件变更或标准输出。
-- [ ] Demo 项目在测试完成后能被正确清理。
-- [ ] 测试报告清晰展示每项指令的通过情况。
+- [x] 运行自动化测试脚本后，所有指令均能产生预期的文件变更或标准输出。
+- [x] Demo 项目在测试完成后能被正确清理。
+- [x] 测试报告清晰展示每项指令的通过情况。
 
 ## 备注 (Notes)
-- 只需要新建 spec 而不在此任务中执行。
-- 自动化测试应尽量保持轻量，不引入沉重的外部依赖。
+- 已完成：修复了 CLI 核心中的 Stack Overflow 问题，并解决了 `--output` 命名冲突。
+- 自动化测试保持轻量，使用本地 debug 编译进行验证。

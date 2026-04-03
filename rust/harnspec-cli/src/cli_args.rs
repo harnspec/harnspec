@@ -28,111 +28,28 @@ pub(crate) struct Cli {
 #[derive(Subcommand)]
 pub(crate) enum Commands {
     /// Dispatch specs to AI coding agents
-    Agent {
-        /// Action: run, list, status, config
-        #[arg(default_value = "help")]
-        action: String,
-
-        /// Specs to dispatch (for run action)
-        specs: Option<Vec<String>>,
-
-        /// Agent type (claude, copilot, aider, gemini, cursor, continue)
-        #[arg(long, default_value = "claude")]
-        agent: Option<String>,
-
-        /// Create worktrees for parallel implementation
-        #[arg(long)]
-        parallel: bool,
-
-        /// Do not update spec status to in-progress
-        #[arg(long)]
-        no_status_update: bool,
-
-        /// Preview without making changes
-        #[arg(long)]
-        dry_run: bool,
-    },
+    Agent(Box<AgentParams>),
 
     /// Analyze spec complexity and structure
-    Analyze {
-        /// Spec path or number
-        spec: String,
-    },
+    Analyze(Box<AnalyzeParams>),
 
     /// Archive spec(s) by setting status to archived
-    Archive {
-        /// Spec paths or numbers (supports batch operations)
-        #[arg(required = true)]
-        specs: Vec<String>,
-
-        /// Preview changes without applying
-        #[arg(long)]
-        dry_run: bool,
-    },
+    Archive(Box<ArchiveParams>),
 
     /// Backfill timestamps from git history
-    Backfill {
-        /// Specific specs to backfill
-        specs: Option<Vec<String>>,
-
-        /// Preview without making changes
-        #[arg(long)]
-        dry_run: bool,
-
-        /// Overwrite existing values
-        #[arg(long)]
-        force: bool,
-
-        /// Include assignee from git author
-        #[arg(long)]
-        assignee: bool,
-
-        /// Include status transitions
-        #[arg(long)]
-        transitions: bool,
-
-        /// Include all optional fields
-        #[arg(long)]
-        all: bool,
-
-        /// Create frontmatter for files without it
-        #[arg(long)]
-        bootstrap: bool,
-    },
+    Backfill(Box<BackfillParams>),
 
     /// Show project board view
-    Board {
-        /// Group by: status, priority, assignee, tag, parent
-        #[arg(short, long, default_value = "status")]
-        group_by: String,
-    },
+    Board(Box<BoardParams>),
 
     /// Check for sequence conflicts
-    Check {
-        /// Attempt to fix conflicts
-        #[arg(long)]
-        fix: bool,
-    },
+    Check(Box<CheckParams>),
 
     /// List child specs for a parent
-    Children {
-        /// Spec path or number
-        spec: String,
-    },
+    Children(Box<ChildrenParams>),
 
     /// Remove specified line ranges from spec
-    Compact {
-        /// Spec to compact
-        spec: String,
-
-        /// Line range to remove (e.g., 145-153)
-        #[arg(long = "remove")]
-        removes: Vec<String>,
-
-        /// Preview without making changes
-        #[arg(long)]
-        dry_run: bool,
-    },
+    Compact(Box<CompactParams>),
 
     /// Create a new spec
     Create(Box<CreateParams>),
@@ -141,337 +58,78 @@ pub(crate) enum Commands {
     Examples,
 
     /// Manage spec relationships (hierarchy and dependencies)
-    ///
-    /// Use parent/child for hierarchy and depends-on for blockers.
-    /// Never use both for the same spec pair.
-    ///
-    /// Examples:
-    ///   harnspec rel add 257 --parent 250
-    ///   harnspec rel add 257 --depends-on 254
-    ///   harnspec rel rm 257 --depends-on 254
-    Rel {
-        /// Arguments: <spec> or <action> <spec>
-        #[arg(required = true, num_args = 1..=2)]
-        args: Vec<String>,
-
-        /// Set or clear parent relationship
-        #[arg(long, num_args = 0..=1, default_missing_value = "")]
-        parent: Option<String>,
-
-        /// Add or remove child relationships
-        #[arg(long = "child", num_args = 1..)]
-        child: Vec<String>,
-
-        /// Add or remove dependency relationships
-        #[arg(long = "depends-on", num_args = 1..)]
-        depends_on: Vec<String>,
-    },
+    Rel(Box<RelParams>),
 
     /// List files in a spec directory
-    Files {
-        /// Spec path or number
-        spec: String,
-
-        /// Show file sizes
-        #[arg(short, long)]
-        size: bool,
-    },
+    Files(Box<FilesParams>),
 
     /// Manage Git repository integration
     Git {
         #[command(subcommand)]
-        action: GitSubcommand,
+        action: Box<GitSubcommand>,
     },
 
     /// Show timeline with dependencies
-    Gantt {
-        /// Filter by status
-        #[arg(short, long)]
-        status: Option<String>,
-    },
+    Gantt(Box<GanttParams>),
 
     /// Initialize HarnSpec in current directory
-    Init {
-        /// Skip prompts and use defaults
-        #[arg(short, long)]
-        yes: bool,
-
-        /// Initialize an example project
-        #[arg(long)]
-        example: Option<String>,
-
-        /// Skip AI tool configuration (symlinks)
-        #[arg(long)]
-        no_ai_tools: bool,
-
-        /// Install HarnSpec agent skills (project-level default)
-        #[arg(long)]
-        skill: bool,
-
-        /// Install skills to .github/skills/
-        #[arg(long)]
-        skill_github: bool,
-
-        /// Install skills to .claude/skills/
-        #[arg(long)]
-        skill_claude: bool,
-
-        /// Install skills to .cursor/skills/
-        #[arg(long)]
-        skill_cursor: bool,
-
-        /// Install skills to .codex/skills/
-        #[arg(long)]
-        skill_codex: bool,
-
-        /// Install skills to .gemini/skills/
-        #[arg(long)]
-        skill_gemini: bool,
-
-        /// Install skills to .vscode/skills/
-        #[arg(long)]
-        skill_vscode: bool,
-
-        /// Install skills to user-level directories (e.g., ~/.copilot/skills)
-        #[arg(long)]
-        skill_user: bool,
-
-        /// Skip skill installation entirely
-        #[arg(long)]
-        no_skill: bool,
-    },
+    Init(Box<InitParams>),
 
     /// Run a configured runner from the current project
     Run(Box<RunParams>),
 
     /// List all specs with optional filtering
-    List {
-        /// Filter by status: draft, planned, in-progress, complete, archived
-        #[arg(short, long)]
-        status: Option<String>,
-
-        /// Filter by tag
-        #[arg(short, long)]
-        tag: Option<Vec<String>>,
-
-        /// Filter by priority: low, medium, high, critical
-        #[arg(short, long)]
-        priority: Option<String>,
-
-        /// Filter by assignee
-        #[arg(short, long)]
-        assignee: Option<String>,
-
-        /// Show compact output
-        #[arg(short, long)]
-        compact: bool,
-
-        /// Show parent-child hierarchy tree
-        #[arg(long)]
-        hierarchy: bool,
-    },
+    List(Box<ListParams>),
 
     /// Show spec dependency graph
-    Deps {
-        /// Spec path or number
-        spec: String,
-
-        /// Maximum depth to traverse
-        #[arg(short = 'D', long, default_value = "3")]
-        depth: usize,
-
-        /// Show upstream dependencies only
-        #[arg(long)]
-        upstream: bool,
-
-        /// Show downstream dependents only
-        #[arg(long)]
-        downstream: bool,
-    },
+    Deps(Box<DepsParams>),
 
     /// Migrate specs from other SDD tools
-    Migrate {
-        /// Path to directory containing specs to migrate
-        input_path: String,
-
-        /// Automatic migration
-        #[arg(long)]
-        auto: bool,
-
-        /// AI-assisted migration (copilot, claude, gemini)
-        #[arg(long = "with")]
-        ai_provider: Option<String>,
-
-        /// Preview without making changes
-        #[arg(long)]
-        dry_run: bool,
-
-        /// Process N docs at a time
-        #[arg(long)]
-        batch_size: Option<usize>,
-
-        /// Don't validate after migration
-        #[arg(long)]
-        skip_validation: bool,
-
-        /// Auto-run backfill after migration
-        #[arg(long)]
-        backfill: bool,
-    },
+    Migrate(Box<MigrateParams>),
 
     /// Migrate specs from archived/ folder to status-based archiving
-    MigrateArchived {
-        /// Preview without making changes
-        #[arg(long)]
-        dry_run: bool,
-    },
+    MigrateArchived(Box<MigrateArchivedParams>),
 
     /// Open spec in editor
-    Open {
-        /// Spec path or number
-        spec: String,
-
-        /// Editor to use (default: $EDITOR or platform default)
-        #[arg(short, long)]
-        editor: Option<String>,
-    },
+    Open(Box<OpenParams>),
 
     /// Search specs
-    Search {
-        /// Search query (supports AND/OR/NOT, field filters, phrases, fuzzy)
-        /// Examples: "api AND security", "tag:rust status:planned", "\"user authentication\"", "auth~2"
-        query: String,
-
-        /// Maximum results
-        #[arg(short, long, default_value = "10")]
-        limit: usize,
-    },
+    Search(Box<SearchParams>),
 
     /// Split spec into multiple files
-    Split {
-        /// Spec to split
-        spec: String,
-
-        /// Output file with line range (e.g., README.md:1-150)
-        #[arg(long = "output")]
-        outputs: Vec<String>,
-
-        /// Update cross-references in README
-        #[arg(long)]
-        update_refs: bool,
-
-        /// Preview without making changes
-        #[arg(long)]
-        dry_run: bool,
-    },
+    Split(Box<SplitParams>),
 
     /// Show spec statistics
-    Stats {
-        /// Show detailed statistics
-        #[arg(long)]
-        detailed: bool,
-    },
+    Stats(Box<StatsParams>),
 
     /// Manage spec templates
-    Templates {
-        /// Action: list, show, add, remove
-        #[arg(short, long)]
-        action: Option<String>,
-
-        /// Template name (for show, add, remove)
-        name: Option<String>,
-    },
+    Templates(Box<TemplatesParams>),
 
     /// Show creation/completion timeline
-    Timeline {
-        /// Number of months to show
-        #[arg(short, long, default_value = "6")]
-        months: usize,
-    },
+    Timeline(Box<TimelineParams>),
 
     /// Count tokens in a spec or any file
-    Tokens {
-        /// Spec or file path to count (omit to count all specs)
-        path: Option<String>,
-
-        /// Show detailed breakdown
-        #[arg(short, long)]
-        verbose: bool,
-    },
+    Tokens(Box<TokensParams>),
 
     /// Interactive terminal UI for spec management
-    Tui {
-        /// Initial view: board, list
-        #[arg(long, default_value = "board")]
-        view: String,
-
-        /// Load a named project from the registry
-        #[arg(long)]
-        project: Option<String>,
-
-        /// Run in headless mode, replay key sequence and print state as JSON
-        #[arg(long)]
-        headless: Option<String>,
-    },
+    Tui(Box<TuiParams>),
 
     /// Start local web UI for spec management
-    Ui {
-        /// Port to run on
-        #[arg(short, long, default_value = "3000")]
-        port: String,
-
-        /// Don't open browser automatically
-        #[arg(long)]
-        no_open: bool,
-
-        /// Enable multi-project mode
-        #[arg(long)]
-        multi_project: bool,
-
-        /// Run in development mode (HarnSpec monorepo only)
-        #[arg(long)]
-        dev: bool,
-
-        /// Preview without running
-        #[arg(long)]
-        dry_run: bool,
-    },
+    Ui(Box<UiParams>),
 
     /// Update a spec's frontmatter
     Update(Box<UpdateParams>),
 
     /// Validate specs for issues
-    Validate {
-        /// Specific spec to validate (validates all if not provided)
-        spec: Option<String>,
-
-        /// Check dependency alignment
-        #[arg(long)]
-        check_deps: bool,
-
-        /// Treat warnings as errors
-        #[arg(long)]
-        strict: bool,
-
-        /// Only show warnings (exit 0)
-        #[arg(long)]
-        warnings_only: bool,
-    },
+    Validate(Box<ValidateParams>),
 
     /// View a spec's details
-    View {
-        /// Spec path or number
-        spec: String,
-
-        /// Show raw markdown
-        #[arg(long)]
-        raw: bool,
-    },
+    View(Box<ViewParams>),
 
     /// Manage AI coding sessions
     Session {
         #[command(subcommand)]
-        action: SessionSubcommand,
+        action: Box<SessionSubcommand>,
     },
 
     /// Manage AI agent skills
@@ -483,58 +141,212 @@ pub(crate) enum Commands {
     /// Manage AI runners
     Runner {
         #[command(subcommand)]
-        action: RunnerSubcommand,
+        action: Box<RunnerSubcommand>,
     },
+}
+
+#[derive(Parser)]
+pub(crate) struct AgentParams {
+    /// Action: run, list, status, config
+    #[arg(default_value = "help")]
+    pub(crate) action: String,
+    /// Specs to dispatch (for run action)
+    pub(crate) specs: Option<Vec<String>>,
+    /// Agent type (claude, copilot, aider, gemini, cursor, continue)
+    #[arg(long, default_value = "claude")]
+    pub(crate) agent: Option<String>,
+    /// Create worktrees for parallel implementation
+    #[arg(long)]
+    pub(crate) parallel: bool,
+    /// Do not update spec status to in-progress
+    #[arg(long)]
+    pub(crate) no_status_update: bool,
+    /// Preview without making changes
+    #[arg(long)]
+    pub(crate) dry_run: bool,
+}
+
+#[derive(Parser)]
+pub(crate) struct AnalyzeParams {
+    /// Spec path or number
+    pub(crate) spec: String,
+}
+
+#[derive(Parser)]
+pub(crate) struct ArchiveParams {
+    /// Spec paths or numbers (supports batch operations)
+    #[arg(required = true)]
+    pub(crate) specs: Vec<String>,
+    /// Preview changes without applying
+    #[arg(long)]
+    pub(crate) dry_run: bool,
+}
+
+#[derive(Parser)]
+pub(crate) struct BackfillParams {
+    /// Specific specs to backfill
+    pub(crate) specs: Option<Vec<String>>,
+    /// Preview without making changes
+    #[arg(long)]
+    pub(crate) dry_run: bool,
+    /// Overwrite existing values
+    #[arg(long)]
+    pub(crate) force: bool,
+    /// Include assignee from git author
+    #[arg(long)]
+    pub(crate) assignee: bool,
+    /// Include status transitions
+    #[arg(long)]
+    pub(crate) transitions: bool,
+    /// Include all optional fields
+    #[arg(long)]
+    pub(crate) all: bool,
+    /// Create frontmatter for files without it
+    #[arg(long)]
+    pub(crate) bootstrap: bool,
+}
+
+#[derive(Parser)]
+pub(crate) struct BoardParams {
+    /// Group by: status, priority, assignee, tag, parent
+    #[arg(short, long, default_value = "status")]
+    pub(crate) group_by: String,
+}
+
+#[derive(Parser)]
+pub(crate) struct CheckParams {
+    /// Attempt to fix conflicts
+    #[arg(long)]
+    pub(crate) fix: bool,
+}
+
+#[derive(Parser)]
+pub(crate) struct ChildrenParams {
+    /// Spec path or number
+    pub(crate) spec: String,
+}
+
+#[derive(Parser)]
+pub(crate) struct CompactParams {
+    /// Spec to compact
+    pub(crate) spec: String,
+    /// Line range to remove (e.g., 145-153)
+    #[arg(long = "remove")]
+    pub(crate) removes: Vec<String>,
+    /// Preview without making changes
+    #[arg(long)]
+    pub(crate) dry_run: bool,
 }
 
 #[derive(Parser)]
 pub(crate) struct CreateParams {
     /// Spec name (e.g., "my-feature")
     pub(crate) name: String,
-
     /// Spec title
     #[arg(short, long)]
     pub(crate) title: Option<String>,
-
     /// Template to use
     #[arg(short = 'T', long)]
     pub(crate) template: Option<String>,
-
     /// Initial status
     #[arg(short, long)]
     pub(crate) status: Option<String>,
-
     /// Priority level
     #[arg(short, long, default_value = "medium")]
     pub(crate) priority: String,
-
     /// Tags (comma-separated)
     #[arg(long)]
     pub(crate) tags: Option<String>,
-
     /// Parent umbrella spec path or number
     #[arg(long)]
     pub(crate) parent: Option<String>,
-
     /// Spec(s) this new spec depends on
     #[arg(long = "depends-on", num_args = 1..)]
     pub(crate) depends_on: Vec<String>,
-
     /// Full markdown content for the spec body (may include frontmatter)
     #[arg(long, allow_hyphen_values = true)]
     pub(crate) content: Option<String>,
-
     /// Read spec content from a file path (takes precedence over --content)
     #[arg(short, long)]
     pub(crate) file: Option<String>,
-
     /// Assignee for the spec
     #[arg(short, long)]
     pub(crate) assignee: Option<String>,
-
     /// Short description (inserted into template body under the title)
     #[arg(long)]
     pub(crate) description: Option<String>,
+}
+
+#[derive(Parser)]
+pub(crate) struct RelParams {
+    /// Arguments: <spec> or <action> <spec>
+    #[arg(required = true, num_args = 1..=2)]
+    pub(crate) args: Vec<String>,
+    /// Set or clear parent relationship
+    #[arg(long, num_args = 0..=1, default_missing_value = "")]
+    pub(crate) parent: Option<String>,
+    /// Add or remove child relationships
+    #[arg(long = "child", num_args = 1..)]
+    pub(crate) child: Vec<String>,
+    /// Add or remove dependency relationships
+    #[arg(long = "depends-on", num_args = 1..)]
+    pub(crate) depends_on: Vec<String>,
+}
+
+#[derive(Parser)]
+pub(crate) struct FilesParams {
+    /// Spec path or number
+    pub(crate) spec: String,
+    /// Show file sizes
+    #[arg(short, long)]
+    pub(crate) size: bool,
+}
+
+#[derive(Parser)]
+pub(crate) struct GanttParams {
+    /// Filter by status
+    #[arg(short, long)]
+    pub(crate) status: Option<String>,
+}
+
+#[derive(Parser)]
+pub(crate) struct InitParams {
+    /// Skip prompts and use defaults
+    #[arg(short, long)]
+    pub(crate) yes: bool,
+    /// Initialize an example project
+    #[arg(long)]
+    pub(crate) example: Option<String>,
+    /// Skip AI tool configuration (symlinks)
+    #[arg(long)]
+    pub(crate) no_ai_tools: bool,
+    /// Install HarnSpec agent skills (project-level default)
+    #[arg(long)]
+    pub(crate) skill: bool,
+    /// Install skills to .github/skills/
+    #[arg(long)]
+    pub(crate) skill_github: bool,
+    /// Install skills to .claude/skills/
+    #[arg(long)]
+    pub(crate) skill_claude: bool,
+    /// Install skills to .cursor/skills/
+    #[arg(long)]
+    pub(crate) skill_cursor: bool,
+    /// Install skills to .codex/skills/
+    #[arg(long)]
+    pub(crate) skill_codex: bool,
+    /// Install skills to .gemini/skills/
+    #[arg(long)]
+    pub(crate) skill_gemini: bool,
+    /// Install skills to .vscode/skills/
+    #[arg(long)]
+    pub(crate) skill_vscode: bool,
+    /// Install skills to user-level directories (e.g., ~/.copilot/skills)
+    #[arg(long)]
+    pub(crate) skill_user: bool,
+    /// Skip skill installation entirely
+    #[arg(long)]
+    pub(crate) no_skill: bool,
 }
 
 #[derive(Parser)]
@@ -542,38 +354,175 @@ pub(crate) struct RunParams {
     /// Inline prompt to send to the runner
     #[arg(short = 'p', long)]
     pub(crate) prompt: Option<String>,
-
     /// Spec IDs to attach as context (repeatable: --spec 028 --spec 320)
     #[arg(long, action = clap::ArgAction::Append)]
     pub(crate) spec: Vec<String>,
-
     /// Runner ID to use (defaults to configured default runner)
     #[arg(long)]
     pub(crate) runner: Option<String>,
-
     /// Override the runner model if supported
     #[arg(long)]
     pub(crate) model: Option<String>,
-
     /// Show the composed command without executing it
     #[arg(long)]
     pub(crate) dry_run: bool,
-
     /// Force ACP protocol for this invocation
     #[arg(long)]
     pub(crate) acp: bool,
-
     /// Run the session inside a dedicated git worktree
     #[arg(long)]
     pub(crate) worktree: bool,
-
     /// Run each provided spec in parallel worktrees
     #[arg(long)]
     pub(crate) parallel: bool,
-
     /// Merge strategy to use for worktree sessions
     #[arg(long)]
     pub(crate) merge_strategy: Option<String>,
+}
+
+#[derive(Parser)]
+pub(crate) struct ListParams {
+    /// Filter by status: draft, planned, in-progress, complete, archived
+    #[arg(short, long)]
+    pub(crate) status: Option<String>,
+    /// Filter by tag
+    #[arg(short, long)]
+    pub(crate) tag: Option<Vec<String>>,
+    /// Filter by priority: low, medium, high, critical
+    #[arg(short, long)]
+    pub(crate) priority: Option<String>,
+    /// Filter by assignee
+    #[arg(short, long)]
+    pub(crate) assignee: Option<String>,
+    /// Show compact output
+    #[arg(short, long)]
+    pub(crate) compact: bool,
+    /// Show parent-child hierarchy tree
+    #[arg(long)]
+    pub(crate) hierarchy: bool,
+}
+
+#[derive(Parser)]
+pub(crate) struct DepsParams {
+    /// Spec path or number
+    pub(crate) spec: String,
+    /// Maximum depth to traverse
+    #[arg(short = 'D', long, default_value = "3")]
+    pub(crate) depth: usize,
+    /// Show upstream dependencies only
+    #[arg(long)]
+    pub(crate) upstream: bool,
+    /// Show downstream dependents only
+    #[arg(long)]
+    pub(crate) downstream: bool,
+}
+
+#[derive(Parser)]
+pub(crate) struct MigrateParams {
+    /// Path to directory containing specs to migrate
+    pub(crate) input_path: String,
+    /// Automatic migration
+    #[arg(long)]
+    pub(crate) auto: bool,
+    /// AI-assisted migration (copilot, claude, gemini)
+    #[arg(long = "with")]
+    pub(crate) ai_provider: Option<String>,
+    /// Preview without making changes
+    #[arg(long)]
+    pub(crate) dry_run: bool,
+    /// Process N docs at a time
+    #[arg(long)]
+    pub(crate) batch_size: Option<usize>,
+    /// Don't validate after migration
+    #[arg(long)]
+    pub(crate) skip_validation: bool,
+    /// Auto-run backfill after migration
+    #[arg(long)]
+    pub(crate) backfill: bool,
+}
+
+#[derive(Parser)]
+pub(crate) struct MigrateArchivedParams {
+    /// Preview without making changes
+    #[arg(long)]
+    pub(crate) dry_run: bool,
+}
+
+#[derive(Parser)]
+pub(crate) struct OpenParams {
+    /// Spec path or number
+    pub(crate) spec: String,
+    /// Editor to use (default: $EDITOR or platform default)
+    #[arg(short, long)]
+    pub(crate) editor: Option<String>,
+}
+
+#[derive(Parser)]
+pub(crate) struct SearchParams {
+    pub(crate) query: String,
+    #[arg(short, long, default_value = "10")]
+    pub(crate) limit: usize,
+}
+
+#[derive(Parser)]
+pub(crate) struct SplitParams {
+    pub(crate) spec: String,
+    #[arg(long = "to")]
+    pub(crate) outputs: Vec<String>,
+    #[arg(long)]
+    pub(crate) update_refs: bool,
+    #[arg(long)]
+    pub(crate) dry_run: bool,
+}
+
+#[derive(Parser)]
+pub(crate) struct StatsParams {
+    #[arg(long)]
+    pub(crate) detailed: bool,
+}
+
+#[derive(Parser)]
+pub(crate) struct TemplatesParams {
+    #[arg(short, long)]
+    pub(crate) action: Option<String>,
+    pub(crate) name: Option<String>,
+}
+
+#[derive(Parser)]
+pub(crate) struct TimelineParams {
+    #[arg(short, long, default_value = "6")]
+    pub(crate) months: usize,
+}
+
+#[derive(Parser)]
+pub(crate) struct TokensParams {
+    pub(crate) path: Option<String>,
+    #[arg(short, long)]
+    pub(crate) verbose: bool,
+}
+
+#[derive(Parser)]
+pub(crate) struct TuiParams {
+    #[arg(long, default_value = "board")]
+    pub(crate) view: String,
+    #[arg(long)]
+    pub(crate) project: Option<String>,
+    #[arg(long)]
+    pub(crate) headless: Option<String>,
+}
+
+#[derive(Parser)]
+pub(crate) struct UiParams {
+    #[arg(short, long, default_value = "3000")]
+    pub(crate) port: String,
+    #[arg(long)]
+    pub(crate) no_open: bool,
+    #[arg(long)]
+    pub(crate) multi_project: bool,
+    #[arg(long)]
+    pub(crate) dev: bool,
+    #[arg(long)]
+    pub(crate) dry_run: bool,
 }
 
 #[derive(Parser)]
@@ -581,74 +530,75 @@ pub(crate) struct UpdateParams {
     /// Spec path(s) or number(s)
     #[arg(required = true, num_args = 1..)]
     pub(crate) specs: Vec<String>,
-
     /// New status
     #[arg(short, long)]
     pub(crate) status: Option<String>,
-
     /// New priority
     #[arg(short, long)]
     pub(crate) priority: Option<String>,
-
     /// New assignee
     #[arg(short, long)]
     pub(crate) assignee: Option<String>,
-
     /// Add tags
     #[arg(long)]
     pub(crate) add_tags: Option<String>,
-
     /// Remove tags
     #[arg(long)]
     pub(crate) remove_tags: Option<String>,
-
     /// Replace text (repeatable: --replace "old" "new")
     #[arg(long = "replace", num_args = 2, value_names = ["OLD", "NEW"], action = ArgAction::Append)]
     pub(crate) replacements: Vec<String>,
-
     /// Replace all matches (applies to all --replace entries)
     #[arg(long, conflicts_with = "match_first")]
     pub(crate) match_all: bool,
-
     /// Replace first match only (applies to all --replace entries)
     #[arg(long, conflicts_with = "match_all")]
     pub(crate) match_first: bool,
-
     /// Check checklist item (repeatable)
     #[arg(long, action = ArgAction::Append)]
     pub(crate) check: Vec<String>,
-
     /// Uncheck checklist item (repeatable)
     #[arg(long, action = ArgAction::Append)]
     pub(crate) uncheck: Vec<String>,
-
     /// Section heading to update
     #[arg(long)]
     pub(crate) section: Option<String>,
-
     /// Replace content for section
     #[arg(long, conflicts_with_all = ["append", "prepend"])]
     pub(crate) section_content: Option<String>,
-
     /// Append content to section
     #[arg(long, conflicts_with = "section_content")]
     pub(crate) append: Option<String>,
-
     /// Prepend content to section
     #[arg(long, conflicts_with = "section_content")]
     pub(crate) prepend: Option<String>,
-
     /// Replace full body content (frontmatter preserved)
     #[arg(long)]
     pub(crate) content: Option<String>,
-
     /// Skip completion verification or stage skipping guard (draft -> in-progress/complete)
     #[arg(short, long)]
     pub(crate) force: bool,
-
     /// Expected content hash for optimistic concurrency (fails if content changed)
     #[arg(long = "expected-hash")]
     pub(crate) expected_hash: Option<String>,
+}
+
+#[derive(Parser)]
+pub(crate) struct ValidateParams {
+    pub(crate) spec: Option<String>,
+    #[arg(long)]
+    pub(crate) check_deps: bool,
+    #[arg(long)]
+    pub(crate) strict: bool,
+    #[arg(long)]
+    pub(crate) warnings_only: bool,
+}
+
+#[derive(Parser)]
+pub(crate) struct ViewParams {
+    pub(crate) spec: String,
+    #[arg(long)]
+    pub(crate) raw: bool,
 }
 
 #[derive(Subcommand)]

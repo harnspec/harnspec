@@ -47,6 +47,7 @@
     "validate-binaries": "tsx scripts/validate-platform-binaries.ts",
     "publish:platforms": "tsx scripts/publish-platform-packages.ts",
     "publish:main": "tsx scripts/publish-main-packages.ts",
+    "validate-demo": "node scripts/validate-demo.mjs",
     "cli": "node bin/harnspec.mjs"
   }
 }

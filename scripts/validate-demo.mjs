@@ -139,7 +139,7 @@ async function main() {
 
     // Spec Split
     console.log(`\n  Test 3.3: spec split`);
-    runHarnSpec(`split "${targetFolder}" --output README.md:1-20`);
+    runHarnSpec(`split "${targetFolder}" --to README.md:1-20`);
     // Splitting usually creates a new file. Let's check if the README survives or if it's split.
     // The current implementation might be simpler or different, but we check if it doesn't crash.
     assert(existsSync(specPath), 'README.md still exists after split');
