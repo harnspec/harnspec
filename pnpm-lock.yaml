@@ -89,12 +89,6 @@ importers:
         specifier: ^3.1.11
         version: 3.1.11
 
-  packages/mcp:
-    dependencies:
-      '@harnspec/cli':
-        specifier: workspace:*
-        version: link:../cli
-
   packages/skills: {}
 
   packages/ui:
