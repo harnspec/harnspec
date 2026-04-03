@@ -28,7 +28,7 @@ on:
         type: boolean
 
 env:
-  IMAGE: ghcr.io/codervisor/harnspec
+  IMAGE: ghcr.io/harnspec/harnspec
 
 jobs:
   # ── Lightweight job to compute shared config ─────────────────────────
