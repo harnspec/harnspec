@@ -77,23 +77,37 @@ fn run_dev_mode(
         return Ok(());
     }
 
-    println!("{}", "Starting web UI...".cyan());
-
-    // Set environment variables
-    let child = Command::new(&package_manager)
-        .args(["run", "dev"])
-        .current_dir(ui_dir)
-        .env("SPECS_DIR", specs_dir)
-        .env("PORT", port)
-        .stdin(Stdio::inherit())
-        .stdout(Stdio::inherit())
-        .stderr(Stdio::inherit())
-        .spawn()?;
+    // Start the web UI
+    let mut child = if cfg!(target_os = "windows") {
+        Command::new("cmd")
+            .args(["/C", &package_manager, "run", "dev"])
+            .current_dir(ui_dir)
+            .env("SPECS_DIR", specs_dir)
+            .env("PORT", port)
+            .stdin(Stdio::inherit())
+            .stdout(Stdio::inherit())
+            .stderr(Stdio::inherit())
+            .spawn()?
+    } else {
+        Command::new(&package_manager)
+            .args(["run", "dev"])
+            .current_dir(ui_dir)
+            .env("SPECS_DIR", specs_dir)
+            .env("PORT", port)
+            .stdin(Stdio::inherit())
+            .stdout(Stdio::inherit())
+            .stderr(Stdio::inherit())
+            .spawn()?
+    };
 
     println!();
     println!(
         "{}",
-        format!("✨ HarnSpec UI: http://localhost:{}", port).green()
+        format!("🚀 HarnSpec UI (Dev Mode): http://localhost:{}", port).green()
+    );
+    println!(
+        "{}",
+        "   Proxying /api to http://localhost:3000 (Make sure backend is running!)".dimmed()
     );
     println!();
     println!("{}", "Press Ctrl+C to stop".dimmed());
@@ -103,9 +117,9 @@ fn run_dev_mode(
     }
 
     // Wait for the process
-    let output = child.wait_with_output()?;
+    let status = child.wait()?;
 
-    if !output.status.success() {
+    if !status.success() {
         return Err("Web UI process exited with error".into());
     }
 
@@ -119,7 +133,7 @@ fn run_published_ui(
     open_browser: bool,
     dry_run: bool,
 ) -> Result<(), Box<dyn Error>> {
-    println!("{}\n", "→ Using published @harnspec/ui package".dimmed());
+    println!("{}\n", "→ Starting HarnSpec UI...".cyan());
 
     // Detect package manager
     let package_manager = detect_package_manager(cwd)?;
@@ -133,13 +147,24 @@ fn run_published_ui(
         return Ok(());
     }
 
-    let mut child = Command::new(&cmd)
-        .args(&args)
-        .current_dir(cwd)
-        .stdin(Stdio::inherit())
-        .stdout(Stdio::inherit())
-        .stderr(Stdio::inherit())
-        .spawn()?;
+    let mut child = if cfg!(target_os = "windows") {
+        Command::new("cmd")
+            .args(["/C", &cmd])
+            .args(&args)
+            .current_dir(cwd)
+            .stdin(Stdio::inherit())
+            .stdout(Stdio::inherit())
+            .stderr(Stdio::inherit())
+            .spawn()?
+    } else {
+        Command::new(&cmd)
+            .args(&args)
+            .current_dir(cwd)
+            .stdin(Stdio::inherit())
+            .stdout(Stdio::inherit())
+            .stderr(Stdio::inherit())
+            .spawn()?
+    };
 
     // Wait for the process
     let status = child.wait()?;
@@ -151,7 +176,7 @@ fn run_published_ui(
             "{}",
             format!("@harnspec/ui exited with code {}", code).red()
         );
-        eprintln!("{}", "Make sure npm can download @harnspec/ui.".dimmed());
+        eprintln!("{}", "Make sure @harnspec/ui is available.".dimmed());
         return Err("Web UI process exited with error".into());
     }
 
