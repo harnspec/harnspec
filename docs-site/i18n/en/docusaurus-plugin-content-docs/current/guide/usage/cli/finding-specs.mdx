@@ -1,0 +1,251 @@
+---
+id: 'finding-specs'
+title: 'Finding Specs'
+sidebar_position: 2
+---
+# Finding Specs
+
+Learn how to discover and navigate specs using search, list commands, and the MCP server for AI agent access.
+
+## Quick Discovery
+
+### List All Specs
+
+```bash
+# Show all specs
+harnspec list
+```
+
+Output:
+```
+📋 Spec List
+
+🟡 ✅ 107-ui-ux-refinements #ui #ux #lessons-learned
+🟡 ✅ 106-ui-package-documentation
+🟡 ⏳ 105-docs-site-enhancements
+🟠 ✅ 104-ui-packaging-fix #packaging #bug-fix
+```
+
+### Filter by Status
+
+```bash
+# Show only in-progress specs
+harnspec list --status in-progress
+
+# Show planned specs
+harnspec list --status planned
+
+# Show completed specs
+harnspec list --status complete
+```
+
+### Filter by Tag
+
+```bash
+# Show specs with specific tag
+harnspec list --tag api
+
+# Show specs with multiple tags
+harnspec list --tag api --tag backend
+```
+
+### Filter by Priority
+
+```bash
+# High priority specs
+harnspec list --priority high
+
+# Low priority specs
+harnspec list --priority low
+```
+
+## Search by Content
+
+### Basic Search
+
+```bash
+# Search all spec content
+harnspec search "authentication"
+```
+
+Searches across:
+- Spec titles and descriptions
+- All README.md content
+- Sub-spec files (DESIGN.md, TESTING.md, etc.)
+- Frontmatter fields
+
+### Search with Filters
+
+```bash
+# Search in specific status
+harnspec search "API" --status in-progress
+
+# Search with tag filter
+harnspec search "cache" --tag performance
+
+# Combine multiple filters
+harnspec search "refactor" --status planned --tag backend --priority high
+```
+
+### Case-Insensitive Search
+
+Search is case-insensitive by default:
+```bash
+harnspec search "api"      # Matches "API", "api", "Api"
+harnspec search "JWT"      # Matches "jwt", "JWT", "Jwt"
+```
+
+## Dependency Navigation
+
+```bash
+# Show dependencies for a spec
+harnspec deps 042
+```
+
+Output:
+```
+Dependency Graph for 042-auth-refactor
+
+Depends On:
+  → 041-jwt-library [complete]       # Required to start
+
+Required By:
+  ← 043-api-redesign [planned]       # Blocked until 042 done
+  ← 044-dashboard [planned]
+
+Related Specs:
+  ⟷ 045-security-audit [in-progress]  # Coordinated work
+```
+
+Navigate relationships:
+- **Depends On (→)**: What this spec requires before it can start
+- **Required By (←)**: What's blocked waiting for this
+- **Related (⟷)**: Informational connections
+
+**See also**: [Dependencies](/docs/guide/usage/cli/project-management#dependencies)
+
+## Advanced Filtering
+
+### Combine Multiple Criteria
+
+```bash
+# High-priority backend work that's planned
+harnspec list --priority high --tag backend --status planned
+
+# In-progress API work
+harnspec list --status in-progress --tag api
+
+# Completed security work
+harnspec list --status complete --tag security
+```
+
+### Exclude Archived
+
+By default, archived specs are excluded from `harnspec list`:
+
+```bash
+# Default: excludes archived
+harnspec list
+
+# Include archived
+harnspec list --archived
+```
+
+## Common Search Patterns
+
+### Find Work to Start
+
+```bash
+# What's ready to work on?
+harnspec list --status planned --priority high
+```
+
+### Check Active Work
+
+```bash
+# What's in progress?
+harnspec list --status in-progress
+
+# Who's working on what?
+harnspec list --status in-progress
+# (shows assignee if set)
+```
+
+### Review Completed Work
+
+```bash
+# Recently completed
+harnspec list --status complete
+
+# Completed work by tag
+harnspec list --status complete --tag api
+```
+
+### Check Dependencies
+
+```bash
+# What's ready to start?
+harnspec list --status planned
+
+# Check if dependencies are met
+harnspec deps <spec-id>
+# (verify required specs are complete)
+```
+
+## Navigation Tips
+
+**DO:**
+- ✅ Use `harnspec search` for content-based discovery
+- ✅ Use `harnspec list` with filters for focused views
+- ✅ Use `harnspec deps` to understand relationships
+- ✅ Check [Board & Stats](/docs/guide/usage/cli/project-management#board-stats) for visual overview
+
+**DON'T:**
+- ❌ Manually grep through specs/ directory
+- ❌ Rely on filesystem naming (use IDs/search instead)
+- ❌ Forget archived specs exist (use --archived to include them)
+
+## Keyboard-Driven Workflows
+
+### Quick Discovery Flow
+
+```bash
+# 1. What's the project state?
+harnspec list --status in-progress
+
+# 2. What should I work on?
+harnspec list --status planned --priority high
+
+# 3. What's this spec about?
+harnspec view <spec-id>
+
+# 4. Start working
+harnspec update <spec-id> --status in-progress
+harnspec open <spec-id>
+```
+
+### Research Flow
+
+```bash
+# 1. Find relevant specs
+harnspec search "authentication"
+
+# 2. View promising spec
+harnspec view 042
+
+# 3. Check related work
+harnspec deps 042
+
+# 4. Read related spec
+harnspec view 041
+```
+
+## Next Steps
+
+- [Creating & Managing Specs](/docs/guide/usage/cli/creating-managing) - Basic operations
+- [Project Management](/docs/guide/usage/cli/project-management) - Board views and health tracking
+- [Spec Structure](/docs/guide/usage/spec-structure) - Understanding spec anatomy
+
+---
+
+**Reference**: [CLI Documentation](/docs/reference/cli) for complete command options

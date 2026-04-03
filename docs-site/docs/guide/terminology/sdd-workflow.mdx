@@ -1,30 +1,30 @@
 ---
-title: SDD Workflow
+title: SDD 工作流
 sidebar_position: 3
 ---
-# Spec-Driven Development (SDD)
+# Spec 驱动开发（SDD）
 
-SDD is the operating rhythm for HarnSpec: capture intent in a spec, let humans and AI execute from it, and keep the spec in sync.
+SDD 是 HarnSpec 的操作节奏：在 Spec 中捕获意图，让人类和 AI 从中执行，并保持 Spec 同步。
 
-## Five Loop Stages
-1. **Discover** — search existing specs before starting new work.
-2. **Plan** — create or update a spec so intent is unambiguous.
-3. **Implement** — humans and AI agents follow the spec to build.
-4. **Validate** — run tests and `harnspec validate` to ensure quality.
-5. **Update** — mark the status, lessons, and follow-ups.
+## 五个循环阶段
+1. **发现** — 在开始新工作之前搜索现有 Spec。
+2. **计划** — 创建或更新 Spec，使意图明确无误。
+3. **实现** — 人类和 AI 代理遵循 Spec 进行构建。
+4. **验证** — 运行测试和 `harnspec validate` 以确保质量。
+5. **更新** — 标记状态、经验教训和后续工作。
 
-The loop restarts whenever new information appears. Specs are living documents, not ceremonial paperwork.
+每当出现新信息时，循环就会重新开始。Spec 是活文档，而非仪式性文书工作。
 
-## Roles in the Workflow
-- **Author** clarifies the problem and desired outcome.
-- **Implementer** (human or AI) executes the plan.
-- **Reviewer** checks success criteria before status changes.
+## 工作流中的角色
+- **作者** 阐明问题和期望的结果。
+- **实现者**（人类或 AI）执行计划。
+- **审查者** 在状态更改前检查成功标准。
 
-## Tooling Support
-- `harnspec list`, `search`, and `view` for discovery.
-- `harnspec create` and `update` for planning/status.
-- `harnspec validate` and the MCP server for automation.
+## 工具支持
+- `harnspec list`、`search` 和 `view` 用于发现。
+- `harnspec create` 和 `update` 用于计划/状态。
+- `harnspec validate` 和 MCP 服务器用于自动化。
 
-## See Also
-- [Understanding HarnSpec](/docs/guide/understanding-harnspec)
-- [AI-Assisted Spec Writing](/docs/advanced/ai-assisted-spec-writing)
+## 另见
+- [理解 HarnSpec](/docs/guide/understanding-harnspec)
+- [AI 辅助 Spec 编写](/docs/advanced/ai-assisted-spec-writing)

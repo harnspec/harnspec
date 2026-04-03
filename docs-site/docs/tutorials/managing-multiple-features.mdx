@@ -1,27 +1,27 @@
 ---
-title: Managing Multiple Features
+title: 管理多个功能
 sidebar_position: 2
-description: Work on multiple related specs with confidence using search, dependencies, and project visibility
+description: 使用搜索、依赖关系和项目可见性，自信地处理多个相关Spec
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Managing Multiple Features
+# 管理多个功能
 
-Real projects have multiple features in flight. Learn how to manage them without losing context or duplicating work.
+真实项目有多个功能同时进行。学习如何在不失去上下文或重复工作的情况下管理它们。
 
-**Time**: 15 minutes  
-**Outcome**: Understand project-level spec management
+**时间**：15 分钟  
+**结果**：理解项目级Spec管理
 
-:::info Prerequisites
-- Completed [Your First Feature with AI](./first-spec-with-ai)
-- Basic familiarity with HarnSpec commands
+:::info 前置条件
+- 完成[使用 AI 完成第一个功能](./first-spec-with-ai)
+- 基本熟悉 HarnSpec 命令
 :::
 
-## Try It Now
+## 立即尝试
 
-Get hands-on with a pre-configured dashboard project:
+使用预配置的仪表板项目快速上手：
 
 ```bash
 npx harnspec init --example dashboard-widgets
@@ -30,108 +30,108 @@ npm install
 npm run dev
 ```
 
-Then prompt your AI tool:
+然后向 AI 工具发送提示：
 
 <Tabs groupId="ai-tool">
   <TabItem value="claude" label="Claude Code">
-    In your terminal with Claude Code:
+    在终端中使用 Claude Code：
 
     ```bash
-    # Make sure you have Claude Code installed
+    # 确保已安装 Claude Code
     # macOS/Linux
     curl -fsSL https://claude.ai/install.sh | bash
     # Windows (PowerShell)
     irm https://claude.ai/install.ps1 | iex
 
-    # Create soft link to CLAUDE.md from the system prompt AGENTS.md
+    # 为系统提示 AGENTS.md 创建软链 CLAUDE.md
     ln -s AGENTS.md CLAUDE.md
 
-    # Send the prompt to Claude Code
-    claude "Help me add three new widgets to this dashboard"
+    # 向 Claude Code 发送提示
+    claude "帮我为这个仪表板添加三个新组件"
     ```
   </TabItem>
   <TabItem value="codex" label="Codex CLI">
-    In your terminal with OpenAI Codex CLI:
+    在终端中使用 OpenAI Codex CLI：
 
     ```bash
-    # Make sure you have Codex CLI installed
+    # 确保已安装 Codex CLI
     npm install -g @openai/codex
 
-    # Send the prompt to Codex CLI
-    codex "Help me add three new widgets to this dashboard"
+    # 向 Codex CLI 发送提示
+    codex "帮我为这个仪表板添加三个新组件"
     ```
   </TabItem>
   <TabItem value="gemini" label="Gemini CLI">
-    In your terminal with Gemini CLI:
+    在终端中使用 Gemini CLI：
 
     ```bash
-    # Make sure you have Gemini CLI installed
+    # 确保已安装 Gemini CLI
     npm install -g @anthropic-ai/gemini-cli
 
-    # Create soft link to GEMINI.md from the system prompt AGENTS.md
+    # 为系统提示 AGENTS.md 创建软链 GEMINI.md
     ln -s AGENTS.md GEMINI.md
 
-    # Send the prompt to Gemini CLI
-    gemini "Help me add three new widgets to this dashboard"
+    # 向 Gemini CLI 发送提示
+    gemini "帮我为这个仪表板添加三个新组件"
     ```
   </TabItem>
   <TabItem value="copilot" label="GitHub Copilot CLI">
-    In your terminal with GitHub Copilot CLI:
+    在终端中使用 GitHub Copilot CLI：
 
     ```bash
-    # Make sure you have GitHub Copilot CLI installed (requires Node.js v22+)
+    # 确保已安装 GitHub Copilot CLI（需要 Node.js v22+）
     npm install -g @github/copilot
 
-    # Send the prompt to Copilot CLI (programmatic mode)
-    copilot -p "Help me add three new widgets to this dashboard" --allow-all-tools
+    # 向 Copilot CLI 发送提示（编程模式）
+    copilot -p "帮我为这个仪表板添加三个新组件" --allow-all-tools
     ```
   </TabItem>
   <TabItem value="ide" label="IDE" default>
-    In your IDE with an AI coding assistant (GitHub Copilot, Claude, Cursor, etc.):
+    在 IDE 中使用 AI 编码助手（GitHub Copilot、Claude、Cursor 等）：
 
-    1. Open the project in your IDE
-    2. Open your AI assistant chat panel
-    3. Send the prompt: _"Help me add three new widgets to this dashboard"_
+    1. 在 IDE 中打开项目
+    2. 打开 AI 助手聊天面板
+    3. 发送提示：_"帮我为这个仪表板添加三个新组件"_
   </TabItem>
 </Tabs>
 
-**Want to understand what happens under the hood?** The sections below walk through each step in detail.
+**想了解底层发生了什么？** 下面的章节将详细介绍每个步骤。
 
-## The Scenario
+## 场景
 
-You're building a dashboard with three widgets that need to work together:
-1. **List contacts** - Display contact table
-2. **Create contact** - Add new contact form
-3. **Bulk import** - CSV upload for multiple contacts
+您正在构建一个仪表板，其中包含需要协同工作的三个组件：
+1. **联系人列表** - 显示联系人表格
+2. **创建联系人** - 添加新联系人表单
+3. **批量导入** - 上传 CSV 以导入多个联系人
 
-Each feature is distinct but shares common code (contact model, validation). You need to track all three without losing sight of dependencies.
+每个功能都是独立的，但共享通用代码（联系人模型、验证）。您需要跟踪所有三个功能而不失去对依赖关系的关注。
 
-Starting point:
+起点：
 ```
 your-project/
 ├── src/
 │   ├── models/
-│   │   └── contact.ts           # Shared model
+│   │   └── contact.ts           # 共享模型
 │   └── components/
 │       └── dashboard/
 └── specs/
-    └── (empty - let's populate it)
+    └── (空 - 让我们填充它)
 ```
 
-## Creating Multiple Specs
+## 创建多个Spec
 
-Ask your AI:
+询问您的 AI：
 
 ```
-Create three specs for dashboard features:
-1. List contacts in a table (read-only, pagination)
-2. Create contact form (name, email, phone validation)
-3. Bulk import contacts from CSV (validation, error handling)
+为仪表板功能创建三个Spec：
+1. 在表格中列出联系人（只读，分页）
+2. 创建联系人表单（姓名、电子邮件、电话验证）
+3. 从 CSV 批量导入联系人（验证、错误处理）
 
-Tag them all with "dashboard" and "contacts".
+全部标记为 "dashboard" 和 "contacts"。
 ```
 
-The AI creates:
+AI 创建：
 ```
 specs/
 ├── 021-contact-list/
@@ -139,21 +139,21 @@ specs/
 └── 023-contact-bulk-import/
 ```
 
-Each with `status: planned` and tags `['dashboard', 'contacts']`.
+每个都有 `status: planned` 和标签 `['dashboard', 'contacts']`。
 
-## Seeing the Big Picture
+## 看到全局
 
-List all your specs:
+列出所有Spec：
 ```bash
 harnspec list
 ```
 
-Output:
+输出：
 ```
-📋 HarnSpec Project Overview
+📋 HarnSpec 项目概览
 
 ┌─────┬────────────────────────┬───────────┬──────────┬──────────┐
-│ Seq │ Name                   │ Status    │ Priority │ Tags     │
+│ 序号 │ 名称                   │ 状态      │ 优先级   │ 标签     │
 ├─────┼────────────────────────┼───────────┼──────────┼──────────┤
 │ 021 │ contact-list           │ planned   │ medium   │ dash...  │
 │ 022 │ contact-create         │ planned   │ medium   │ dash...  │
@@ -161,177 +161,177 @@ Output:
 └─────┴────────────────────────┴───────────┴──────────┴──────────┘
 ```
 
-Use the board view for workflow status:
+使用看板视图查看工作流状态：
 ```bash
 harnspec board
 ```
 
-Shows Kanban columns: Planned → In Progress → Complete
+显示看板列：已规划 → 进行中 → 已完成
 
-**Why this matters:** At a glance, you know what's queued, what's active, and what's done. No spreadsheet needed.
+**为什么这很重要：** 一目了然，您就知道什么在排队、什么在活动、什么已完成。不需要电子表格。
 
-## Finding Related Specs
+## 查找相关Spec
 
-Search by tag:
+按标签搜索：
 ```bash
 harnspec list --tags contacts
 ```
 
-Or ask your AI:
+或询问您的 AI：
 ```
-Show me all dashboard specs.
+显示所有仪表板Spec。
 ```
 
-The AI runs the search and shows you the results with context.
+AI 运行搜索并向您显示带有上下文的结果。
 
-Search by keyword:
+按关键字搜索：
 ```bash
 harnspec search "validation"
 ```
 
-Finds specs mentioning validation across all content. Perfect for avoiding duplicate work.
+在所有内容中查找提到验证的Spec。非常适合避免重复工作。
 
-## Working in Parallel
+## 并行工作
 
-Start work on the list feature:
+开始列表功能的工作：
 ```
-Implement spec 021.
-```
-
-AI implements the contact list. While that's in review, you start another:
-```
-Implement spec 022.
+实施Spec 021。
 ```
 
-Check status anytime:
+AI 实施联系人列表。在审查时，您开始另一个：
+```
+实施Spec 022。
+```
+
+随时检查状态：
 ```bash
 harnspec list --status in-progress
 ```
 
-Shows:
+显示：
 ```
 │ 021 │ contact-list        │ in-progress │
 │ 022 │ contact-create      │ in-progress │
 ```
 
-**Best practice:** Keep 2-3 specs in-progress max. More than that signals blocked work or context switching overhead.
+**最佳实践：** 保持 2-3 个Spec同时进行中。超过这个数量表明工作受阻或上下文切换开销。
 
-## Managing Dependencies
+## 管理依赖关系
 
-Bulk import depends on the contact model and validation from the create form. Document this:
+批量导入依赖于创建表单中的联系人模型和验证。记录这一点：
 
 ```
-Link spec 023 as depending on spec 022 (needs validation logic first).
+将Spec 023 链接为依赖于Spec 022（首先需要验证逻辑）。
 ```
 
-Or manually:
+或手动：
 ```bash
 harnspec link 023 --depends-on 022
 ```
 
-Now when you view spec 023:
+现在查看Spec 023：
 ```markdown
 ---
 depends_on: [022]
 ---
 
-# Contact Bulk Import
+# 联系人批量导入
 
-> **Dependencies**: [022-contact-create](../022-contact-create)
+> **依赖关系**：[022-contact-create](../022-contact-create)
 ```
 
-The AI knows to check spec 022 before implementing 023. It won't start bulk import until contact creation is complete.
+AI 知道在实施 023 之前检查Spec 022。它不会在联系人创建完成之前开始批量导入。
 
-**View dependencies:**
+**查看依赖关系：**
 ```bash
 harnspec deps 023
 ```
 
-Shows:
+显示：
 ```
 023-contact-bulk-import
-└─ depends on → 022-contact-create
+└─ 依赖于 → 022-contact-create
 ```
 
-## Completing the Project
+## 完成项目
 
-As you finish each feature:
+完成每个功能后：
 ```bash
 harnspec update 021 --status complete
 harnspec update 022 --status complete
 harnspec update 023 --status complete
 ```
 
-Check project health:
+检查项目健康状况：
 ```bash
 harnspec stats
 ```
 
-Output:
+输出：
 ```
-📊 Project Statistics
+📊 项目统计
 
-Status Distribution:
-  Complete:     3
-  In Progress:  0
-  Planned:      0
+状态分布：
+  已完成：    3
+  进行中：    0
+  已规划：    0
 
-Recent Activity:
-  ✓ 023-contact-bulk-import completed 2 hours ago
-  ✓ 022-contact-create completed 1 day ago
-  ✓ 021-contact-list completed 1 day ago
+最近活动：
+  ✓ 023-contact-bulk-import 2 小时前完成
+  ✓ 022-contact-create 1 天前完成
+  ✓ 021-contact-list 1 天前完成
 ```
 
-**Satisfaction:** Clear record of what shipped. Future you (or teammates) can see exactly what was built and when.
+**满意：** 清晰记录已发布的内容。未来的您（或队友）可以准确看到构建了什么以及何时构建的。
 
-## What Just Happened
+## 刚才发生了什么
 
-You managed a multi-spec project without chaos:
+您管理了一个多Spec项目而没有混乱：
 
-**Without HarnSpec:**
-- Sticky notes or issue tracker for tracking
-- No visibility into dependencies
-- Hard to find related work
-- Status buried in git commits
+**没有 HarnSpec：**
+- 便签或问题跟踪器用于跟踪
+- 看不到依赖关系
+- 很难找到相关工作
+- 状态埋在 git 提交中
 
-**With HarnSpec:**
-- Single source of truth (`harnspec list`)
-- Dependency tracking prevents ordering mistakes
-- Search finds related work instantly
-- Status tracking built-in
+**有了 HarnSpec：**
+- 单一事实来源（`harnspec list`）
+- 依赖关系跟踪防止排序错误
+- 搜索立即找到相关工作
+- 内置状态跟踪
 
-The CLI commands + AI integration give you project visibility without leaving your editor.
+CLI 命令 + AI 集成为您提供项目可见性，无需离开编辑器。
 
-## Key Techniques
+## 关键技术
 
-**Discovery:**
-- `harnspec list` - See everything
-- `harnspec board` - Visualize workflow
-- `harnspec search` - Find by keyword
-- `harnspec list --tags <tag>` - Filter by category
+**发现：**
+- `harnspec list` - 查看所有内容
+- `harnspec board` - 可视化工作流
+- `harnspec search` - 按关键字查找
+- `harnspec list --tags <tag>` - 按类别过滤
 
-**Management:**
-- `harnspec deps` - Show dependencies
-- `harnspec link --depends-on` - Document blocking work
-- `harnspec stats` - Project health check
-- Multiple specs `in-progress` OK if independent
+**管理：**
+- `harnspec deps` - 显示依赖关系
+- `harnspec link --depends-on` - 记录阻塞工作
+- `harnspec stats` - 项目健康检查
+- 多个Spec `in-progress` 可以，如果独立
 
-**AI Integration:**
-- Ask "Show me dashboard specs" → AI runs search
-- Ask "What's blocking spec X?" → AI checks deps
-- Ask "Update spec status" → AI runs command
+**AI 集成：**
+- 询问 "显示仪表板Spec" → AI 运行搜索
+- 询问 "什么阻塞Spec X？" → AI 检查依赖关系
+- 询问 "更新Spec状态" → AI 运行命令
 
-## Next Steps
+## 下一步
 
-Practice with your project:
-- Create 2-3 related specs
-- Tag them by feature area
-- Try `harnspec list`, `board`, `search`
-- Document one dependency
+在您的项目中练习：
+- 创建 2-3 个相关Spec
+- 按功能区域标记它们
+- 尝试 `harnspec list`、`board`、`search`
+- 记录一个依赖关系
 
-**Learn more:**
-- [Refactoring with Specs →](./refactoring-with-specs) - Technical specs for architecture work
-- [Finding Specs](/docs/guide/usage/cli/finding-specs) - Advanced search patterns
-- [Project Management](/docs/guide/usage/cli/project-management) - Board, stats, dependencies
+**了解更多：**
+- [使用Spec重构 →](./refactoring-with-specs) - 架构工作的技术Spec
+- [查找Spec](/docs/guide/usage/cli/finding-specs) - 高级搜索模式
+- [项目管理](/docs/guide/usage/cli/project-management) - 看板、统计、依赖关系
 
-**Questions?** See [FAQ](/docs/faq) or [ask the community](https://github.com/codervisor/harnspec/discussions).
+**有问题？** 查看 [FAQ](/docs/faq) 或[询问社区](https://github.com/codervisor/harnspec/discussions)。

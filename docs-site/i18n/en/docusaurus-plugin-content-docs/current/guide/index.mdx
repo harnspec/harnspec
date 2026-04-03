@@ -1,0 +1,128 @@
+---
+id: index
+title: What is HarnSpec?
+sidebar_label: Overview
+sidebar_position: 1
+description: A lightweight Spec-Driven Development methodology for AI-powered development
+---
+
+# What is HarnSpec?
+
+**Ship faster with higher quality. Lean specs that both humans and AI understand.**
+
+HarnSpec brings agile principles to SDD (Spec-Driven Development)—small, focused documents (&lt;2,000 tokens) that keep you and your AI aligned.
+
+> **Think of it as "Markdown for Project Management"**: Simple, structured, and machine-readable.
+
+## Quick Start
+
+```bash
+# Try with a tutorial project
+npx harnspec init --example dark-theme
+cd dark-theme && npm install && npm start
+
+# Or add to your existing project
+npm install -g harnspec && harnspec init
+```
+
+**Visualize your project:**
+
+```bash
+harnspec board    # Kanban view
+harnspec stats    # Project metrics
+harnspec ui       # Web UI at localhost:3000
+```
+
+**Next:** [Your First Spec with AI](/docs/tutorials/first-spec-with-ai) (10 min tutorial)
+
+## Why HarnSpec?
+
+**High velocity + High quality.** Other SDD frameworks add process overhead (multi-step workflows, rigid templates). Vibe coding is fast but chaotic (no shared understanding). HarnSpec hits the sweet spot:
+
+- **Fast iteration** - Living documents that grow with your code
+- **AI performance** - Small specs = better AI output (context rot is real)
+- **Always current** - Lightweight enough that you actually update them
+
+📖 [Compare with Spec Kit, OpenSpec, Kiro →](/docs/guide/why-harnspec)
+
+## Features
+
+| Feature | Description |
+|---------|-------------|
+| **📊 Kanban Board** | `harnspec board` - visual project tracking |
+| **🔍 Smart Search** | `harnspec search` - find specs by content or metadata |
+| **🔗 Dependencies** | Track spec relationships with `depends_on` and `related` |
+| **🎨 Web UI** | `harnspec ui` - browser-based dashboard |
+| **📈 Project Stats** | `harnspec stats` - health metrics and bottleneck detection |
+| **🤖 AI-Native** | CLI toolset designed for AI assistants |
+
+## AI Integration
+
+Works with any AI coding assistant via CLI commands or Agent Skills:
+
+```markdown
+# AI Agent Instructions
+## Project: [Project Name]
+- Use `harnspec board` to see project state
+- Use `harnspec search` to find relevant context
+- Use `harnspec create` for new specs
+```
+
+**Compatible with:** VS Code Copilot, Claude Code, Gemini CLI, Cursor, Windsurf, Kiro CLI, Kimi CLI, Qodo CLI, Amp, Trae Agent, Qwen Code, Droid, and more.
+
+📖 [Full AI integration guide →](/docs/guide/usage/ai-coding-workflow)
+
+## What You Get
+
+*   [**Core CLI**](/docs/guide/usage/cli/creating-managing): Manage specs, track status, and visualize dependencies.
+*   [**Agent Skills**](/docs/guide/usage/advanced-features/agent-configuration#agent-skills-skillmd): Project-specific guidance for AI agents.
+*   [**Visual Mode**](/docs/guide/visual-mode): A beautiful web interface for browsing your project's spec graph.
+
+## A Simple Example
+
+A HarnSpec is just a Markdown file with frontmatter:
+
+```markdown title="./specs/001-user-auth-api/README.md"
+---
+status: in-progress
+created: 2025-11-07
+priority: high
+tags: [api, auth]
+---
+
+# User Authentication API
+
+## Goal
+Enable secure user login and session management for the mobile app.
+
+## Key Scenarios
+1. User logs in with email/password → receives JWT token
+2. User accesses protected endpoint with token → gets data
+3. User token expires → receives 401, must re-authenticate
+
+## Acceptance Criteria
+- [ ] Login endpoint returns valid JWT on success
+- [ ] JWT includes user ID and expiration
+- [ ] Protected endpoints verify JWT signature
+
+## Non-Goals
+- Social login (future feature)
+- Password reset (separate spec)
+```
+
+## Documentation
+
+📖 [Full Documentation](/docs/guide/) · [CLI Reference](/docs/reference/cli) · [First Principles](/docs/advanced/first-principles) · [FAQ](/docs/faq)
+
+## Community
+
+💬 [Discussions](https://github.com/codervisor/harnspec/discussions) · 🐛 [Issues](https://github.com/codervisor/harnspec/issues) · 🤝 [Contributing](https://github.com/codervisor/harnspec/blob/main/CONTRIBUTING.md)
+
+## Next Steps
+
+*   **[Getting Started](/docs/guide/getting-started)**: Install the CLI and create your first spec.
+*   **[Why HarnSpec?](/docs/guide/why-harnspec)**: Understand the benefits of HarnSpec over other tools.
+*   **[Understanding HarnSpec](/docs/guide/understanding-harnspec)**: Dive deeper into the "Context Economy" philosophy.
+*   **[AI Integration](/docs/guide/usage/advanced-features/agent-configuration)**: Connect HarnSpec to your AI coding assistant.
+
+

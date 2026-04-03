@@ -1,322 +1,297 @@
 ---
 id: 'agent-configuration'
-title: 'Agent Configuration'
+title: '代理配置'
 sidebar_position: 2
 ---
-# Agent Configuration
+# 代理配置
 
-Configure AI coding agents to work effectively with HarnSpec through AGENTS.md instructions and best practices.
+通过 AGENTS.md 指令和最佳实践配置 AI 编码代理以有效使用 HarnSpec。
 
-## AGENTS.md Overview
+## AGENTS.md 概述
 
-`AGENTS.md` serves as permanent instructions for AI coding agents in your repository. When you run `harnspec init`, this file is created with HarnSpec guidance.
+`AGENTS.md` 作为您仓库中 AI 编码代理的永久指令。当您运行 `harnspec init` 时，会创建此文件并包含 HarnSpec 指导。
 
-**Purpose:**
-- Provide context about your project
-- Define when to use specs
-- Specify workflow and commands
-- Set quality standards
+**用途：**
+- 提供项目上下文
+- 定义何时使用 Spec
+- 指定工作流程和命令
+- 设置质量标准
 
-## Agent Skills (SKILL.md)
+## Agent Skills（SKILL.md）
 
-HarnSpec now supports **Agent Skills** via a SKILL.md file. This is the preferred place to store **SDD methodology** so AGENTS.md can remain **project-specific only**.
+HarnSpec 现在支持 **Agent Skills** 的 SKILL.md 文件。推荐将 **SDD 方法论** 放入 SKILL.md，让 AGENTS.md 只保留**项目特定规则**。
 
-**Project skill location:**
+**项目级 Skill 位置：**
 
-- .github/skills/HarnSpec-sdd/SKILL.md (installed via `harnspec skill install`)
+- .github/skills/HarnSpec-sdd/SKILL.md（通过 `harnspec skill install` 安装）
 
-**Why use a skill?**
-- Cross-platform: works with Claude, Cursor, Codex, and other skill-compatible tools
-- Portable: checked into git and shared across projects
-- Minimal AGENTS.md: keep this file under 100 lines with only team-specific rules
+**为什么使用 Skill？**
+- 跨平台：可用于 Claude、Cursor、Codex 等支持 Skills 的工具
+- 可移植：纳入 git 管理，跨项目共享
+- AGENTS.md 精简：控制在 100 行以内，只写团队规则
 
-**Minimal AGENTS.md example (with skill):**
+**最小化 AGENTS.md 示例（配合 Skill）：**
 
 ```markdown
-# AI Agent Instructions
+# AI 代理指令
 
-## Project: Example
+## 项目：Example
 
-Core SDD workflow is defined in .github/skills/HarnSpec-sdd/SKILL.md.
+核心 SDD 工作流定义在 .github/skills/HarnSpec-sdd/SKILL.md。
 
-## Project-Specific Rules
-- Use pnpm instead of npm
-- Update both en and zh-CN locales for UI text
+## 项目特定规则
+- 使用 pnpm 而非 npm
+- UI 文案同时更新 en 与 zh-CN 语言包
 ```
 
-## Multi-Tool Support
+## 多工具支持
 
-Different AI tools expect different instruction file names. HarnSpec automatically creates symlinks to ensure all tools find instructions:
+不同的 AI 工具期望不同的指令文件名。HarnSpec 自动创建符号链接以确保所有工具都能找到指令：
 
-| AI Tool | Expected File | How HarnSpec Handles It |
-|---------|--------------|------------------------|
-| Claude Code / Claude Desktop | `CLAUDE.md` | Symlink → AGENTS.md |
-| Gemini CLI | `GEMINI.md` | Symlink → AGENTS.md |
-| GitHub Copilot | `AGENTS.md` | Primary file |
-| Cursor | `AGENTS.md` | Primary file |
-| Windsurf | `AGENTS.md` | Primary file |
-| Droid | `AGENTS.md` | Primary file |
-| Cline | `AGENTS.md` | Primary file |
-| Kiro CLI | `AGENTS.md` / `.kiro/steering.md` | Primary file |
-| Kimi CLI | `AGENTS.md` | Primary file |
-| Qodo CLI | `AGENTS.md` | Primary file |
-| Amp | `AGENTS.md` | Primary file |
-| Trae Agent | `AGENTS.md` | Primary file |
-| Qwen Code | `AGENTS.md` | Primary file |
-| Warp Terminal | `AGENTS.md` | Primary file |
+| AI 工具 | 期望的文件 | HarnSpec 处理方式 |
+|---------|-----------|------------------|
+| Claude Code / Claude Desktop | `CLAUDE.md` | 符号链接 → AGENTS.md |
+| Gemini CLI | `GEMINI.md` | 符号链接 → AGENTS.md |
+| GitHub Copilot | `AGENTS.md` | 主文件 |
+| Cursor | `AGENTS.md` | 主文件 |
+| Windsurf | `AGENTS.md` | 主文件 |
+| Cline | `AGENTS.md` | 主文件 |
+| Warp Terminal | `AGENTS.md` | 主文件 |
 
-## HarnSpec Support Matrix
-
-| Tool | VibeKanban | OpenSpec Native | Agent Instructions File |
-|------|------------|-----------------|------------------------|
-| Claude Code | ✅ | ✅ (slash commands) | CLAUDE.md → AGENTS.md |
-| OpenAI Codex | ✅ | ✅ (slash commands) | AGENTS.md |
-| GitHub Copilot | ✅ | ✅ (slash commands) | AGENTS.md |
-| Cursor | ✅ | ✅ (slash commands) | AGENTS.md |
-| OpenCode | ✅ | ✅ (slash commands) | AGENTS.md |
-| Qwen Code | ✅ | ✅ (AGENTS.md) | AGENTS.md |
-| Gemini CLI | ✅ | ✅ (AGENTS.md) | GEMINI.md → AGENTS.md |
-| Amp | ✅ | ✅ (AGENTS.md) | AGENTS.md |
-| Kiro CLI | ✅ | ✅ (AGENTS.md) | AGENTS.md / .kiro/steering.md |
-| Kimi CLI | ✅ | ✅ (AGENTS.md) | AGENTS.md |
-| Droid CLI | ✅ | ✅ (AGENTS.md) | AGENTS.md |
-| Qodo CLI | ✅ | ⚠️ (via MCP) | AGENTS.md |
-| Trae Agent | ✅ | ✅ (AGENTS.md) | AGENTS.md |
-
-### Init Options
+### 初始化选项
 
 ```bash
-# Default: creates CLAUDE.md symlink (most common use case)
+# 默认：创建 CLAUDE.md 符号链接（最常见用例）
 harnspec init -y
 
-# Create symlinks for specific tools
+# 为特定工具创建符号链接
 harnspec init -y --agent-tools claude,gemini
 
-# Create symlinks for all supported tools
+# 为所有支持的工具创建符号链接
 harnspec init -y --agent-tools all
 
-# Skip symlinks (legacy behavior)
+# 跳过符号链接（旧行为）
 harnspec init -y --agent-tools none
 ```
 
-**Note:** On Windows, copies are created instead of symlinks (requires admin privileges).
+**注意：** 在 Windows 上，由于符号链接需要管理员权限，会创建副本而非符号链接。
 
-## MCP-First AGENTS.md
+## MCP 优先的 AGENTS.md
 
-The generated AGENTS.md emphasizes **MCP tools as the primary method** for spec management:
+生成的 AGENTS.md 强调 **MCP 工具作为主要方法** 进行 Spec 管理：
 
-### Key Sections
+### 关键章节
 
-#### 1. Critical Discovery Steps
+#### 1. 关键发现步骤
 
 ```markdown
-## 🚨 CRITICAL: Before ANY Task
+## 🚨 关键：任何任务之前
 
-**STOP and check these first:**
+**先停下来检查这些：**
 
-1. **Discover context** → Use `board` tool to see project state
-2. **Search for related work** → Use `search` tool before creating new specs
-3. **Never create files manually** → Always use `create` tool for new specs
+1. **发现上下文** → 使用 `board` 工具查看项目状态
+2. **搜索相关工作** → 创建新 Spec 之前使用 `search` 工具
+3. **永远不要手动创建文件** → 始终使用 `create` 工具创建新 Spec
 ```
 
-#### 2. MCP Tools as Primary Method
+#### 2. MCP 工具作为主要方法
 
 ```markdown
-## 🔧 How to Manage Specs
+## 🔧 如何管理 Spec
 
-### Primary Method: MCP Tools (Recommended)
+### 主要方法：MCP 工具（推荐）
 
-If you have HarnSpec MCP tools available, **ALWAYS use them**:
+如果您有 HarnSpec MCP 工具可用，**始终使用它们**：
 
-| Action | MCP Tool | Description |
-|--------|----------|-------------|
-| See project status | `board` | Kanban view + project health metrics |
-| List all specs | `list` | Filterable list with metadata |
-| Search specs | `search` | Semantic search across all content |
-| View a spec | `view` | Full content with formatting |
-| Create new spec | `create` | Auto-sequences, proper structure |
-| Update spec | `update` | Validates transitions, timestamps |
-| Check dependencies | `deps` | Visual dependency graph |
+| 操作 | MCP 工具 | 描述 |
+|------|----------|------|
+| 查看项目状态 | `board` | 看板视图 + 项目健康指标 |
+| 列出所有 Spec | `list` | 可过滤的带元数据列表 |
+| 搜索 Spec | `search` | 跨所有内容的语义搜索 |
+| 查看 Spec | `view` | 带格式的完整内容 |
+| 创建新 Spec | `create` | 自动编号，正确结构 |
+| 更新 Spec | `update` | 验证状态转换，时间戳 |
+| 检查依赖 | `deps` | 可视化依赖图 |
 ```
 
-#### 3. SDD Workflow Checkpoints
+#### 3. SDD 工作流检查点
 
 ```markdown
-## ⚠️ SDD Workflow Checkpoints
+## ⚠️ SDD 工作流检查点
 
-### Before Starting ANY Task
-1. 📋 **Run `board`** - What's the current project state?
-2. 🔍 **Run `search`** - Are there related specs already?
-3. 📝 **Check existing specs** - Is there one for this work?
+### 开始任何任务之前
+1. 📋 **运行 `board`** - 当前项目状态是什么？
+2. 🔍 **运行 `search`** - 是否已有相关 Spec？
+3. 📝 **检查现有 Spec** - 这项工作是否已有 Spec？
 
-### During Implementation
-4. 📊 **Update status to `in-progress`** BEFORE coding
-5. 📝 **Document decisions** in the spec as you work
-6. 🔗 **Link related specs** if you discover connections
+### 实现过程中
+4. 📊 **编码前将状态更新为 `in-progress`**
+5. 📝 **在 Spec 中记录决策**
+6. 🔗 **如果发现关联，链接相关 Spec**
 
-### After Completing Work
-7. ✅ **Update status to `complete`** when done
-8. 📄 **Document what you learned** in the spec
-9. 🤔 **Create follow-up specs** if needed
+### 完成工作后
+7. ✅ **完成后将状态更新为 `complete`**
+8. 📄 **在 Spec 中记录学到的内容**
+9. 🤔 **如需后续工作，创建新 Spec**
 ```
 
-#### 4. Common Mistakes Table
+#### 4. 常见错误表
 
 ```markdown
-### 🚫 Common Mistakes to Avoid
+### 🚫 避免常见错误
 
-| ❌ Don't | ✅ Do Instead |
-|----------|---------------|
-| Create spec files manually | Use `create` tool |
-| Skip discovery before new work | Run `board` and `search` first |
-| Leave status as "planned" after starting | Update to `in-progress` immediately |
-| Finish work without updating spec | Document decisions, update status |
-| Edit frontmatter manually | Use `update` tool |
-| Forget about specs mid-conversation | Check spec status periodically |
-```
-
-## Complete AGENTS.md Template
-
-```markdown
-# AI Agent Instructions
-
-## Project: [Your Project Name]
-
-[Brief description of what the project does]
-
-## 🚨 CRITICAL: Before ANY Task
-
-**STOP and check these first:**
-
-1. **Discover context** → Use `board` tool to see project state
-2. **Search for related work** → Use `search` tool before creating new specs
-3. **Never create files manually** → Always use `create` tool for new specs
-
-> **Why?** Skipping discovery creates duplicate work. Manual file creation breaks HarnSpec tooling.
-
-## 🔧 How to Manage Specs
-
-### Primary Method: MCP Tools (Recommended)
-
-If you have HarnSpec MCP tools available, **ALWAYS use them**:
-
-| Action | MCP Tool | Description |
-|--------|----------|-------------|
-| See project status | `board` | Kanban view + project health metrics |
-| List all specs | `list` | Filterable list with metadata |
-| Search specs | `search` | Semantic search across all content |
-| View a spec | `view` | Full content with formatting |
-| Create new spec | `create` | Auto-sequences, proper structure |
-| Update spec | `update` | Validates transitions, timestamps |
-| Check dependencies | `deps` | Visual dependency graph |
-
-**Why MCP over CLI?**
-- ✅ Direct tool integration (no shell execution needed)
-- ✅ Structured responses (better for AI reasoning)
-- ✅ Real-time validation (immediate feedback)
-- ✅ Context-aware (understands project state)
-
-### Fallback: CLI Commands
-
-If MCP tools are not available, use CLI commands:
-
-    harnspec board              # Project overview
-    harnspec list               # See all specs
-    harnspec search "query"     # Find relevant specs
-    harnspec create <name>      # Create new spec
-    harnspec update <spec> --status <status>  # Update status
-    harnspec deps <spec>        # Show dependencies
-
-**Tip:** Check if you have HarnSpec MCP tools available before using CLI.
-
-## ⚠️ SDD Workflow Checkpoints
-
-### Before Starting ANY Task
-1. 📋 **Run `board`** - What's the current project state?
-2. 🔍 **Run `search`** - Are there related specs already?
-3. 📝 **Check existing specs** - Is there one for this work?
-
-### During Implementation
-4. 📊 **Update status to `in-progress`** BEFORE coding
-5. 📝 **Document decisions** in the spec as you work
-6. 🔗 **Link related specs** if you discover connections
-
-### After Completing Work
-7. ✅ **Update status to `complete`** when done
-8. 📄 **Document what you learned** in the spec
-9. 🤔 **Create follow-up specs** if needed
-
-### 🚫 Common Mistakes to Avoid
-
-| ❌ Don't | ✅ Do Instead |
-|----------|---------------|
-| Create spec files manually | Use `create` tool |
-| Skip discovery before new work | Run `board` and `search` first |
-| Leave status as "planned" after starting | Update to `in-progress` immediately |
-| Finish work without updating spec | Document decisions, update status |
-| Edit frontmatter manually | Use `update` tool |
-| Forget about specs mid-conversation | Check spec status periodically |
-
-## Core Rules
-
-1. **Read README.md first** - Understand project context
-2. **Check specs/** - Review existing specs before starting
-3. **Use MCP tools** - Prefer MCP over CLI when available
-4. **Follow HarnSpec principles** - Clarity over documentation
-5. **Keep it minimal** - If it doesn't add clarity, cut it
-6. **NEVER manually edit frontmatter** - Use `update`, `link`, `unlink` tools
-7. **Track progress in specs** - Update status and document decisions
-
-## When to Use Specs
-
-**Write a spec for:**
-- Features affecting multiple parts of the system
-- Breaking changes or significant refactors
-- Design decisions needing team alignment
-
-**Skip specs for:**
-- Bug fixes
-- Trivial changes
-- Self-explanatory refactors
-
-## Quality Standards
-
-- **Status tracking is mandatory:**
-  - `planned` → after creation
-  - `in-progress` → BEFORE starting implementation
-  - `complete` → AFTER finishing implementation
-- Specs stay in sync with implementation
-- Never leave specs with stale status
-
-## Spec Complexity Guidelines
-
-| Tokens | Status |
+| ❌ 不要 | ✅ 应该 |
 |--------|--------|
-| <2,000 | ✅ Optimal |
-| 2,000-3,500 | ✅ Good |
-| 3,500-5,000 | ⚠️ Consider splitting |
-| >5,000 | 🔴 Should split |
-
-Use `tokens` tool to check spec size.
+| 手动创建 Spec 文件 | 使用 `create` 工具 |
+| 跳过发现直接开始新工作 | 先运行 `board` 和 `search` |
+| 开始后保持状态为 "planned" | 立即更新为 `in-progress` |
+| 完成工作但不更新 Spec | 记录决策，更新状态 |
+| 手动编辑 frontmatter | 使用 `update` 工具 |
+| 对话中忘记 Spec | 定期检查 Spec 状态 |
 ```
 
-## Configuring Different AI Tools
+## 完整的 AGENTS.md 模板
+
+```markdown
+# AI 代理指令
+
+## 项目：[您的项目名称]
+
+[项目功能的简要描述]
+
+## 🚨 关键：任何任务之前
+
+**先停下来检查这些：**
+
+1. **发现上下文** → 使用 `board` 工具查看项目状态
+2. **搜索相关工作** → 创建新 Spec 之前使用 `search` 工具
+3. **永远不要手动创建文件** → 始终使用 `create` 工具创建新 Spec
+
+> **为什么？** 跳过发现会导致重复工作。手动创建文件会破坏 HarnSpec 工具链。
+
+## 🔧 如何管理 Spec
+
+### 主要方法：MCP 工具（推荐）
+
+如果您有 HarnSpec MCP 工具可用，**始终使用它们**：
+
+| 操作 | MCP 工具 | 描述 |
+|------|----------|------|
+| 查看项目状态 | `board` | 看板视图 + 项目健康指标 |
+| 列出所有 Spec | `list` | 可过滤的带元数据列表 |
+| 搜索 Spec | `search` | 跨所有内容的语义搜索 |
+| 查看 Spec | `view` | 带格式的完整内容 |
+| 创建新 Spec | `create` | 自动编号，正确结构 |
+| 更新 Spec | `update` | 验证状态转换，时间戳 |
+| 检查依赖 | `deps` | 可视化依赖图 |
+
+**为什么 MCP 优于 CLI？**
+- ✅ 直接工具集成（无需执行 shell 命令）
+- ✅ 结构化响应（更适合 AI 推理）
+- ✅ 实时验证（即时反馈）
+- ✅ 上下文感知（理解项目状态）
+
+### 备选方案：CLI 命令
+
+如果 MCP 工具不可用，使用 CLI 命令：
+
+    harnspec board              # 项目概览
+    harnspec list               # 查看所有 Spec
+    harnspec search "query"     # 查找相关 Spec
+    harnspec create <name>      # 创建新 Spec
+    harnspec update <spec> --status <status>  # 更新状态
+    harnspec deps <spec>        # 显示依赖
+
+**提示：** 使用 CLI 前先检查是否有 HarnSpec MCP 工具可用。
+
+## ⚠️ SDD 工作流检查点
+
+### 开始任何任务之前
+1. 📋 **运行 `board`** - 当前项目状态是什么？
+2. 🔍 **运行 `search`** - 是否已有相关 Spec？
+3. 📝 **检查现有 Spec** - 这项工作是否已有 Spec？
+
+### 实现过程中
+4. 📊 **编码前将状态更新为 `in-progress`**
+5. 📝 **在 Spec 中记录决策**
+6. 🔗 **如果发现关联，链接相关 Spec**
+
+### 完成工作后
+7. ✅ **完成后将状态更新为 `complete`**
+8. 📄 **在 Spec 中记录学到的内容**
+9. 🤔 **如需后续工作，创建新 Spec**
+
+### 🚫 避免常见错误
+
+| ❌ 不要 | ✅ 应该 |
+|--------|--------|
+| 手动创建 Spec 文件 | 使用 `create` 工具 |
+| 跳过发现直接开始新工作 | 先运行 `board` 和 `search` |
+| 开始后保持状态为 "planned" | 立即更新为 `in-progress` |
+| 完成工作但不更新 Spec | 记录决策，更新状态 |
+| 手动编辑 frontmatter | 使用 `update` 工具 |
+| 对话中忘记 Spec | 定期检查 Spec 状态 |
+
+## 核心规则
+
+1. **首先阅读 README.md** - 了解项目上下文
+2. **检查 specs/** - 开始前审查现有 Spec
+3. **使用 MCP 工具** - 可用时优先使用 MCP 而非 CLI
+4. **遵循 HarnSpec 原则** - 清晰度优于文档
+5. **保持最小** - 如果不增加清晰度，就删除它
+6. **永不手动编辑 frontmatter** - 使用 `update`、`link`、`unlink` 工具
+7. **在 Spec 中跟踪进度** - 更新状态并记录决策
+
+## 何时使用 Spec
+
+**为以下内容编写 Spec：**
+- 影响系统多个部分的功能
+- 破坏性更改或重大重构
+- 需要团队对齐的设计决策
+
+**跳过 Spec：**
+- 错误修复
+- 琐碎更改
+- 不言自明的重构
+
+## 质量标准
+
+- **状态跟踪是必须的：**
+  - `planned` → 创建后
+  - `in-progress` → 开始实现之前
+  - `complete` → 完成实现之后
+- Spec 与实现保持同步
+- 永不留下过时状态的 Spec
+
+## Spec 复杂度指南
+
+| Token 数 | 状态 |
+|---------|------|
+| <2,000 | ✅ 最佳 |
+| 2,000-3,500 | ✅ 良好 |
+| 3,500-5,000 | ⚠️ 考虑拆分 |
+| >5,000 | 🔴 应该拆分 |
+
+使用 `tokens` 工具检查 Spec 大小。
+```
+
+## 配置不同的 AI 工具
 
 ### Claude Code
 
-Claude Code reads `CLAUDE.md` by default. HarnSpec automatically creates this symlink:
+Claude Code 默认读取 `CLAUDE.md`。HarnSpec 自动创建此符号链接：
 
 ```bash
-# After harnspec init
+# harnspec init 后
 ls -la CLAUDE.md
 # CLAUDE.md -> AGENTS.md
 ```
 
-**With MCP (Recommended):** Configure the HarnSpec MCP server for full functionality. See [MCP Integration](/docs/guide/usage/mcp-integration).
+**使用 MCP（推荐）：** 配置 HarnSpec MCP 服务器以获得完整功能。参见 [MCP 集成](/zh-Hans/docs/guide/usage/advanced-features/agent-configuration)。
 
 ### Gemini CLI
 
-Gemini CLI reads `GEMINI.md`. Create with:
+Gemini CLI 读取 `GEMINI.md`。创建方式：
 
 ```bash
 harnspec init -y --agent-tools gemini
@@ -324,32 +299,32 @@ harnspec init -y --agent-tools gemini
 
 ### GitHub Copilot
 
-Copilot automatically reads `AGENTS.md` when files are opened in your editor.
+Copilot 在编辑器中打开文件时自动读取 `AGENTS.md`。
 
-**No additional setup needed.**
+**无需额外设置。**
 
 ### Cursor
 
-Cursor reads `.cursorrules` by default. Options:
+Cursor 默认读取 `.cursorrules`。选项：
 
-**Option 1:** Use AGENTS.md (recommended)
+**选项 1：** 使用 AGENTS.md（推荐）
 ```bash
-# Cursor also reads AGENTS.md
-# No additional setup
+# Cursor 也读取 AGENTS.md
+# 无需额外设置
 ```
 
-**Option 2:** Link .cursorrules to AGENTS.md
+**选项 2：** 将 .cursorrules 链接到 AGENTS.md
 ```bash
 ln -s AGENTS.md .cursorrules
 ```
 
 ### Windsurf
 
-Windsurf reads `AGENTS.md` by default. No additional setup needed.
+Windsurf 默认读取 `AGENTS.md`。无需额外设置。
 
-### Claude Desktop / ChatGPT / Other Chat Interfaces
+### Claude Desktop / ChatGPT / 其他聊天界面
 
-These tools work best with MCP integration. Configure the HarnSpec MCP server:
+这些工具配合 MCP 集成效果最佳。配置 HarnSpec MCP 服务器：
 
 ```json
 {
@@ -362,34 +337,34 @@ These tools work best with MCP integration. Configure the HarnSpec MCP server:
 }
 ```
 
-See [MCP Integration](/docs/guide/usage/mcp-integration) for full setup instructions.
+参见 [MCP 集成](/zh-Hans/docs/guide/usage/advanced-features/agent-configuration) 了解完整设置说明。
 
-## Best Practices for AI-Readable Specs
+## AI 可读 Spec 的最佳实践
 
-### 1. Be Explicit and Concrete
+### 1. 明确和具体
 
-❌ **Vague:**
+❌ **模糊：**
 ```markdown
-Implement secure authentication
+实现安全认证
 ```
 
-✅ **Specific:**
+✅ **具体：**
 ```markdown
-Implement JWT authentication with:
-- bcrypt password hashing (min 10 rounds)
-- 24-hour token expiry
-- Rate limiting (5 attempts/min per IP)
+实现 JWT 认证，包括：
+- bcrypt 密码哈希（最少 10 轮）
+- 24 小时 Token 过期
+- 速率限制（每分钟每 IP 5 次尝试）
 ```
 
-### 2. Provide Examples
+### 2. 提供示例
 
-AI agents understand examples better than abstract descriptions.
+AI 代理更好地理解示例而不是抽象描述。
 
-**Good:**
+**好：**
 ```markdown
-## API Response Example
+## API 响应示例
 
-```json
+\`\`\`json
 {
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "expiresAt": "2025-11-03T06:00:00Z",
@@ -398,185 +373,185 @@ AI agents understand examples better than abstract descriptions.
     "email": "user@example.com"
   }
 }
+\`\`\`
 ```
-```
 
-### 3. Use Testable Acceptance Criteria
+### 3. 使用可测试的验收标准
 
-Make criteria specific and verifiable:
+使标准具体且可验证：
 
-✅ **Good Criteria:**
-- [ ] POST /api/auth/login returns 200 with JWT on success
-- [ ] Invalid credentials return 401 with error message
-- [ ] Passwords are hashed with bcrypt, min 10 rounds
-- [ ] Rate limit: max 5 attempts per minute per IP
+✅ **好标准：**
+- [ ] POST /api/auth/login 成功时返回 200 和 JWT
+- [ ] 无效凭据返回 401 和错误消息
+- [ ] 密码使用 bcrypt 哈希，最少 10 轮
+- [ ] 速率限制：每分钟每 IP 最多 5 次尝试
 
-❌ **Bad Criteria:**
-- [ ] Authentication works
-- [ ] Good security
-- [ ] Fast performance
+❌ **坏标准：**
+- [ ] 认证有效
+- [ ] 良好的安全性
+- [ ] 快速性能
 
-### 4. Define Boundaries Explicitly
+### 4. 明确定义边界
 
-Use "Out of Scope" or "Non-Goals" to prevent scope creep:
+使用"不在范围内"或"非目标"来防止范围蔓延：
 
 ```markdown
-## Out of Scope
+## 不在范围内
 
-- Social login (Google, GitHub) - separate epic
-- Password reset - separate spec
-- 2FA - not needed for MVP
-- Remember me functionality - future enhancement
+- 社交登录（Google、GitHub）- 单独的史诗
+- 密码重置 - 单独的 Spec
+- 2FA - MVP 不需要
+- 记住我功能 - 未来增强
 ```
 
-### 5. Show, Don't Just Tell
+### 5. 展示，不仅仅是告诉
 
-Include concrete examples of:
-- API requests/responses
-- CLI commands and output
-- Database schemas
-- Configuration files
-- Test cases
+包括具体示例：
+- API 请求/响应
+- CLI 命令和输出
+- 数据库模式
+- 配置文件
+- 测试用例
 
-### 6. Structure for Scanning
+### 6. 为扫描而构建
 
-AI agents (and humans) scan before reading:
+AI 代理（和人类）在阅读前扫描：
 
-✅ **Good Structure:**
+✅ **好结构：**
 ```markdown
-## Problem
-[2-3 sentences]
+## 问题
+[2-3 句话]
 
-## Solution
-[High-level approach]
+## 解决方案
+[高级方法]
 
-### Technical Details
-[Implementation specifics]
+### 技术细节
+[实现细节]
 
-## Success Criteria
-- [ ] [Testable outcome]
+## 成功标准
+- [ ] [可测试的结果]
 ```
 
-❌ **Bad Structure:**
+❌ **坏结构：**
 ```markdown
-So we need to build this feature and it should do X, Y, Z...
-[wall of text with no structure]
+所以我们需要构建这个功能，它应该做 X、Y、Z...
+[没有结构的大段文字]
 ```
 
-## Repository Organization
+## 仓库组织
 
-### Make Specs Discoverable
+### 使 Spec 可发现
 
 ```
 your-project/
-├── AGENTS.md           ← Primary AI instructions
-├── CLAUDE.md → AGENTS.md   ← Symlink for Claude Code
-├── README.md           ← Project overview
-├── specs/              ← All specs here
+├── AGENTS.md           ← 主要 AI 指令
+├── CLAUDE.md → AGENTS.md   ← Claude Code 的符号链接
+├── README.md           ← 项目概述
+├── specs/              ← 所有 Spec 在这里
 │   ├── 001-feature-a/
 │   │   └── README.md
 │   ├── 002-feature-b/
 │   │   ├── README.md
 │   │   ├── DESIGN.md
 │   │   └── TESTING.md
-│   └── archived/       ← Old specs
-├── src/                ← Source code
-└── tests/              ← Tests
+│   └── archived/       ← 旧 Spec
+├── src/                ← 源代码
+└── tests/              ← 测试
 ```
 
-### Keep Specs Close to Code
+### 保持 Spec 靠近代码
 
-Specs in the repo (not external wiki):
-- ✅ Version controlled
-- ✅ Branch-specific
-- ✅ Easy for AI to find
-- ✅ Searchable
+仓库中的 Spec（不是外部 wiki）：
+- ✅ 版本控制
+- ✅ 分支特定
+- ✅ AI 易于查找
+- ✅ 可搜索
 
-## Verification
+## 验证
 
-### Test AI Understanding
+### 测试 AI 理解
 
-Ask your AI agent these questions to verify HarnSpec integration:
+向您的 AI 代理提出这些问题以验证 HarnSpec 集成：
 
-**Test 1: Can it discover the project?**
+**测试 1：它能发现项目吗？**
 ```
-Show me the project board.
+显示项目看板。
 ```
-Expected: Agent uses MCP `board` tool (or `harnspec board` CLI)
+预期：代理使用 MCP `board` 工具（或 `harnspec board` CLI）
 
-**Test 2: Can it search specs?**
+**测试 2：它能搜索 Spec 吗？**
 ```
-Find specs related to authentication.
+查找与认证相关的 Spec。
 ```
-Expected: Agent uses MCP `search` tool
+预期：代理使用 MCP `search` 工具
 
-**Test 3: Can it create specs properly?**
+**测试 3：它能正确创建 Spec 吗？**
 ```
-Create a spec for user authentication.
+为用户认证创建一个 Spec。
 ```
-Expected: Agent uses MCP `create` tool (NOT manual file creation)
+预期：代理使用 MCP `create` 工具（而非手动创建文件）
 
-**Test 4: Can it update status?**
+**测试 4：它能更新状态吗？**
 ```
-Mark spec 001 as in-progress.
+将 Spec 001 标记为进行中。
 ```
-Expected: Agent uses MCP `update` tool
+预期：代理使用 MCP `update` 工具
 
-**Test 5: Does it follow SDD workflow?**
+**测试 5：它遵循 SDD 工作流吗？**
 ```
-I want to implement a new caching feature.
+我想实现一个新的缓存功能。
 ```
-Expected: Agent first runs `board` and `search`, then creates spec before coding
+预期：代理先运行 `board` 和 `search`，然后在编码前创建 Spec
 
-## Common Pitfalls
+## 常见陷阱
 
-### 1. Overly Verbose Instructions
+### 1. 过于冗长的指令
 
-❌ **Bad:**
+❌ **坏：**
 ```markdown
-The AI agent should carefully read all available documentation
-and thoroughly understand the codebase before making any changes.
-It's important to...
-[500 words of general advice]
+AI 代理应该仔细阅读所有可用的文档
+并在进行任何更改之前彻底了解代码库。
+重要的是...
+[500 字的一般建议]
 ```
 
-✅ **Good:**
+✅ **好：**
 ```markdown
-1. Read README.md first
-2. Check existing specs with `harnspec list`
-3. Follow HarnSpec principles (see AGENTS.md)
+1. 首先阅读 README.md
+2. 使用 `harnspec list` 检查现有 Spec
+3. 遵循 HarnSpec 原则（见 AGENTS.md）
 ```
 
-### 2. Ambiguous Success Criteria
+### 2. 模糊的成功标准
 
-❌ **Bad:**
+❌ **坏：**
 ```markdown
-- [ ] Feature works well
-- [ ] Good performance
-- [ ] Users are happy
+- [ ] 功能运行良好
+- [ ] 良好的性能
+- [ ] 用户满意
 ```
 
-✅ **Good:**
+✅ **好：**
 ```markdown
-- [ ] API response `<100`ms (p95)
-- [ ] Zero crashes in 1 week
-- [ ] NPS score >8
+- [ ] API 响应 `<100`ms（p95）
+- [ ] 1 周内零崩溃
+- [ ] NPS 分数 >8
 ```
 
-### 3. Missing Context
+### 3. 缺少上下文
 
-Always provide:
-- **Why**: Problem and motivation
-- **What**: Specific requirements
-- **How**: Approach and constraints
-- **When**: Success criteria
+始终提供：
+- **为什么**：问题和动机
+- **什么**：具体要求
+- **如何**：方法和约束
+- **何时**：成功标准
 
-## Next Steps
+## 下一步
 
-- [MCP Integration](/docs/guide/usage/mcp-integration) - Model Context Protocol setup
-- [AI-Assisted Spec Writing](/docs/advanced/ai-assisted-spec-writing) - Practical patterns
-- [Getting Started](/docs/guide/getting-started) - Initial setup guide
+- [MCP 集成](/zh-Hans/docs/guide/usage/advanced-features/agent-configuration) - 模型上下文协议设置
+- [编写 AI 可执行的 Spec](/zh-Hans/docs/advanced/ai-assisted-spec-writing) - 实用模式
+- [入门](/zh-Hans/docs/guide/getting-started) - 初始设置指南
 
 ---
 
-**Related**: [CLI Reference](/docs/reference/cli) for complete command documentation
+**相关**：[CLI 参考](/zh-Hans/docs/reference/cli) 了解完整的命令文档

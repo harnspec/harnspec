@@ -1,251 +1,254 @@
 ---
 id: 'finding-specs'
-title: 'Finding Specs'
+title: '查找Spec'
 sidebar_position: 2
 ---
-# Finding Specs
+# 查找Spec
 
-Learn how to discover and navigate specs using search, list commands, and the MCP server for AI agent access.
+学习如何使用搜索、列表命令和 MCP 服务器发现和导航Spec以供 AI 代理访问。
 
-## Quick Discovery
+## 快速发现
 
-### List All Specs
+### 列出所有Spec
 
 ```bash
-# Show all specs
+# 显示所有Spec
 harnspec list
 ```
 
-Output:
+输出：
 ```
-📋 Spec List
+📋 Specs (18 total)
 
-🟡 ✅ 107-ui-ux-refinements #ui #ux #lessons-learned
-🟡 ✅ 106-ui-package-documentation
-🟡 ⏳ 105-docs-site-enhancements
-🟠 ✅ 104-ui-packaging-fix #packaging #bug-fix
+┌─────┬────────────────────────┬──────────────┬──────────┐
+│ ID  │ Name                   │ Status       │ Priority │
+├─────┼────────────────────────┼──────────────┼──────────┤
+│ 042 │ auth-refactor          │ in-progress  │ high     │
+│ 043 │ api-redesign           │ planned      │ medium   │
+│ 044 │ dashboard-performance  │ complete     │ low      │
+└─────┴────────────────────────┴──────────────┴──────────┘
 ```
 
-### Filter by Status
+### 按状态过滤
 
 ```bash
-# Show only in-progress specs
+# 仅显示进行中的Spec
 harnspec list --status in-progress
 
-# Show planned specs
+# 显示计划中的Spec
 harnspec list --status planned
 
-# Show completed specs
+# 显示已完成的Spec
 harnspec list --status complete
 ```
 
-### Filter by Tag
+### 按标签过滤
 
 ```bash
-# Show specs with specific tag
+# 显示带特定标签的Spec
 harnspec list --tag api
 
-# Show specs with multiple tags
+# 显示带多个标签的Spec
 harnspec list --tag api --tag backend
 ```
 
-### Filter by Priority
+### 按优先级过滤
 
 ```bash
-# High priority specs
+# 高优先级Spec
 harnspec list --priority high
 
-# Low priority specs
+# 低优先级Spec
 harnspec list --priority low
 ```
 
-## Search by Content
+## 按内容搜索
 
-### Basic Search
+### 基本搜索
 
 ```bash
-# Search all spec content
+# 搜索所有Spec内容
 harnspec search "authentication"
 ```
 
-Searches across:
-- Spec titles and descriptions
-- All README.md content
-- Sub-spec files (DESIGN.md, TESTING.md, etc.)
-- Frontmatter fields
+搜索范围：
+- Spec标题和描述
+- 所有 README.md 内容
+- 子 Spec文件（DESIGN.md、TESTING.md 等）
+- frontmatter字段
 
-### Search with Filters
+### 使用过滤器搜索
 
 ```bash
-# Search in specific status
+# 在特定状态中搜索
 harnspec search "API" --status in-progress
 
-# Search with tag filter
+# 使用标签过滤器搜索
 harnspec search "cache" --tag performance
 
-# Combine multiple filters
+# 组合多个过滤器
 harnspec search "refactor" --status planned --tag backend --priority high
 ```
 
-### Case-Insensitive Search
+### 不区分大小写搜索
 
-Search is case-insensitive by default:
+搜索默认不区分大小写：
 ```bash
-harnspec search "api"      # Matches "API", "api", "Api"
-harnspec search "JWT"      # Matches "jwt", "JWT", "Jwt"
+harnspec search "api"      # 匹配 "API"、"api"、"Api"
+harnspec search "JWT"      # 匹配 "jwt"、"JWT"、"Jwt"
 ```
 
-## Dependency Navigation
+## 依赖导航
 
 ```bash
-# Show dependencies for a spec
+# 显示Spec的依赖关系
 harnspec deps 042
 ```
 
-Output:
+输出：
 ```
-Dependency Graph for 042-auth-refactor
+042-auth-refactor 的依赖图 (Dependency Graph)
 
-Depends On:
-  → 041-jwt-library [complete]       # Required to start
+依赖于：
+  → 041-jwt-library [complete]       # 开始前需要
 
-Required By:
-  ← 043-api-redesign [planned]       # Blocked until 042 done
+被需要：
+  ← 043-api-redesign [planned]       # 在 042 完成前被阻塞
   ← 044-dashboard [planned]
 
-Related Specs:
-  ⟷ 045-security-audit [in-progress]  # Coordinated work
+相关Spec：
+  ⟷ 045-security-audit [in-progress]  # 协调工作
 ```
 
-Navigate relationships:
-- **Depends On (→)**: What this spec requires before it can start
-- **Required By (←)**: What's blocked waiting for this
-- **Related (⟷)**: Informational connections
+导航关系：
+- **依赖于（→）**：此Spec在开始前需要什么
+- **被需要（←）**：等待此Spec的内容被阻塞
+- **相关（⟷）**：信息连接
 
-**See also**: [Dependencies](/docs/guide/usage/cli/project-management#dependencies)
+**另见**：[依赖关系](/zh-Hans/docs/guide/usage/cli/project-management#dependencies)
 
-## Advanced Filtering
+## 高级过滤
 
-### Combine Multiple Criteria
+### 组合多个标准
 
 ```bash
-# High-priority backend work that's planned
+# 计划中的高优先级后端工作
 harnspec list --priority high --tag backend --status planned
 
-# In-progress API work
+# 进行中的 API 工作
 harnspec list --status in-progress --tag api
 
-# Completed security work
+# 已完成的安全工作
 harnspec list --status complete --tag security
 ```
 
-### Exclude Archived
+### 排除已归档
 
-By default, archived specs are excluded from `harnspec list`:
+默认情况下，`harnspec list` 排除已归档的Spec：
 
 ```bash
-# Default: excludes archived
+# 默认：排除已归档
 harnspec list
 
-# Include archived
+# 包括已归档
 harnspec list --archived
 ```
 
-## Common Search Patterns
+## 常见搜索模式
 
-### Find Work to Start
+### 查找要开始的工作
 
 ```bash
-# What's ready to work on?
+# 准备开始的工作是什么？
 harnspec list --status planned --priority high
 ```
 
-### Check Active Work
+### 检查活动工作
 
 ```bash
-# What's in progress?
+# 进行中的是什么？
 harnspec list --status in-progress
 
-# Who's working on what?
+# 谁在做什么？
 harnspec list --status in-progress
-# (shows assignee if set)
+# （如果设置则显示负责人）
 ```
 
-### Review Completed Work
+### 审查已完成的工作
 
 ```bash
-# Recently completed
+# 最近完成的
 harnspec list --status complete
 
-# Completed work by tag
+# 按标签完成的工作
 harnspec list --status complete --tag api
 ```
 
-### Check Dependencies
+### 检查依赖关系
 
 ```bash
-# What's ready to start?
+# 准备开始的是什么？
 harnspec list --status planned
 
-# Check if dependencies are met
+# 检查是否满足依赖关系
 harnspec deps <spec-id>
-# (verify required specs are complete)
+# （验证所需Spec已完成）
 ```
 
-## Navigation Tips
+## 导航提示
 
-**DO:**
-- ✅ Use `harnspec search` for content-based discovery
-- ✅ Use `harnspec list` with filters for focused views
-- ✅ Use `harnspec deps` to understand relationships
-- ✅ Check [Board & Stats](/docs/guide/usage/cli/project-management#board-stats) for visual overview
+**做：**
+- ✅ 使用 `harnspec search` 进行基于内容的发现
+- ✅ 使用带过滤器的 `harnspec list` 进行聚焦视图
+- ✅ 使用 `harnspec deps` 了解关系
+- ✅ 查看[看板与统计](/zh-Hans/docs/guide/usage/cli/project-management#board-stats)获得可视化概览
 
-**DON'T:**
-- ❌ Manually grep through specs/ directory
-- ❌ Rely on filesystem naming (use IDs/search instead)
-- ❌ Forget archived specs exist (use --archived to include them)
+**不要做：**
+- ❌ 手动 grep specs/ 目录
+- ❌ 依赖文件系统命名（改用 ID/搜索）
+- ❌ 忘记已归档的Spec存在（使用 --archived 包括它们）
 
-## Keyboard-Driven Workflows
+## 键盘驱动工作流程
 
-### Quick Discovery Flow
+### 快速发现流程
 
 ```bash
-# 1. What's the project state?
+# 1. 项目状态如何？
 harnspec list --status in-progress
 
-# 2. What should I work on?
+# 2. 我应该做什么？
 harnspec list --status planned --priority high
 
-# 3. What's this spec about?
+# 3. 这个Spec是关于什么的？
 harnspec view <spec-id>
 
-# 4. Start working
+# 4. 开始工作
 harnspec update <spec-id> --status in-progress
 harnspec open <spec-id>
 ```
 
-### Research Flow
+### 研究流程
 
 ```bash
-# 1. Find relevant specs
+# 1. 查找相关Spec
 harnspec search "authentication"
 
-# 2. View promising spec
+# 2. 查看有希望的Spec
 harnspec view 042
 
-# 3. Check related work
+# 3. 检查相关工作
 harnspec deps 042
 
-# 4. Read related spec
+# 4. 阅读相关Spec
 harnspec view 041
 ```
 
-## Next Steps
+## 下一步
 
-- [Creating & Managing Specs](/docs/guide/usage/cli/creating-managing) - Basic operations
-- [Project Management](/docs/guide/usage/cli/project-management) - Board views and health tracking
-- [Spec Structure](/docs/guide/usage/spec-structure) - Understanding spec anatomy
+- [创建和管理Spec](/zh-Hans/docs/guide/usage/cli/creating-managing) - 基本操作
+- [项目管理](/zh-Hans/docs/guide/usage/cli/project-management) - 看板视图和健康跟踪
+- [Spec结构](/zh-Hans/docs/guide/usage/spec-structure) - 了解Spec解剖
 
 ---
 
-**Reference**: [CLI Documentation](/docs/reference/cli) for complete command options
+**参考**：[CLI 文档](/zh-Hans/docs/reference/cli)了解完整的命令选项

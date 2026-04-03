@@ -1,27 +1,27 @@
 ---
-title: Your First Spec with AI
+title: 完成第一个 Spec
 sidebar_position: 1
-description: Build a complete feature from idea to working code with AI-assisted spec-driven development
+description: 通过 AI 辅助的Spec驱动开发，从想法到工作代码构建完整功能
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Your First Spec with AI
+# 完成第一个 Spec
 
-Learn how HarnSpec helps you go from intent to implementation in minutes, not hours. You'll build a real feature—dark theme support—with AI doing the heavy lifting.
+了解 HarnSpec 如何帮助您在几分钟而非几小时内从意图到实现。您将构建一个真实功能——深色主题支持——由 AI 完成繁重工作。
 
-**Time**: 10 minutes  
-**Outcome**: Working feature with a completed spec
+**时间**：10 分钟  
+**结果**：带有完整Spec的工作功能
 
-:::info Prerequisites
-- Completed [Getting Started](/docs/guide/getting-started) guide
-- AI coding tool (GitHub Copilot, Claude, etc.)
+:::info 前置条件
+- 完成[快速开始](/docs/guide/getting-started)指南
+- AI 编程工具（GitHub Copilot、Claude 等）
 :::
 
-## Try It Now
+## 立即尝试
 
-Get hands-on with a pre-configured example project:
+使用预配置的示例项目快速上手：
 
 ```bash
 npx harnspec init --example dark-theme
@@ -30,106 +30,106 @@ npm install
 npm start
 ```
 
-Then prompt your AI tool:
+然后向 AI 工具发送提示：
 
 <Tabs groupId="ai-tool">
   <TabItem value="claude" label="Claude Code">
-    In your terminal with Claude Code:
+    在终端中使用 Claude Code：
 
     ```bash
-    # Make sure you have Claude Code installed
+    # 确保已安装 Claude Code
     # macOS/Linux
     curl -fsSL https://claude.ai/install.sh | bash
     # Windows (PowerShell)
     irm https://claude.ai/install.ps1 | iex
 
-    # Create soft link to CLAUDE.md from the system prompt AGENTS.md
+    # 为系统提示 AGENTS.md 创建软链 CLAUDE.md
     ln -s AGENTS.md CLAUDE.md
 
-    # Send the prompt to Claude Code
-    claude "Help me add dark theme support with theme switcher"
+    # 向 Claude Code 发送提示
+    claude "帮我为这个应用添加带主题切换的深色主题支持"
     ```
   </TabItem>
   <TabItem value="codex" label="Codex CLI">
-    In your terminal with OpenAI Codex CLI:
+    在终端中使用 OpenAI Codex CLI：
 
     ```bash
-    # Make sure you have Codex CLI installed
+    # 确保已安装 Codex CLI
     npm install -g @openai/codex
 
-    # Send the prompt to Codex CLI
-    codex "Help me add dark theme support with theme switcher"
+    # 向 Codex CLI 发送提示
+    codex "帮我为这个应用添加带主题切换的深色主题支持"
     ```
   </TabItem>
   <TabItem value="gemini" label="Gemini CLI">
-    In your terminal with Gemini CLI:
+    在终端中使用 Gemini CLI：
 
     ```bash
-    # Make sure you have Gemini CLI installed
+    # 确保已安装 Gemini CLI
     npm install -g @anthropic-ai/gemini-cli
 
-    # Create soft link to GEMINI.md from the system prompt AGENTS.md
+    # 为系统提示 AGENTS.md 创建软链 GEMINI.md
     ln -s AGENTS.md GEMINI.md
 
-    # Send the prompt to Gemini CLI
-    gemini "Help me add dark theme support with theme switcher"
+    # 向 Gemini CLI 发送提示
+    gemini "帮我为这个应用添加带主题切换的深色主题支持"
     ```
   </TabItem>
   <TabItem value="copilot" label="GitHub Copilot CLI">
-    In your terminal with GitHub Copilot CLI:
+    在终端中使用 GitHub Copilot CLI：
 
     ```bash
-    # Make sure you have GitHub Copilot CLI installed (requires Node.js v22+)
+    # 确保已安装 GitHub Copilot CLI（需要 Node.js v22+）
     npm install -g @github/copilot
 
-    # Send the prompt to Copilot CLI (programmatic mode)
-    copilot -p "Help me add dark theme support with theme switcher" --allow-all-tools
+    # 向 Copilot CLI 发送提示（编程模式）
+    copilot -p "帮我为这个应用添加带主题切换的深色主题支持" --allow-all-tools
     ```
   </TabItem>
   <TabItem value="ide" label="IDE" default>
-    In your IDE with an AI coding assistant (GitHub Copilot, Claude, Cursor, etc.):
+    在 IDE 中使用 AI 编码助手（GitHub Copilot、Claude、Cursor 等）：
 
-    1. Open the project in your IDE
-    2. Open your AI assistant chat panel
-    3. Send the prompt: _"Help me add dark theme support with theme switcher"_
+    1. 在 IDE 中打开项目
+    2. 打开 AI 助手聊天面板
+    3. 发送提示：_"帮我为这个应用添加带主题切换的深色主题支持"_
   </TabItem>
 </Tabs>
 
-**Want to understand what happens under the hood?** The sections below walk through each step in detail.
+**想了解底层发生了什么？** 下面的章节将详细介绍每个步骤。
 
-## The Scenario
+## 场景
 
-You're building a task manager web app. Users love it, but keep requesting dark mode for late-night work sessions. Currently, the app only has a bright light theme.
+您正在构建一个任务管理器 Web 应用。用户喜欢它，但一直要求提供深色模式以便在深夜工作时使用。目前，该应用仅有明亮的浅色主题。
 
-Starting point:
+起点：
 ```
 your-project/
 ├── src/
 │   ├── public/
-│   │   ├── index.html           # Task manager UI
-│   │   ├── style.css            # Current light theme
-│   │   └── app.js               # Task logic
-│   └── server.js                # Express server
-└── specs/                        # Your specs folder
+│   │   ├── index.html           # 任务管理器 UI
+│   │   ├── style.css            # 当前的浅色主题
+│   │   └── app.js               # 任务逻辑
+│   └── server.js                # Express 服务器
+└── specs/                       # 您的 Spec 文件夹
 ```
 
-## Creating the Spec
+## 创建Spec
 
-In your AI tool, describe what you want:
+在您的 AI 工具中，描述您想要什么：
 
 ```
-Create a new spec for adding dark theme support to this task manager.
-The theme should:
-- Automatically detect system preference
-- Include a manual theme switcher button
-- Use accessible color contrast
-- Smooth transition between themes
-- Preserve the current design aesthetic
+为这个任务管理器创建一个添加深色主题支持的新Spec。
+主题应该：
+- 自动检测系统偏好
+- 包含手动主题切换按钮
+- 使用可访问的颜色对比度
+- 主题之间平滑过渡
+- 保留当前的设计美学
 
-Keep it simple and user-friendly.
+保持简单和用户友好。
 ```
 
-The AI reads your project structure and creates a spec in `specs/015-dark-theme-support/`. Here's what it generates:
+AI 读取您的项目结构并在 `specs/015-dark-theme-support/` 中创建Spec。以下是它生成的内容：
 
 ```markdown title="specs/015-dark-theme-support/README.md"
 ---
@@ -138,86 +138,86 @@ created: '2025-11-24'
 priority: high
 ---
 
-# Dark Theme Support
+# 深色主题支持
 
-> **Status**: 📅 Planned · **Priority**: High
+> ** 状态 **：📅 已计划 · ** 优先级 **：高
 
-## Overview
-Add dark theme that automatically switches based on user's system preferences.
-Currently only light theme available, causing eye strain in low-light.
+## 概览
+添加根据用户系统偏好自动切换的深色主题。
+目前仅有浅色主题，在弱光下会导致眼睛疲劳。
 
-## Design
-- Use CSS `prefers-color-scheme` media query for auto-detection
-- Add manual theme switcher button in UI
-- Define dark theme color palette (accessible contrast)
-- Smooth transitions between themes
-- Test with both light/dark system preferences
+## 设计
+- 使用 CSS `prefers-color-scheme` 媒体查询进行自动检测
+- 在 UI 中添加手动主题切换按钮
+- 定义深色主题调色板（可访问对比度）
+- 主题之间平滑过渡
+- 测试浅色/深色系统偏好
 
-## Plan
-- [ ] Define dark theme color variables
-- [ ] Add media query for dark theme
-- [ ] Create theme switcher button component
-- [ ] Update all color references to use variables
-- [ ] Test color contrast for accessibility
+## 计划
+- [ ] 定义深色主题颜色变量
+- [ ] 为深色主题添加媒体查询
+- [ ] 创建主题切换按钮组件
+- [ ] 更新所有颜色引用以使用变量
+- [ ] 测试可访问性的颜色对比度
 
-## Test
-- [ ] Theme switches automatically with system preference
-- [ ] All colors meet WCAG AA contrast standards
-- [ ] Smooth transitions without flashing
-- [ ] Works in Chrome, Firefox, Safari
+## 测试
+- [ ] 主题根据系统偏好自动切换
+- [ ] 所有颜色符合 WCAG AA 对比度标准
+- [ ] 平滑过渡无闪烁
+- [ ] 在 Chrome、Firefox、Safari 中工作
 ```
 
-**What just happened?** The AI:
-1. Understood your intent
-2. Analyzed your existing CSS structure
-3. Created a focused spec with implementation plan
-4. Set status to `planned` (ready to build)
+**刚才发生了什么？** AI：
+1. 理解了您的意图
+2. 分析了您现有的 CSS 结构
+3. 创建了一个带有实施计划的集中Spec
+4. 将状态设置为 `planned`（准备构建）
 
-## Implementation
+## 实施
 
-Now ask the AI to implement it:
+现在让 AI 实施它：
 
 ```
-Implement spec 015.
+实施Spec 015。
 ```
 
-The AI will:
-- Read the spec requirements
-- Add CSS color variables for both themes
-- Implement the `prefers-color-scheme` media query
-- Update all hardcoded colors to use variables
-- Test the implementation
+AI 将：
+- 读取Spec要求
+- 为两个主题添加 CSS 颜色变量
+- 实施 `prefers-color-scheme` 媒体查询
+- 将所有硬编码颜色更新为使用变量
+- 测试实施
 
-You'll see updates like:
+您会看到类似这样的更新：
 ```
-✓ Updated style.css: Added CSS variables for theming
-✓ Updated style.css: Added dark theme media query
-✓ Updated style.css: Converted colors to variables
-✓ Verified: Color contrast meets WCAG AA standards
+✓ 更新了 style.css：添加了主题 CSS 变量
+✓ 更新了 style.css：添加了深色主题媒体查询
+✓ 更新了 style.css：将颜色转换为变量
+✓ 已验证：颜色对比度符合 WCAG AA 标准
 ```
 
-## Review and Complete
+## 审查和完成
 
-Test the feature locally:
+在本地测试功能：
 ```bash
 npm start
-# Open http://localhost:3000
-# Toggle your system theme (macOS: System Settings > Appearance)
+# 打开 http://localhost:3000
+# 切换您的系统主题（macOS：系统设置 > 外观）
 ```
 
-The app should smoothly switch between light and dark themes!
+应用应该在浅色和深色主题之间平滑切换！
 
-Everything works? Tell your AI:
+一切正常？告诉您的 AI：
 ```
-Mark spec 015 as complete.
+将Spec 015 标记为完成。
 ```
 
-Or run manually:
+或手动运行：
 ```bash
 harnspec update 015 --status complete
 ```
 
-The spec now shows:
+Spec现在显示：
 ```markdown
 ---
 status: complete
@@ -225,38 +225,38 @@ completed_at: '2025-11-24T16:45:00.000Z'
 ---
 ```
 
-## What Just Happened
+## 刚才发生了什么
 
-You experienced spec-driven development with AI:
+您体验了使用 AI 的Spec驱动开发：
 
-**Without HarnSpec:**
-- Dive into CSS, miss edge cases
-- Forget accessibility requirements
-- No record of color choices or rationale
-- Hard for others to understand decisions
+**没有 HarnSpec：**
+- 直接修改 CSS，遗漏边缘情况
+- 忘记可访问性要求
+- 没有颜色选择或理由的记录
+- 其他人难以理解决策
 
-**With HarnSpec:**
-- Clear requirements captured upfront
-- AI implements with full context
-- Design decisions documented
-- Accessibility checklist tracked
-- Complete audit trail
+**有了 HarnSpec：**
+- 预先捕获清晰的要求
+- AI 使用完整上下文实施
+- 记录设计决策
+- 跟踪可访问性检查清单
+- 完整的审计跟踪
 
-The spec becomes your **shared memory** between you, the AI, and your team. Everyone knows what was built and why.
+Spec成为您、AI 和团队之间的 **共享内存**。每个人都知道构建了什么以及为什么。
 
-## Next Steps
+## 下一步
 
-Try it yourself with these enhancements:
-- Save user preference in localStorage
-- Add more theme variants (high contrast, etc.)
-- Extract theme colors to config file
-- Add theme preview before switching
+尝试这些增强功能：
+- 在 localStorage 中保存用户偏好
+- 添加更多主题变体（高对比度等）
+- 将主题颜色提取到配置文件
+- 添加切换前的主题预览
 
-Or pick a different feature from your backlog and follow the same workflow.
+或从您的待办事项中选择不同的功能并遵循相同的工作流程。
 
-**Learn more:**
-- [Managing Multiple Features →](./managing-multiple-features) - Handle 2-3 related specs
-- [AI Coding Workflow](/docs/guide/usage/ai-coding-workflow) - Best practices
-- [Spec Structure](/docs/guide/usage/spec-structure) - Organizing specs
+**了解更多：**
+- [管理多个功能 →](./managing-multiple-features) - 处理 2-3 个相关Spec
+- [AI 编码工作流](/zh-Hans/docs/guide/usage/ai-coding-workflow) - 最佳实践
+- [Spec结构](/zh-Hans/docs/guide/usage/spec-structure) - 组织Spec
 
-**Need help?** Check [FAQ](/docs/faq) or [file an issue](https://github.com/codervisor/harnspec/issues).
+**需要帮助？** 查看[常见问题](/zh-Hans/docs/faq)或[提交问题](https://github.com/codervisor/harnspec/issues)。

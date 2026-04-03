@@ -1,369 +1,371 @@
 ---
 id: visual-mode
-title: Visual Mode
-sidebar_label: Visual Mode
+title: 可视化模式
+sidebar_label: 可视化模式
 sidebar_position: 8
-description: Using the HarnSpec web UI for visual spec management
+description: 使用 HarnSpec 网页界面进行可视化Spec管理
 ---
 
-# Visual Mode
+# 可视化模式
 
-The HarnSpec UI provides a visual web interface for browsing and managing specs. It's perfect for visual learners, team presentations, and exploratory spec browsing.
+HarnSpec UI 提供了一个可视化的网页界面，用于浏览和管理Spec。它非常适合视觉学习者、团队演示和探索性Spec浏览。
 
-![HarnSpec UI list view showing spec cards with search and filters](/img/ui/ui-spec-list.png)
+![HarnSpec UI 列表视图，展示搜索和筛选控件](/img/ui/ui-spec-list.png)
 
-## What is Visual Mode?
+## 什么是可视化模式？
 
-Visual Mode is a local web application that provides:
+可视化模式是一个本地网页应用程序，提供：
 
-- **Interactive Spec Browser**: Browse specs with rich formatting and syntax highlighting
-- **Dependency Visualization**: See relationships between specs as an interactive graph
-- **Project Overview**: View project stats and metrics at a glance
-- **Search & Filtering**: Quickly find specs by status, tags, or content
-- **Board View**: Kanban-style visualization of spec status
+- **交互式Spec浏览器**：浏览具有丰富格式和语法高亮的Spec
+- **依赖关系可视化**：以交互式图形查看Spec之间的关系
+- **项目概览**：一目了然地查看项目统计数据和指标
+- **搜索和筛选**：按状态、标签或内容快速查找Spec
+- **看板视图**：按状态组织的看板式可视化
 
-## When to Use UI vs CLI
+## 何时使用 UI 与 CLI
 
-**Use the UI when you want to:**
-- Explore and discover specs visually
-- Present specs to stakeholders or team members
-- Visualize dependencies and relationships
-- Get a high-level project overview
-- Browse specs without remembering commands
+**使用 UI 的情况：**
+- 可视化探索和发现Spec
+- 向利益相关者或团队成员展示Spec
+- 可视化依赖关系和关联
+- 获取高层次的项目概览
+- 浏览Spec而无需记住命令
 
-**Use the CLI when you want to:**
-- Create or edit specs quickly
-- Automate workflows with scripts
-- Integrate with CI/CD pipelines
-- Work in terminal-only environments
-- Perform bulk operations
+**使用 CLI 的情况：**
+- 快速创建或编辑Spec
+- 使用脚本自动化工作流
+- 与 CI/CD 管道集成
+- 在仅终端环境中工作
+- 执行批量操作
 
-## Getting Started
+## 入门指南
 
-### Method 1: Using `harnspec ui`
+### 方法 1：使用 `harnspec ui`
 
-If you have the HarnSpec CLI installed:
+如果您已安装 HarnSpec CLI：
 
 ```bash
 harnspec ui
 ```
 
-This command will:
-- Auto-detect your specs directory
-- Start the web server on port 3000
-- Open your default browser automatically
+此命令将：
+- 自动检测您的Spec目录
+- 在 3000 端口启动网页服务器
+- 自动打开您的默认浏览器
 
-### Method 2: Using `npx @HarnSpec/ui`
+### 方法 2：使用 `npx @HarnSpec/ui`
 
-You can run the UI directly without installing the CLI:
+您可以在不安装 CLI 的情况下直接运行 UI：
 
 ```bash
 npx @HarnSpec/ui
 ```
 
-This is useful for:
-- Projects that don't have the CLI installed
-- Quick one-time usage
-- Sharing with team members who don't have HarnSpec installed
+这对以下情况很有用：
+- 项目未安装 CLI
+- 快速一次性使用
+- 与未安装 HarnSpec 的团队成员共享
 
-### Options
+### 选项
 
-Both methods support the same options:
+两种方法支持相同的选项：
 
 ```bash
-# Custom specs directory
+# 自定义Spec目录
 harnspec ui --specs ./my-specs
 
-# Custom port
+# 自定义端口
 harnspec ui --port 3100
 
-# Don't auto-open browser
+# 不自动打开浏览器
 harnspec ui --no-open
 
-# Combine options
+# 组合选项
 harnspec ui --specs ./docs/specs --port 3100 --no-open
 ```
 
-**Available Options:**
-- `-s, --specs <dir>` - Specify specs directory (auto-detected by default)
-- `-p, --port <port>` - Server port (default: 3000)
-- `--no-open` - Don't open browser automatically
+**可用选项：**
+- `-s, --specs <dir>` - 指定Spec目录（默认自动检测）
+- `-p, --port <port>` - 服务器端口（默认：3000）
+- `--no-open` - 不自动打开浏览器
 
-## Features
+## 功能特性
 
-### Spec Browser
+### Spec浏览器
 
-The main interface shows all your specs in a list view:
+主界面以列表视图显示所有Spec：
 
-- **Rich Formatting**: Markdown rendered with syntax highlighting
-- **Status Indicators**: Visual badges for spec status (planned, active, done, etc.)
-- **Quick Filters**: Filter by status, tags, or priority
-- **Search**: Full-text search across all specs
+- **丰富格式**：带语法高亮的 Markdown 渲染
+- **状态指示器**：Spec状态的可视化徽章（planned、active、done 等）
+- **快速筛选**：按状态、标签或优先级筛选
+- **搜索**：跨所有Spec的全文搜索
 
-![List view with filters and search input highlighted](/img/ui/ui-list-view.png)
+![列表视图示例，突出筛选器和搜索框](/img/ui/ui-list-view.png)
 
-### Spec Detail View
+### Spec详情视图
 
-Click any spec to see:
+点击任何Spec查看：
 
-- **Full Content**: Complete spec rendered with proper formatting
-- **Metadata**: All frontmatter fields displayed clearly
-- **Related Specs**: Links to dependencies and related work
-- **Quick Actions**: Links to edit, view source, or open in file system
+- **完整内容**：完整Spec以适当格式渲染
+- **元数据**：清晰显示所有前置字段
+- **相关Spec**：依赖关系和相关工作的链接
+- **快速操作**：编辑、查看源代码或在文件系统中打开的链接
 
-![Spec detail view showing metadata, actions, and rendered markdown](/img/ui/ui-spec-detail.png)
+![Spec详情视图展示元数据、操作按钮和正文内容](/img/ui/ui-spec-detail.png)
 
-### Dependency Graph
+### 依赖关系图
 
-Visualize how specs relate to each other:
+可视化Spec之间的关联：
 
-- **Interactive Graph**: Drag nodes, zoom, and pan
-- **Relationship Lines**: See which specs depend on others
-- **Click to Navigate**: Click any node to view that spec
-- **Filter by Status**: Show only active specs, completed work, etc.
+- **交互式图形**：拖动节点、缩放和平移
+- **关系线**：查看哪些Spec依赖于其他Spec
+- **点击导航**：点击任何节点查看该Spec
+- **按状态筛选**：仅显示活动Spec、已完成工作等
 
-![Dependency graph modal with current spec and related work nodes](/img/ui/ui-dependency-graph.png)
+![依赖关系图弹窗，包含当前Spec与关联工作的节点](/img/ui/ui-dependency-graph.png)
 
-### Board View
+### 看板视图
 
-Kanban-style view of specs organized by status:
+按状态组织Spec的看板式视图：
 
-- **Drag and Drop**: Move specs between status columns (if enabled)
-- **Status Columns**: Planned, Active, Done, etc.
-- **Card Previews**: See spec title, tags, and assignee at a glance
+- **拖放**：在状态列之间移动Spec（如果启用）
+- **状态列**：Planned、Active、Done 等
+- **卡片预览**：一目了然地查看Spec标题、标签和负责人
 
-![Board view with Planned, In Progress, Complete, and Archived columns](/img/ui/ui-board-view.png)
+![看板视图包含 Planned、In Progress、Complete、Archived 列](/img/ui/ui-board-view.png)
 
-### Project Stats
+### 项目统计
 
-Dashboard showing project metrics:
+显示项目指标的仪表板：
 
-- **Total Specs**: Overall spec count
-- **By Status**: Breakdown of specs in each status
-- **By Priority**: Distribution of priority levels
-- **By Tags**: Most commonly used tags
+- **总Spec数**：整体Spec计数
+- **按状态**：每个状态中Spec的细分
+- **按优先级**：优先级级别的分布
+- **按标签**：最常用的标签
 
-![Dashboard summary tiles plus Recently Added, Planned, and activity feeds](/img/ui/ui-dashboard.png)
+![项目统计仪表板展示总计、完成率和饼图](/img/ui/ui-project-stats.png)
 
-### Search View
+### 搜索视图
 
-Need to find a specific spec? The search UI updates results instantly as you type, and the board view reflects the filtered set.
+需要立即定位Spec？搜索框输入后实时刷新，列表和看板都会同步过滤。
 
-![Search filtering to dependency-related specs across board columns](/img/ui/ui-search-view.png)
+![搜索关键字 dependency 后仅显示匹配的卡片与列](/img/ui/ui-search-view.png)
 
-## Architecture Overview
+## 架构总览
 
 ```mermaid
 flowchart LR
-    CLI[harnspec ui] -- delegates --> Local[Local Next.js build]
-    External[npx @HarnSpec/ui] -- downloads --> Package["@HarnSpec/ui package"]
-    Local & Package --> Server[Next.js standalone server]
-    Server -->|Reads specs| FS[specs/ directory]
-    Browser((Browser)) -->|HTTP :3000| Server
+    CLI[harnspec ui] --> Local[本地 Next.js 构建]
+    External[npx @HarnSpec/ui] --> Package["@HarnSpec/ui 包"]
+    Local --> Server[Next.js standalone 服务器]
+    Package --> Server
+    Server -->|读取Spec| FS[specs/ 目录]
+    Browser((浏览器)) -->|HTTP :3000| Server
 ```
 
-### Monorepo vs External Projects
+### Monorepo vs 外部项目
 
 ```mermaid
 flowchart TB
-    subgraph Monorepo Dev
+    subgraph Monorepo 开发
         CLIDev[harnspec ui --dev]
         WebPkg[packages/web]
-        CLIDev --> WebPkg --> Server1[Local Next.js server]
+        CLIDev --> WebPkg --> Server1[本地 Next.js 服务器]
     end
 
-    subgraph External Project
+    subgraph 外部项目
         NPX[npx @HarnSpec/ui]
-        npmCache[npm registry cache]
-        NPX --> npmCache --> Server2[Standalone server]
+        npmCache[npm registry 缓存]
+        NPX --> npmCache --> Server2[Standalone 服务器]
     end
 
-    Server1 & Server2 --> SharedFS[SPECS_DIR filesystem mode]
+    Server1 --> SharedFS[SPECS_DIR 文件系统模式]
+    Server2 --> SharedFS
 ```
 
-## How Filesystem Mode Works
+## 文件系统模式的工作原理
 
-The UI uses **filesystem mode**, which means it stays in sync with your local files automatically.
+UI 使用 **文件系统模式**，这意味着它会自动与您的本地文件保持同步。
 
 ```mermaid
 graph LR
-    Editor[Code Editor] -->|Writes| Disk[specs/ directory]
-    Disk -->|Reads| UI[HarnSpec UI]
-    UI -->|Displays| Browser[Web Browser]
+    Editor[代码编辑器] -->|写入| Disk[specs/ 目录]
+    Disk -->|读取| UI[HarnSpec UI]
+    UI -->|显示| Browser[Web 浏览器]
 ```
 
-### Direct File Access
-- No database required
-- Reads directly from your `specs/` directory
-- No setup or configuration needed
+### 直接文件访问
+- 无需数据库
+- 直接从 `specs/` 目录读取
+- 无需设置或配置
 
-### Realtime Updates
-- 60-second cache TTL
-- Changes to spec files appear automatically
-- Edit specs in your editor, see updates in UI
+### 实时更新
+- 60 秒缓存 TTL
+- Spec文件的更改会自动显示
+- 在编辑器中编辑Spec，在 UI 中查看更新
 
-### Why This Architecture?
+### 为什么采用这种架构？
 
-**Simplicity**: No database to configure, migrate, or maintain
+**简单性**：无需配置、迁移或维护数据库
 
-**Reliability**: Your specs are always in sync with the file system
+**可靠性**：您的Spec始终与文件系统同步
 
-**Portability**: Works in any project with a `specs/` directory
+**可移植性**：在任何有 `specs/` 目录的项目中都可以工作
 
-**Performance**: Caching ensures fast load times while staying current
+**性能**：缓存确保快速加载时间，同时保持更新
 
-## Development Workflows
+## 开发工作流
 
-### Working with the UI and CLI Together
+### 同时使用 UI 和 CLI
 
-The UI and CLI complement each other:
+UI 和 CLI 相互补充：
 
 ```bash
-# Terminal 1: Run the UI
+# 终端 1：运行 UI
 harnspec ui
 
-# Terminal 2: Work with specs
+# 终端 2：处理Spec
 harnspec create new-feature
 harnspec update new-feature --status=active
 
-# The UI automatically reflects changes within 60 seconds
+# UI 会在 60 秒内自动反映更改
 ```
 
-### Team Collaboration
+### 团队协作
 
-**Share on Local Network:**
+**在本地网络上共享：**
 
 ```bash
-# Find your IP address
-ifconfig | grep "inet " # or ipconfig on Windows
+# 查找您的 IP 地址
+ifconfig | grep "inet " # 或在 Windows 上使用 ipconfig
 
-# Start UI and share the URL
+# 启动 UI 并共享 URL
 harnspec ui --port 3000
-# Share: http://192.168.1.xxx:3000
+# 共享：http://192.168.1.xxx:3000
 ```
 
-**For Remote Teams:**
-- Consider deploying the UI to a shared server
-- Use ngrok or similar tools for temporary sharing
-- Or share screenshots/screen recordings
+**对于远程团队：**
+- 考虑将 UI 部署到共享服务器
+- 使用 ngrok 或类似工具进行临时共享
+- 或共享截图/屏幕录制
 
-### Presentations and Demos
+### 演示和展示
 
-The UI is great for presenting specs to stakeholders:
+UI 非常适合向利益相关者展示Spec：
 
-1. **Clean Interface**: Professional, distraction-free view
-2. **Dependency Graphs**: Visualize project structure
-3. **Board View**: Show progress and status
-4. **Interactive**: Navigate between related specs during discussion
+1. **简洁界面**：专业、无干扰的视图
+2. **依赖关系图**：可视化项目结构
+3. **看板视图**：显示进度和状态
+4. **交互式**：在讨论期间在相关Spec之间导航
 
-## Troubleshooting
+## 故障排除
 
-### Specs Directory Not Found
+### 找不到Spec目录
 
-**Problem**: `Error: Could not find specs directory`
+**问题**：`Error: Could not find specs directory`
 
-**Solution**:
+**解决方案**：
 ```bash
-# Explicitly specify the directory
+# 明确指定目录
 harnspec ui --specs ./path/to/specs
 
-# Or ensure you're in the project root
+# 或确保您在项目根目录
 cd /path/to/project
 harnspec ui
 ```
 
-### Port Already in Use
+### 端口已被占用
 
-**Problem**: `Error: Port 3000 is already in use`
+**问题**：`Error: Port 3000 is already in use`
 
-**Solution**:
+**解决方案**：
 ```bash
-# Use a different port
+# 使用不同端口
 harnspec ui --port 3100
 
-# Or stop the process using port 3000
-# On macOS/Linux:
+# 或停止使用 3000 端口的进程
+# 在 macOS/Linux 上：
 lsof -ti:3000 | xargs kill
 
-# On Windows:
+# 在 Windows 上：
 netstat -ano | findstr :3000
 taskkill /PID <PID> /F
 ```
 
-### UI Not Opening in Browser
+### UI 未在浏览器中打开
 
-**Problem**: Server starts but browser doesn't open
+**问题**：服务器启动但浏览器未打开
 
-**Solution**:
+**解决方案**：
 ```bash
-# Manually open: http://localhost:3000
-# Or disable auto-open and use your preferred browser
+# 手动打开：http://localhost:3000
+# 或禁用自动打开并使用您喜欢的浏览器
 harnspec ui --no-open
 ```
 
-### Outdated UI Version
+### UI 版本过时
 
-**Problem**: Features missing or UI looks different
+**问题**：功能缺失或 UI 看起来不同
 
-**Solution**:
+**解决方案**：
 ```bash
-# Clear npm cache and reinstall
+# 清除 npm 缓存并重新安装
 npx clear-npx-cache
 npx @HarnSpec/ui@latest
 
-# Or if using CLI, update it
+# 或如果使用 CLI，更新它
 npm install -g @HarnSpec/cli@latest
 ```
 
-### Changes Not Appearing
+### 更改未显示
 
-**Problem**: Edited spec but UI still shows old content
+**问题**：编辑了Spec但 UI 仍显示旧内容
 
-**Solution**:
-- Wait up to 60 seconds for cache to expire
-- Hard refresh browser (Cmd+Shift+R / Ctrl+Shift+R)
-- Check file was saved correctly
+**解决方案**：
+- 等待最多 60 秒以使缓存过期
+- 硬刷新浏览器（Cmd+Shift+R / Ctrl+Shift+R）
+- 检查文件是否正确保存
 
-### Build Not Found (Monorepo Dev Mode)
+### 找不到构建（Monorepo 开发模式）
 
-**Problem**: `Error: Build directory not found`
+**问题**：`Error: Build directory not found`
 
-**Solution**:
-This only affects HarnSpec contributors in the monorepo:
+**解决方案**：
+这仅影响 monorepo 中的 HarnSpec 贡献者：
 ```bash
 cd packages/web
 npm run build
 ```
 
-## Tips & Best Practices
+## 技巧与最佳实践
 
-### Performance
+### 性能
 
-- The UI caches specs for 60 seconds - large projects load quickly
-- Use search and filters to narrow down what you're viewing
-- Close other browser tabs if the UI feels slow
+- UI 缓存Spec 60 秒 - 大型项目快速加载
+- 使用搜索和筛选缩小查看范围
+- 如果 UI 感觉慢，关闭其他浏览器标签页
 
-### Workflow Integration
+### 工作流集成
 
-- Keep the UI running in a browser tab while you work
-- Use it as your "spec dashboard" alongside your code editor
-- Review specs in the UI before starting implementation
+- 在工作时在浏览器标签页中保持 UI 运行
+- 将其用作代码编辑器旁边的"Spec仪表板"
+- 在开始实施之前在 UI 中审查Spec
 
-### Team Adoption
+### 团队采用
 
-- Demo the UI in team meetings to increase adoption
-- Share the URL during spec reviews
-- Use board view for sprint planning meetings
+- 在团队会议中演示 UI 以提高采用率
+- 在Spec审查期间共享 URL
+- 在冲刺计划会议中使用看板视图
 
-## Next Steps
+## 下一步
 
-- **Learn More**: See [CLI Reference](/docs/reference/cli#harnspec-ui) for all command options
-- **UI Package**: Check out [@HarnSpec/ui](/docs/reference/ui-package) for technical details
-- **Get Started**: Read [Getting Started](/docs/guide/getting-started) to set up your first specs
+- **了解更多**：查看 [CLI 参考](/docs/reference/cli#harnspec-ui) 以获取所有命令选项
+- **UI 包**：查看 [@HarnSpec/ui](/docs/reference/ui-package) 以获取技术细节
+- **入门**：阅读[入门指南](/docs/guide/getting-started)以设置您的第一个Spec
 
-## Related Documentation
+## 相关文档
 
-- [CLI Reference - `harnspec ui` command](/docs/reference/cli#harnspec-ui)
-- [UI Package Reference](/docs/reference/ui-package)
-- [Getting Started Guide](/docs/guide/getting-started)
-- [Managing Specs](/docs/guide/usage/cli/creating-managing)
+- [CLI 参考 - `harnspec ui` 命令](/docs/reference/cli#harnspec-ui)
+- [UI 包参考](/docs/reference/ui-package)
+- [入门指南](/docs/guide/getting-started)
+- [管理Spec](/docs/guide/usage/cli/creating-managing)

@@ -1,197 +1,197 @@
 ---
 id: 'cli'
-title: 'CLI Reference'
+title: 'CLI 参考'
 sidebar_position: 1
 ---
-# CLI Commands
+# CLI 命令
 
-Complete reference for all HarnSpec CLI commands.
+所有 HarnSpec CLI 命令的完整参考。
 
-## Global Options
+## 全局选项
 
-Available for all commands:
+适用于所有命令：
 
-- `--help` - Show help for a command
-- `--version` - Show HarnSpec version
+- `--help` - 显示命令帮助
+- `--version` - 显示 HarnSpec 版本
 
-## Commands
+## 命令
 
 ### `harnspec init`
 
-Initialize HarnSpec in your project.
+在您的项目中初始化 HarnSpec。
 
 ```bash
 harnspec init [options]
 ```
 
-**Interactive prompts (new project):**
-1. Choose setup path (quick start, choose template, or customize)
-2. Handle existing files (merge, backup, or skip)
-3. Configure initial settings
+**交互式提示（新项目）：**
+1. 选择设置路径（快速开始、选择模板或自定义）
+2. 处理现有文件（合并、备份或跳过）
+3. 配置初始设置
 
-**Interactive prompts (existing project):**
-When HarnSpec is already initialized, you'll be asked how to proceed:
-1. **Upgrade configuration** (recommended) - Update config to latest version, keeps specs and AGENTS.md
-2. **Reset configuration** - Fresh config from template, keeps `specs/` directory
-3. **Full reset** - Remove everything and start fresh (requires confirmation)
-4. **Cancel** - Exit without changes
+**交互式提示（已初始化项目）：**
+当 HarnSpec 已经初始化时，系统会询问如何处理：
+1. **升级配置** （推荐）- 更新配置到最新版本，保留 Spec 和 AGENTS.md
+2. **重置配置** - 使用模板创建新配置，保留 `specs/` 目录
+3. **完全重置** - 删除所有内容重新开始（需要确认）
+4. **取消** - 退出不做任何更改
 
-**What it creates:**
-- `.harnspec/config.json` - Configuration file
-- `.harnspec/templates/` - Custom templates directory
-- `specs/` - Specs directory
-- `AGENTS.md` - AI agent integration guidance (if not present)
+**创建内容：**
+- `.harnspec/config.json` - 配置文件
+- `.harnspec/templates/` - 自定义模板目录
+- `specs/` - Spec 目录
+- `AGENTS.md` - AI 代理集成指导（如果不存在）
 
-**Options:**
-- `-y, --yes` - Skip prompts and use defaults (quick start with standard template)
-- `-f, --force` - Force re-initialization (resets config, keeps specs)
-- `--template <name>` - Use specific template (`standard` or `detailed`)
-- `--agent-tools <tools>` - AI tools to create symlinks for (comma-separated: `claude,gemini,copilot` or `all` or `none`)
+**选项：**
+- `-y, --yes` - 跳过提示并使用默认值（使用标准模板快速开始）
+- `-f, --force` - 强制重新初始化（重置配置，保留 Spec）
+- `--template <name>` - 使用特定模板（`standard` 或 `detailed`）
+- `--agent-tools <tools>` - 创建 AI 工具符号链接（逗号分隔：`claude,gemini,copilot` 或 `all` 或 `none`）
 
-**Examples:**
+**示例：**
 
 ```bash
-# Interactive initialization
+# 交互式初始化
 harnspec init
 
-# Quick start with defaults
+# 使用默认值快速开始
 harnspec init -y
 
-# Force re-init (resets config, keeps specs)
+# 强制重新初始化（重置配置，保留 Spec）
 harnspec init -f
 
-# Use detailed template
+# 使用详细模板
 harnspec init --template detailed
 
-# Create symlinks for all AI tools
+# 为所有 AI 工具创建符号链接
 harnspec init --agent-tools all
 ```
 
-**Re-initialization behavior:**
-- `-y` flag: Safely upgrades config (preserves everything)
-- `-f` flag: Resets config only (preserves `specs/` directory)
-- Interactive: Choose your strategy with full context (shows spec count)
+**重新初始化行为：**
+- `-y` 标志：安全升级配置（保留所有内容）
+- `-f` 标志：仅重置配置（保留 `specs/` 目录）
+- 交互模式：在完整上下文中选择策略（显示 Spec 数量）
 
 ---
 
 ### `harnspec create`
 
-Create a new spec.
+创建新Spec。
 
 ```bash
 harnspec create <name> [options]
 ```
 
-**Arguments:**
-- `<name>` - Spec name (required)
+**参数：**
+- `<name>` - Spec名称（必需）
 
-**Options:**
-- `--title <title>` - Set custom title
-- `--description <desc>` - Set initial description
-- `--tags <tags>` - Comma-separated tags
-- `--priority <priority>` - Set priority (`low`, `medium`, `high`, `critical`)
-- `--assignee <name>` - Set assignee
-- `--template <template>` - Use a specific template
-- `--field <name=value>` - Set custom field (can be used multiple times)
-- `--no-prefix` - Skip date prefix even if configured
+**选项：**
+- `--title <title>` - 设置自定义标题
+- `--description <desc>` - 设置初始描述
+- `--tags <tags>` - 逗号分隔的标签
+- `--priority <priority>` - 设置优先级（`low`、`medium`、`high`、`critical`）
+- `--assignee <name>` - 设置受让人
+- `--template <template>` - 使用特定模板
+- `--field <name=value>` - 设置自定义字段（可多次使用）
+- `--no-prefix` - 即使配置了也跳过日期前缀
 
-**Examples:**
+**示例：**
 
 ```bash
-# Basic spec
+# 基本Spec
 harnspec create user-authentication
 
-# Spec with metadata
+# 带元数据的Spec
 harnspec create user-auth --status=planned --priority=high --tags=security,api
 
-# Spec with custom fields
+# 带自定义字段的Spec
 harnspec create user-auth --field epic=PROJ-123 --field sprint=42
 ```
 
-**Output:**
+**输出：**
 ```
-✓ Created: specs/001-user-authentication/
-  Edit: specs/001-user-authentication/README.md
+✓ 已创建：specs/001-user-authentication/
+  编辑：specs/001-user-authentication/README.md
 ```
 
-**Behavior:**
-- Creates `specs/NNN-name/` directory (flat structure with global numbering)
-- Generates `README.md` from template
-- Assigns sequential number (NNN) globally across all specs
-- Sets frontmatter with metadata
+**行为：**
+- 创建 `specs/NNN-name/` 目录（扁平结构，全局编号）
+- 从模板生成 `README.md`
+- 分配顺序编号（NNN），在所有Spec中全局编号
+- 使用元数据设置frontmatter
 
-**Note**: Default is flat structure. For date-based grouping, configure `pattern: "custom"` in `.harnspec/config.json`.
+**注意**：默认为扁平结构。对于基于日期的分组，在 `.harnspec/config.json` 中配置 `pattern: "custom"`。
 
 ---
 
 ### `harnspec list`
 
-List all specs with optional filtering.
+列出所有Spec并可选过滤。
 
 ```bash
 harnspec list [options]
 ```
 
-**Options:**
-- `--archived` - Include archived specs
-- `--status <status>` - Filter by status (`planned`, `in-progress`, `complete`, `archived`)
-- `--priority <priority>` - Filter by priority (`low`, `medium`, `high`, `critical`)
-- `--tag <tag>` - Filter by tag (use multiple --tag flags for multiple tags)
-- `--assignee <name>` - Filter by assignee
-- `--field <name=value>` - Filter by custom field (can specify multiple)
-- `--sort <field>` - Sort by field (`id`, `created`, `name`, `status`, `priority`) (default: `id`)
-- `--order <order>` - Sort order (`asc`, `desc`) (default: `desc`)
-- `--compact` - Show compact output
-- `--hierarchy` - Show parent-child hierarchy tree
-- `--json` - Output as JSON
+**选项：**
+- `--archived` - 包括已归档的Spec
+- `--status <status>` - 按状态过滤（`planned`、`in-progress`、`complete`、`archived`）
+- `--priority <priority>` - 按优先级过滤（`low`、`medium`、`high`、`critical`）
+- `--tag <tag>` - 按标签过滤（对多个标签使用多个 --tag 标志）
+- `--assignee <name>` - 按受让人过滤
+- `--field <name=value>` - 按自定义字段过滤（可指定多个）
+- `--sort <field>` - 按字段排序（`id`、`created`、`name`、`status`、`priority`）（默认：`id`）
+- `--order <order>` - 排序顺序（`asc`、`desc`）（默认：`desc`）
+- `--compact` - 显示紧凑输出
+- `--hierarchy` - 显示父子层级树
+- `--json` - 以 JSON 格式输出
 
-**Examples:**
+**示例：**
 
 ```bash
-# List all specs
+# 列出所有Spec
 harnspec list
 
-# Filter by status
+# 按状态过滤
 harnspec list --status=in-progress
 harnspec list --status=planned
 
-# Filter by priority
+# 按优先级过滤
 harnspec list --priority=high
 
-# Filter by tag
+# 按标签过滤
 harnspec list --tag api
 
-# Filter by multiple tags
+# 按多个标签过滤
 harnspec list --tag api --tag backend
 
-# Combine filters
+# 组合过滤器
 harnspec list --status planned --priority high --tag api
 
-# Filter by custom field
+# 按自定义字段过滤
 harnspec list --field epic=PROJ-123
 
-# JSON output for programmatic use
+# JSON 输出用于程序化使用
 harnspec list --json
 harnspec list --status planned --json
 
-# Hierarchy tree view
+# 层级树视图
 harnspec list --hierarchy
 ```
 
-**Output:**
+**输出：**
 ```
-=== Specs ===
+=== Spec ===
 
 📅 specs/001-user-authentication
-   Created: 2025-11-02 · Priority: high · Tags: security, api
+   创建：2025-11-02 · 优先级：high · 标签：security, api
 
 ⏳ specs/002-password-reset
-   Created: 2025-11-02 · Priority: medium
+   创建：2025-11-02 · 优先级：medium
 ```
 
-**Note**: Output shows flat structure (default). With date-grouping configured, paths would be `specs/YYYYMMDD/NNN-name/`.
+**注意**：输出显示扁平结构（默认）。配置日期分组后，路径将为 `specs/YYYYMMDD/NNN-name/`。
 
-**Hierarchy output** (with `--hierarchy`):
+**层级输出**（使用 `--hierarchy`）：
 ```
 #221 AI Orchestration Integration (umbrella)
 └── #168 Orchestration Platform (umbrella)
@@ -202,109 +202,92 @@ harnspec list --hierarchy
   └── #160 Tokens/Validation Display (planned)
 ```
 
-**Status Icons:**
-- 📅 Planned
-- ⏳ In progress
-- ✅ Complete
-- 📦 Archived
+**状态图标：**
+- 📅 计划中
+- ⏳ 进行中
+- ✅ 完成
+- 📦 已归档
 
 ---
 
 ### `harnspec update`
 
-Update spec metadata and content.
+更新Spec元数据。
 
 ```bash
 harnspec update <spec> [<spec> ...] [options]
 ```
 
-**Arguments:**
-- `<spec>` - One or more spec identifiers (required). Each can be:
-  - Spec number: `42` or `042`
-  - Spec name: `unified-dashboard`
-  - Full folder: `045-unified-dashboard`
+**参数：**
+- `<spec>` - 一个或多个Spec标识符（必需）。每个可以是：
+  - Spec编号：`42` 或 `042`
+  - Spec名称：`unified-dashboard`
+  - 完整文件夹：`045-unified-dashboard`
 
-**Options:**
-- `--status <status>` - Update status (`planned`, `in-progress`, `complete`, `archived`)
-- `--priority <priority>` - Update priority (`low`, `medium`, `high`, `critical`)
-- `--assignee <name>` - Set assignee
-- `--add-tags <tags>` - Add tags (comma-separated)
-- `--remove-tags <tags>` - Remove tags (comma-separated)
-- `--replace <OLD> <NEW>` - Replace text (repeatable)
-- `--match-all` - Replace all matches (applies to all `--replace` entries)
-- `--match-first` - Replace first match only (applies to all `--replace` entries)
-- `--check <text>` - Check checklist item (repeatable)
-- `--uncheck <text>` - Uncheck checklist item (repeatable)
-- `--section <heading>` - Section heading to update
-- `--section-content <content>` - Replace section content
-- `--append <content>` - Append content to section
-- `--prepend <content>` - Prepend content to section
-- `--content <content>` - Replace full body content (frontmatter preserved)
-- `--force` - Skip completion verification when setting status to complete
+**选项：**
+- `--status <status>` - 更新状态（`planned`、`in-progress`、`complete`、`archived`）
+- `--priority <priority>` - 更新优先级（`low`、`medium`、`high`、`critical`）
+- `--tags <tags>` - 更新标签（逗号分隔，替换现有标签）
+- `--assignee <name>` - 设置受让人
+- `--field <name=value>` - 更新自定义字段（可多次使用）
 
-**Examples:**
+**示例：**
 
 ```bash
-# Update status (using spec number)
+# 更新状态（使用Spec编号）
 harnspec update 1 --status=in-progress
 
-# Update priority (using spec name)
+# 更新优先级（使用Spec名称）
 harnspec update user-auth --priority=critical
 
-# Add tags
-harnspec update 001-user-auth --add-tags=security,api,mvp
+# 更新标签
+harnspec update 001-user-auth --tags=security,api,mvp
 
-# Update multiple fields
+# 更新自定义字段
+harnspec update 1 --field epic=PROJ-123
+
+# 更新多个字段
 harnspec update 1 --status=complete --priority=high
 
-# Batch update multiple specs
+# 批量更新多个Spec
 harnspec update 001-user-auth 002-password-reset --status=in-progress
-
-# Replace text
-harnspec update 1 --replace "## Overview" "## Overview\n\nUpdated details."
-
-# Check off a checklist item while updating status
-harnspec update 1 --status=in-progress --check "Task 1"
-
-# Append to a section
-harnspec update 1 --section "Notes" --append "Decision: Use option A."
 ```
 
-**Output:**
+**输出：**
 ```
-✓ Updated: specs/001-user-auth
-  Fields: status, priority
+✓ 已更新：specs/001-user-auth
+  字段：status, priority
 ```
 
-**Special Behavior:**
-- Setting status to `complete` automatically adds `completed` timestamp
-- Visual badges in README.md are auto-updated
-- Both frontmatter and badges stay in sync
+**特殊行为：**
+- 将状态设置为 `complete` 会自动添加 `completed` 时间戳
+- README.md 中的可视徽章自动更新
+- frontmatter和徽章保持同步
 
 ---
 
 ### `harnspec children`
 
-List child specs for a parent (deprecated in favor of `harnspec rel view`).
+列出某个父 Spec 的子 Spec（已弃用，推荐使用 `harnspec rel view`）。
 
 ```bash
 harnspec children <spec>
 ```
 
-**Arguments:**
-- `<spec>` - Spec identifier (required). Can be:
-  - Spec number: `42` or `042`
-  - Spec name: `unified-dashboard`
-  - Full folder: `045-unified-dashboard`
+**参数：**
+- `<spec>` - Spec 标识符（必需）。可以是：
+  - Spec 编号：`42` 或 `042`
+  - Spec 名称：`unified-dashboard`
+  - 完整文件夹：`045-unified-dashboard`
 
-**Examples:**
+**示例：**
 
 ```bash
-# List children of an umbrella spec
+# 列出伞形 Spec 的子 Spec
 harnspec children 168
 ```
 
-**Output:**
+**输出：**
 ```
 Children of 168-HarnSpec-orchestration-platform
 ────────────────────────────────────────
@@ -313,161 +296,157 @@ Children of 168-HarnSpec-orchestration-platform
   📅 249-sessions-sidebar-unified-ux - Unified Sessions UX with Right Drawer
 ```
 
-**Note**: Prefer `harnspec rel view <spec>` for relationship details.
+**注意**：推荐使用 `harnspec rel view <spec>` 查看关系详情。
 
 ---
 
 ### `harnspec search`
 
-Full-text search across all specs.
+跨所有Spec全文搜索。
 
 ```bash
 harnspec search <query> [options]
 ```
 
-**Arguments:**
-- `<query>` - Search query (required)
+**参数：**
+- `<query>` - 搜索查询（必需）
 
-**Options:**
-- `--status <status>` - Filter results by status
-- `--priority <priority>` - Filter results by priority
-- `--tag <tag>` - Filter results by tag
-- `--assignee <name>` - Filter results by assignee
-- `--field <name=value>` - Filter results by custom field (can specify multiple)
-- `--json` - Output as JSON
+**选项：**
+- `--status <status>` - 按状态过滤结果
+- `--priority <priority>` - 按优先级过滤结果
+- `--tag <tag>` - 按标签过滤结果
+- `--assignee <name>` - 按受让人过滤结果
+- `--field <name=value>` - 按自定义字段过滤结果（可指定多个）
 
-**Examples:**
+**示例：**
 
 ```bash
-# Basic search
+# 基本搜索
 harnspec search "authentication"
 
-# Search with filters
+# 带过滤器的搜索
 harnspec search "JWT token" --status=in-progress
 harnspec search "API" --tag=security
 harnspec search "password" --field epic=PROJ-123
-
-# JSON output for programmatic use
-harnspec search "authentication" --json
 ```
 
-**Output:**
+**输出：**
 ```
-Found 2 specs matching "authentication":
+找到 2 个匹配 "authentication" 的Spec：
 
 📅 specs/001-user-authentication
-   Created: 2025-11-02
-   Matches in: Overview, Key Scenarios
+   创建：2025-11-02
+   匹配位置：概述、关键场景
 
 ⏳ specs/003-two-factor-auth
-   Created: 2025-11-02
-   Matches in: Technical Approach
+   创建：2025-11-02
+   匹配位置：技术方法
 ```
 
-**Search Behavior:**
-- Searches in spec content (README.md)
-- Case-insensitive
-- Searches title, overview, scenarios, criteria, etc.
-- Does not search frontmatter metadata
+**搜索行为：**
+- 搜索Spec内容（README.md）
+- 不区分大小写
+- 搜索标题、概述、场景、标准等
+- 不搜索frontmatter
 
 ---
 
 ### `harnspec archive`
 
-Archive completed specs.
+归档已完成的Spec。
 
 ```bash
 harnspec archive <spec> [<spec> ...]
 ```
 
-**Arguments:**
-- `<spec>` - Spec identifier (required). Can be:
-  - Spec number: `42` or `042`
-  - Spec name: `unified-dashboard`
-  - Full folder: `045-unified-dashboard`
+**参数：**
+- `<spec>` - Spec标识符（必需）。可以是：
+  - Spec编号：`42` 或 `042`
+  - Spec名称：`unified-dashboard`
+  - 完整文件夹：`045-unified-dashboard`
 
-**Examples:**
+**示例：**
 
 ```bash
-# Archive by spec number
+# 按Spec编号归档
 harnspec archive 1
 
-# Archive by name
+# 按名称归档
 harnspec archive user-auth
 
-# Archive multiple specs
+# 批量归档多个Spec
 harnspec archive 001-user-auth 002-password-reset
 ```
 
-**Output:**
+**输出：**
 ```
-✓ Archived: specs/001-user-auth
-  Moved to: specs/archived/001-user-auth
+✓ 已归档：specs/001-user-auth
+  移至：specs/archived/001-user-auth
 ```
 
-**Behavior:**
-- Moves spec from `specs/` to `specs/archived/`
-- Preserves directory structure
-- Keeps all metadata
-- Spec no longer appears in `harnspec list` by default
+**行为：**
+- 将Spec从 `specs/` 移至 `specs/archived/`
+- 保留目录结构
+- 保留所有元数据
+- Spec不再默认出现在 `harnspec list` 中
 
-**Best Practice:**
-- Update status to `complete` before archiving
-- Archive specs when work is fully done
-- Use to keep active workspace clean
+**最佳实践：**
+- 归档前将状态更新为 `complete`
+- 工作完全完成后归档Spec
+- 用于保持活动工作区清洁
 
 ---
 
 ### `harnspec view`
 
-View spec content.
+查看Spec内容。
 
 ```bash
 harnspec view <spec> [options]
 ```
 
-**Arguments:**
-- `<spec>` - Spec identifier (required). Can be:
-  - Spec number: `42` or `042`
-  - Spec name: `unified-dashboard`
-  - Full folder: `045-unified-dashboard`
+**参数：**
+- `<spec>` - Spec标识符（必需）。可以是：
+  - Spec编号：`42` 或 `042`
+  - Spec名称：`unified-dashboard`
+  - 完整文件夹：`045-unified-dashboard`
 
-**Options:**
-- `--raw` - Output raw markdown (for piping/scripting)
-- `--json` - Output as JSON
-- `--no-color` - Disable colors
+**选项：**
+- `--raw` - 输出原始 markdown（用于管道/脚本）
+- `--json` - 输出为 JSON
+- `--no-color` - 禁用颜色
 
-**Examples:**
+**示例：**
 
 ```bash
-# View formatted spec
+# 查看格式化的Spec
 harnspec view 001-user-authentication
 
-# Get raw markdown (for scripting)
+# 获取原始 markdown（用于脚本）
 harnspec view 001-user-auth --raw | grep "TODO"
 
-# Get structured JSON
+# 获取结构化 JSON
 harnspec view 001-user-auth --json | jq '.frontmatter.status'
 ```
 
-**Default Output (formatted):**
+**默认输出（格式化）：**
 ```
 ━━━ 001-user-authentication ━━━
 
-📅 Status: planned
-🟡 Priority: high
-📆 Created: 2025-11-02
-🏷️  Tags: #security #api
+📅 状态：planned
+🟡 优先级：high
+📆 创建：2025-11-02
+🏷️  标签：#security #api
 
 ────────────────────────────────────────────────────────────
 
-# User Authentication
+# 用户身份验证
 
-## Overview
+## 概述
 ...
 ```
 
-**Raw Output (`--raw`):**
+**原始输出（`--raw`）：**
 ```markdown
 ---
 status: planned
@@ -478,13 +457,13 @@ tags:
   - api
 ---
 
-# User Authentication
+# 用户身份验证
 
-## Overview
+## 概述
 ...
 ```
 
-**JSON Output (`--json`):**
+**JSON 输出（`--json`）：**
 ```json
 {
   "name": "001-user-authentication",
@@ -495,78 +474,78 @@ tags:
     "created": "2025-11-02",
     "tags": ["security", "api"]
   },
-  "content": "# User Authentication\n\n## Overview\n..."
+  "content": "# 用户身份验证\n\n## 概述\n..."
 }
 ```
 
-**Use Cases:**
-- **Default**: Human-readable spec viewing
-- **`--raw`**: Piping to other tools, AI context, version control diffs
-- **`--json`**: Programmatic access, CI/CD, integrations
+**用例：**
+- **默认**：人类可读的Spec查看
+- **`--raw`**：管道到其他工具、AI 上下文、版本控制差异
+- **`--json`**：程序化访问、CI/CD、集成
 
 ---
 
 ### `harnspec open`
 
-Open spec in editor.
+在编辑器中打开Spec。
 
 ```bash
 harnspec open <spec> [options]
 ```
 
-**Arguments:**
-- `<spec>` - Spec identifier (required). Can be:
-  - Spec number: `42` or `042`
-  - Spec name: `unified-dashboard`
-  - Full folder: `045-unified-dashboard`
+**参数：**
+- `<spec>` - Spec标识符（必需）。可以是：
+  - Spec编号：`42` 或 `042`
+  - Spec名称：`unified-dashboard`
+  - 完整文件夹：`045-unified-dashboard`
 
-**Options:**
-- `--editor <editor>` - Specify editor command
+**选项：**
+- `--editor <editor>` - 指定编辑器命令
 
-**Examples:**
+**示例：**
 
 ```bash
-# Open in default editor
+# 在默认编辑器中打开
 harnspec open 001-user-authentication
 
-# Open in specific editor
+# 在特定编辑器中打开
 harnspec open 001-user-auth --editor=code
 harnspec open 001-user-auth --editor=vim
 ```
 
-**Editor Selection:**
-1. `--editor` flag if provided
-2. `$VISUAL` environment variable
-3. `$EDITOR` environment variable
-4. System default (`open` on macOS, `xdg-open` on Linux, `start` on Windows)
+**编辑器选择：**
+1. 如果提供了 `--editor` 标志
+2. `$VISUAL` 环境变量
+3. `$EDITOR` 环境变量
+4. 系统默认（macOS 上的 `open`、Linux 上的 `xdg-open`、Windows 上的 `start`）
 
-**Behavior:**
-- Opens the spec's `README.md` file
-- GUI editors (VS Code, Atom) don't block terminal
-- Terminal editors (vim, nano) block until closed
+**行为：**
+- 打开Spec的 `README.md` 文件
+- GUI 编辑器（VS Code、Atom）不会阻塞终端
+- 终端编辑器（vim、nano）在关闭前阻塞
 
 ---
 
 ### `harnspec templates`
 
-Manage spec templates.
+管理 Spec 模板。
 
 ```bash
 harnspec templates [command]
 ```
 
-**Subcommands:**
+**子命令：**
 
-#### `harnspec templates` or `harnspec templates list`
+#### `harnspec templates` 或 `harnspec templates list`
 
-List available templates.
+列出可用模板。
 
 ```bash
 harnspec templates
 harnspec templates list
 ```
 
-**Output:**
+**输出：**
 ```
 === Project Templates ===
 
@@ -586,32 +565,32 @@ Use templates with: harnspec create <name> --template=<template-name>
 
 #### `harnspec templates show <name>`
 
-Show template content.
+显示模板内容。
 
 ```bash
 harnspec templates show default
 harnspec templates show detailed
 ```
 
-For directory-based templates, shows all files in the template.
+对于目录模板，显示模板中的所有文件。
 
 #### `harnspec templates add <name> <file>`
 
-Register a template.
+注册模板。
 
 ```bash
-# Single-file template
+# 单文件模板
 harnspec templates add api api-spec.md
 
-# Directory-based multi-file template
+# 目录多文件模板
 harnspec templates add enterprise enterprise/
 ```
 
-For directory templates, the directory must contain a `README.md` file as the main template.
+目录模板必须包含 `README.md` 文件作为主模板。
 
 #### `harnspec templates remove <name>`
 
-Unregister a template (does not delete the file).
+取消注册模板（不删除文件）。
 
 ```bash
 harnspec templates remove api
@@ -619,93 +598,77 @@ harnspec templates remove api
 
 #### `harnspec templates copy <source> <target>`
 
-Copy a template to create a new one.
+复制模板以创建新模板。
 
 ```bash
 harnspec templates copy default api-spec
 ```
 
-**Template Types:**
+**模板类型：**
 
-1. **Single-file templates** (e.g., `spec-template.md`)
-   - Only that file is used when creating specs
-   - Best for simple, consistent spec structures
+1. **单文件模板**（如 `spec-template.md`）
+   - 创建 Spec 时只使用该文件
+   - 适合简单、一致的 Spec 结构
 
-2. **Directory-based templates** (e.g., `detailed/`)
-   - All `.md` files in the directory are copied when creating specs
-   - Must contain `README.md` as the main template
-   - Best for complex specs with multiple sub-spec files
+2. **目录模板**（如 `detailed/`）
+   - 创建 Spec 时复制目录中的所有 `.md` 文件
+   - 必须包含 `README.md` 作为主模板
+   - 适合包含多个子 Spec 文件的复杂 Spec
 
 ---
 
 ### `harnspec stats`
 
-Show statistics about specs.
+显示Spec统计信息。
 
 ```bash
-harnspec stats [options]
+harnspec stats
 ```
 
-**Options:**
-- `--tag <tag>` - Filter by tag
-- `--assignee <name>` - Filter by assignee
-- `--json` - Output as JSON
-- `--full` - Show full detailed analytics
-- `--timeline` - Show only timeline section
-- `--velocity` - Show only velocity section
-
-**Output:**
+**输出：**
 ```
-=== Spec Statistics ===
+=== Spec统计 ===
 
-Total Specs: 15
-  Planned: 5
-  In Progress: 7
-  Complete: 3
+总Spec数：15
+  计划中：5
+  进行中：7
+  完成：3
 
-By Priority:
-  Critical: 2
-  High: 6
-  Medium: 5
-  Low: 2
+按优先级：
+  关键：2
+  高：6
+  中：5
+  低：2
 
-By Tag:
-  api: 8
-  security: 5
-  ui: 3
+按标签：
+  api：8
+  security：5
+  ui：3
 ```
 
 ---
 
 ### `harnspec board`
 
-View specs organized by status (Kanban-style).
+按状态查看Spec（看板风格）。
 
 ```bash
-harnspec board [options]
+harnspec board
 ```
 
-**Options:**
-- `--complete` - Include complete specs (hidden by default)
-- `--simple` - Hide completion summary
-- `--completion-only` - Show only completion summary
-- `--tag <tag>` - Filter by tag
-- `--assignee <name>` - Filter by assignee
-- `--group-by <mode>` - Group by `status`, `priority`, `assignee`, `tag`, or `parent` (default: `status`)
-- `--json` - Output as JSON
-
-**Output:**
+**输出：**
 ```
 ╔═══════════════════════════════════════════════════════════╗
-║                    HarnSpec Board                         ║
+║                    HarnSpec 看板                          ║
 ╠═══════════════════════════════════════════════════════════╣
-║ PLANNED          IN PROGRESS         COMPLETE             ║
+║ 计划中           进行中              完成                 ║
+- `--group-by <mode>` - 按 `status`、`priority`、`assignee`、`tag` 或 `parent` 分组（默认：`status`）
 ╠─────────────────┬────────────────────┬────────────────────╣
 ║ user-auth       │ api-gateway        │ login-ui           ║
 ║ rate-limiting   │ database-setup     │ password-hash      ║
 ║ oauth-provider  │ error-handling     │ session-mgmt       ║
 ║                 │                    │                    ║
-║ 3 specs         │ 3 specs            │ 3 specs            ║
+║ 3 个Spec        │ 3 个Spec           │ 3 个Spec           ║
 ╚═════════════════╧════════════════════╧════════════════════╝
 ```
 
@@ -713,618 +676,221 @@ harnspec board [options]
 
 ### `harnspec tokens`
 
-Count tokens in specifications for LLM context management.
+为 LLM 上下文管理统计Spec的Token数。
 
 ```bash
 harnspec tokens [spec] [options]
 ```
 
-**Arguments:**
-- `[spec]` - Spec identifier (optional). Can be:
-  - Spec number: `42` or `042`
-  - Spec name: `unified-dashboard`
-  - Full folder: `045-unified-dashboard`
-  - If omitted, shows token counts for all specs
+**参数：**
+- `[spec]` - Spec标识符（可选）。可以是：
+  - Spec编号：`42` 或 `042`
+  - Spec名称：`unified-dashboard`
+  - 完整文件夹：`045-unified-dashboard`
+  - 省略时显示所有Spec的Token统计
 
-**Options:**
-- `--detailed` - Show content breakdown (prose, code, tables, frontmatter)
-- `--include-sub-specs` - Include sub-spec files in count
-- `--all` - Show all specs (not just active)
-- `--sort-by <field>` - Sort by: `tokens`, `lines`, `name` (default: `tokens`)
-- `--json` - Output as JSON
+**选项：**
+- `--detailed` - 显示内容拆分（正文、代码、表格、frontmatter）
+- `--include-sub-specs` - 在计数中包含子 Spec文件
+- `--all` - 显示所有Spec（不仅限于活动状态）
+- `--sort-by <field>` - 排序字段：`tokens`、`lines`、`name`（默认：`tokens`）
+- `--json` - 以 JSON 输出
 
-**Examples:**
+**示例：**
 
 ```bash
-# Count tokens in a specific spec
+# 统计特定Spec
 harnspec tokens 045
 harnspec tokens unified-dashboard
 
-# Show detailed breakdown
+# 查看详细拆分
 harnspec tokens 045 --detailed
 
-# Include sub-spec files
+# 包含子 Spec文件
 harnspec tokens 045 --include-sub-specs
 
-# Show all specs sorted by token count
+# 按Token数查看所有Spec
 harnspec tokens
 harnspec tokens --all
 
-# JSON output for programmatic use
+# 用于脚本的 JSON 输出
 harnspec tokens 045 --json
 ```
 
-**Output:**
+**输出：**
 ```
-📊 Token Count: 045-unified-dashboard
+📊 Token统计：045-unified-dashboard
 
-  Total: 2,847 tokens ✅
+  总计：2,847 Token ✅
 
-Files:
+文件：
 
-  README.md                 1,923 tokens (287 lines)
-  DESIGN.md                   654 tokens (98 lines)
-  TESTING.md                  270 tokens (41 lines)
+  README.md                 1,923 Token (287 行)
+  DESIGN.md                   654 Token (98 行)
+  TESTING.md                  270 Token (41 行)
 
-Content Breakdown:
+内容拆分：
 
-  Prose       2,145 tokens  (75%)
-  Code          523 tokens  (18%)
-  Tables        156 tokens  (5%)
-  Frontmatter    23 tokens  (1%)
+  正文        2,145 Token  (75%)
+  代码          523 Token  (18%)
+  表格          156 Token  (5%)
+  frontmatter      23 Token  (1%)
 ```
 
-**Performance Indicators:**
-- ✅ Excellent (&lt;2,000 tokens) - Baseline AI performance (100% effectiveness)
-- 👍 Good (2,000-3,500 tokens) - Slight degradation, acceptable (95% effectiveness)
-- ⚠️ Warning (3,500-5,000 tokens) - Consider simplification (85% effectiveness)
-- 🔴 Problem (&gt;5,000 tokens) - Should split (70% effectiveness)
+**性能指示：**
+- ✅ 优秀 (&lt;2,000 Token) - 基线 AI 表现（100% 有效）
+- 👍 良好 (2,000-3,500 Token) - 轻微退化，可接受（95% 有效）
+- ⚠️ 警告 (3,500-5,000 Token) - 考虑拆分或精简（85% 有效）
+- 🔴 问题 (&gt;5,000 Token) - 应拆分（70% 有效）
 
-**Use Cases:**
-- Check if spec fits in AI context window
-- Identify specs that need splitting
-- Understand token cost before loading into AI tools
-- Monitor spec complexity over time
-- Validate specs meet Context Economy thresholds
+**使用场景：**
+- 检查Spec是否适合 AI 上下文窗口
+- 识别需要拆分的Spec
+- 在加载到 AI 工具前了解Token成本
+- 监控Spec复杂度随时间的变化
+- 验证Spec是否符合上下文经济 (Context Economy)阈值
 
-**Why Token Count Matters:**
-- Token count is the industry standard for LLM context measurement
-- Research shows quality degradation starts well before context limits
-- Code is denser (~3 chars/token) than prose (~4 chars/token)
-- 6x cost difference between high and low token count specs
+**为什么关心Token数：**
+- Token是 LLM 上下文衡量的行业标准
+- 研究表明质量在达到上下文极限之前就会下降
+- 代码更密集（≈3 字符/Token）而正文更稀疏（≈4 字符/Token）
+- 高低TokenSpec之间存在 6 倍的成本差异
 
 ---
 
 ### `harnspec deps`
 
-Show dependency graph for a spec.
+显示Spec的依赖关系（即将推出）。
 
 ```bash
-harnspec deps <spec> [options]
+harnspec deps <spec>
 ```
 
-**Arguments:**
-- `<spec>` - Spec identifier (required). Can be:
-  - Spec number: `42` or `042`
-  - Spec name: `unified-dashboard`
-  - Full folder: `045-unified-dashboard`
-
-**Options:**
-- `--depth <n>` - Show N levels deep (default: 3)
-- `--graph` - ASCII graph visualization
-- `--json` - Output as JSON
-- `--complete` - Show complete graph (all relationships)
-- `--upstream` - Show only upstream dependencies
-- `--downstream` - Show only downstream dependents
-- `--impact` - Show impact radius (all affected specs)
-
-**Examples:**
-
-```bash
-# Show all relationships
-harnspec deps 085
-
-# Show only upstream dependencies
-harnspec deps 085 --upstream
-
-# Show impact radius
-harnspec deps 085 --impact
-
-# JSON output for programmatic use
-harnspec deps 085 --json
-```
-
-**Output:**
-```
-📦 Dependencies for 085-cli-relationship-commands
-
-Depends On:
-  → 042-spec-frontmatter-metadata ✅
-  → 035-mcp-tools-expansion ✅
-
-Required By:
-  ← 099-enhanced-dependency-commands-cli-mcp ✅
-```
-
----
-
-### `harnspec validate`
-
-Validate specs for quality issues using token-based thresholds.
-
-```bash
-harnspec validate [specs...] [options]
-```
-
-**Arguments:**
-- `[specs...]` - Specific specs to validate (optional). If omitted, validates all specs.
-
-**Options:**
-- `--verbose` - Show passing specs in addition to warnings/errors
-- `--quiet` - Suppress warnings, only show errors
-- `--format <format>` - Output format: `default`, `json`, `compact` (default: `default`)
-- `--json` - Output as JSON (shorthand for `--format json`)
-- `--rule <rule>` - Filter by specific rule name (e.g., `complexity`, `frontmatter`, `structure`)
-
-**Examples:**
-
-```bash
-# Validate all specs
-harnspec validate
-
-# Validate specific specs
-harnspec validate 045 unified-dashboard
-
-# Show all specs including passing
-harnspec validate --verbose
-
-# Only show errors (suppress warnings)
-harnspec validate --quiet
-
-# JSON output for CI/CD
-harnspec validate --format json
-
-# Check specific validation rule
-harnspec validate --rule complexity
-harnspec validate --rule frontmatter
-```
-
-**Output:**
-```
-✓ Validating specs...
-
-✅ 045-unified-dashboard
-   Token count: 2,847 (Good)
-   Structure: 32 sections, 6 sub-specs
-
-⚠️ 059-programmatic-spec-management
-   Token count: 4,203 (Warning - consider simplification)
-   Suggestion: Consider splitting or using sub-specs
-
-🔴 016-github-action
-   Token count: 6,450 (Should split)
-   Suggestion: Split for Context Economy
-
-Summary:
-  Passed: 1
-  Warnings: 1
-  Errors: 1
-```
-
-**Validation Rules:**
-
-1. **Complexity** (token-based)
-   - Checks token count against research-backed thresholds
-   - Evaluates structure quality (sectioning, sub-specs)
-   - Identifies specs that need splitting
-
-2. **Frontmatter**
-   - Validates required fields (status, created)
-   - Checks field types and values
-   - Ensures metadata consistency
-
-3. **Structure**
-   - Checks for proper heading hierarchy
-   - Validates section organization
-   - Ensures required sections present
-
-4. **Sub-specs**
-   - Validates sub-spec file naming
-   - Checks cross-references
-   - Ensures sub-spec consistency
-
-5. **Corruption**
-   - Detects malformed frontmatter
-   - Identifies parsing issues
-   - Flags inconsistent metadata
-
-**Token Thresholds:**
-- ✅ Excellent: &lt;2,000 tokens (100% AI effectiveness)
-- 👍 Good: 2,000-3,500 tokens (95% AI effectiveness)
-- ⚠️ Warning: 3,500-5,000 tokens (85% AI effectiveness)
-- 🔴 Error: &gt;5,000 tokens (70% AI effectiveness, should split)
-
-**Use Cases:**
-- Pre-commit validation in CI/CD
-- Quality checks before marking specs complete
-- Identifying specs that need refactoring
-- Ensuring consistent spec quality across project
-
----
-
-### `harnspec files`
-
-List files in a spec directory.
-
-```bash
-harnspec files <spec> [options]
-```
-
-**Arguments:**
-- `<spec>` - Spec identifier (required). Can be:
-  - Spec number: `42` or `042`
-  - Spec name: `unified-dashboard`
-  - Full folder: `045-unified-dashboard`
-
-**Options:**
-- `--type <type>` - Filter by type: `docs`, `assets`
-- `--tree` - Show tree structure
-- `--json` - Output as JSON
-
-**Examples:**
-
-```bash
-# List all files
-harnspec files 045
-
-# Filter by type
-harnspec files 045 --type docs
-
-# JSON output
-harnspec files 045 --json
-```
-
-**Output:**
-```
-📄 Files in 045-unified-dashboard
-
-Required:
-  ✓ README.md              (11.5 KB, ~2,847 tokens)  Main spec
-
-Documents:
-  ✓ DESIGN.md              (6.2 KB, ~654 tokens)
-  ✓ TESTING.md             (2.8 KB, ~270 tokens)
-
-Assets:
-  ✓ architecture.png       (45.3 KB)
-
-Total: 4 files, 65.8 KB
-```
-
----
-
-### `harnspec check`
-
-Check for sequence conflicts in spec numbering.
-
-```bash
-harnspec check [options]
-```
-
-**Options:**
-- `-q, --quiet` - Brief output
-- `--json` - Output as JSON
-
-**Examples:**
-
-```bash
-# Check for conflicts
-harnspec check
-
-# JSON output for CI/CD
-harnspec check --json
-```
-
-**Output (no conflicts):**
-```
-✓ No sequence conflicts detected
-```
-
-**Output (with conflicts):**
-```
-⚠️  Sequence conflicts detected:
-
-  Sequence 042:
-    - 042-user-auth
-    - 042-api-gateway
-
-Tip: Use date prefix to prevent conflicts:
-  Edit .harnspec/config.json → structure.prefix: "{YYYYMMDD}-"
-
-Or rename folders manually to resolve.
-```
-
-**Use Cases:**
-- Pre-commit validation
-- CI/CD pipeline checks
-- Ensuring unique spec numbering
-
----
-
-### `harnspec backfill`
-
-Backfill timestamps from git history.
-
-```bash
-harnspec backfill [specs...] [options]
-```
-
-**Arguments:**
-- `[specs...]` - Specific specs to backfill (optional). If omitted, processes all specs.
-
-**Options:**
-- `--dry-run` - Show what would be updated without making changes
-- `--force` - Overwrite existing timestamp values
-- `--assignee` - Include assignee from first commit author
-- `--transitions` - Include full status transition history
-- `--all` - Include all optional fields (assignee + transitions)
-- `--json` - Output as JSON
-
-**Examples:**
-
-```bash
-# Backfill all specs (dry run)
-harnspec backfill --dry-run
-
-# Backfill specific specs
-harnspec backfill 045 unified-dashboard
-
-# Backfill with all metadata
-harnspec backfill --all
-
-# JSON output
-harnspec backfill --json
-```
-
-**Output:**
-```
-Analyzing git history for 118 specs...
-
-✓ 045-unified-dashboard
-  created_at: 2025-11-02T10:30:00.000Z (from git)
-  completed_at: 2025-11-05T14:20:00.000Z (from git)
-
-✓ 046-dashboard-widgets
-  created_at: 2025-11-03T09:15:00.000Z (from git)
-  (no completed_at - spec still in progress)
-
-Summary:
-  Updated: 2 specs
-  Skipped: 116 specs (already have timestamps)
-```
-
-**Use Cases:**
-- Migrating to HarnSpec from other systems
-- Recovering missing timestamp data
-- Ensuring accurate spec history
-
----
-
-### `harnspec timeline`
-
-Show creation/completion timeline over time.
-
-```bash
-harnspec timeline [options]
-```
-
-**Options:**
-- `--days <n>` - Show last N days (default: 30)
-- `--by-tag` - Group by tag
-- `--by-assignee` - Group by assignee
-- `--json` - Output as JSON
-
-**Examples:**
-
-```bash
-# Show last 30 days
-harnspec timeline
-
-# Show last 90 days
-harnspec timeline --days 90
-
-# Group by tag
-harnspec timeline --by-tag
-
-# JSON output
-harnspec timeline --json
-```
-
-**Output:**
-```
-📈 Spec Timeline
-
-Activity (Last 30 Days)
-
-Date          Created  Completed
-────────────  ───────  ─────────
-2025-11-24    ████ 4   ███ 3
-2025-11-23    ██ 2     █ 1
-2025-11-22    ███ 3    ██ 2
-2025-11-21    █ 1      █ 1
-```
-
-**Use Cases:**
-- Track team velocity
-- Monitor project activity
-- Identify productivity patterns
-
----
-
-### `harnspec gantt`
-
-Show timeline with dependencies (Gantt chart style).
-
-```bash
-harnspec gantt [options]
-```
-
-**Options:**
-- `--weeks <n>` - Show N weeks (default: 4)
-- `--show-complete` - Include completed specs
-- `--critical-path` - Highlight critical path
-- `--json` - Output as JSON
-
-**Examples:**
-
-```bash
-# Show next 4 weeks
-harnspec gantt
-
-# Show next 8 weeks with completed specs
-harnspec gantt --weeks 8 --show-complete
-
-# JSON output
-harnspec gantt --json
-```
-
-**Output:**
-```
-📅 Gantt Chart (Next 4 Weeks)
-
-Spec                          Week 1  Week 2  Week 3  Week 4
-────────────────────────────  ──────  ──────  ──────  ──────
-🔴 042-user-auth               ████████████
-🟠 043-api-gateway                     ████████████
-🟡 044-dashboard-ui                            ████████████
-
-Legend:
-  🔴 Critical  🟠 High  🟡 Medium  🟢 Low
-  ████ In Progress  ░░░░ Planned
-```
-
-**Use Cases:**
-- Sprint planning
-- Project timeline visualization
-- Dependency management
+**参数：**
+- `<spec>` - Spec标识符。可以是：
+  - Spec编号：`42` 或 `042`
+  - Spec名称：`unified-dashboard`
+  - 完整文件夹：`045-unified-dashboard`
+
+**注意：**此功能已计划但尚未实现。
 
 ---
 
 ### `harnspec ui`
 
-Start a local web UI for visual spec management.
+启动本地网页 UI 进行可视化Spec管理。
 
 ```bash
-harnspec ui [options]
+harnspec ui [选项]
 ```
 
-**Options:**
-- `-s, --specs <dir>` - Specs directory (auto-detected if omitted)
-- `-p, --port <port>` - Port to run on (default: 3000)
-- `--no-open` - Don't open browser automatically
-- `--dev` - Development mode (HarnSpec monorepo only)
-- `--dry-run` - Show command without executing
+**选项：**
+- `-s, --specs <dir>` - Spec目录（如果省略则自动检测）
+- `-p, --port <port>` - 运行端口（默认：3000）
+- `--no-open` - 不自动打开浏览器
+- `--dev` - 开发模式（仅限 HarnSpec monorepo）
+- `--dry-run` - 显示命令而不执行
 
-**Examples:**
+**示例：**
 
 ```bash
-# Auto-detect specs, open on port 3000
+# 自动检测Spec，在 3000 端口打开
 harnspec ui
 
-# Custom directory and port
+# 自定义目录和端口
 harnspec ui --specs ./docs/specs --port 3100
 
-# Don't open browser automatically
+# 不自动打开浏览器
 harnspec ui --no-open
 
-# See what command would run
+# 查看将运行的命令
 harnspec ui --dry-run
 ```
 
-**Features:**
-- **Spec Browser**: List, search, and filter all specs
-- **Dependency Graph**: Visualize relationships between specs
-- **Board View**: Kanban-style view organized by status
-- **Rich Formatting**: Full markdown rendering with syntax highlighting
-- **Realtime Updates**: Changes appear automatically (60s cache)
+**功能特性：**
+- **Spec浏览器**：列出、搜索和筛选所有Spec
+- **依赖关系图**：可视化Spec之间的关系
+- **看板视图**：按状态组织的看板式视图
+- **丰富格式**：带语法高亮的完整 markdown 渲染
+- **实时更新**：更改自动显示（60秒缓存）
 
-**How It Works:**
+**工作原理：**
 
-In external projects:
-- Delegates to `npx @HarnSpec/ui` 
-- No additional installation required
-- Uses filesystem mode (direct file reads)
+在外部项目中：
+- 委托给 `npx @HarnSpec/ui`
+- 无需额外安装
+- 使用文件系统模式（直接文件读取）
 
-In HarnSpec monorepo:
-- Runs local `packages/web` in development
-- Useful for testing UI changes
+在 HarnSpec monorepo 中：
+- 在开发中运行本地 `packages/web`
+- 用于测试 UI 更改
 
-**Auto-Detection:**
+**自动检测：**
 
-The command automatically searches for your specs directory:
-1. `--specs` option (if provided)
-2. `specs/` in current directory
-3. `../specs/` (parent directory)
-4. `../../specs/` (grandparent directory)
+命令自动搜索您的Spec目录：
+1. `--specs` 选项（如果提供）
+2. 当前目录中的 `specs/`
+3. `../specs/`（父目录）
+4. `../../specs/`（祖父目录）
 
-**Browser Control:**
+**浏览器控制：**
 
-By default, the command opens your default browser. Use `--no-open` to prevent this, then manually navigate to `http://localhost:3000` (or your custom port).
+默认情况下，命令会打开您的默认浏览器。使用 `--no-open` 来阻止这一行为，然后手动导航到 `http://localhost:3000`（或您的自定义端口）。
 
-**Port Conflicts:**
+**端口冲突：**
 
-If port 3000 is already in use:
+如果端口 3000 已被使用：
 ```bash
-# Use a different port
+# 使用不同端口
 harnspec ui --port 3100
 
-# Or stop the process using port 3000
-# macOS/Linux:
+# 或停止使用端口 3000 的进程
+# macOS/Linux：
 lsof -ti:3000 | xargs kill
-# Windows:
+# Windows：
 netstat -ano | findstr :3000
-# Then: taskkill /PID <PID> /F
+# 然后：taskkill /PID <PID> /F
 ```
 
-**Use Cases:**
-- Visual exploration and discovery of specs
-- Team presentations and demos
-- Stakeholder reviews
-- Dependency analysis
-- Quick spec browsing without CLI commands
+**用例：**
+- 可视化探索和发现Spec
+- 团队演示和展示
+- 利益相关者审查
+- 依赖关系分析
+- 无需 CLI 命令的快速Spec浏览
 
-→ **Learn More**: See [Visual Mode Guide](/docs/guide/visual-mode) for detailed usage and [UI Package Reference](/docs/reference/ui-package) for technical details.
+→ **了解更多**：查看[可视化模式指南](/docs/guide/visual-mode)了解详细使用方法，查看 [UI 包参考](/docs/reference/ui-package)了解技术细节。
 
 ---
 
-## Spec Identifiers
+## Spec标识符
 
-All commands that accept a `<spec>` argument support flexible formats:
+接受 `<spec>` 参数的所有命令都支持灵活格式：
 
 ```bash
-# Spec number (with or without padding)
+# Spec编号（带或不带填充）
 42
 042
 
-# Spec name
+# Spec名称
 unified-dashboard
 
-# Full folder name
+# 完整文件夹名称
 045-unified-dashboard
 
-# With old date-based structure (still supported)
+# 使用旧的基于日期的结构（仍然支持）
 specs/20251102/001-user-auth
 20251102/001-user-auth
 001-user-auth
 ```
 
-HarnSpec will find the spec regardless of which format you use.
+无论使用哪种格式，HarnSpec 都会找到Spec。
 
 ---
 
-## Configuration
+## 配置
 
-Commands respect settings in `.harnspec/config.json`:
+命令遵循 `.harnspec/config.json` 中的设置：
 
 ```json
 {
@@ -1346,16 +912,16 @@ Commands respect settings in `.harnspec/config.json`:
 }
 ```
 
-See [Configuration Reference](/docs/reference/config) for details.
+详见[配置参考](/zh-Hans/docs/reference/config)。
 
 ---
 
-## Exit Codes
+## 退出代码
 
-- `0` - Success
-- `1` - Error (invalid arguments, file not found, etc.)
-- `2` - User cancelled operation
+- `0` - 成功
+- `1` - 错误（无效参数、文件未找到等）
+- `2` - 用户取消操作
 
 ---
 
-**Next**: Explore [Configuration](/docs/reference/config) or learn about [Custom Fields](/docs/guide/usage/advanced-features/custom-fields).
+**下一步**：探索[配置](/zh-Hans/docs/reference/config)或了解[自定义字段](/zh-Hans/docs/guide/usage/advanced-features/custom-fields)。

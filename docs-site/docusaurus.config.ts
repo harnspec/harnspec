@@ -6,7 +6,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'HarnSpec',
-  tagline: 'Lightweight spec methodology for AI-powered development',
+  tagline: '专为 AI 协作设计的轻量级规范',
   favicon: 'favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -31,8 +31,8 @@ const config: Config = {
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'zh-Hans'],
+    defaultLocale: 'zh-Hans',
+    locales: ['zh-Hans', 'en'],
   },
 
   presets: [
@@ -86,18 +86,18 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'guideSidebar',
           position: 'left',
-          label: 'Guide',
+          label: '指南',
         },
         {
           type: 'docSidebar',
           sidebarId: 'referenceSidebar',
           position: 'left',
-          label: 'Reference',
+          label: '参考',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
+        {to: '/blog', label: '博客', position: 'left'},
         {
           href: 'https://harnspec.github.io/',
-          label: 'Web App',
+          label: 'Web 应用',
           position: 'left',
         },
         {
@@ -115,66 +115,62 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: '文档',
           items: [
             {
-              label: 'Getting Started',
+              label: '快速开始',
               to: '/docs/guide/getting-started',
             },
             {
-              label: 'CLI Reference',
+              label: 'CLI 参考',
               to: '/docs/reference/cli',
             },
             {
-              label: 'MCP Server',
-              to: '/docs/guide/usage/mcp-integration',
-            },
-            {
-              label: 'AI Integration',
+              label: 'AI 集成',
               to: '/docs/guide/usage/advanced-features/agent-configuration',
             },
           ],
         },
         {
-          title: 'Community',
+          title: '社区',
           items: [
             {
               label: 'GitHub',
               href: 'https://github.com/harnspec/harnspec',
             },
             {
-              label: 'Issues',
+              label: '问题反馈',
               href: 'https://github.com/harnspec/harnspec/issues',
             },
             {
-              label: 'Discussions',
+              label: '讨论区',
               href: 'https://github.com/harnspec/harnspec/discussions',
             },
           ],
         },
         {
-          title: 'More',
+          title: '更多',
           items: [
             {
-              label: 'Blog',
+              label: '博客',
               to: '/blog',
             },
             {
-              label: 'Contributing',
+              label: '参与贡献',
               href: 'https://github.com/harnspec/harnspec/blob/main/CONTRIBUTING.md',
             },
             {
-              label: 'Changelog',
+              label: '更新日志',
               href: 'https://github.com/harnspec/harnspec/blob/main/CHANGELOG.md',
             },
             {
-              label: 'npm Package',
+              label: 'npm 包',
               href: 'https://www.npmjs.com/package/harnspec',
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} HarnSpec. Built with Docusaurus.`,
+      copyright: `版权所有 © ${new Date().getFullYear()} HarnSpec. 使用 Docusaurus 构建。`,
     },
     prism: {
       theme: prismThemes.github,

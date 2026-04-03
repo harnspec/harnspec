@@ -1,332 +1,334 @@
 ---
 id: 'creating-managing'
-title: 'Creating & Managing Specs'
+title: '创建和管理Spec'
 sidebar_position: 1
 ---
-# Creating & Managing Specs
+# 创建和管理Spec
 
-Learn the essential operations for working with HarnSpec specs: creating, updating, viewing, and managing the spec lifecycle.
+学习使用 HarnSpec Spec的基本操作：创建、更新、查看和管理Spec生命周期。
 
-## Creating a New Spec
+## 创建新Spec
 
-### Basic Creation
+### 基本创建
 
 ```bash
 harnspec create my-feature
 ```
 
-This creates a new spec with:
-- Auto-generated unique ID (e.g., `042-my-feature`)
-- Initialized frontmatter (status: `planned`, created date)
-- Basic spec template in `specs/042-my-feature/README.md`
+这会创建一个新Spec，包含：
+- 自动生成的唯一 ID（例如，`042-my-feature`）
+- 初始化的frontmatter（状态：`planned`，创建日期）
+- `specs/042-my-feature/README.md` 中的基本Spec模板
 
-### Interactive Creation
+### 交互式创建
 
 ```bash
 harnspec create
 ```
 
-Without a name, you'll be prompted interactively for:
-- Spec name
-- Optional description
-- Initial status (defaults to `planned`)
+不带名称时，您将被交互式提示：
+- Spec名称
+- 可选描述
+- 初始状态（默认为 `planned`）
 
-### Advanced Options
+### 高级选项
 
 ```bash
-# Create with initial status
+# 使用初始状态创建
 harnspec create my-feature --status in-progress
 
-# Create with tags
+# 使用标签创建
 harnspec create my-feature --tags api,backend
 
-# Create with priority
+# 使用优先级创建
 harnspec create my-feature --priority high
 ```
 
-**See also**: [CLI Reference: create](/docs/reference/cli#harnspec-create) for all options
+**另见**：[CLI 参考：create](/zh-Hans/docs/reference/cli#harnspec-create) 获取所有选项
 
-## Updating Specs
+## 更新Spec
 
-### Status Updates
+### 状态更新
 
-**Update spec status** (REQUIRED - never edit frontmatter manually):
+**更新Spec状态**（必需 - 永远不要手动编辑frontmatter）：
 
 ```bash
-# Move to in-progress
+# 移至进行中
 harnspec update 042 --status in-progress
 
-# Mark as complete
+# 标记为完成
 harnspec update 042 --status complete
 
-# Archive when done
+# 完成后归档
 harnspec update 042 --status archived
 ```
 
-**Available statuses**: `planned`, `in-progress`, `complete`, `archived`
+**可用状态**：`planned`、`in-progress`、`complete`、`archived`
 
-### Priority and Tags
+### 优先级和标签
 
 ```bash
-# Set priority
+# 设置优先级
 harnspec update 042 --priority high
 
-# Add/update tags
+# 添加/更新标签
 harnspec update 042 --tags api,backend,refactor
 
-# Assign to someone
+# 分配给某人
 harnspec update 042 --assignee alice
 ```
 
-**Important**: Always use `harnspec update` for system-managed fields. Manual edits will corrupt metadata.
+**重要**：始终使用 `harnspec update` 更新系统管理的字段。手动编辑会损坏元数据。
 
-**See also**: [CLI Reference: update](/docs/reference/cli#harnspec-update)
+**另见**：[CLI 参考：update](/zh-Hans/docs/reference/cli#harnspec-update)
 
-## Viewing Specs
+## 查看Spec
 
-### Quick View
+### 快速查看
 
 ```bash
-# View spec (formatted for reading)
+# 查看Spec（格式化以便阅读）
 harnspec view 042
 
-# View sub-spec file
+# 查看子 Spec文件
 harnspec view 042/DESIGN.md
 ```
 
-### Raw Output
+### 原始输出
 
 ```bash
-# Get raw markdown (for parsing)
+# 获取原始 markdown（用于解析）
 harnspec view 042 --raw
 
-# Get structured JSON
+# 获取结构化 JSON
 harnspec view 042 --json
 ```
 
-### Open in Editor
+### 在编辑器中打开
 
 ```bash
-# Open in default editor
+# 在默认编辑器中打开
 harnspec open 042
 
-# Open specific sub-spec
+# 打开特定子 Spec
 harnspec open 042/TESTING.md
 ```
 
-**See also**: [CLI Reference: view](/docs/reference/cli#harnspec-view)
+**另见**：[CLI 参考：view](/zh-Hans/docs/reference/cli#harnspec-view)
 
-## Listing Specs
+## 列出Spec
 
-### View All Specs
+### 查看所有Spec
 
 ```bash
-# List all specs
+# 列出所有Spec
 harnspec list
 
-# List by status
+# 按状态列出
 harnspec list --status in-progress
 
-# List by tag
+# 按标签列出
 harnspec list --tag api
 ```
 
-### Kanban Board View
+### 看板视图
 
 ```bash
-# Visual board view
+# 可视化看板视图
 harnspec board
 ```
 
-Shows specs grouped by status with project health metrics.
+显示按状态分组的Spec及项目健康指标。
 
-**See also**: [Board & Stats](/docs/guide/usage/cli/project-management#board-stats)
+**另见**：[看板和统计](/zh-Hans/docs/guide/usage/cli/project-management#board-stats)
 
-## Managing Spec Files
+## 管理Spec文件
 
-### Sub-Spec Files
+### 子 Spec文件
 
-For complex specs, split into multiple files:
+对于复杂Spec，拆分为多个文件：
 
 ```bash
-# List all files in a spec
+# 列出Spec中的所有文件
 harnspec files 042
 ```
 
-Common sub-spec files:
-- `README.md` - Main spec (required)
-- `DESIGN.md` - Detailed design
-- `IMPLEMENTATION.md` - Implementation plan
-- `TESTING.md` - Test strategy
-- `CONFIGURATION.md` - Config examples
+常见子 Spec文件：
+- `README.md` - 主Spec（必需）
+- `DESIGN.md` - 详细设计
+- `IMPLEMENTATION.md` - 实现计划
+- `TESTING.md` - 测试策略
+- `CONFIGURATION.md` - 配置示例
 
-**Why?** Keeps each file under 2,000 tokens (Context Economy principle).
+**为什么？**保持每个文件在 400 行以下（上下文经济 (Context Economy)原则）。
 
-**See also**: [Sub-Spec Files](/docs/guide/usage/spec-structure#sub-spec-files)
+**另见**：[子 Spec文件](/zh-Hans/docs/guide/usage/spec-structure#sub-spec-files)
 
-### Viewing File List
+### 查看文件列表
 
 ```bash
-# Show all files in spec
+# 显示Spec中的所有文件
 harnspec files 042
 ```
 
-Output:
+输出：
 ```
-📄 Files in 042-my-feature
+📄 042-my-feature 中的文件
 
-Required:
-  ✓ README.md        (234 lines)  Main spec
+必需：
+  ✓ README.md        (234 行)  主Spec
 
-Documents:
-  ✓ DESIGN.md        (187 lines)
-  ✓ TESTING.md       (145 lines)
+文档：
+  ✓ DESIGN.md        (187 行)
+  ✓ TESTING.md       (145 行)
 
-Total: 3 files, 566 lines
+总计：3 个文件，566 行
 ```
 
-## Archiving Specs
+## 归档Spec
 
-When work is complete and you want to move spec out of active view:
+当工作完成并且您想将Spec移出活动视图时：
 
 ```bash
-# Archive completed spec
+# 归档已完成的Spec
 harnspec update 042 --status archived
 ```
 
-Archived specs:
-- Don't appear in default `harnspec list`
-- Still searchable
-- Can be unarchived later
+归档的Spec：
+- 不会出现在默认的 `harnspec list` 中
+- 仍可搜索
+- 以后可以取消归档
 
-## Dependencies and Relationships
+## 依赖和关系
 
-### Declaring Dependencies
+### 声明依赖
 
-Use `harnspec link` to manage dependencies (do not edit frontmatter manually):
-
-```bash
-# Add dependency (blocking)
-harnspec link 042 --depends-on 041
+**硬依赖**（阻塞）：
+```yaml
+# 在Specfrontmatter中（目前必须手动编辑）
+depends_on:
+  - spec-041  # 在此之前必须完成
 ```
 
-### Viewing Dependencies
+### 查看依赖
 
 ```bash
-# Show dependency graph
+# 显示依赖关系图
 harnspec deps 042
 ```
 
-Output:
+输出：
 ```
-Dependency Graph for 042-my-feature
+042-my-feature 的依赖关系图
 
-Depends On:
+依赖于：
   → 041-authentication [complete]
 
-Required By:
+被需要：
   ← 043-dashboard [in-progress]
+
+相关Spec：
+  ⟷ 044-api-refactor [planned]
 ```
 
-**See also**: [Dependencies](/docs/guide/usage/cli/project-management#dependencies)
+**另见**：[依赖](/zh-Hans/docs/guide/usage/cli/project-management#dependencies)
 
-## Validation
+## 验证
 
-Check spec structure and frontmatter:
+检查Spec结构和frontmatter：
 
 ```bash
-# Validate all specs
+# 验证所有Spec
 harnspec validate
 
-# Validate specific spec
+# 验证特定Spec
 harnspec validate 042
 ```
 
-Catches:
-- Invalid frontmatter structure
-- Missing required fields
-- Dependency cycles
-- Token count warnings (>3,500 tokens reduces AI effectiveness)
+捕获：
+- 无效的frontmatter结构
+- 缺少必需字段
+- 依赖循环
+- Token 计数警告（>5,000 Token 降低 AI 有效性）
 
-**See also**: [Validation](/docs/guide/usage/cli/validation)
+**另见**：[验证](/zh-Hans/docs/guide/usage/cli/validation)
 
-## Search
+## 搜索
 
-Find specs by content, name, or metadata:
+通过内容、名称或元数据查找Spec：
 
 ```bash
-# Search spec content
+# 搜索Spec内容
 harnspec search "authentication"
 
-# Search with filters
+# 使用过滤器搜索
 harnspec search "API" --status in-progress --tag backend
 ```
 
-**See also**: [Finding Specs](/docs/guide/usage/cli/finding-specs)
+**另见**：[查找Spec](/zh-Hans/docs/guide/usage/cli/finding-specs)
 
-## Common Workflows
+## 常见工作流
 
-### Starting New Work
+### 开始新工作
 
 ```bash
-# 1. Create spec
+# 1. 创建Spec
 harnspec create auth-refactor --tags security,backend
 
-# 2. Edit spec (define problem, solution, success criteria)
+# 2. 编辑Spec（定义问题、解决方案、成功标准）
 harnspec open 042
 
-# 3. Move to in-progress when ready
+# 3. 准备好时移至进行中
 harnspec update 042 --status in-progress
 ```
 
-### Completing Work
+### 完成工作
 
 ```bash
-# 1. Mark complete
+# 1. 标记为完成
 harnspec update 042 --status complete
 
-# 2. Validate everything still works
+# 2. 验证一切仍然正常
 harnspec validate
 
-# 3. Optional: Archive if no longer needed
+# 3. 可选：如果不再需要则归档
 harnspec update 042 --status archived
 ```
 
-### Complex Spec Management
+### 复杂Spec管理
 
 ```bash
-# 1. Check if spec is getting too large
-harnspec tokens 042
+# 1. 检查Spec是否变得过大
+harnspec view 042 --raw | wc -l
 
-# 2. If >3,500 tokens, split into sub-specs
-# Create DESIGN.md, TESTING.md, etc.
+# 2. 如果 >400 行，拆分为子 Spec
+# 创建 DESIGN.md、TESTING.md 等
 
-# 3. Verify structure
+# 3. 验证结构
 harnspec files 042
 ```
 
-## Best Practices
+## 最佳实践
 
-**DO:**
-- ✅ Use `harnspec update` for status/priority/tags (never edit frontmatter)
-- ✅ Use `harnspec link` for relationships
-- ✅ Keep README.md focused (use sub-specs for detail)
-- ✅ Update status as work progresses
-- ✅ Archive completed specs to reduce clutter
-- ✅ Validate regularly (`harnspec validate`)
+**要做：**
+- ✅ 使用 `harnspec update` 更新状态/优先级/标签（永远不要编辑frontmatter）
+- ✅ 保持 README.md 专注（使用子 Spec获取详细信息）
+- ✅ 随着工作进展更新状态
+- ✅ 归档已完成的Spec以减少混乱
+- ✅ 定期验证（`harnspec validate`）
 
-**DON'T:**
-- ❌ Manually edit system-managed frontmatter (status, priority, tags, assignee, transitions, timestamps, depends_on, related)
-- ❌ Let specs grow beyond 3,500 tokens without splitting
-- ❌ Leave specs in stale status
-- ❌ Skip validation before committing
+**不要：**
+- ❌ 手动编辑系统管理的frontmatter（status、priority、tags、assignee、transitions、timestamps）
+- ❌ 让Spec在没有拆分的情况下超过 400 行
+- ❌ 让Spec保持陈旧状态
+- ❌ 在提交前跳过验证
 
-## Next Steps
+## 下一步
 
-- [Finding Specs](/docs/guide/usage/cli/finding-specs) - Search and discovery
-- [Spec Structure](/docs/guide/usage/spec-structure) - Understanding spec anatomy
-- [Project Management](/docs/guide/usage/cli/project-management) - Board views and health tracking
+- [查找Spec](/zh-Hans/docs/guide/usage/cli/finding-specs) - 搜索和发现
+- [Spec结构](/zh-Hans/docs/guide/usage/spec-structure) - 理解Spec结构
+- [项目管理](/zh-Hans/docs/guide/usage/cli/project-management#board-stats) - 看板视图和健康跟踪
 
 ---
 
-**Reference**: [CLI Documentation](/docs/reference/cli) for complete command reference
+**参考**：[CLI 文档](/zh-Hans/docs/reference/cli) 获取完整命令参考

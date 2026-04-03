@@ -1,15 +1,15 @@
 ---
 id: 'frontmatter'
-title: 'Frontmatter'
+title: 'frontmatter'
 sidebar_position: 8
 ---
-# Frontmatter
+# frontmatter
 
-HarnSpec uses YAML frontmatter for structured metadata at the top of each spec.
+HarnSpec 在每个Spec顶部使用 YAML frontmatter作为结构化元数据。
 
-## What is Frontmatter?
+## 什么是frontmatter？
 
-Frontmatter is machine-readable metadata in YAML format:
+frontmatter是 YAML 格式的机器可读元数据：
 
 ```markdown
 ---
@@ -19,93 +19,93 @@ tags: [api, security]
 priority: high
 ---
 
-# Your Spec Title
+# 您的Spec标题
 
-[Spec content...]
+[Spec内容...]
 ```
 
-## Core Fields
+## 核心字段
 
-### status (required)
+### status（必需）
 
-Current state of the spec.
+Spec的当前状态。
 
-**Valid values:**
-- `planned` - Not started yet
-- `in-progress` - Currently being worked on
-- `complete` - Work is finished
-- `archived` - Work is archived
+**有效值：**
+- `planned` - 尚未开始
+- `in-progress` - 当前正在处理
+- `complete` - 工作已完成
+- `archived` - 工作已归档
 
-**Example:**
+**示例：**
 ```yaml
 status: in-progress
 ```
 
-### created (required)
+### created（必需）
 
-Date when spec was created (ISO 8601 format).
+Spec创建的日期（ISO 8601 格式）。
 
-**Format:** `YYYY-MM-DD`
+**格式：** `YYYY-MM-DD`
 
-**Example:**
+**示例：**
 ```yaml
 created: 2025-11-02
 ```
 
-This is auto-filled when you use `harnspec create`.
+当您使用 `harnspec create` 时，这会自动填充。
 
-## Optional Fields
+## 可选字段
 
 ### tags
 
-Array of tags for categorization and filtering.
+用于分类和过滤的标签数组。
 
-**Example:**
+**示例：**
 ```yaml
 tags: [api, security, mvp]
 ```
 
-**Usage:**
+**用法：**
 ```bash
 harnspec list --tag=api
 ```
 
 ### priority
 
-Importance level of the work.
+工作的重要性级别。
 
-**Valid values:**
+**有效值：**
 - `low`
 - `medium`
 - `high`
 - `critical`
 
-**Example:**
+**示例：**
 ```yaml
 priority: high
 ```
 
-**Usage:**
+**用法：**
 ```bash
 harnspec list --priority=high
 ```
 
 ### completed
 
-Date when work was completed (auto-added).
+工作完成的日期（自动添加）。
 
-**Format:** `YYYY-MM-DD`
+**格式：** `YYYY-MM-DD`
 
-**Example:**
+**示例：**
 ```yaml
 completed: 2025-11-05
 ```
 
-This is automatically added when you set `status: complete`.
+当您设置 `status: complete` 时，这会自动添加。
 
-## Custom Fields
+## 自定义字段
 
-You can define custom fields in `.harnspec/config.json`:
+您可以在 `.harnspec/config.json` 中定义自定义字段：
 
 ```json
 {
@@ -121,37 +121,37 @@ You can define custom fields in `.harnspec/config.json`:
 }
 ```
 
-**Supported types:**
+**支持的类型：**
 - `string`
 - `number`
 - `boolean`
 - `array`
 
-**Usage:**
+**用法：**
 ```bash
 harnspec create feature --field assignee=alice --field sprint=42
 harnspec list --field epic=PROJ-123
 ```
 
-See [Custom Fields](/docs/guide/usage/advanced-features/custom-fields) for details.
+详情请参见[自定义字段](/zh-Hans/docs/guide/usage/advanced-features/custom-fields)。
 
-## Visual Badges
+## 视觉徽章
 
-HarnSpec auto-generates visual badges from frontmatter:
+HarnSpec 从frontmatter自动生成视觉徽章：
 
 ```markdown
-> **Status**: ⏳ In progress · **Priority**: High · **Created**: 2025-11-02 · **Tags**: api, security
+> **Status**: ⏳ 进行中 · **Priority**: 高 · **Created**: 2025-11-02 · **Tags**: api, security
 ```
 
-**Status icons:**
-- 📅 Planned
-- ⏳ In progress
-- ✅ Complete
-- 📦 Archived
+**状态图标：**
+- 📅 计划中
+- ⏳ 进行中
+- ✅ 已完成
+- 📦 已归档
 
-These badges are automatically updated when you use `harnspec update`.
+当您使用 `harnspec update` 时，这些徽章会自动更新。
 
-## Full Example
+## 完整示例
 
 ```yaml
 ---
@@ -166,54 +166,54 @@ epic: PROJ-123
 sprint: 42
 ---
 
-# User Authentication API
+# 用户认证 API
 
-> **Status**: ⏳ In progress · **Priority**: High · **Created**: 2025-11-02  
+> **Status**: ⏳ 进行中 · **Priority**: 高 · **Created**: 2025-11-02  
 > **Tags**: api, authentication, security · **Assignee**: alice · **Reviewer**: bob
 
-[Spec content...]
+[Spec内容...]
 ```
 
-## Editing Frontmatter
+## 编辑frontmatter
 
-### Via CLI
+### 通过 CLI
 
-Recommended approach:
+推荐的方法：
 
 ```bash
 harnspec update 001 --status=complete --priority=critical
 ```
 
-This updates both frontmatter and visual badges.
+这会更新frontmatter和视觉徽章。
 
-### Manual Editing
+### 手动编辑
 
-You can also edit frontmatter directly in the file:
+您也可以直接在文件中编辑frontmatter：
 
-1. Open `README.md` in editor
-2. Modify YAML between `---` markers
-3. Save file
+1. 在编辑器中打开 `README.md`
+2. 修改 `---` 标记之间的 YAML
+3. 保存文件
 
-Note: Manual edits don't auto-update visual badges. Run `harnspec update` to sync.
+注意：手动编辑不会自动更新视觉徽章。运行 `harnspec update` 进行同步。
 
-## Best Practices
+## 最佳实践
 
-:::tip Start Minimal
-Begin with just `status` and `created`. Add fields only when you need them.
+:::tip 从最小开始
+从 `status` 和 `created` 开始。仅在需要时添加字段。
 :::
 
-:::tip Use Tags Consistently
-Establish tag conventions for your team. Examples: `api`, `ui`, `backend`, `security`.
+:::tip 一致地使用标签
+为您的团队建立标签约定。示例：`api`、`ui`、`backend`、`security`。
 :::
 
-:::tip Update Status Regularly
-Keep status current. Use `harnspec list` to see what's in progress.
+:::tip 定期更新状态
+保持状态最新。使用 `harnspec list` 查看进行中的内容。
 :::
 
-:::tip Don't Over-Customize
-Add custom fields sparingly. Each field is overhead to maintain.
+:::tip 不要过度自定义
+谨慎添加自定义字段。每个字段都是要维护的开销。
 :::
 
 ---
 
-**Next**: Learn about [Custom Fields](/docs/guide/usage/advanced-features/custom-fields) or explore [Variables](/docs/guide/usage/advanced-features/variables).
+**下一步**：了解[自定义字段](/zh-Hans/docs/guide/usage/advanced-features/custom-fields)或探索[变量](/zh-Hans/docs/guide/usage/advanced-features/variables)。

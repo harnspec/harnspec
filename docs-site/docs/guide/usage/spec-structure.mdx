@@ -1,57 +1,57 @@
 ---
 id: 'spec-structure'
-title: 'Spec Structure'
+title: 'Spec结构'
 sidebar_position: 3
 ---
-# Spec Structure
+# Spec结构
 
-Understand the anatomy of a HarnSpec spec: frontmatter, required sections, sub-spec files, and how to structure specs for both human and AI understanding.
+理解 HarnSpec Spec的结构：frontmatter、必需部分、子 Spec文件，以及如何构建人类和 AI 都能理解的Spec。
 
-## Spec Anatomy
+## Spec结构
 
-Every spec consists of:
-1. **Frontmatter** (YAML metadata)
-2. **Title and Status Badge** (auto-generated)
-3. **Core Sections** (Problem, Solution, Success Criteria)
-4. **Optional Sub-Spec Files** (for complex specs)
+每个Spec包含：
+1. **frontmatter**（YAML 元数据）
+2. **标题和状态徽章**（自动生成）
+3. **核心部分**（问题、解决方案、成功标准）
+4. **可选子 Spec文件**（用于复杂Spec）
 
-## Frontmatter
+## frontmatter
 
-### Required Fields
+### 必需字段
 
 ```yaml
 ---
-status: planned                    # Current status
-created: '2025-11-08'             # Creation date (YYYY-MM-DD)
-created_at: '2025-11-08T10:30:00Z' # ISO timestamp (auto-managed)
-updated_at: '2025-11-08T14:45:00Z' # ISO timestamp (auto-managed)
+status: planned                    # 当前状态
+created: '2025-11-08'             # 创建日期（YYYY-MM-DD）
+created_at: '2025-11-08T10:30:00Z' # ISO 时间戳（自动管理）
+updated_at: '2025-11-08T14:45:00Z' # ISO 时间戳（自动管理）
 ---
 ```
 
-**Important**: These are system-managed. Use `harnspec update` to modify, never edit manually.
+**重要**：这些是系统管理的。使用 `harnspec update` 修改，永远不要手动编辑。
 
-### Optional Fields
+### 可选字段
 
 ```yaml
 ---
 status: in-progress
 created: '2025-11-08'
-tags:                              # Categorization
+tags:                              # 分类
   - api
   - backend
   - security
 priority: high                     # high, medium, low
-assignee: alice                    # Who's working on it
-depends_on:                        # Hard dependencies (blocking)
+assignee: alice                    # 谁在做这个
+depends_on:                        # 硬依赖（阻塞）
   - spec-041
   - spec-039
-related:                           # Soft relationships (informational)
+related:                           # 软关系（信息性）
   - spec-043
   - spec-044
 created_at: '2025-11-08T10:30:00Z'
 updated_at: '2025-11-08T14:45:00Z'
-completed_at: '2025-11-09T16:20:00Z'  # When marked complete
-transitions:                       # Status change history
+completed_at: '2025-11-09T16:20:00Z'  # 标记为完成的时间
+transitions:                       # 状态变更历史
   - status: in-progress
     at: '2025-11-08T11:00:00Z'
   - status: complete
@@ -59,163 +59,163 @@ transitions:                       # Status change history
 ---
 ```
 
-**Manual editing**: Most fields are managed via CLI. Use `harnspec update` for status/priority/tags, and `harnspec link` for relationships.
+**手动编辑**：只有 `depends_on` 和 `related` 必须手动编辑（尚无 CLI 命令）。所有其他字段使用 `harnspec update`。
 
-**See also**: [Frontmatter Reference](/docs/reference/frontmatter)
+**另见**：[frontmatter参考](/zh-Hans/docs/reference/frontmatter)
 
-## Status Badge
+## 状态徽章
 
-Auto-generated after frontmatter:
-
-```markdown
-> **Status**: ⏳ In progress · **Priority**: High · **Created**: 2025-11-08 · **Tags**: api, backend
-```
-
-This is rendered by the CLI and shouldn't be manually edited.
-
-## Core Sections
-
-### Minimal Structure
-
-Every spec should have at minimum:
+在frontmatter后自动生成：
 
 ```markdown
-## Problem
-[What problem are we solving? Why does it matter?]
-
-## Solution
-[What are we building? How does it solve the problem?]
-
-## Success Criteria
-- [ ] [How do we know it's done?]
-- [ ] [What does success look like?]
+> **状态**：⏳ 进行中 · **优先级**：高 · **创建**：2025-11-08 · **标签**：api, backend
 ```
 
-### Recommended Structure
+这由 CLI 渲染，不应手动编辑。
 
-For more complex specs:
+## 核心部分
+
+### 最小结构
+
+每个Spec至少应有：
 
 ```markdown
-## Overview
-[1-2 paragraph summary of the feature/change]
+## 问题
+[我们要解决什么问题？为什么重要？]
 
-## Problem
-[Detailed problem description]
+## 解决方案
+[我们要构建什么？它如何解决问题？]
 
-### Why It Matters
-[Impact, urgency, business context]
-
-### Current State
-[What exists today that's insufficient]
-
-## Solution
-[Proposed approach]
-
-### Design Decisions
-[Key choices made and why]
-
-### Trade-offs
-[What we're giving up, alternatives considered]
-
-## Implementation
-[High-level implementation approach]
-
-### Phases (if multi-phase)
-1. Phase 1: [Description]
-2. Phase 2: [Description]
-
-## Success Criteria
-- [ ] [Specific, measurable outcomes]
-- [ ] [Acceptance criteria]
-- [ ] [Performance targets]
-
-## Out of Scope
-- [What we're explicitly NOT doing]
-- [Future considerations]
+## 成功标准
+- [ ] [我们如何知道完成了？]
+- [ ] [成功是什么样子？]
 ```
 
-### Optional Sections
+### 推荐结构
 
-Add only if needed:
+对于更复杂的Spec：
 
 ```markdown
-## Research
-[Findings from exploration/spikes]
+## 概述
+[功能/变更的 1-2 段摘要]
 
-## Dependencies
-[External dependencies, blocked work]
+## 问题
+[详细问题描述]
 
-## Testing Strategy
-[How to validate the solution]
+### 为什么重要
+[影响、紧迫性、业务背景]
 
-## Rollout Plan
-[Deployment approach, migration steps]
+### 当前状态
+[今天存在但不够的是什么]
 
-## Risks
-[Potential issues and mitigations]
+## 解决方案
+[提出的方法]
+
+### 设计决策
+[做出的关键选择及原因]
+
+### 权衡
+[我们放弃了什么，考虑的替代方案]
+
+## 实现
+[高级实现方法]
+
+### 阶段（如果是多阶段）
+1. 阶段 1：[描述]
+2. 阶段 2：[描述]
+
+## 成功标准
+- [ ] [具体、可衡量的结果]
+- [ ] [验收标准]
+- [ ] [性能目标]
+
+## 超出范围
+- [我们明确不做的事情]
+- [未来考虑事项]
 ```
 
-## Sub-Spec Files {#sub-spec-files}
+### 可选部分
 
-When a spec exceeds **3,500 tokens** or has multiple distinct concerns, split into sub-specs:
+仅在需要时添加：
 
-### Common Sub-Specs
+```markdown
+## 研究
+[探索/尝试的发现]
+
+## 依赖
+[外部依赖、被阻塞的工作]
+
+## 测试策略
+[如何验证解决方案]
+
+## 发布计划
+[部署方法、迁移步骤]
+
+## 风险
+[潜在问题和缓解措施]
+```
+
+## 子 Spec文件 {#sub-spec-files}
+
+当Spec超过 400 行或有多个不同关注点时，拆分为子 Spec：
+
+### 常见子 Spec
 
 ```
 specs/042-my-feature/
-├── README.md              # Main spec (required)
-├── DESIGN.md              # Detailed design and architecture
-├── IMPLEMENTATION.md      # Implementation plan with phases
-├── TESTING.md             # Test strategy and test cases
-├── CONFIGURATION.md       # Config examples and schemas
-└── API.md                 # API design (if applicable)
+├── README.md              # 主Spec（必需）
+├── DESIGN.md              # 详细设计和架构
+├── IMPLEMENTATION.md      # 带阶段的实现计划
+├── TESTING.md             # 测试策略和测试用例
+├── CONFIGURATION.md       # 配置示例和模式
+└── API.md                 # API 设计（如适用）
 ```
 
-### README.md (Main Spec)
+### README.md（主Spec）
 
-Should contain:
-- Frontmatter (metadata)
-- High-level overview
-- Problem statement
-- Solution approach
-- Success criteria
-- Links to sub-specs for details
+应包含：
+- frontmatter（元数据）
+- 高级概述
+- 问题陈述
+- 解决方案方法
+- 成功标准
+- 指向子 Spec的详细链接
 
-**Target**: &lt;2,000 tokens
+**目标**：&lt;2,000 Token
 
 ### DESIGN.md
 
-Detailed design decisions:
-- Architecture diagrams
-- Data models
-- Component interactions
-- Technology choices and rationale
+详细设计决策：
+- 架构图
+- 数据模型
+- 组件交互
+- 技术选择和理由
 
-**Target**: &lt;2,000 tokens
+**目标**：&lt;400 行
 
 ### IMPLEMENTATION.md
 
-Execution plan:
-- Phase breakdown
-- Task lists
-- Order of operations
-- Integration points
+执行计划：
+- 阶段分解
+- 任务列表
+- 操作顺序
+- 集成点
 
-**Target**: &lt;2,000 tokens
+**目标**：&lt;400 行
 
 ### TESTING.md
 
-Test strategy:
-- Test cases
-- Edge cases
-- Performance tests
-- Integration tests
+测试策略：
+- 测试用例
+- 边缘情况
+- 性能测试
+- 集成测试
 
-**Target**: &lt;2,000 tokens
+**目标**：&lt;400 行
 
-## Examples
+## 示例
 
-### Simple Spec (Single File)
+### 简单Spec（单文件）
 
 ```markdown
 ---
@@ -226,41 +226,41 @@ tags:
 priority: medium
 ---
 
-# Fix Authentication Timeout
+# 修复身份验证超时
 
-> **Status**: 📋 Planned · **Priority**: Medium
+> **状态**：📋 计划中 · **优先级**：中
 
-## Problem
-Users are logged out after 15 minutes of inactivity, even if actively using the app. Session timeout is too aggressive.
+## 问题
+用户在 15 分钟不活动后被登出，即使正在积极使用应用。会话超时太激进。
 
-## Solution
-Extend session timeout to 8 hours for active users:
-- Keep 15-minute timeout for truly inactive users
-- Refresh session on any API call
-- Add "Remember me" option for 30-day token
+## 解决方案
+为活跃用户延长会话超时至 8 小时：
+- 对真正不活跃的用户保持 15 分钟超时
+- 在任何 API 调用时刷新会话
+- 添加"记住我"选项以获得 30 天Token
 
-## Implementation
-1. Update JWT token TTL configuration
-2. Add middleware to refresh token on API calls
-3. Add "Remember me" checkbox to login form
-4. Update documentation
+## 实现
+1. 更新 JWT Token TTL 配置
+2. 添加中间件以在 API 调用时刷新Token
+3. 在登录表单添加"记住我"复选框
+4. 更新文档
 
-## Success Criteria
-- [ ] Users stay logged in for 8 hours of active use
-- [ ] Inactive users (no API calls) timeout after 15 minutes
-- [ ] "Remember me" tokens last 30 days
-- [ ] Zero customer complaints about premature logouts
+## 成功标准
+- [ ] 用户在 8 小时的活跃使用期间保持登录
+- [ ] 不活跃用户（无 API 调用）在 15 分钟后超时
+- [ ] "记住我"Token持续 30 天
+- [ ] 零客户投诉关于过早登出
 
-## Out of Scope
-- SSO integration (future work)
-- Multi-device session management
+## 超出范围
+- SSO 集成（未来工作）
+- 多设备会话管理
 ```
 
-**Token count**: ~500 tokens ✅ (excellent for AI comprehension)
+**行数**：约 45 行 ✅
 
-### Complex Spec (Multi-File)
+### 复杂Spec（多文件）
 
-**README.md** (overview):
+**README.md**（概述）：
 ```markdown
 ---
 status: in-progress
@@ -273,120 +273,120 @@ depends_on:
   - spec-041
 ---
 
-# API v2 Redesign
+# API v2 重新设计
 
-> **Status**: ⏳ In progress · **Priority**: High
+> **状态**：⏳ 进行中 · **优先级**：高
 
-## Overview
-Complete redesign of REST API to RESTful principles, consistent error handling, and improved performance.
+## 概述
+完全重新设计 REST API 以符合 RESTful 原则、一致的错误处理和改进的性能。
 
-## Problem
-Current API (v1) has:
-- Inconsistent endpoint naming
-- Mixed HTTP methods (some resources use POST for reads)
-- No standard error format
-- Poor performance (N+1 queries common)
+## 问题
+当前 API（v1）有：
+- 不一致的端点命名
+- 混合 HTTP 方法（某些资源使用 POST 进行读取）
+- 无标准错误格式
+- 性能差（N+1 查询常见）
 
-See [DESIGN.md](./DESIGN.md) for detailed analysis.
+详见 [DESIGN.md](./DESIGN.md) 进行详细分析。
 
-## Solution
-Build API v2 with:
-- RESTful resource design
-- Consistent error responses
-- GraphQL for complex queries
-- &lt;200ms p95 response time
+## 解决方案
+构建 API v2，包含：
+- RESTful 资源设计
+- 一致的错误响应
+- GraphQL 用于复杂查询
+- &lt;200ms p95 响应时间
 
-See:
-- [DESIGN.md](./DESIGN.md) - Architecture and design decisions
-- [IMPLEMENTATION.md](./IMPLEMENTATION.md) - Phase breakdown
-- [TESTING.md](./TESTING.md) - Test strategy
+参见：
+- [DESIGN.md](./DESIGN.md) - 架构和设计决策
+- [IMPLEMENTATION.md](./IMPLEMENTATION.md) - 阶段分解
+- [TESTING.md](./TESTING.md) - 测试策略
 
-## Success Criteria
-- [ ] All v1 endpoints have v2 equivalents
-- [ ] p95 response time &lt;200ms
-- [ ] 100% API test coverage
-- [ ] Migration guide published
-- [ ] Zero breaking changes for 3 months after v2 launch
+## 成功标准
+- [ ] 所有 v1 端点都有 v2 等效项
+- [ ] p95 响应时间 &lt;200ms
+- [ ] 100% API 测试覆盖率
+- [ ] 发布迁移指南
+- [ ] v2 启动后 3 个月内零破坏性变化
 
-## Out of Scope
-- GraphQL subscriptions (v2.1)
-- Batch operations (v2.2)
+## 超出范围
+- GraphQL 订阅（v2.1）
+- 批量操作（v2.2）
 ```
 
-**DESIGN.md** (detailed design - 1,500 tokens)  
-**IMPLEMENTATION.md** (execution plan - 1,200 tokens)  
-**TESTING.md** (test strategy - 800 tokens)  
+**DESIGN.md**（详细设计 - 350 行）
+**IMPLEMENTATION.md**（执行计划 - 280 行）
+**TESTING.md**（测试策略 - 190 行）
 
-**Total**: ~4,000 tokens across 4 files ✅  
-**Largest file**: 1,500 tokens ✅
+**总计**：约 820 行，跨 4 个文件 ✅
+**最大文件**：350 行 ✅
 
-## Structure Best Practices
+## 结构最佳实践
 
-**DO:**
-- ✅ Start with Problem, Solution, Success Criteria (minimum viable)
-- ✅ Add sections progressively as needed
-- ✅ Split into sub-specs when >3,500 tokens
-- ✅ Link between sub-specs for navigation
-- ✅ Keep README.md as entry point/overview
+**要做：**
+- ✅ 从问题、解决方案、成功标准开始（最小可行）
+- ✅ 根据需要逐步添加部分
+- ✅ 当 &gt;400 行时拆分为子 Spec
+- ✅ 在子 Spec之间链接以便导航
+- ✅ 将 README.md 保持为入口点/概述
 
-**DON'T:**
-- ❌ Add every possible section upfront
-- ❌ Let any single file exceed 3,500 tokens
-- ❌ Bury the problem statement
-- ❌ Skip success criteria
-- ❌ Mix multiple unrelated concerns in one spec
+**不要：**
+- ❌ 预先添加所有可能的部分
+- ❌ 让任何单个文件超过 400 行
+- ❌ 埋藏问题陈述
+- ❌ 跳过成功标准
+- ❌ 在一个Spec中混合多个不相关的关注点
 
-## AI-Friendly Structure
+## AI 友好结构
 
-To maximize AI agent understanding:
+为了最大化 AI 代理理解：
 
-**1. Use clear headings**
+**1. 使用清晰的标题**
 ```markdown
-## Problem
-## Solution
-## Success Criteria
+## 问题
+## 解决方案
+## 成功标准
 ```
-Not: "The Problem", "Our Solution", "How We Know It Works"
+而非："问题所在"、"我们的解决方案"、"我们如何知道有效"
 
-**2. Include examples**
+**2. 包含示例**
 ```markdown
-## Solution
-Use Redis for caching:
+## 解决方案
+使用 Redis 进行缓存：
 
-```json
-{
+\`\`\`json
+\{
   "key": "user:123",
-  "value": {"name": "Alice", "email": "alice@example.com"},
+  "value": \{"name": "Alice", "email": "alice@example.com"\},
   "ttl": 300
-}
-```
+\}
+\`\`\`
 ```
 
-**3. Make boundaries explicit**
+**3. 明确边界**
 ```markdown
-## Out of Scope
-- Mobile app parity (future)
-- OAuth providers beyond Google (not needed)
+## 超出范围
+- 移动应用对等（未来）
+- Google 以外的 OAuth 提供商（不需要）
 ```
 
-**4. Define success quantitatively**
+**4. 定量定义成功**
 ```markdown
-## Success Criteria
-- [ ] API response time &lt;100ms (p95)
-- [ ] Cache hit rate >80%
-- [ ] Zero false positives in 2 weeks
+## 成功标准
+- [ ] API 响应时间 &lt;100ms（p95）
+- [ ] 缓存命中率 &gt;80%
+- [ ] 2 周内零假阳性
 ```
 
-Not: "Fast API", "Good caching", "Works well"
+而非："快速 API"、"良好缓存"、"运行良好"
 
-**See also**: [AI-Assisted Spec Writing](/docs/advanced/ai-assisted-spec-writing)
+**另见**：[编写 AI 可执行的Spec](/zh-Hans/docs/advanced/ai-assisted-spec-writing)
 
-## Next Steps
+## 下一步
 
-- [Creating & Managing Specs](/docs/guide/usage/cli/creating-managing) - Basic operations
-- [Templates](/docs/guide/usage/advanced-features/templates) - Spec templates
-- [Frontmatter Reference](/docs/reference/frontmatter) - Complete metadata guide
+- [创建和管理Spec](/zh-Hans/docs/guide/usage/cli/creating-managing) - 基本操作
+- [模板](/zh-Hans/docs/guide/usage/advanced-features/templates) - Spec模板
+- [frontmatter参考](/zh-Hans/docs/reference/frontmatter) - 完整元数据指南
 
 ---
 
-**Reference**: [CLI Documentation](/docs/reference/cli) for command details
+**参考**：[CLI 文档](/zh-Hans/docs/reference/cli) 获取命令详情

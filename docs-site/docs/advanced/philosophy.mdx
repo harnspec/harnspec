@@ -1,304 +1,304 @@
 ---
 id: 'philosophy'
-title: 'Philosophy & Mindset'
+title: '哲学与心态'
 sidebar_position: 6
 ---
-# Philosophy & Mindset
+# 哲学与心态
 
-> "HarnSpec is a mindset, not a format."
+> "HarnSpec 是一种心态，而非格式。"
 
-Beyond the [First Principles](/docs/advanced/first-principles), effective HarnSpec practice requires adopting key mental models and beliefs about how specs should work.
+除了 [第一性原理](/docs/advanced/first-principles) 之外，有效的 HarnSpec 实践还需要采用关于Spec应如何工作的关键心智模型和信念。
 
-## Mental Models for AI Co-Creation
+## AI 协作创造的心智模型
 
-When AI assists in writing specs (not just implementing from them), three mental models guide how specs fit into your workflow:
+当 AI 协助编写Spec时（不仅仅是从Spec实施），三种心智模型指导Spec如何融入您的工作流：
 
-### Spec-as-Checkpoint (Primary Model)
+### Spec作为检查点（Spec-as-Checkpoint，主要模型）
 
-**What it is:** Formalize intent at key decision points in the development conversation.
+** 它是什么：** 在开发对话的关键决策点正式化意图。
 
-**Workflow:**
-1. **Converse with AI** - Explore options, clarify requirements, iterate on design
-2. **Recognize checkpoint** - When design is clear enough to formalize
-3. **Crystallize into spec** - AI drafts initial spec, human refines
-4. **Continue from spec** - Spec becomes contract for implementation
+** 工作流：**
+1. ** 与 AI 对话 ** - 探索选项、澄清需求、迭代设计
+2. ** 识别检查点 ** - 当设计足够清晰可以正式化时
+3. ** 结晶为Spec ** - AI 起草初始Spec，人类完善
+4. ** 从Spec继续 ** - Spec成为实施的契约
 
-**When to use:**
-- After clarifying complex design with AI
-- Before starting multi-phase implementation
-- When ready to commit to an approach
-- To capture decisions before moving forward
+** 何时使用：**
+- 在与 AI 澄清复杂设计后
+- 在开始多阶段实施之前
+- 当准备提交到某种方法时
+- 在向前推进之前捕获决策
 
-**Example:** You discuss API design with AI for 15 minutes, clarify constraints and trade-offs, then formalize the agreed design as a spec before implementation begins.
+** 示例：** 您与 AI 讨论 API 设计 15 分钟，澄清约束和权衡，然后在实施开始前将商定的设计正式化为Spec。
 
-### Spec-as-Artifact (Formal Documentation)
+### Spec作为工件（Spec-as-Artifact，正式文档）
 
-**What it is:** Durable documentation that persists beyond the immediate work.
+** 它是什么：** 超越即时工作持续存在的持久性文档。
 
-**Purpose:**
-- Reference for future modifications
-- Onboarding for new team members
-- Compliance and audit trails
-- Institutional knowledge capture
+** 目的：**
+- 未来修改的参考
+- 新团队成员的入职
+- 合规和审计跟踪
+- 机构知识捕获
 
-**When to use:**
-- Architectural decisions affecting multiple systems
-- Features requiring regulatory documentation
-- Complex designs others will extend
-- Work that needs future reference
+** 何时使用：**
+- 影响多个系统的架构决策
+- 需要监管文档的功能
+- 其他人将扩展的复杂设计
+- 需要未来参考的工作
 
-**Example:** A payment processing spec that documents security decisions, PCI compliance approach, and integration patterns for future developers.
+** 示例：** 记录安全决策、PCI 合规方法和未来开发人员集成模式的支付处理Spec。
 
-### Spec-as-Context (Living Documentation)
+### Spec作为上下文（Spec-as-Context，活文档）
 
-**What it is:** Evolving context that grows alongside implementation.
+** 它是什么：** 随实施一起增长的演进上下文。
 
-**Characteristics:**
-- Updated iteratively as understanding grows
-- Reflects current reality, not just initial plans
-- Bridges ongoing human-AI collaboration
-- Captures learnings and refinements
+** 特征：**
+- 随理解增长而迭代更新
+- 反映当前现实，而非仅初始计划
+- 桥接持续的人机协作
+- 捕获学习和完善
 
-**When to use:**
-- SDD-style iterative development
-- Complex features with emergent requirements
-- Long-running work with multiple iterations
-- When spec serves as living project memory
+** 何时使用：**
+- SDD 风格的迭代开发
+- 需求出现的复杂功能
+- 多次迭代的长期工作
+- 当Spec作为活跃项目记忆时
 
-**Example:** A refactoring spec that evolves as you discover new patterns, documents decisions as you make them, and captures what worked vs. what didn't.
-
----
-
-### Choosing Your Mental Model
-
-Most specs move through these phases:
-
-1. **Start as Checkpoint** - Formalize conversation into spec
-2. **Evolve as Context** - Update as implementation teaches you things
-3. **End as Artifact** - Archive as reference documentation
-
-**The key insight:** These aren't separate approaches—they're stages in a spec's lifecycle. Start simple (checkpoint), evolve naturally (context), finish as documentation (artifact).
-
-**For AI-assisted authoring:**
-- AI helps draft the checkpoint (structure your thoughts)
-- AI helps maintain context (update as you learn)
-- Humans ensure artifact quality (refine for clarity)
+** 示例：** 随着您发现新模式而演变的重构Spec，在做出决策时记录决策，并捕获什么有效与什么无效。
 
 ---
 
-## The HarnSpec Mindset
+### 选择您的心智模型
 
-To practice HarnSpec effectively, adopt these core attitudes:
+大多数Spec经历这些阶段：
 
-### Start with Why
+1. ** 作为检查点开始 ** - 将对话正式化为Spec
+2. ** 作为上下文演进 ** - 随着实施教会您事情而更新
+3. ** 作为工件结束 ** - 归档作为参考文档
 
-Every spec should answer: "Why does this work exist?"
+** 关键见解：** 这些不是独立的方法——它们是Spec生命周期中的阶段。简单开始（检查点），自然演进（上下文），完成为文档（工件）。
 
-- What problem are we solving?
-- Why is it important?
-- Why now?
-
-Without clear answers, the work may not be worth doing.
-
-### Embrace "Good Enough"
-
-Perfectionism is the enemy of lean specifications.
-
-- Ship a "good enough" spec quickly
-- Get feedback from real work
-- Refine based on what you learn
-- Iterate continuously
-
-A perfect spec that's never written is worthless. An imperfect spec that gets work moving is valuable.
-
-### Question Every Word
-
-Before writing anything, ask: "Does this add clarity?"
-
-If not, don't write it.
-
-- Verbose explanations → brief, clear statements
-- Exhaustive edge cases → critical scenarios only
-- Academic formality → conversational clarity
-- Comprehensive references → essential links
-
-### Think Living Document
-
-Specs are not contracts carved in stone. They're living guides that evolve.
-
-- Update specs as you learn
-- Capture decisions as you make them
-- Reflect reality, not just plans
-- Archive when work is complete
-
-A spec that's out of date is worse than no spec at all.
-
-### Design for Scanning
-
-People (and AI agents) scan before they read.
-
-Structure specs for quick comprehension:
-- Use clear headings
-- Keep sections short
-- Use bullet points
-- Highlight key information
-- Add visual elements (emojis, badges) where helpful
-
-If someone can't understand your spec in 2 minutes, it's probably too long.
+** 对于 AI 辅助编写：**
+- AI 帮助起草检查点（结构化您的想法）
+- AI 帮助维护上下文（随着您学习而更新）
+- 人类确保工件质量（完善以提高清晰度）
 
 ---
 
-## Core Beliefs
+## HarnSpec 心态
 
-The HarnSpec approach is guided by four foundational beliefs:
+要有效实践 HarnSpec，请采用这些核心态度：
 
-### 1. Documentation is a Means, Not an End
+### 从为什么开始
 
-The goal isn't to create comprehensive documentation. The goal is to **enable effective action**.
+每个Spec都应该回答："这项工作为什么存在？"
 
-- Specs exist to facilitate understanding and decision-making
-- If nobody reads or uses a spec, it has failed—regardless of how thorough it is
-- Value delivered to users > documentation completeness
+- 我们要解决什么问题？
+- 为什么重要？
+- 为什么是现在？
 
-### 2. Context Beats Comprehensiveness
+没有清晰的答案，工作可能不值得做。
 
-Capturing **why** something matters is more valuable than exhaustively documenting **what** it is.
+### 拥抱"足够好"
 
-- Understanding the problem is more important than detailing the solution
-- The "why" rarely changes, but the "how" evolves constantly
-- Context enables good decisions; exhaustive details become outdated quickly
+完美主义是精简Spec的敌人。
 
-### 3. Specs Should Reduce Burden, Not Create It
+- 快速交付"足够好"的Spec
+- 从实际工作中获得反馈
+- 根据您学到的内容进行完善
+- 持续迭代
 
-Traditional specs often become a burden (too long to read, too complex to maintain, too rigid to adapt).
+永远不会编写的完美Spec是无价值的。让工作推进的不完美Spec是有价值的。
 
-HarnSpec specs should:
-- Take minutes to read
-- Be easy to keep current
-- Evolve with the project
-- Invite collaboration
+### 质疑每个字
 
-### 4. AI Changes Everything
+在编写任何内容之前，问："这会增加清晰度吗？"
 
-In the era of AI-assisted development, specs serve a dual purpose:
-- **Human Communication**: Align team understanding
-- **AI Context**: Provide clear direction for AI coding agents
+如果不会，就不要写。
 
-AI agents benefit from the same qualities humans do: clear, concise writing with concrete examples, explicit boundaries, and testable criteria.
+- 冗长的解释 → 简短、清晰的陈述
+- 详尽的边缘情况 → 仅关键场景
+- 学术正式性 → 对话式清晰度
+- 全面的参考 → 基本链接
 
----
+### 把它想成活文档
 
-## Balancing Lean and Complete
+Spec不是刻在石头上的契约。它们是演变的活指南。
 
-The goal isn't to write as little as possible. The goal is to write **as much as necessary**.
+- 随着您学习更新Spec
+- 在做出决策时捕获决策
+- 反映现实，而非仅计划
+- 工作完成时归档
 
-Some features are complex and require detailed specs. That's okay. The question isn't "How short can I make this?" but rather "What's essential for understanding?"
+过时的Spec比根本没有Spec更糟糕。
 
-### When to Add More Detail
+### 为扫描而设计
 
-Add detail when:
-- Complexity demands it
-- Ambiguity would cause problems
-- Coordination across teams is needed
-- Technical constraints are critical
-- Failure has high consequences
+人（和 AI 代理）在阅读之前会扫描。
 
-### When to Cut Detail
+构建Spec以便快速理解：
+- 使用清晰的标题
+- 保持部分简短
+- 使用要点
+- 突出显示关键信息
+- 在有帮助的地方添加视觉元素（表情符号、徽章）
 
-Cut detail when:
-- It's obvious to your audience
-- It's easily discovered elsewhere
-- It might change before work begins
-- It's tangential to the core goal
-- It's implementation detail for later
+如果有人无法在 2 分钟内理解您的Spec，它可能太长了。
 
 ---
 
-## AI-Assisted Spec Authoring
+## 核心信念
 
-AI can help write specs, not just implement from them. This creates a collaborative workflow:
+HarnSpec 方法由四个基本信念指导：
 
-**Human provides:**
-- Intent and context ("Why are we doing this?")
-- Constraints and trade-offs ("What limits exist?")
-- Success criteria ("How do we know it's done?")
-- Refinement and editing (enforce HarnSpec principles)
+### 1. 文档是手段，而非目的
 
-**AI provides:**
-- Initial structure and draft
-- Expansion of brief notes into sections
-- Examples and test cases
-- Formatting and organization
+目标不是创建全面的文档。目标是 ** 实现有效行动 **。
 
-**Result:** Faster spec creation that still maintains human judgment on what matters. AI handles structure, humans ensure clarity and intent.
+- Spec的存在是为了促进理解和决策
+- 如果没有人阅读或使用Spec，它就失败了——无论它有多彻底
+- 向用户交付的价值 &gt; 文档完整性
 
-**Critical:** First principles matter MORE in AI-assisted authoring. Without human review, AI tends toward verbosity (violating Signal-to-Noise) and implementation focus (violating Intent Over Implementation). Your role is to ensure specs remain lean and purposeful.
+### 2. 上下文胜过全面性
 
----
+捕获 ** 为什么 ** 某事重要比详尽记录 ** 是什么 ** 更有价值。
 
-## Success Criteria
+- 理解问题比详细说明解决方案更重要
+- "为什么"很少改变，但"如何"不断演变
+- 上下文实现良好决策；详尽的细节很快就会过时
 
-How do you know if you're practicing HarnSpec effectively?
+### 3. Spec应该减轻负担，而非制造负担
 
-### Self-Check Questions
+传统Spec通常成为负担（太长无法阅读，太复杂无法维护，太僵化无法适应）。
 
-**Context Economy:**
-- [ ] Can someone read this spec in 5-10 minutes?
-- [ ] Is each spec file under 400 lines?
-- [ ] If not, is it split into focused sub-specs?
+HarnSpec Spec应该：
+- 花几分钟阅读
+- 易于保持最新
+- 随项目演进
+- 邀请协作
 
-**Signal-to-Noise:**
-- [ ] Does every sentence inform a decision?
-- [ ] Can I explain what decision each section enables?
-- [ ] Have I cut "nice to know" vs. "need to know"?
+### 4. AI 改变一切
 
-**Intent Over Implementation:**
-- [ ] Is the "why" clear?
-- [ ] Are trade-offs explained?
-- [ ] Can someone make good decisions without me?
+在 AI 辅助开发时代，Spec有双重目的：
+- ** 人类沟通 **：对齐团队理解
+- ** AI 上下文 **：为 AI 编码代理提供清晰方向
 
-**Bridge the Gap:**
-- [ ] Can both humans and AI understand this?
-- [ ] Is there clear structure + natural language?
-- [ ] Are examples included where needed?
-
-**Progressive Disclosure:**
-- [ ] Did I add only what I need now?
-- [ ] Am I solving current pain, not future "what ifs"?
-- [ ] Can this grow naturally without rewriting?
-
-### Your Specs Are Successful If:
-
-✅ **They get read** - People actually read them (all the way through)  
-✅ **They get used** - They inform actual development work  
-✅ **They stay current** - They're updated as the project evolves  
-✅ **They enable autonomy** - Developers can work without constant clarification  
-✅ **They facilitate AI** - AI agents can implement features from them  
-✅ **They age well** - They remain useful even after implementation
-
-### Your Specs Are Failing If:
-
-❌ People say "TL;DR" (too long; didn't read)  
-❌ Developers ignore them and ask for clarification  
-❌ They become outdated quickly  
-❌ They generate more questions than answers  
-❌ AI agents misinterpret them  
-❌ They're never referenced after initial review
+AI 代理受益于人类受益的相同品质：清晰、简洁的写作，具体示例、明确边界和可测试标准。
 
 ---
 
-## The Bottom Line
+## 平衡精简和完整
 
-HarnSpec is a **mindset**, not a format.
+目标不是写得尽可能少。目标是写 ** 必要的内容 **。
 
-Focus on:
-- **Why** over what
-- **Clarity** over completeness
-- **Action** over documentation
-- **Evolution** over perfection
+某些功能很复杂，需要详细的Spec。这没关系。问题不是"我能把这个写多短？"而是"理解所必需的是什么？"
 
-If your specs help people (and AI agents) build better software faster, you're doing HarnSpec right.
+### 何时添加更多细节
+
+在以下情况下添加细节：
+- 复杂性要求它
+- 歧义会导致问题
+- 需要跨团队协调
+- 技术约束至关重要
+- 失败有高后果
+
+### 何时削减细节
+
+在以下情况下削减细节：
+- 对您的受众来说显而易见
+- 在其他地方容易发现
+- 可能在工作开始前改变
+- 与核心目标无关
+- 是稍后的实现细节
 
 ---
 
-**Next**: Explore practical day-to-day techniques in [AI-Assisted Spec Writing](/docs/advanced/ai-assisted-spec-writing), or learn [When to Write Specs](/docs/guide/understanding-harnspec#when-to-write-a-spec) in HarnSpec.
+## AI 辅助的Spec编写
+
+AI 可以帮助编写Spec，而不仅仅是从Spec实施。这创造了一个协作工作流：
+
+** 人类提供：**
+- 意图和上下文（"我们为什么要这样做？"）
+- 约束和权衡（"存在什么限制？"）
+- 成功标准（"我们如何知道完成了？"）
+- 完善和编辑（执行 HarnSpec 原则）
+
+** AI 提供：**
+- 初始结构和草稿
+- 将简短笔记扩展为部分
+- 示例和测试用例
+- 格式和组织
+
+** 结果：** 更快的Spec创建，同时仍保持对重要内容的人类判断。AI 处理结构，人类确保清晰度和意图。
+
+** 关键：** 第一性原理在 AI 辅助编写中 ** 更 ** 重要。没有人类审查，AI 倾向于冗长（违反信噪比 (Signal-to-Noise)）和实现焦点（违反意图优于实现 (Intent Over Implementation)）。您的角色是确保Spec保持精简和有目的。
+
+---
+
+## 成功标准
+
+如何知道您是否有效地实践 HarnSpec？
+
+### 自我检查问题
+
+** 上下文经济 (Context Economy)：**
+- [ ] 有人能在 5-10 分钟内阅读这个Spec吗？
+- [ ] 每个Spec文件是否少于 400 行？
+- [ ] 如果不是，是否拆分为聚焦的子 Spec？
+
+** 信噪比：**
+- [ ] 每个句子都提供决策信息吗？
+- [ ] 我能解释每个部分实现什么决策吗？
+- [ ] 我是否削减了"好知道"与"需要知道"？
+
+** 意图优于实现：**
+- [ ] "为什么"清晰吗？
+- [ ] 权衡是否解释了？
+- [ ] 有人能在没有我的情况下做出良好决策吗？
+
+** 弥合差距 (Bridge the Gap)：**
+- [ ] 人类和 AI 都能理解这个吗？
+- [ ] 是否有清晰的结构 + 自然语言？
+- [ ] 在需要时是否包含示例？
+
+** 渐进式披露 (Progressive Disclosure)：**
+- [ ] 我是否只添加了我现在需要的？
+- [ ] 我是在解决当前痛点，而非未来"假设"吗？
+- [ ] 这能自然增长而无需重写吗？
+
+### 如果满足以下条件，您的Spec是成功的：
+
+✅ ** 它们被阅读 ** - 人们实际阅读它们（一直到底）  
+✅ ** 它们被使用 ** - 它们为实际开发工作提供信息  
+✅ ** 它们保持最新 ** - 随着项目演进而更新  
+✅ ** 它们实现自主 ** - 开发人员可以在没有持续澄清的情况下工作  
+✅ ** 它们促进 AI ** - AI 代理可以从中实施功能  
+✅ ** 它们经得起时间考验 ** - 即使在实施后仍然有用
+
+### 如果满足以下条件，您的Spec正在失败：
+
+❌ 人们说"太长了；没读"（TL;DR）  
+❌ 开发人员忽略它们并请求澄清  
+❌ 它们很快就过时了  
+❌ 它们产生的问题多于答案  
+❌ AI 代理误解它们  
+❌ 初始审查后从未被引用
+
+---
+
+## 底线
+
+HarnSpec 是一种 ** 心态 **，而非格式。
+
+专注于：
+- ** 为什么 ** 优于什么
+- ** 清晰度 ** 优于完整性
+- ** 行动 ** 优于文档
+- ** 演进 ** 优于完美
+
+如果您的Spec帮助人（和 AI 代理）更快地构建更好的软件，您就在正确地做 HarnSpec。
+
+---
+
+** 下一步 **：在 [AI 辅助的Spec编写](/docs/advanced/ai-assisted-spec-writing) 中探索实用的日常技术，或了解 HarnSpec 中的 [何时编写Spec](/docs/guide/understanding-harnspec#when-to-write-a-spec)。

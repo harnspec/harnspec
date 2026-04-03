@@ -1,35 +1,35 @@
 ---
 id: 'templates'
-title: 'Templates'
+title: '模板'
 sidebar_position: 7
 ---
-# Templates
+# 模板
 
-HarnSpec provides customizable templates to match your workflow and team structure.
+HarnSpec 提供可自定义的模板以匹配您的工作流程和团队结构。
 
-## Overview
+## 概述
 
-Templates are complete working models that include:
-- Spec structure and examples
-- `AGENTS.md` for AI agent integration
-- Supporting files (CONTRIBUTING.md, checklists, etc.)
-- Project-specific configuration
+模板是包含以下内容的完整工作模型：
+- Spec结构和示例
+- 用于 AI 代理集成的 `AGENTS.md`
+- 支持文件（CONTRIBUTING.md、检查清单等）
+- 项目特定配置
 
-## Available Templates
+## 可用模板
 
-### Standard (Default)
+### Standard（默认）
 
-Recommended for most projects - single-file specs with AGENTS.md.
+大多数项目推荐 - 单文件 Spec 与 AGENTS.md。
 
-**Best for:** Solo developers, small teams, simple to moderately complex specs
+**最适合：** 单人开发者、小团队、简单到中等复杂度的 Spec
 
-**Includes:**
-- Status, tags, priority fields
-- AGENTS.md for AI integration
-- All sections in single README.md file
-- Guidance for when to split into sub-specs
+**包括：**
+- 状态、标签、优先级字段
+- 用于 AI 集成的 AGENTS.md
+- 所有章节在单个 README.md 文件中
+- 何时拆分为子 Spec 的指导
 
-**Example frontmatter:**
+**示例 frontmatter：**
 ```yaml
 ---
 status: planned
@@ -39,27 +39,27 @@ priority: high
 ---
 ```
 
-**Sections:**
-- Overview
-- Design
-- Plan
-- Test
-- Notes
+**章节：**
+- 概述
+- 设计
+- 计划
+- 测试
+- 注释
 
 ### Detailed
 
-For complex specs with lots of content - uses sub-spec structure.
+用于内容很多的复杂 Spec - 使用子 Spec 结构。
 
-**Best for:** Large features, architectural changes, specs with >3,500 tokens
+**最适合：** 大型功能、架构变更、>3,500 Token 的 Spec
 
-**Includes:**
-- Same metadata as standard
-- README.md as overview/navigation
-- Separate sub-spec files (DESIGN.md, PLAN.md, TEST.md)
-- Demonstrates real-world sub-spec pattern
-- Helps manage token limits for AI context
+**包括：**
+- 与 standard 相同的元数据
+- README.md 作为概述/导航
+- 独立的子 Spec 文件（DESIGN.md, PLAN.md, TEST.md）
+- 演示真实的子 Spec 模式
+- 帮助管理 AI 上下文的 Token 限制
 
-**Example frontmatter:**
+**示例 frontmatter：**
 ```yaml
 ---
 status: planned
@@ -69,53 +69,53 @@ priority: high
 ---
 ```
 
-**Structure:**
+**结构：**
 ```
 specs/NNN-feature-name/
-├── README.md      # Overview + navigation
-├── DESIGN.md      # Design details
-├── PLAN.md        # Implementation plan
-└── TEST.md        # Testing strategy
+├── README.md      # 概述 + 导航
+├── DESIGN.md      # 设计细节
+├── PLAN.md        # 实施计划
+└── TEST.md        # 测试策略
 ```
 
-**Usage:**
+**使用：**
 ```bash
 harnspec init --template detailed
 ```
 
-## Choosing a Template
+## 选择模板
 
-Run `harnspec init` and choose "Choose a template":
+运行 `harnspec init` 并选择"选择模板"：
 
 ```bash
 harnspec init
 ```
 
 ```
-? How would you like to set up?
-  ❯ Quick start (recommended)
-    Choose a template
+? 您想如何设置？
+  ❯ 快速开始（推荐）
+    选择模板
 
-? Which template would you like to use?
-  ❯ standard - Recommended - single-file specs with AGENTS.md
-    detailed - Complex specs with sub-spec structure (DESIGN, PLAN, TEST)
+? 您想使用哪个模板？
+  ❯ standard - 推荐 - 单文件 Spec 与 AGENTS.md
+    detailed - 复杂 Spec 与子 Spec 结构（DESIGN, PLAN, TEST）
 ```
 
-## Custom Templates
+## 自定义模板
 
-You can create your own templates in `.harnspec/templates/`.
+您可以在 `.harnspec/templates/` 中创建自己的模板。
 
-### Single-File Templates
+### 单文件模板
 
-For simple, consistent spec structures:
+适用于简单、一致的 Spec 结构：
 
-1. Create template file:
+1. 创建模板文件：
 ```bash
 mkdir -p .harnspec/templates
 touch .harnspec/templates/my-template.md
 ```
 
-2. Edit template with placeholders:
+2. 使用占位符编辑模板：
 ```markdown
 ---
 status: planned
@@ -124,15 +124,15 @@ created: {date}
 
 # {name}
 
-**Team**: {team}
-**Author**: {author}
+**团队**：{team}
+**作者**：{author}
 
-## Overview
+## 概述
 
-[Your custom sections...]
+[您的自定义章节...]
 ```
 
-3. Register in `.harnspec/config.json`:
+3. 在 `.harnspec/config.json` 中注册：
 ```json
 {
   "template": "my-template.md",
@@ -143,28 +143,28 @@ created: {date}
 }
 ```
 
-Or use CLI:
+或使用 CLI：
 ```bash
 harnspec templates add my-template my-template.md
 ```
 
-### Directory-Based Templates (Multi-File)
+### 目录模板（多文件）
 
-For complex specs that need multiple files (like DESIGN.md, PLAN.md, TEST.md):
+适用于需要多个文件的复杂 Spec（如 DESIGN.md、PLAN.md、TEST.md）：
 
-1. Create template directory:
+1. 创建模板目录：
 ```bash
 mkdir -p .harnspec/templates/api-spec
 ```
 
-2. Create the main template (`README.md` is required):
+2. 创建主模板（必须包含 `README.md`）：
 ```bash
 touch .harnspec/templates/api-spec/README.md
 touch .harnspec/templates/api-spec/ENDPOINTS.md
 touch .harnspec/templates/api-spec/SCHEMAS.md
 ```
 
-3. Register the directory:
+3. 注册目录：
 ```json
 {
   "templates": {
@@ -174,47 +174,47 @@ touch .harnspec/templates/api-spec/SCHEMAS.md
 }
 ```
 
-Or use CLI:
+或使用 CLI：
 ```bash
 harnspec templates add api api-spec
 ```
 
-4. Use the template:
+4. 使用模板：
 ```bash
 harnspec create my-api --template=api
-# Creates: specs/NNN-my-api/
+# 创建：specs/NNN-my-api/
 #   ├── README.md
 #   ├── ENDPOINTS.md
 #   └── SCHEMAS.md
 ```
 
-When using a directory template, all `.md` files are copied to the new spec folder.
+使用目录模板时，所有 `.md` 文件都会被复制到新的 Spec 文件夹。
 
-### Available Variables
+### 可用变量
 
-- `{name}` - Spec name
-- `{date}` - Creation date (ISO format)
-- `{project_name}` - From package.json
-- `{author}` - From git config user.name
-- `{git_user}` - Git username
-- `{git_email}` - Git email
-- `{git_repo}` - Repository name
+- `{name}` - Spec名称
+- `{date}` - 创建日期（ISO 格式）
+- `{project_name}` - 来自 package.json
+- `{author}` - 来自 git config user.name
+- `{git_user}` - Git 用户名
+- `{git_email}` - Git 电子邮件
+- `{git_repo}` - 仓库名称
 
-Add custom variables in config:
+在配置中添加自定义变量：
 ```json
 {
   "variables": {
-    "team": "Platform Engineering",
+    "team": "平台工程",
     "company": "Acme Corp"
   }
 }
 ```
 
-## Template Structure
+## 模板结构
 
-A complete template includes:
+完整的模板包括：
 
-### 1. Frontmatter
+### 1. frontmatter
 ```yaml
 ---
 status: planned
@@ -224,56 +224,56 @@ priority: medium
 ---
 ```
 
-### 2. Visual Badges
+### 2. 视觉徽章
 ```markdown
-> **Status**: 📅 Planned · **Created**: {date}
+> **Status**: 📅 计划中 · **Created**: {date}
 ```
 
-### 3. Content Sections
+### 3. 内容章节
 ```markdown
-## Overview
-## Goal
-## Key Scenarios
-## Acceptance Criteria
-## Technical Approach
-## Non-Goals
+## 概述
+## 目标
+## 关键场景
+## 验收标准
+## 技术方法
+## 非目标
 ```
 
-Customize sections to fit your needs.
+自定义章节以适应您的需求。
 
-## Switching Templates
+## 切换模板
 
-To change templates mid-project:
+要在项目中途更改模板：
 
-1. Update `.harnspec/config.json`:
+1. 更新 `.harnspec/config.json`：
 ```json
 {
   "template": "new-template.md"
 }
 ```
 
-2. New specs will use the new template
+2. 新Spec将使用新模板
 
-3. Existing specs remain unchanged (update manually if needed)
+3. 现有Spec保持不变（如果需要手动更新）
 
-## Best Practices
+## 最佳实践
 
-:::tip Start Simple
-Begin with the standard template. Use detailed template only when you have specs with >3,500 tokens or very complex features.
+:::tip 从简单开始
+从 standard 模板开始。仅当您有 >3,500 Token 的 Spec 或非常复杂的功能时才使用 detailed 模板。
 :::
 
-:::tip Iterate on Templates
-Refine your templates based on what actually gets used. Remove unused sections.
+:::tip 迭代模板
+根据实际使用情况完善您的模板。删除未使用的章节。
 :::
 
-:::tip Keep Sections Optional
-Not every spec needs every section. Use what adds value, skip what doesn't.
+:::tip 保持章节可选
+并非每个Spec都需要每个章节。使用有价值的，跳过没有价值的。
 :::
 
-:::tip Share Templates
-Export your `.harnspec/templates/` directory to share with other teams or projects.
+:::tip 共享模板
+导出您的 `.harnspec/templates/` 目录以与其他团队或项目共享。
 :::
 
 ---
 
-**Next**: Learn about [Frontmatter](/docs/guide/usage/advanced-features/frontmatter) fields or explore [Custom Fields](/docs/guide/usage/advanced-features/custom-fields).
+**下一步**：了解[frontmatter](/zh-Hans/docs/guide/usage/advanced-features/frontmatter)字段或探索[自定义字段](/zh-Hans/docs/guide/usage/advanced-features/custom-fields)。

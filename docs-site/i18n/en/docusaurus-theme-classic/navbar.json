@@ -1,0 +1,20 @@
+{
+  "item.label.指南": {
+    "message": "Guide"
+  },
+  "item.label.参考": {
+    "message": "Reference"
+  },
+  "item.label.博客": {
+    "message": "Blog"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub"
+  },
+  "item.label.Web 应用": {
+    "message": "Web App"
+  },
+  "logo.alt": {
+    "message": "HarnSpec Logo"
+  }
+}

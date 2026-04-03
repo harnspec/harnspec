@@ -1,126 +1,126 @@
 ---
 id: 'variables'
-title: 'Variables'
+title: '变量'
 sidebar_position: 10
 ---
-# Variables
+# 变量
 
-Template variables allow you to generate dynamic content in your specs.
+模板变量允许您在Spec中生成动态内容。
 
-## Overview
+## 概述
 
-Variables are placeholders in your spec templates that get replaced with actual values when you create a spec.
+变量是Spec模板中的占位符，在创建Spec时会被实际值替换。
 
-**Example:**
+**示例：**
 ```markdown
-# \{name\}
+# {name}
 
-Created by \{author\} on \{date\}
+由 {author} 创建于 {date}
 ```
 
-Becomes:
+变为：
 ```markdown
 # user-authentication
 
-Created by John Doe on 2025-11-02
+由 John Doe 创建于 2025-11-02
 ```
 
-## Built-in Variables
+## 内置变量
 
-These variables are available automatically:
+这些变量自动可用：
 
 ### \{name\}
 
-The spec name provided to `harnspec create`.
+提供给 `harnspec create` 的Spec名称。
 
 ```bash
 harnspec create user-authentication
 ```
 
-Results in:
+结果为：
 ```markdown
 # user-authentication
 ```
 
 ### \{date\}
 
-Current date in ISO 8601 format (YYYY-MM-DD).
+ISO 8601 格式的当前日期（YYYY-MM-DD）。
 
 ```markdown
 created: \{date\}
 ```
 
-Results in:
+结果为：
 ```markdown
 created: 2025-11-02
 ```
 
 ### \{project_name\}
 
-Project name from `package.json`.
+来自 `package.json` 的项目名称。
 
 ```markdown
-**Project**: \{project_name\}
+**项目**：\{project_name\}
 ```
 
 ### \{author\}
 
-User's name from git config (`user.name`).
+来自 git 配置（`user.name`）的用户名称。
 
 ```markdown
-**Author**: \{author\}
+**作者**：\{author\}
 ```
 
 ### \{git_user\}
 
-Git username from git config.
+来自 git 配置的 Git 用户名。
 
 ```markdown
-**Username**: \{git_user\}
+**用户名**：\{git_user\}
 ```
 
 ### \{git_email\}
 
-Git email from git config (`user.email`).
+来自 git 配置（`user.email`）的 Git 电子邮件。
 
 ```markdown
-**Contact**: \{git_email\}
+**联系方式**：\{git_email\}
 ```
 
 ### \{git_repo\}
 
-Repository name from git remote URL.
+来自 git 远程 URL 的仓库名称。
 
 ```markdown
-**Repository**: \{git_repo\}
+**仓库**：\{git_repo\}
 ```
 
-## Custom Variables
+## 自定义变量
 
-Define your own variables in `.harnspec/config.json`:
+在 `.harnspec/config.json` 中定义您自己的变量：
 
 ```json
 {
   "variables": {
-    "team": "Platform Engineering",
+    "team": "平台工程",
     "company": "Acme Corp",
     "default_reviewer": "alice"
   }
 }
 ```
 
-Use in templates:
+在模板中使用：
 ```markdown
-**Team**: \{team\}
-**Company**: \{company\}
-**Reviewer**: \{default_reviewer\}
+**团队**：\{team\}
+**公司**：\{company\}
+**审查者**：\{default_reviewer\}
 ```
 
-## Using Variables in Templates
+## 在模板中使用变量
 
-### 1. Create or Edit Template
+### 1. 创建或编辑模板
 
-`.harnspec/templates/spec-template.md`:
+`.harnspec/templates/spec-template.md`：
 
 ```markdown
 ---
@@ -130,43 +130,43 @@ created: \{date\}
 
 # \{name\}
 
-**Team**: \{team\}  
-**Author**: \{author\}  
-**Created**: \{date\}
+**团队**：\{team\}  
+**作者**：\{author\}  
+**创建时间**：\{date\}
 
-## Overview
+## 概述
 
-[What is \{name\} and why are we building it?]
+[\{name\} 是什么以及我们为什么要构建它？]
 
-## Contact
+## 联系方式
 
-Questions? Reach out to \{default_reviewer\} or \{git_email\}
+有问题？联系 \{default_reviewer\} 或 \{git_email\}
 ```
 
-### 2. Configure Variables
+### 2. 配置变量
 
-`.harnspec/config.json`:
+`.harnspec/config.json`：
 
 ```json
 {
   "template": "spec-template.md",
   "specsDir": "specs",
   "variables": {
-    "team": "Platform Engineering",
+    "team": "平台工程",
     "default_reviewer": "alice"
   }
 }
 ```
 
-### 3. Create Spec
+### 3. 创建Spec
 
 ```bash
 harnspec create user-authentication
 ```
 
-### 4. Result
+### 4. 结果
 
-All variables are automatically replaced:
+所有变量自动替换：
 
 ```markdown
 ---
@@ -176,34 +176,34 @@ created: 2025-11-02
 
 # user-authentication
 
-**Team**: Platform Engineering  
-**Author**: John Doe  
-**Created**: 2025-11-02
+**团队**：平台工程  
+**作者**：John Doe  
+**创建时间**：2025-11-02
 
-## Overview
+## 概述
 
-[What is user-authentication and why are we building it?]
+[user-authentication 是什么以及我们为什么要构建它？]
 
-## Contact
+## 联系方式
 
-Questions? Reach out to alice or john@example.com
+有问题？联系 alice 或 john@example.com
 ```
 
-## Common Patterns
+## 常见模式
 
-### Team Attribution
+### 团队归属
 
 ```json
 {
   "variables": {
-    "team": "Backend Team",
+    "team": "后端团队",
     "team_lead": "Alice",
     "team_email": "backend@company.com"
   }
 }
 ```
 
-### Documentation Links
+### 文档链接
 
 ```json
 {
@@ -215,7 +215,7 @@ Questions? Reach out to alice or john@example.com
 }
 ```
 
-### Company Information
+### 公司信息
 
 ```json
 {
@@ -227,7 +227,7 @@ Questions? Reach out to alice or john@example.com
 }
 ```
 
-### Project Metadata
+### 项目元数据
 
 ```json
 {
@@ -239,56 +239,56 @@ Questions? Reach out to alice or john@example.com
 }
 ```
 
-## Best Practices
+## 最佳实践
 
-:::tip Use for Static Values
-Variables are best for information that rarely changes (team names, URLs, contacts).
+:::tip 用于静态值
+变量最适合很少更改的信息（团队名称、URL、联系方式）。
 :::
 
-:::tip Keep Names Descriptive
-Use clear variable names: `default_reviewer` not `dr`, `docs_url` not `url1`.
+:::tip 保持名称描述性
+使用清晰的变量名称：`default_reviewer` 而不是 `dr`，`docs_url` 而不是 `url1`。
 :::
 
-:::tip Don't Overuse
-Not everything needs to be a variable. Use them where they add value.
+:::tip 不要过度使用
+并非所有内容都需要成为变量。在它们增加价值的地方使用它们。
 :::
 
-:::tip Document Variables
-Add comments in config explaining what each variable is for.
+:::tip 记录变量
+在配置中添加注释，解释每个变量的用途。
 :::
 
-## Limitations
+## 限制
 
-- Variables are resolved at creation time only
-- No dynamic or computed variables
-- No conditional logic
-- No loops or iterations
-- Cannot reference other variables
+- 变量仅在创建时解析
+- 没有动态或计算变量
+- 没有条件逻辑
+- 没有循环或迭代
+- 不能引用其他变量
 
-## Troubleshooting
+## 故障排除
 
-### Variable Not Replaced
+### 变量未替换
 
-**Problem:** `\{my_var\}` appears literally in spec.
+**问题：** `\{my_var\}` 在Spec中按字面显示。
 
-**Causes:**
-1. Variable not defined in config
-2. Typo in variable name
-3. Config file not saved
+**原因：**
+1. 配置中未定义变量
+2. 变量名称拼写错误
+3. 配置文件未保存
 
-**Solution:** Check `.harnspec/config.json` has the variable defined.
+**解决方案：** 检查 `.harnspec/config.json` 是否定义了变量。
 
-### Wrong Value
+### 错误的值
 
-**Problem:** Variable has unexpected value.
+**问题：** 变量具有意外的值。
 
-**Causes:**
-1. Git config not set (for git_* variables)
-2. package.json missing (for project_name)
-3. Stale config cache
+**原因：**
+1. Git 配置未设置（对于 git_* 变量）
+2. package.json 缺失（对于 project_name）
+3. 陈旧的配置缓存
 
-**Solution:** Check source of built-in variables, restart after config changes.
+**解决方案：** 检查内置变量的来源，配置更改后重新启动。
 
 ---
 
-**Next**: Learn about [Templates](/docs/guide/usage/advanced-features/templates) or explore the [Configuration Reference](/docs/reference/config).
+**下一步**：了解[模板](/zh-Hans/docs/guide/usage/advanced-features/templates)或探索[配置参考](/zh-Hans/docs/reference/config)。

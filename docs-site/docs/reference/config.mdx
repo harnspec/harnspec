@@ -1,17 +1,17 @@
 ---
 id: 'config'
-title: 'Configuration'
+title: '配置'
 sidebar_position: 2
 ---
-# Configuration
+# 配置
 
-Complete reference for `.harnspec/config.json`.
+`.harnspec/config.json` 的完整参考。
 
-## Configuration File
+## 配置文件
 
-HarnSpec configuration is stored in `.harnspec/config.json` in your project root.
+HarnSpec 配置存储在项目根目录的 `.harnspec/config.json` 中。
 
-## Default Configuration
+## 默认配置
 
 ```json
 {
@@ -34,16 +34,16 @@ HarnSpec configuration is stored in `.harnspec/config.json` in your project root
 }
 ```
 
-## Configuration Options
+## 配置选项
 
 ### template
 
-Primary template file to use for new specs.
+用于新Spec的主模板文件。
 
-**Type:** `string`  
-**Default:** `"spec-template.md"`
+**类型：** `string`  
+**默认：** `"spec-template.md"`
 
-Path to the template file within `.harnspec/templates/` directory.
+`.harnspec/templates/` 目录中模板文件的路径。
 
 ```json
 {
@@ -53,12 +53,12 @@ Path to the template file within `.harnspec/templates/` directory.
 
 ### templates
 
-Map of named templates for different spec types.
+不同Spec类型的命名模板映射。
 
-**Type:** `object`  
-**Default:** `{ "default": "spec-template.md" }`
+**类型：** `object`  
+**默认：** `{ "default": "spec-template.md" }`
 
-Allows you to define multiple templates that users can select from during `harnspec create` or `harnspec init`.
+允许您定义多个模板，用户可以在 `harnspec create` 或 `harnspec init` 期间选择。
 
 ```json
 {
@@ -73,10 +73,10 @@ Allows you to define multiple templates that users can select from during `harns
 
 ### specsDir
 
-Directory where active specs are stored.
+存储活动Spec的目录。
 
-**Type:** `string`  
-**Default:** `"specs"`
+**类型：** `string`  
+**默认：** `"specs"`
 
 ```json
 {
@@ -86,12 +86,12 @@ Directory where active specs are stored.
 
 ### autoCheck
 
-Enable/disable automatic sequence conflict checking.
+启用/禁用自动序列冲突检查。
 
-**Type:** `boolean`  
-**Default:** `true`
+**类型：** `boolean`  
+**默认：** `true`
 
-When enabled, HarnSpec automatically checks for sequence number conflicts during spec creation and warns if duplicates exist.
+启用后，HarnSpec 在Spec创建期间自动检查序列号冲突，如果存在重复则发出警告。
 
 ```json
 {
@@ -101,20 +101,20 @@ When enabled, HarnSpec automatically checks for sequence number conflicts during
 
 ### structure
 
-Configuration for spec folder structure and naming.
+Spec文件夹结构和命名的配置。
 
-**Type:** `object`
+**类型：** `object`
 
 #### structure.pattern
 
-Folder structure pattern.
+文件夹结构模式。
 
-**Type:** `string`  
-**Values:** `"flat"` | `"custom"` | legacy pattern string  
-**Default:** `"flat"`
+**类型：** `string`  
+**值：** `"flat"` | `"custom"` | 旧模式字符串  
+**默认：** `"flat"`
 
-- `"flat"`: Specs are organized in a flat structure (e.g., `specs/001-name/`)
-- `"custom"`: Custom grouping using `groupExtractor` field
+- `"flat"`：Spec以扁平结构组织（例如，`specs/001-name/`）
+- `"custom"`：使用 `groupExtractor` 字段的自定义分组
 
 ```json
 {
@@ -126,15 +126,15 @@ Folder structure pattern.
 
 #### structure.prefix
 
-Prefix for spec folders in flat pattern.
+扁平模式中Spec文件夹的前缀。
 
-**Type:** `string` (optional)  
-**Default:** `""` (empty, uses global sequence numbers)
+**类型：** `string`（可选）  
+**默认：** `""`（空，使用全局序列号）
 
-Common values:
-- `""` - Global numbering (e.g., `001-name/`, `002-name/`)
-- `"{YYYYMMDD}-"` - Date-prefixed (e.g., `20251107-001-name/`)
-- `"spec-"` - Custom prefix (e.g., `spec-001-name/`)
+常见值：
+- `""` - 全局编号（例如，`001-name/`、`002-name/`）
+- `"{YYYYMMDD}-"` - 日期前缀（例如，`20251107-001-name/`）
+- `"spec-"` - 自定义前缀（例如，`spec-001-name/`）
 
 ```json
 {
@@ -147,12 +147,12 @@ Common values:
 
 #### structure.dateFormat
 
-Date format for date-based patterns.
+基于日期的模式的日期格式。
 
-**Type:** `string`  
-**Default:** `"YYYYMMDD"`
+**类型：** `string`  
+**默认：** `"YYYYMMDD"`
 
-Supported formats: `"YYYYMMDD"`, `"YYYY-MM-DD"`, `"YYYY-MM"`, `"YYYY/MM"`, `"YYYY"`, `"MM"`
+支持的格式：`"YYYYMMDD"`、`"YYYY-MM-DD"`、`"YYYY-MM"`、`"YYYY/MM"`、`"YYYY"`、`"MM"`
 
 ```json
 {
@@ -164,13 +164,13 @@ Supported formats: `"YYYYMMDD"`, `"YYYY-MM-DD"`, `"YYYY-MM"`, `"YYYY/MM"`, `"YYY
 
 #### structure.sequenceDigits
 
-Number of digits for sequence numbers.
+序列号的位数。
 
-**Type:** `number`  
-**Default:** `3`
+**类型：** `number`  
+**默认：** `3`
 
-- `3` → `001`, `002`, `003`
-- `4` → `0001`, `0002`, `0003`
+- `3` → `001`、`002`、`003`
+- `4` → `0001`、`0002`、`0003`
 
 ```json
 {
@@ -182,10 +182,10 @@ Number of digits for sequence numbers.
 
 #### structure.defaultFile
 
-Default filename within each spec folder.
+每个Spec文件夹中的默认文件名。
 
-**Type:** `string`  
-**Default:** `"README.md"`
+**类型：** `string`  
+**默认：** `"README.md"`
 
 ```json
 {
@@ -197,12 +197,12 @@ Default filename within each spec folder.
 
 #### structure.groupExtractor
 
-Field extractor for custom grouping pattern.
+自定义分组模式的字段提取器。
 
-**Type:** `string` (optional)  
-**Example:** `"{YYYYMMDD}"` or `"milestone-{milestone}"`
+**类型：** `string`（可选）  
+**示例：** `"{YYYYMMDD}"` 或 `"milestone-{milestone}"`
 
-Used when `pattern` is `"custom"` to dynamically group specs by frontmatter fields.
+当 `pattern` 为 `"custom"` 时使用，按frontmatter字段动态分组Spec。
 
 ```json
 {
@@ -215,11 +215,11 @@ Used when `pattern` is `"custom"` to dynamically group specs by frontmatter fiel
 
 #### structure.groupFallback
 
-Fallback folder when groupExtractor field is missing.
+当 groupExtractor 字段缺失时的回退文件夹。
 
-**Type:** `string` (optional)
+**类型：** `string`（可选）
 
-Only used for non-date extractors. When the frontmatter field is missing, specs are placed in this fallback folder.
+仅用于非日期提取器。当frontmatter字段缺失时，Spec被放置在此回退文件夹中。
 
 ```json
 {
@@ -233,9 +233,9 @@ Only used for non-date extractors. When the frontmatter field is missing, specs 
 
 ### features
 
-Feature flags for optional functionality.
+可选功能的功能标志。
 
-**Type:** `object`
+**类型：** `object`
 
 ```json
 {
@@ -252,58 +252,58 @@ Feature flags for optional functionality.
 
 #### features.aiAgents
 
-Enable AI agent integration (creates AGENTS.md file).
+启用 AI 代理集成（创建 AGENTS.md 文件）。
 
-**Type:** `boolean`  
-**Default:** `true`
+**类型：** `boolean`  
+**默认：** `true`
 
 #### features.examples
 
-Enable example content in templates.
+在模板中启用示例内容。
 
-**Type:** `boolean`  
-**Default:** `true`
+**类型：** `boolean`  
+**默认：** `true`
 
 #### features.collaboration
 
-Enable collaboration features (assignee, reviewer fields).
+启用协作功能（负责人、审查者字段）。
 
-**Type:** `boolean`  
-**Default:** `false`
+**类型：** `boolean`  
+**默认：** `false`
 
 #### features.compliance
 
-Enable compliance tracking fields.
+启用合规跟踪字段。
 
-**Type:** `boolean`  
-**Default:** `false`
+**类型：** `boolean`  
+**默认：** `false`
 
 #### features.approvals
 
-Enable approval workflow fields.
+启用审批工作流字段。
 
-**Type:** `boolean`  
-**Default:** `false`
+**类型：** `boolean`  
+**默认：** `false`
 
 #### features.apiDocs
 
-Enable API documentation sections in templates.
+在模板中启用 API 文档部分。
 
-**Type:** `boolean`  
-**Default:** `false`
+**类型：** `boolean`  
+**默认：** `false`
 
 ### frontmatter
 
-Configuration for spec frontmatter fields validation.
+Specfrontmatter字段验证的配置。
 
-**Type:** `object` (optional)
+**类型：** `object`（可选）
 
 #### frontmatter.required
 
-Fields that must be present in every spec.
+每个Spec中必须存在的字段。
 
-**Type:** `string[]` (optional)  
-**Default:** `["status", "created"]`
+**类型：** `string[]`（可选）  
+**默认：** `["status", "created"]`
 
 ```json
 {
@@ -315,10 +315,10 @@ Fields that must be present in every spec.
 
 #### frontmatter.optional
 
-Fields that may be present but aren't required.
+可能存在但不是必需的字段。
 
-**Type:** `string[]` (optional)  
-**Default:** `["tags", "priority"]`
+**类型：** `string[]`（可选）  
+**默认：** `["tags", "priority"]`
 
 ```json
 {
@@ -330,12 +330,12 @@ Fields that may be present but aren't required.
 
 #### frontmatter.custom
 
-Custom fields with type definitions.
+带类型定义的自定义字段。
 
-**Type:** `object` (optional)  
-**Default:** `{}`
+**类型：** `object`（可选）  
+**默认：** `{}`
 
-**Supported types:** `"string"`, `"number"`, `"boolean"`, `"array"`
+**支持的类型：** `"string"`、`"number"`、`"boolean"`、`"array"`
 
 ```json
 {
@@ -352,24 +352,24 @@ Custom fields with type definitions.
 
 ### variables
 
-Custom variables for template substitution.
+模板替换的自定义变量。
 
-**Type:** `object` (optional)  
-**Default:** `{}`
+**类型：** `object`（可选）  
+**默认：** `{}`
 
-Variables can be used in templates using `{variable_name}` syntax.
+变量可以在模板中使用 `\{variable_name\}` 语法使用。
 
 ```json
 {
   "variables": {
-    "team": "Platform Engineering",
+    "team": "平台工程",
     "company": "Acme Corp",
     "default_reviewer": "alice"
   }
 }
 ```
 
-## Complete Example
+## 完整示例
 
 ```json
 {
@@ -407,7 +407,7 @@ Variables can be used in templates using `{variable_name}` syntax.
   },
   "variables": {
     "company": "Acme Corp",
-    "team": "Platform Engineering",
+    "team": "平台工程",
     "default_reviewer": "alice",
     "docs_url": "https://docs.acme.com",
     "compliance_email": "compliance@acme.com"
@@ -415,26 +415,26 @@ Variables can be used in templates using `{variable_name}` syntax.
 }
 ```
 
-## Validation
+## 验证
 
-HarnSpec validates configuration on load:
+HarnSpec 在加载时验证配置：
 
-- Required structure fields must be valid
-- Custom field types must be valid (`string`, `number`, `boolean`, `array`)
-- Template files must exist in `.harnspec/templates/`
-- Spec directory is created if missing
+- 必需的结构字段必须有效
+- 自定义字段类型必须有效（`string`、`number`、`boolean`、`array`）
+- 模板文件必须存在于 `.harnspec/templates/` 中
+- 如果缺少Spec目录，则创建
 
-Invalid configuration will show an error with details.
+无效的配置将显示带有详细信息的错误。
 
-## Migration
+## 迁移
 
-When updating configuration:
+更新配置时：
 
-1. Edit `.harnspec/config.json`
-2. New specs will use new configuration
-3. Existing specs are not automatically updated
-4. Manually update existing specs if needed
+1. 编辑 `.harnspec/config.json`
+2. 新Spec将使用新配置
+3. 现有Spec不会自动更新
+4. 如需要手动更新现有Spec
 
 ---
 
-**Next**: Check the [CLI Reference](/docs/reference/cli) or explore [Frontmatter Fields](/docs/reference/frontmatter).
+**下一步**：查看 [CLI 参考](/zh-Hans/docs/reference/cli)或探索[frontmatter字段](/zh-Hans/docs/reference/frontmatter)。

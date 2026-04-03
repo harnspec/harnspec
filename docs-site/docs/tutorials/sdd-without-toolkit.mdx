@@ -1,36 +1,36 @@
 ---
-title: Practice SDD Without the Toolkit
+title: 无需工具实践 SDD
 sidebar_position: 5
-description: Let AI set up a lightweight spec management system and practice HarnSpec methodology
+description: 让 AI 为您搭建轻量级 Spec 管理系统并实践 HarnSpec 方法论
 ---
 
-# Practice SDD Without the Toolkit
+# 无需工具实践 SDD
 
-Learn the **HarnSpec methodology** by having your AI agent build a custom spec management system for you. In minutes, you'll have a working SDD workflow—no toolkit installation required.
+学习 **HarnSpec 方法论**，让您的 AI Agent 为您构建自定义 Spec 管理系统。几分钟内，您就能拥有完整的 SDD 工作流——无需安装工具包。
 
-**Time**: 10 minutes  
-**Outcome**: Working spec management system + AI-driven SDD workflow
+**时长**：10 分钟  
+**成果**：可用的 Spec 管理系统 + AI 驱动的 SDD 工作流
 
-:::tip Two Meanings of "HarnSpec"
-1. **HarnSpec methodology** - The spec-driven development approach (this tutorial)
-2. **HarnSpec toolkit** - The CLI/MCP/UI tools (`harnspec`, MCP server, etc.)
+:::tip "HarnSpec" 的两层含义
+1. **HarnSpec 方法论** - 规格驱动开发方法（本教程重点）
+2. **HarnSpec 工具包** - CLI/MCP/UI 工具（`harnspec`、MCP 服务器等）
 
-This tutorial focuses on #1. Your AI will create a **custom scaffold script** that implements the methodology with zero dependencies.
+本教程聚焦于第一点。您的 AI 将创建一个 **自定义脚手架脚本**，零依赖实现方法论。
 :::
 
-## The AI-First Approach
+## AI 优先的方法
 
-**You don't write any code. You don't edit any files. The AI does everything.**
+**您不编写任何代码。您不编辑任何文件。AI 完成一切。**
 
-You play the role of **commander**: give intent, review results, approve next steps. The AI is your **spec creator, maintainer, and executor**.
+您扮演 **指挥官** 的角色：提供意图、审查结果、批准下一步。AI 是您的 **Spec 创建者、维护者和执行者**。
 
 ```mermaid
 graph TB
-    H[👤 Human<br/>Intent & Review] --> AI[🤖 AI Execution Loop]
-    AI --> S[Setup]
-    AI --> C[Create Specs]
-    AI --> I[Implement]
-    AI --> U[Update]
+    H[👤 人类<br/>意图 & 审查] --> AI[🤖 AI 执行循环]
+    AI --> S[搭建]
+    AI --> C[创建 Spec]
+    AI --> I[实现]
+    AI --> U[更新]
     U --> H
     
     style H fill:#e1f5ff,stroke:#1e3a8a,stroke-width:2px,color:#1e3a8a
@@ -41,78 +41,78 @@ graph TB
     style U fill:#f0fdf4,stroke:#166534,stroke-width:1px,color:#166534
 ```
 
-**This is the future of software development**: humans provide strategic direction, AI handles tactical execution.
+**这是软件开发的未来**：人类提供战略方向，AI 处理战术执行。
 
-## What You Need
+## 您需要什么
 
-- **AI coding assistant** (GitHub Copilot, Claude, Cursor, Windsurf, etc.)
-- **Any project** to work on (or start fresh)
+- **AI 编码助手**（GitHub Copilot、Claude、Cursor、Windsurf 等）
+- **任何项目** 可用（或从头开始）
 
-That's it. No npm packages, no installations, no setup.
+仅此而已。无需 npm 包，无需安装，无需设置。
 
-## Step 1: Bootstrap Your Spec System
+## 步骤 1：引导您的 Spec 系统
 
-**💬 Send this prompt to your AI assistant:**
+**💬 发送此提示给您的 AI 助手：**
 
 ```
-Set up a lightweight spec management system for this project.
+为这个项目搭建一个轻量级 Spec 管理系统。
 
-Create:
-1. specs/ folder for specifications
-2. spec.js - Node.js script with these commands:
-   - create <name> - Create new spec with auto-sequence number
-   - update <spec> --status <status> - Update spec status
-   - list [--status <status>] - List specs with optional filter
-   - view <spec> - Display spec content
-3. AGENTS.md - SDD workflow instructions for AI agents
-4. Template for spec format (embedded in spec.js)
+创建：
+1. specs/ 文件夹用于存放 Spec
+2. spec.js - Node.js 脚本，包含以下命令：
+   - create <name> - 创建新 Spec，自动分配序列号
+   - update <spec> --status <status> - 更新 Spec 状态
+   - list [--status <status>] - 列出 Spec，可选状态过滤
+   - view <spec> - 显示 Spec 内容
+3. AGENTS.md - AI Agent 的 SDD 工作流指令
+4. Spec 格式模板（嵌入在 spec.js 中）
 
-Requirements:
-- Zero npm dependencies (use only Node.js built-ins)
-- Specs use frontmatter (status, created, priority, tags)
-- Follow HarnSpec first principles
-- Keep it minimal and practical
+要求：
+- 零 npm 依赖（仅使用 Node.js 内置模块）
+- Spec 使用 frontmatter（status、created、priority、tags）
+- 遵循 HarnSpec 第一性原理
+- 保持最简和实用
 ```
 
-**What the AI does** (you do nothing):
+**AI 做什么**（您什么都不做）：
 
-1. Creates `specs/` directory
-2. Generates `spec.js` with complete CLI functionality
-3. Writes `AGENTS.md` with SDD workflow instructions
-4. Embeds spec template in the script
+1. 创建 `specs/` 目录
+2. 生成包含完整 CLI 功能的 `spec.js`
+3. 编写包含 SDD 工作流指令的 `AGENTS.md`
+4. 在脚本中嵌入 Spec 模板
 
-**Result**: Working spec management system in ~2 minutes.
+**结果**：约 2 分钟内拥有可用的 Spec 管理系统。
 
-:::tip Verify the Setup
+:::tip 验证设置
 ```bash
 node spec.js --help
 ```
 
-You should see available commands. The AI created a fully functional CLI!
+您应该看到可用命令。AI 创建了一个完全功能的 CLI！
 :::
 
-## Step 2: Create Your First Spec
+## 步骤 2：创建您的第一个 Spec
 
-**💬 Send this prompt to your AI assistant:**
+**💬 发送此提示给您的 AI 助手：**
 
 ```
-Create a spec for adding dark theme support to this app.
+为这个应用创建一个添加深色主题支持的 Spec。
 
-Requirements:
-- Auto-detect system preference
-- Smooth transitions
-- Maintain current design aesthetic
+要求：
+- 自动检测系统偏好
+- 平滑过渡
+- 保持当前设计美学
 ```
 
-**What the AI does**:
+**AI 做什么**：
 
-1. Runs `node spec.js create dark-theme`
-2. Writes spec content following the template
-3. Captures your requirements in Overview
-4. Adds implementation plan
-5. Commits: `git commit -m "spec: add 001-dark-theme"`
+1. 运行 `node spec.js create dark-theme`
+2. 按照模板编写 Spec 内容
+3. 在 Overview 中捕获您的需求
+4. 添加实现计划
+5. 提交：`git commit -m "spec: add 001-dark-theme"`
 
-**You get** (without writing a single line):
+**您得到**（无需编写一行代码）：
 
 ```markdown title="specs/001-dark-theme/README.md"
 ---
@@ -125,80 +125,79 @@ tags: [ui, enhancement]
 # Dark Theme Support
 
 ## Overview
-Add dark theme that responds to system preferences. Currently only 
-light theme available, causing eye strain in low-light environments.
+添加响应系统偏好的深色主题。目前仅有浅色主题，
+在弱光环境下导致眼睛疲劳。
 
-**Why**: Improve user experience for users working at night or in 
-dark environments.
+**为什么**：改善夜间或暗环境下工作的用户体验。
 
 ## Design
-- Use CSS `prefers-color-scheme` media query
-- CSS variables for theme colors
-- Smooth transition (200ms) between themes
-- WCAG AA contrast standards
+- 使用 CSS `prefers-color-scheme` 媒体查询
+- 使用 CSS 变量定义主题颜色
+- 主题间平滑过渡（200ms）
+- 符合 WCAG AA 对比度标准
 
 ## Plan
-- [ ] Define color variables (light + dark palettes)
-- [ ] Add media query for dark mode
-- [ ] Update all components to use variables
-- [ ] Test contrast ratios
+- [ ] 定义颜色变量（浅色 + 深色调色板）
+- [ ] 为深色模式添加媒体查询
+- [ ] 更新所有组件使用变量
+- [ ] 测试对比度比率
 
 ## Success Criteria
-- [ ] Theme switches with system preference
-- [ ] All text meets WCAG AA contrast
-- [ ] No flash during theme transition
+- [ ] 主题随系统偏好切换
+- [ ] 所有文本符合 WCAG AA 对比度
+- [ ] 主题切换时无闪烁
 ```
 
-**Check it**:
+**检查**：
 ```bash
 node spec.js list
 # 001-dark-theme [planned] Dark Theme Support
 ```
 
-## Step 3: Implement the Feature
+## 步骤 3：实现功能
 
-**💬 Send this prompt to your AI assistant:**
-
-```
-Implement spec 001.
-```
-
-That's it. Three words.
-
-**What the AI does**:
-
-1. Runs `node spec.js view 001` to read requirements
-2. Updates status: `node spec.js update 001 --status in-progress`
-3. Implements the feature:
-   - Adds CSS variables
-   - Implements media query
-   - Updates all color references
-   - Tests in both themes
-4. Updates spec checkboxes as work progresses
-5. Runs `node spec.js update 001 --status complete`
-6. Commits: `git commit -m "feat: implement dark theme (closes #001)"`
-
-**You review**: Open the app, toggle system theme. It works!
-
-## Step 4: Complex Feature with Multiple Specs
-
-**💬 Send this prompt to your AI assistant:**
+**💬 发送此提示给您的 AI 助手：**
 
 ```
-Add user authentication with JWT.
-
-This needs multiple specs:
-- JWT service (token generation/validation)
-- Login/logout endpoints
-- Protected route middleware
-- Password hashing
-
-Create specs for each component and implement them in order.
+实现 Spec 001。
 ```
 
-**What the AI does**:
+就这样。三个字。
 
-1. **Creates 4 related specs**:
+**AI 做什么**：
+
+1. 运行 `node spec.js view 001` 读取需求
+2. 更新状态：`node spec.js update 001 --status in-progress`
+3. 实现功能：
+   - 添加 CSS 变量
+   - 实现媒体查询
+   - 更新所有颜色引用
+   - 在两种主题下测试
+4. 随着工作进展更新 Spec 复选框
+5. 运行 `node spec.js update 001 --status complete`
+6. 提交：`git commit -m "feat: implement dark theme (closes #001)"`
+
+**您审查**：打开应用，切换系统主题。成功！
+
+## 步骤 4：包含多个 Spec 的复杂功能
+
+**💬 发送此提示给您的 AI 助手：**
+
+```
+使用 JWT 添加用户身份验证。
+
+这需要多个 Spec：
+- JWT 服务（令牌生成/验证）
+- 登录/登出端点
+- 受保护路由中间件
+- 密码哈希
+
+为每个组件创建 Spec 并按顺序实现。
+```
+
+**AI 做什么**：
+
+1. **创建 4 个相关 Spec**：
    ```bash
    node spec.js create jwt-service
    node spec.js create auth-endpoints  
@@ -206,31 +205,31 @@ Create specs for each component and implement them in order.
    node spec.js create password-hashing
    ```
 
-2. **Links dependencies** (manually edits frontmatter):
+2. **链接依赖关系**（手动编辑 frontmatter）：
    ```yaml
-   # In 003-auth-endpoints/README.md
-   depends_on: [002, 004]  # Needs JWT service + password hashing
+   # 在 003-auth-endpoints/README.md 中
+   depends_on: [002, 004]  # 需要 JWT 服务 + 密码哈希
    ```
 
-3. **Implements in order**:
-   - Spec 002 (JWT service) → complete
-   - Spec 004 (password hashing) → complete
-   - Spec 003 (auth endpoints) → complete
-   - Spec 005 (auth middleware) → complete
+3. **按顺序实现**：
+   - Spec 002（JWT 服务）→ complete
+   - Spec 004（密码哈希）→ complete
+   - Spec 003（认证端点）→ complete
+   - Spec 005（认证中间件）→ complete
 
-4. **Updates all specs** automatically during implementation
+4. **在实现过程中自动更新所有 Spec**
 
-**You review**: 
+**您审查**： 
 ```bash
 node spec.js list
-# Shows 4 completed specs with dependencies handled correctly
+# 显示 4 个已完成的 Spec，依赖关系正确处理
 ```
 
-## The Scaffold Script (spec.js)
+## 脚手架脚本 (spec.js)
 
-Here's what the AI created for you:
+这是 AI 为您创建的：
 
-```javascript title="spec.js (generated by AI)"
+```javascript title="spec.js (由 AI 生成)"
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
@@ -246,20 +245,20 @@ tags: []
 # {{TITLE}}
 
 ## Overview
-[Describe the problem and why this solution]
+[描述问题以及为什么选择此方案]
 
 ## Design
-[Key decisions and rationale]
+[关键决策和理由]
 
 ## Plan
-- [ ] Task 1
-- [ ] Task 2
+- [ ] 任务 1
+- [ ] 任务 2
 
 ## Success Criteria
-- [ ] Criterion 1
+- [ ] 标准 1
 `;
 
-// Command implementations
+// 命令实现
 function create(name) {
   const seq = getNextSequence();
   const slug = \`\${seq}-\${name}\`;
@@ -280,7 +279,7 @@ function update(spec, options) {
   const file = path.join(dir, 'README.md');
   let content = fs.readFileSync(file, 'utf8');
   
-  // Update frontmatter
+  // 更新 frontmatter
   content = content.replace(
     /status: \w+/,
     \`status: \${options.status}\`
@@ -306,7 +305,7 @@ function list(options = {}) {
   });
 }
 
-// Helper functions
+// 辅助函数
 function getNextSequence() {
   const specs = fs.readdirSync(SPECS_DIR);
   const numbers = specs
@@ -327,7 +326,7 @@ function toTitle(slug) {
     .join(' ');
 }
 
-// CLI parser
+// CLI 解析器
 const [,, command, ...args] = process.argv;
 
 switch(command) {
@@ -345,211 +344,211 @@ switch(command) {
 }
 ```
 
-**AI generated this in seconds. Zero dependencies. Pure Node.js.**
+**AI 在几秒内生成了这个。零依赖。纯 Node.js。**
 
-## The AGENTS.md File
+## AGENTS.md 文件
 
-The AI also created instructions for itself:
+AI 还为自己创建了指令：
 
-```markdown title="AGENTS.md (generated by AI)"
+```markdown title="AGENTS.md (由 AI 生成)"
 # AI Agent Instructions
 
 ## Spec-Driven Development Workflow
 
-1. **Discover**: Run `node spec.js list` to check existing specs
-2. **Plan**: Run `node spec.js create <name>` for new features
-3. **Start Work**: Run `node spec.js update <spec> --status in-progress`
-4. **Implement**: Write code, update spec checkboxes as you go
-5. **Complete**: Run `node spec.js update <spec> --status complete`
+1. **Discover**: 运行 `node spec.js list` 检查现有 Spec
+2. **Plan**: 为新功能运行 `node spec.js create <name>`
+3. **Start Work**: 运行 `node spec.js update <spec> --status in-progress`
+4. **Implement**: 编写代码，边做边更新 Spec 复选框
+5. **Complete**: 运行 `node spec.js update <spec> --status complete`
 
 ## Spec Creation Guidelines
 
-- Keep specs \<300 lines (~2K tokens)
-- Focus on "why" and "what", not "how"
-- Update specs as implementation reveals new insights
-- Use clear, decision-informing language
+- 保持 Spec \<300 行（约 2K Token）
+- 关注"为什么"和"是什么"，而非"如何做"
+- 随着实现揭示新见解更新 Spec
+- 使用清晰、能帮助决策的语言
 
 ## Status Workflow
 
-- `planned` - Spec written, not started
-- `in-progress` - Currently implementing
-- `complete` - Implementation done and tested
+- `planned` - Spec 已编写，未开始
+- `in-progress` - 当前正在实现
+- `complete` - 实现完成并测试
 
 ## First Principles
 
-Apply in order:
-1. **Context Economy** - Fit in working memory
-2. **Signal-to-Noise** - Every word informs decisions
-3. **Intent Over Implementation** - Capture why, not just how
+按顺序应用：
+1. **Context Economy** - 适应工作记忆
+2. **Signal-to-Noise** - 每个词都帮助决策
+3. **Intent Over Implementation** - 捕获为什么，而非仅仅如何
 ```
 
-**Now every AI session starts with these instructions. Consistency guaranteed.**
+**现在每个 AI 会话都从这些指令开始。保证一致性。**
 
-## Why This Approach Works
+## 为什么这种方法有效
 
-**Human-AI collaboration at its best:**
+**最佳的人机协作：**
 
-| Role | Human | AI |
-|------|-------|-----|
-| **Strategic** | Define goals, priorities | Suggest trade-offs, alternatives |
-| **Tactical** | Review, approve | Create specs, write code, update docs |
-| **Operational** | Monitor outcomes | Execute commands, manage state |
+| 角色 | 人类 | AI |
+|------|------|-----|
+| **战略** | 定义目标、优先级 | 建议权衡、替代方案 |
+| **战术** | 审查、批准 | 创建 Spec、编写代码、更新文档 |
+| **操作** | 监控结果 | 执行命令、管理状态 |
 
-**You stay in the "command center"**—high-level thinking, decision-making. The AI handles the grunt work.
+**您停留在"指挥中心"**——高层次思考、决策制定。AI 处理苦力活。
 
-## Extending the System
+## 扩展系统
 
-**Add more commands as you need them:**
-
-```
-Enhance spec.js with these commands:
-- search <query> - Find specs by content
-- deps <spec> - Show dependency graph
-- board - Display Kanban-style status board
-- validate - Check spec quality (token count, structure)
-```
-
-The AI adds them in minutes. Your system evolves with your needs.
-
-**Add spec templates:**
+**根据需要添加更多命令：**
 
 ```
-Create templates/ directory with:
-- feature.md - For new features
-- bug.md - For bug fixes
-- refactor.md - For refactoring work
-
-Update spec.js to support: node spec.js create <name> --template <type>
+使用以下命令增强 spec.js：
+- search <query> - 通过内容查找 Spec
+- deps <spec> - 显示依赖图
+- board - 显示看板式状态视图
+- validate - 检查 Spec 质量（Token 数、结构）
 ```
 
-## Applying First Principles
+AI 在几分钟内添加完成。您的系统随需求演进。
 
-The HarnSpec methodology is built on 5 first principles (in priority order):
+**添加 Spec 模板：**
 
-### 1. Context Economy
-**Specs must fit in working memory—both human and AI.**
+```
+创建 templates/ 目录，包含：
+- feature.md - 用于新功能
+- bug.md - 用于 Bug 修复
+- refactor.md - 用于重构工作
 
-- Target: \<2,000 tokens (~300 lines)
-- AI checks token count during creation
-- Automatically suggests splitting if too large
+更新 spec.js 支持：node spec.js create <name> --template <type>
+```
 
-### 2. Signal-to-Noise Maximization
-**Every word must inform decisions or be cut.**
+## 应用第一性原理
 
-- AI removes fluff during spec writing
-- Focuses on decisions, trade-offs, rationale
-- Cuts obvious or inferable content
+HarnSpec 方法论建立在 5 个第一性原理之上（按优先级排序）：
 
-### 3. Intent Over Implementation  
-**Capture "why" and "what," let "how" emerge.**
+### 1. 上下文经济 (Context Economy)
+**Spec 必须适应工作记忆——无论是人类还是 AI。**
 
-- AI emphasizes problem definition
-- Documents design decisions
-- Implementation details stay minimal
+- 目标：\<2,000 Token（约 300 行）
+- AI 在创建时检查 Token 数
+- 如果太大自动建议拆分
 
-### 4. Bridge the Gap
-**Both human and AI must understand.**
+### 2. 信噪比最大化 (Signal-to-Noise Maximization)
+**每个词都必须帮助决策，否则删除。**
 
-- Clear structure (frontmatter + sections)
-- Natural language, no jargon
-- Examples for complex concepts
+- AI 在编写 Spec 时删除冗余内容
+- 专注于决策、权衡、理由
+- 删除显而易见或可推断的内容
 
-### 5. Progressive Disclosure
-**Add complexity only when pain is felt.**
+### 3. 意图优于实现 (Intent Over Implementation)
+**捕获"为什么"和"是什么"，让"如何做"自然涌现。**
 
-- Start with minimal script (create, update, list)
-- Add features as needed (search, deps, validate)
-- No premature abstraction
+- AI 强调问题定义
+- 记录设计决策
+- 实现细节保持最简
 
-**Learn more**: [First Principles](/docs/advanced/first-principles)
+### 4. 弥合差距 (Bridge the Gap)
+**人类和 AI 都必须理解。**
 
-## Comparing Approaches
+- 清晰的结构（frontmatter + 章节）
+- 自然语言，无术语
+- 为复杂概念添加示例
 
-| Aspect | Custom Script (This Tutorial) | HarnSpec Toolkit |
-|--------|------------------------------|------------------|
-| **Setup** | AI creates in 2 min | `npm install -g harnspec` |
-| **Dependencies** | Zero (pure Node.js) | Node.js + several packages |
-| **Customization** | Fully yours, modify anytime | Predefined features |
-| **Features** | Start minimal, add as needed | Full feature set upfront |
-| **Learning Curve** | Gentle (you see all the code) | Steeper (black box CLI) |
-| **Best For** | Small teams, custom needs | Teams wanting batteries-included |
-| **AI Integration** | AGENTS.md + script | MCP server + CLI |
+### 5. 渐进式披露 (Progressive Disclosure)
+**仅在感到痛苦时才增加复杂性。**
 
-**Both follow the same methodology.** Choose based on your needs.
+- 从最简脚本开始（create、update、list）
+- 按需添加功能（search、deps、validate）
+- 无过早抽象
 
-## When to Adopt the Toolkit
+**了解更多**：[第一性原理](/zh-Hans/docs/advanced/first-principles)
 
-Consider the official toolkit when:
+## 方法对比
 
-**Pain points emerge:**
-- Team size \>5 (need better collaboration)
-- \>50 specs (need advanced search/analytics)
-- Multiple projects (need shared tooling)
-- Non-technical stakeholders (need visual mode)
-- Complex dependencies (need dependency graphs)
+| 方面 | 自定义脚本（本教程） | HarnSpec 工具包 |
+|------|---------------------|-----------------|
+| **设置** | AI 在 2 分钟内创建 | `npm install -g harnspec` |
+| **依赖** | 零（纯 Node.js） | Node.js + 多个包 |
+| **定制** | 完全属于您，随时修改 | 预定义功能 |
+| **功能** | 从最简开始，按需添加 | 完整功能集 |
+| **学习曲线** | 平缓（您看到所有代码） | 更陡（黑盒 CLI） |
+| **最适合** | 小团队、自定义需求 | 想要开箱即用的团队 |
+| **AI 集成** | AGENTS.md + 脚本 | MCP 服务器 + CLI |
 
-**Toolkit advantages:**
-- Intelligent semantic search
-- Visual kanban board
-- Dependency graph visualization
-- MCP server for deep AI integration
-- Validation and complexity analysis
-- Battle-tested with edge cases handled
+**两者遵循相同的方法论。** 根据需求选择。
 
-**Migration is easy:** Specs are just markdown files. The toolkit reads your existing `specs/` directory with zero changes needed.
+## 何时采用工具包
 
-## Practice Exercise
+当出现以下情况时考虑官方工具包：
 
-**Try it now** (takes ~10 minutes):
+**痛点出现：**
+- 团队规模 \>5（需要更好的协作）
+- \>50 个 Spec（需要高级搜索/分析）
+- 多个项目（需要共享工具）
+- 非技术利益相关者（需要可视化模式）
+- 复杂依赖（需要依赖图）
 
-1. **Bootstrap**: "Set up spec system with spec.js + AGENTS.md"
-2. **Create**: "Create spec for [feature you want]"
-3. **Implement**: "Implement spec 001"
-4. **Review**: Check the code, test the feature
-5. **Complete**: AI marks spec complete automatically
+**工具包优势：**
+- 智能语义搜索
+- 可视化看板
+- 依赖图可视化
+- 深度 AI 集成的 MCP 服务器
+- 验证和复杂度分析
+- 经过实战检验，处理边缘情况
 
-**Bonus challenges:**
-- Have AI create 3 related specs with dependencies
-- Ask AI to implement them in correct order
-- Add a `search` command to spec.js
-- Create a custom template for your domain
+**迁移很容易：** Spec 只是 Markdown 文件。工具包读取您现有的 `specs/` 目录，无需任何更改。
 
-## Key Takeaways
+## 练习
 
-**AI-first development is here:**
-- **You command**, AI executes
-- **You review**, AI implements
-- **You decide**, AI documents
+**现在就试试**（约 10 分钟）：
 
-**HarnSpec methodology enables this workflow:**
-- Specs as shared memory between human and AI
-- Clear workflow: Discover → Plan → Implement → Complete
-- First principles keep specs focused and actionable
-- Zero-dependency custom tooling when needed
+1. **引导**："使用 spec.js + AGENTS.md 搭建 Spec 系统"
+2. **创建**："为 [您想要的功能] 创建 Spec"
+3. **实现**："实现 Spec 001"
+4. **审查**：检查代码，测试功能
+5. **完成**：AI 自动标记 Spec 完成
 
-**The future**: Human strategic thinking + AI tactical execution = 10x productivity
+**额外挑战：**
+- 让 AI 创建 3 个带依赖关系的相关 Spec
+- 要求 AI 按正确顺序实现它们
+- 向 spec.js 添加 `search` 命令
+- 为您的领域创建自定义模板
 
-## Next Steps
+## 关键要点
 
-**Continue with custom script:**
-- Add more commands (search, deps, validate)
-- Create custom templates for your domain
-- Integrate with your existing tools
-- Keep evolving as needs emerge
+**AI 优先的开发已经到来：**
+- **您指挥**，AI 执行
+- **您审查**，AI 实现
+- **您决策**，AI 记录
 
-**Ready for the toolkit?**
-- [Getting Started](/docs/guide/getting-started) - Install `harnspec`
-- [CLI Usage](/docs/guide/usage/cli/overview) - Full command reference
-- [MCP Integration](/docs/guide/usage/mcp-integration) - Deep AI integration
+**HarnSpec 方法论促成这一工作流：**
+- Spec 作为人类和 AI 之间的共享记忆
+- 清晰的工作流：发现 → 规划 → 实现 → 完成
+- 第一性原理保持 Spec 专注和可执行
+- 需要时零依赖自定义工具
 
-**Go deeper on methodology:**
-- [First Principles](/docs/advanced/first-principles) - Decision framework
-- [Context Engineering](/docs/advanced/context-engineering) - Optimize for AI
-- [AI-Assisted Spec Writing](/docs/advanced/ai-assisted-spec-writing) - Advanced patterns
-- [SDD Workflow](/docs/guide/terminology/sdd-workflow) - Complete workflow guide
+**未来**：人类战略思维 + AI 战术执行 = 10 倍生产力
 
-**Questions?** Check [FAQ](/docs/faq) or [file an issue](https://github.com/codervisor/harnspec/issues).
+## 下一步
+
+**继续使用自定义脚本：**
+- 添加更多命令（search、deps、validate）
+- 为您的领域创建自定义模板
+- 与现有工具集成
+- 随需求演进
+
+**准备尝试工具包？**
+- [快速开始](/zh-Hans/docs/guide/getting-started) - 安装 `harnspec`
+- [CLI 使用](/zh-Hans/docs/guide/usage/cli/overview) - 完整命令参考
+- [MCP 集成](/zh-Hans/docs/guide/usage/advanced-features/agent-configuration) - 深度 AI 集成
+
+**深入了解方法论：**
+- [第一性原理](/zh-Hans/docs/advanced/first-principles) - 决策框架
+- [上下文工程](/zh-Hans/docs/advanced/context-engineering) - 为 AI 优化
+- [AI 辅助 Spec 编写](/zh-Hans/docs/advanced/ai-assisted-spec-writing) - 高级模式
+- [SDD 工作流](/zh-Hans/docs/guide/terminology/sdd-workflow) - 完整工作流指南
+
+**有问题？** 查看 [常见问题](/zh-Hans/docs/faq) 或 [提交 Issue](https://github.com/codervisor/harnspec/issues)。
 
 ---
 
-**Remember**: The methodology is tool-agnostic. Whether you use a custom script or the full toolkit, the principles and workflow remain the same. Start simple, evolve as needed. Let AI do the heavy lifting while you focus on what matters—building great software.
+**记住**：方法论与工具无关。无论您使用自定义脚本还是完整工具包，原则和工作流保持不变。从简单开始，按需演进。让 AI 承担重任，您专注于重要的事情——构建优秀的软件。

@@ -1,222 +1,222 @@
 ---
 id: 'validation'
-title: 'Validation'
+title: '验证'
 sidebar_position: 4
 ---
 
-# Validation
+# 验证
 
-Ensure spec quality with HarnSpec's built-in validation system. Validate checks for structural issues, frontmatter correctness, and token count management to maintain optimal AI comprehension.
+使用 HarnSpec 的内置验证系统确保Spec质量。验证检查结构问题、frontmatter正确性以及Token计数管理，以保持最佳的 AI 理解能力。
 
-## Validate Command
+## 验证命令
 
-Check specs for quality issues:
+检查Spec的质量问题：
 
 ```bash
 harnspec validate
 ```
 
-Validates all specs by default. Check specific specs:
+默认验证所有Spec。检查特定Spec：
 
 ```bash
 harnspec validate <spec-1> <spec-2>
 ```
 
-## Quality Checks
+## 质量检查
 
-### Token Count Analysis
+### Token计数分析
 
-Based on **Context Economy** principle - specs must fit in AI working memory:
+基于 **上下文经济 (Context Economy)** 原则 - Spec必须适合 AI 工作记忆 (Working Memory)：
 
-- **✅ Excellent**: \<2,000 tokens - 100% AI effectiveness
-- **👍 Good**: 2,000-3,500 tokens - 95% AI effectiveness
-- **⚠️ Warning**: 3,500-5,000 tokens - 85% AI effectiveness
-- **🔴 Error**: >5,000 tokens - 70% AI effectiveness, should split
+- **✅ 优秀**：\<2,000 个Token - 100% AI 有效性
+- **👍 良好**：2,000-3,500 个Token - 95% AI 有效性
+- **⚠️ 警告**：3,500-5,000 个Token - 85% AI 有效性
+- **🔴 错误**：>5,000 个Token - 70% AI 有效性，应该拆分
 
-**Rationale**: 
-- AI context windows: Limited and expensive
-- Quality degradation starts before 50K token hard limits
-- Human + AI working memory: ~2-3K tokens for optimal comprehension
-- Physics + Biology + Economics = Hard limit
+**理由**：
+- AI 上下文窗口：有限且昂贵
+- 质量下降在 50K Token硬限制之前就开始
+- 人类 + AI 工作记忆：约 2-3K Token 以实现最佳理解
+- 物理 + 生物 + 经济 = 硬限制
 
-**Line Count Backstop**:
-HarnSpec also checks line counts as a safety net (400 warning / 500 max), but **token count is the primary metric** since it directly measures AI working memory consumption.
+**行数支撑**：
+HarnSpec 也检查行数作为安全网（400 行警告 / 500 行最大值），但 **Token计数是主要指标**,因为它直接测量 AI 工作记忆消耗。
 
-### Sub-Spec Validation
+### 子 Spec验证
 
-Checks sub-spec files (DESIGN.md, TESTING.md, IMPLEMENTATION.md, etc.):
+检查子 Spec文件（DESIGN.md、TESTING.md、IMPLEMENTATION.md 等）：
 
-- Each sub-spec also follows token limits
-- Total spec size (main + sub-specs) tracked
-- Recommends splitting if any file exceeds threshold
+- 每个子 Spec也遵循Token限制
+- 跟踪总Spec大小（主Spec + 子 Spec）
+- 如果任何文件超过阈值，建议拆分
 
-### Frontmatter Validation
+### frontmatter验证
 
-Ensures required fields are present and valid:
+确保所需字段存在且有效：
 
-**Required Fields:**
-- `status`: Must be valid (planned, in-progress, complete, etc.)
-- `priority`: Must be valid (high, medium, low, none)
-- `created`: Valid date format
+**必需字段：**
+- `status`：必须有效（planned、in-progress、complete 等）
+- `priority`：必须有效（high、medium、low、none）
+- `created`：有效日期格式
 
-**Optional Fields (validated if present):**
-- `tags`: Proper format
-- `depends_on`: Valid spec references
-- Custom fields: Proper types
+**可选字段（如果存在则验证）：**
+- `tags`：正确格式
+- `depends_on`：有效的Spec引用
+- 自定义字段：正确类型
 
-### Structure Validation
+### 结构验证
 
-Checks spec organization:
+检查Spec组织：
 
-- README.md exists (main spec file)
-- Sub-specs follow naming conventions
-- No orphaned or duplicate content
+- README.md 存在（主Spec文件）
+- 子 Spec遵循命名约定
+- 没有孤立或重复的内容
 
-## Validation Output
+## 验证输出
 
-### Clean Validation
+### 清洁验证
 
 ```bash
 $ harnspec validate
 
-✅ All specs valid!
+✅ 所有Spec有效！
 
-Summary:
-  • 45 specs checked
-  • 0 errors
-  • 0 warnings
+摘要：
+  • 检查了 45 个Spec
+  • 0 个错误
+  • 0 个警告
 ```
 
-### With Warnings
+### 有警告
 
 ```bash
 $ harnspec validate
 
-⚠️  Warnings found:
+⚠️  发现警告：
 
 058-docs-overview-polish/README.md
-  ⚠️  Token count: 4,200 tokens (85% AI effectiveness)
-  → Consider: Simplifying or splitting into sub-specs
+  ⚠️  Token计数：4,200 个Token（85% AI 有效性）
+  → 考虑：简化或拆分为子 Spec
 
-Summary:
-  • 45 specs checked
-  • 0 errors
-  • 1 warning
+摘要：
+  • 检查了 45 个Spec
+  • 0 个错误
+  • 1 个警告
 ```
 
-### With Errors
+### 有错误
 
 ```bash
 $ harnspec validate
 
-❌ Errors found:
+❌ 发现错误：
 
 042-complex-spec/README.md
-  🔴 Token count: 5,800 tokens (70% AI effectiveness)
-  → Action: Split into sub-specs to improve AI comprehension
+  🔴 Token计数：5,800 个Token（70% AI 有效性）
+  → 操作：拆分为子 Spec以提高 AI 理解能力
 
 043-broken-spec/README.md
-  🔴 Invalid status: 'in_progress' (should be 'in-progress')
-  🔴 Missing required field: 'created'
+  🔴 无效状态：'in_progress'（应该是 'in-progress'）
+  🔴 缺少必需字段：'created'
 
-Summary:
-  • 45 specs checked
-  • 3 errors
-  • 0 warnings
+摘要：
+  • 检查了 45 个Spec
+  • 3 个错误
+  • 0 个警告
 ```
 
-## Custom Validation Options
+## 自定义验证选项
 
-### Set Custom Thresholds
+### 设置自定义阈值
 
 ```bash
-# Stricter token threshold
+# 更严格的Token阈值
 harnspec validate --warning-threshold 4000
 
-# More lenient threshold
+# 更宽松的阈值
 harnspec validate --warning-threshold 6000
 
-# Custom line count backstop
+# 自定义行数支撑
 harnspec validate --max-lines 500
 ```
 
-### Validate Specific Aspects
+### 验证特定方面
 
 ```bash
-# Only check complexity (tokens)
+# 仅检查复杂性（Token）
 harnspec validate --check complexity
 
-# Only check frontmatter
+# 仅检查frontmatter
 harnspec validate --check frontmatter
 
-# Only check structure
+# 仅检查结构
 harnspec validate --check structure
 ```
 
-## Fixing Validation Issues
+## 修复验证问题
 
-### Token Count Violations
+### Token计数违规
 
-**Problem**: Spec exceeds 5,000 tokens (70% AI effectiveness)
+**问题**：Spec超过 5,000 个Token（70% AI 有效性）
 
-**Solution**: Split using sub-specs
+**解决方案**：使用子 Spec拆分
 
 ```markdown
-# Before: Single 5,800-token spec
-README.md (5,800 tokens) 🔴 - 70% AI effectiveness
+# 之前：单个 5,800 TokenSpec
+README.md (5,800 Token) 🔴 - 70% AI 有效性
 
-# After: Split into focused sub-specs
-README.md (2,000 tokens) ✅ - Overview, decision, summary (100% effectiveness)
-DESIGN.md (1,500 tokens) ✅ - Detailed design (100% effectiveness)
-IMPLEMENTATION.md (1,500 tokens) ✅ - Implementation plan (100% effectiveness)
+# 之后：拆分为专注的子 Spec
+README.md (2,000 Token) ✅ - 概述、决策、摘要（100% 有效性）
+DESIGN.md (1,500 Token) ✅ - 详细设计（100% 有效性）
+IMPLEMENTATION.md (1,500 Token) ✅ - 实现计划（100% 有效性）
 ```
 
-**Why this works**:
-- Each file stays under 2,000 tokens for optimal AI comprehension
-- AI can focus on one aspect at a time
-- Humans can navigate to relevant sections quickly
+**为什么这样做有效**：
+- 每个文件保持在 2,000 个Token 以下以实现最佳 AI 理解
+- AI 可以一次专注于一个方面
+- 人类可以快速导航到相关部分
 
-### Invalid Frontmatter
+### 无效的frontmatter
 
-**Problem**: Invalid or missing frontmatter fields
+**问题**：frontmatter字段无效或缺失
 
-**Solution**: Use `harnspec update` to fix:
+**解决方案**：使用 `harnspec update` 修复：
 
 ```bash
-# Fix status
+# 修复状态
 harnspec update <spec> --status in-progress
 
-# Fix priority
+# 修复优先级
 harnspec update <spec> --priority high
 
-# Fix tags
+# 修复标签
 harnspec update <spec> --tags feature,api
 ```
 
-### Structure Issues
+### 结构问题
 
-**Problem**: Missing README.md or malformed sub-specs
+**问题**：缺少 README.md 或格式错误的子 Spec
 
-**Solution**: 
-- Ensure README.md exists as main spec file
-- Follow sub-spec naming: DESIGN.md, TESTING.md, etc.
-- Use proper frontmatter in all files
+**解决方案**：
+- 确保 README.md 作为主Spec文件存在
+- 遵循子 Spec命名：DESIGN.md、TESTING.md 等
+- 在所有文件中使用正确的frontmatter
 
-## Validation Workflows
+## 验证工作流程
 
-### Pre-Commit Check
+### 提交前检查
 
-Run before committing:
+提交前运行：
 
 ```bash
 harnspec validate
 ```
 
-Fix any errors before committing changes.
+在提交更改之前修复任何错误。
 
-### CI/CD Integration
+### CI/CD 集成
 
-Add to your CI pipeline:
+添加到您的 CI 管道：
 
 ```yaml
 # .github/workflows/validate.yml
@@ -234,66 +234,66 @@ jobs:
       - run: harnspec validate
 ```
 
-### Regular Review
+### 定期审查
 
-Weekly spec health check:
+每周Spec健康检查：
 
 ```bash
-# Check overall health
+# 检查整体健康状况
 harnspec validate
 
-# Detailed analysis
+# 详细分析
 harnspec stats --full
 
-# Review large specs (token focus)
+# 审查大型Spec（Token焦点）
 harnspec tokens --all --include-sub-specs
 ```
 
-## When to Split
+## 何时拆分
 
-Split when:
-- ✅ Spec exceeds ~3,500 tokens (Context Economy warning)
-- ✅ Multiple distinct concerns (different topics)
-- ✅ Spec takes >10 minutes to read
-- ✅ Frequent editing causes confusion
+在以下情况下拆分：
+- ✅ Spec超过约 3,500 个Token（上下文经济警告）
+- ✅ 多个不同的关注点（不同主题）
+- ✅ Spec需要超过 10 分钟阅读
+- ✅ 频繁编辑导致混乱
 
-Don't split when:
-- ❌ Under ~2,000 tokens and focused
-- ❌ Single cohesive concept
-- ❌ Quick to read and understand
+在以下情况下不要拆分：
+- ❌ 少于约 2,000 个Token且专注
+- ❌ 单一的连贯概念
+- ❌ 快速阅读和理解
 
-## When to Simplify
+## 何时简化
 
-Simplify when:
-- Excessive detail for simple feature
-- Repeated information
-- Low signal-to-noise ratio
-- Future speculation
+在以下情况下简化：
+- 简单功能的过多细节
+- 重复信息
+- 低信噪比 (Signal-to-Noise)
+- 未来推测
 
-## When to Accept Warnings
+## 何时接受警告
 
-Sometimes warnings are acceptable:
-- Temporarily high during active development
-- Complex feature needing comprehensive detail
-- Splitting would reduce clarity
+有时警告是可以接受的：
+- 在积极开发期间暂时较高
+- 需要全面细节的复杂功能
+- 拆分会降低清晰度
 
-Always re-evaluate later.
+始终稍后重新评估。
 
-## Best Practices
+## 最佳实践
 
-1. **Validate early** - Before committing
-2. **Fix warnings promptly** - Don't let them accumulate
-3. **Split around 3,500 tokens** - Use sub-specs for complex features
-4. **Automate** - Add to CI/CD pipeline
-5. **Regular reviews** - Weekly health checks
+1. **尽早验证** - 提交前
+2. **及时修复警告** - 不要让它们累积
+3. **在约 3,500 个Token时拆分** - 对复杂功能使用子 Spec
+4. **自动化** - 添加到 CI/CD 管道
+5. **定期审查** - 每周健康检查
 
-## Next Steps
+## 下一步
 
-- **[Creating & Managing Specs](/docs/guide/usage/cli/creating-managing)** - Basic operations
-- **[Finding Specs](/docs/guide/usage/cli/finding-specs)** - Search and discovery
-- **[Project Management](/docs/guide/usage/cli/project-management)** - Board views and dependencies
-- **[CLI Reference](/docs/reference/cli)** - Complete command documentation
+- **[创建和管理Spec](/zh-Hans/docs/guide/usage/cli/creating-managing)** - 基本操作
+- **[查找Spec](/zh-Hans/docs/guide/usage/cli/finding-specs)** - 搜索和发现
+- **[项目管理](/zh-Hans/docs/guide/usage/cli/project-management)** - 看板视图和依赖关系
+- **[CLI 参考](/zh-Hans/docs/reference/cli)** - 完整命令文档
 
 ---
 
-**Reference**: See [First Principles](/docs/advanced/first-principles) for the rationale behind Context Economy and token management.
+**参考**：请参阅[第一性原理](/zh-Hans/docs/advanced/first-principles)了解上下文经济和Token管理背后的理由。

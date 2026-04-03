@@ -1,0 +1,337 @@
+---
+title: Managing Multiple Features
+sidebar_position: 2
+description: Work on multiple related specs with confidence using search, dependencies, and project visibility
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Managing Multiple Features
+
+Real projects have multiple features in flight. Learn how to manage them without losing context or duplicating work.
+
+**Time**: 15 minutes  
+**Outcome**: Understand project-level spec management
+
+:::info Prerequisites
+- Completed [Your First Feature with AI](./first-spec-with-ai)
+- Basic familiarity with HarnSpec commands
+:::
+
+## Try It Now
+
+Get hands-on with a pre-configured dashboard project:
+
+```bash
+npx harnspec init --example dashboard-widgets
+cd dashboard-widgets
+npm install
+npm run dev
+```
+
+Then prompt your AI tool:
+
+<Tabs groupId="ai-tool">
+  <TabItem value="claude" label="Claude Code">
+    In your terminal with Claude Code:
+
+    ```bash
+    # Make sure you have Claude Code installed
+    # macOS/Linux
+    curl -fsSL https://claude.ai/install.sh | bash
+    # Windows (PowerShell)
+    irm https://claude.ai/install.ps1 | iex
+
+    # Create soft link to CLAUDE.md from the system prompt AGENTS.md
+    ln -s AGENTS.md CLAUDE.md
+
+    # Send the prompt to Claude Code
+    claude "Help me add three new widgets to this dashboard"
+    ```
+  </TabItem>
+  <TabItem value="codex" label="Codex CLI">
+    In your terminal with OpenAI Codex CLI:
+
+    ```bash
+    # Make sure you have Codex CLI installed
+    npm install -g @openai/codex
+
+    # Send the prompt to Codex CLI
+    codex "Help me add three new widgets to this dashboard"
+    ```
+  </TabItem>
+  <TabItem value="gemini" label="Gemini CLI">
+    In your terminal with Gemini CLI:
+
+    ```bash
+    # Make sure you have Gemini CLI installed
+    npm install -g @anthropic-ai/gemini-cli
+
+    # Create soft link to GEMINI.md from the system prompt AGENTS.md
+    ln -s AGENTS.md GEMINI.md
+
+    # Send the prompt to Gemini CLI
+    gemini "Help me add three new widgets to this dashboard"
+    ```
+  </TabItem>
+  <TabItem value="copilot" label="GitHub Copilot CLI">
+    In your terminal with GitHub Copilot CLI:
+
+    ```bash
+    # Make sure you have GitHub Copilot CLI installed (requires Node.js v22+)
+    npm install -g @github/copilot
+
+    # Send the prompt to Copilot CLI (programmatic mode)
+    copilot -p "Help me add three new widgets to this dashboard" --allow-all-tools
+    ```
+  </TabItem>
+  <TabItem value="ide" label="IDE" default>
+    In your IDE with an AI coding assistant (GitHub Copilot, Claude, Cursor, etc.):
+
+    1. Open the project in your IDE
+    2. Open your AI assistant chat panel
+    3. Send the prompt: _"Help me add three new widgets to this dashboard"_
+  </TabItem>
+</Tabs>
+
+**Want to understand what happens under the hood?** The sections below walk through each step in detail.
+
+## The Scenario
+
+You're building a dashboard with three widgets that need to work together:
+1. **List contacts** - Display contact table
+2. **Create contact** - Add new contact form
+3. **Bulk import** - CSV upload for multiple contacts
+
+Each feature is distinct but shares common code (contact model, validation). You need to track all three without losing sight of dependencies.
+
+Starting point:
+```
+your-project/
+├── src/
+│   ├── models/
+│   │   └── contact.ts           # Shared model
+│   └── components/
+│       └── dashboard/
+└── specs/
+    └── (empty - let's populate it)
+```
+
+## Creating Multiple Specs
+
+Ask your AI:
+
+```
+Create three specs for dashboard features:
+1. List contacts in a table (read-only, pagination)
+2. Create contact form (name, email, phone validation)
+3. Bulk import contacts from CSV (validation, error handling)
+
+Tag them all with "dashboard" and "contacts".
+```
+
+The AI creates:
+```
+specs/
+├── 021-contact-list/
+├── 022-contact-create/
+└── 023-contact-bulk-import/
+```
+
+Each with `status: planned` and tags `['dashboard', 'contacts']`.
+
+## Seeing the Big Picture
+
+List all your specs:
+```bash
+harnspec list
+```
+
+Output:
+```
+📋 HarnSpec Project Overview
+
+┌─────┬────────────────────────┬───────────┬──────────┬──────────┐
+│ Seq │ Name                   │ Status    │ Priority │ Tags     │
+├─────┼────────────────────────┼───────────┼──────────┼──────────┤
+│ 021 │ contact-list           │ planned   │ medium   │ dash...  │
+│ 022 │ contact-create         │ planned   │ medium   │ dash...  │
+│ 023 │ contact-bulk-import    │ planned   │ high     │ dash...  │
+└─────┴────────────────────────┴───────────┴──────────┴──────────┘
+```
+
+Use the board view for workflow status:
+```bash
+harnspec board
+```
+
+Shows Kanban columns: Planned → In Progress → Complete
+
+**Why this matters:** At a glance, you know what's queued, what's active, and what's done. No spreadsheet needed.
+
+## Finding Related Specs
+
+Search by tag:
+```bash
+harnspec list --tags contacts
+```
+
+Or ask your AI:
+```
+Show me all dashboard specs.
+```
+
+The AI runs the search and shows you the results with context.
+
+Search by keyword:
+```bash
+harnspec search "validation"
+```
+
+Finds specs mentioning validation across all content. Perfect for avoiding duplicate work.
+
+## Working in Parallel
+
+Start work on the list feature:
+```
+Implement spec 021.
+```
+
+AI implements the contact list. While that's in review, you start another:
+```
+Implement spec 022.
+```
+
+Check status anytime:
+```bash
+harnspec list --status in-progress
+```
+
+Shows:
+```
+│ 021 │ contact-list        │ in-progress │
+│ 022 │ contact-create      │ in-progress │
+```
+
+**Best practice:** Keep 2-3 specs in-progress max. More than that signals blocked work or context switching overhead.
+
+## Managing Dependencies
+
+Bulk import depends on the contact model and validation from the create form. Document this:
+
+```
+Link spec 023 as depending on spec 022 (needs validation logic first).
+```
+
+Or manually:
+```bash
+harnspec link 023 --depends-on 022
+```
+
+Now when you view spec 023:
+```markdown
+---
+depends_on: [022]
+---
+
+# Contact Bulk Import
+
+> **Dependencies**: [022-contact-create](../022-contact-create)
+```
+
+The AI knows to check spec 022 before implementing 023. It won't start bulk import until contact creation is complete.
+
+**View dependencies:**
+```bash
+harnspec deps 023
+```
+
+Shows:
+```
+023-contact-bulk-import
+└─ depends on → 022-contact-create
+```
+
+## Completing the Project
+
+As you finish each feature:
+```bash
+harnspec update 021 --status complete
+harnspec update 022 --status complete
+harnspec update 023 --status complete
+```
+
+Check project health:
+```bash
+harnspec stats
+```
+
+Output:
+```
+📊 Project Statistics
+
+Status Distribution:
+  Complete:     3
+  In Progress:  0
+  Planned:      0
+
+Recent Activity:
+  ✓ 023-contact-bulk-import completed 2 hours ago
+  ✓ 022-contact-create completed 1 day ago
+  ✓ 021-contact-list completed 1 day ago
+```
+
+**Satisfaction:** Clear record of what shipped. Future you (or teammates) can see exactly what was built and when.
+
+## What Just Happened
+
+You managed a multi-spec project without chaos:
+
+**Without HarnSpec:**
+- Sticky notes or issue tracker for tracking
+- No visibility into dependencies
+- Hard to find related work
+- Status buried in git commits
+
+**With HarnSpec:**
+- Single source of truth (`harnspec list`)
+- Dependency tracking prevents ordering mistakes
+- Search finds related work instantly
+- Status tracking built-in
+
+The CLI commands + AI integration give you project visibility without leaving your editor.
+
+## Key Techniques
+
+**Discovery:**
+- `harnspec list` - See everything
+- `harnspec board` - Visualize workflow
+- `harnspec search` - Find by keyword
+- `harnspec list --tags <tag>` - Filter by category
+
+**Management:**
+- `harnspec deps` - Show dependencies
+- `harnspec link --depends-on` - Document blocking work
+- `harnspec stats` - Project health check
+- Multiple specs `in-progress` OK if independent
+
+**AI Integration:**
+- Ask "Show me dashboard specs" → AI runs search
+- Ask "What's blocking spec X?" → AI checks deps
+- Ask "Update spec status" → AI runs command
+
+## Next Steps
+
+Practice with your project:
+- Create 2-3 related specs
+- Tag them by feature area
+- Try `harnspec list`, `board`, `search`
+- Document one dependency
+
+**Learn more:**
+- [Refactoring with Specs →](./refactoring-with-specs) - Technical specs for architecture work
+- [Finding Specs](/docs/guide/usage/cli/finding-specs) - Advanced search patterns
+- [Project Management](/docs/guide/usage/cli/project-management) - Board, stats, dependencies
+
+**Questions?** See [FAQ](/docs/faq) or [ask the community](https://github.com/codervisor/harnspec/discussions).

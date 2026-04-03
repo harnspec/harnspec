@@ -1,25 +1,25 @@
 ---
 id: ai-assisted-spec-writing
-title: AI Assisted Spec Writing
+title: 'AI 辅助的Spec编写'
 sidebar_position: 6
 ---
 
-HarnSpec specs can be written by humans, AI, or co-created collaboratively. This guide covers how to work with AI to draft, refine, and maintain specs while keeping them lean and actionable.
+HarnSpec Spec可以由人类编写、AI 编写，或协作共同创建。本指南介绍如何与 AI 合作起草、完善和维护Spec，同时保持它们精简且可操作。
 
-## The Three Modes
+## 三种模式
 
 ```mermaid
 graph LR
-    A[Mode 1:<br/>Human-Written] --> B[Human writes spec]
-    B --> C[AI implements]
+    A[模式 1:<br/>人类编写] --> B[人类编写Spec]
+    B --> C[AI 实施]
     
-    D[Mode 2:<br/>AI-Drafted] --> E[AI drafts spec]
-    E --> F[Human refines]
-    F --> G[AI implements]
+    D[模式 2:<br/>AI 起草] --> E[AI 起草Spec]
+    E --> F[人类完善]
+    F --> G[AI 实施]
     
-    H[Mode 3:<br/>Co-Created] --> I[Human + AI iterate]
-    I --> J[Converge on spec]
-    J --> K[AI implements]
+    H[模式 3:<br/>共同创建] --> I[人类 + AI 迭代]
+    I --> J[聚焦于Spec]
+    J --> K[AI 实施]
     
     style A fill:#e1f5ff,stroke:#1e3a8a,stroke-width:2px,color:#1e3a8a
     style D fill:#fff4e1,stroke:#92400e,stroke-width:2px,color:#92400e
@@ -28,47 +28,47 @@ graph LR
     linkStyle default stroke-width:1px
 ```
 
-### Mode 1: Human-Written, AI-Implemented (Traditional)
-You write the spec from scratch, AI implements from it. Best when you have deep domain knowledge and clear vision.
+### 模式 1：人类编写，AI 实施（传统）
+您从头编写Spec，AI 根据它实施。当您拥有深厚的领域知识和清晰的愿景时最佳。
 
-### Mode 2: AI-Drafted, Human-Refined (Assisted)
-AI drafts the initial spec from your intent, you review and refine. Best for getting started quickly or when structure is unclear.
+### 模式 2：AI 起草，人类完善（辅助）
+AI 根据您的意图起草初始Spec，您审查并完善。当需要快速开始或结构不清晰时最佳。
 
-### Mode 3: Co-Created Iteratively (Collaborative)
-You and AI build the spec together through conversation, progressively refining. Best for complex features where discovery happens during specification.
+### 模式 3：迭代共同创建（协作）
+您和 AI 通过对话共同构建Spec，逐步完善。当复杂功能在Spec过程中需要探索时最佳。
 
-**All three modes are valid.** Choose based on your context, not ideology.
+**所有三种模式都是有效的。** 根据您的上下文选择，而非意识形态。
 
-## When to Use AI-Assisted Spec Writing
+## 何时使用 AI 辅助的Spec编写
 
-### Write a spec (with AI help) when:
+### 编写Spec（在 AI 帮助下）当：
 
-✅ **Intent needs to persist** - Decisions, rationale, and context should outlive the conversation  
-✅ **Multiple stakeholders need alignment** - Can't have everyone chat with AI individually  
-✅ **Complexity warrants structure** - Conversation would drift or lose important details  
-✅ **Compliance or audit trail required** - Formal documentation needed  
-✅ **Conversation has clarified intent** - You've iterated enough to know what you want  
+✅ **意图需要持久存在** - 决策、理由和上下文应该超越对话  
+✅ **多个利益相关者需要对齐** - 不能让每个人单独与 AI 聊天  
+✅ **复杂性需要结构** - 对话会漂移或丢失重要细节  
+✅ **需要合规或审计跟踪** - 需要正式文档  
+✅ **对话已澄清意图** - 您已足够迭代，知道您想要什么  
 
-### Skip the spec and just converse when:
+### 跳过Spec，仅对话当：
 
-❌ **Quick feature with no ambiguity** - AI can implement directly from clear instruction  
-❌ **Exploratory work** - Still discovering what to build  
-❌ **One-off prototype** - No future reference needed  
-❌ **Context is already clear in codebase** - Implementation speaks for itself  
+❌ **快速功能且无歧义** - AI 可以直接从清晰指令实施  
+❌ **探索性工作** - 仍在发现要构建什么  
+❌ **一次性原型** - 不需要未来参考  
+❌ **代码库中上下文已清晰** - 实施本身说明了一切  
 
-**Key insight:** AI-assisted authoring makes specs MORE accessible (easier to create), but doesn't change WHEN they're needed. The decision point is still: **"Does formalization add value?"**
+**关键见解**：AI 辅助创作使Spec **更易访问**（更容易创建），但不会改变 **何时** 需要它们。决策点仍然是：** "形式化是否增加价值？" **
 
-## The 5-Step Workflow
+## 5 步工作流
 
 ```mermaid
 flowchart LR
-    A["1. Articulate<br/>Intent"] --> B["2. AI Drafts<br/>Spec"]
-    B --> C["3. Review &<br/>Refine"]
-    C --> D["4. Checkpoint<br/>& Commit"]
-    D --> E["5. Implement<br/>from Spec"]
+    A["1. 表达<br/>意图"] --> B["2. AI 起草<br/>Spec"]
+    B --> C["3. 审查与<br/>完善"]
+    C --> D["4. 检查点<br/>与提交"]
+    D --> E["5. 从Spec<br/>实施"]
     
-    C -.->|"Needs work"| B
-    E -.->|"Learn & update"| C
+    C -.->|"需要工作"| B
+    E -.->|"学习与更新"| C
     
     style A fill:#e1f5ff,stroke:#1e3a8a,stroke-width:2px,color:#1e3a8a
     style B fill:#fff4e1,stroke:#92400e,stroke-width:2px,color:#92400e
@@ -79,129 +79,129 @@ flowchart LR
     linkStyle default stroke-width:1px
 ```
 
-### Step 1: Articulate Intent
+### 步骤 1：表达意图
 
-Start with a clear problem statement or desired outcome. Don't worry about structure yet.
+从清晰的问题陈述或期望结果开始。不要担心结构。
 
-**Good prompts:**
-- "We need to reduce user onboarding time from 14 to 5 minutes"
-- "Add rate limiting to prevent API abuse"
-- "Migrate authentication to support SSO"
+**好的提示**：
+- "我们需要将用户入职时间从 14 分钟减少到 5 分钟"
+- "添加速率限制以防止 API 滥用"
+- "迁移认证以支持 SSO"
 
-**Poor prompts:**
-- "Make the app better" (too vague)
-- "Add a button" (too trivial for a spec)
-- "Implement OAuth 2.0 with PKCE flow using JWT tokens..." (jumping to implementation)
+**不好的提示**：
+- "让应用更好"（太模糊）
+- "添加一个按钮"（对于Spec来说太琐碎）
+- "使用带 PKCE 流程的 OAuth 2.0 实现 JWT tokens..."（跳到实现）
 
-### Step 2: AI Drafts Initial Spec
+### 步骤 2：AI 起草初始Spec
 
-Ask AI to draft a spec following HarnSpec principles:
+要求 AI 遵循 HarnSpec 原则起草Spec：
 
 ```
-Draft a HarnSpec for [your intent]. Follow these principles:
-- Context Economy: Keep it under 300 lines
-- Signal-to-Noise: Every sentence must inform decisions
-- Intent Over Implementation: Focus on WHY and WHAT, not HOW
-- Include: Problem, Solution, Success Criteria, Trade-offs
+为 [您的意图] 起草一个 HarnSpec。遵循这些原则：
+- 上下文经济 (Context Economy)：保持在 300 行以下
+- 信噪比 (Signal-to-Noise)：每个句子都必须提供决策信息
+- 意图优于实现 (Intent Over Implementation)：专注于为什么和什么，而非如何
+- 包括：问题、解决方案、成功标准、权衡
 ```
 
-**What to expect:**
-- Structured sections (Problem, Solution, Success Criteria)
-- Initial implementation ideas
-- Possibly some verbosity (AI tends to over-explain)
+**期望什么**：
+- 结构化部分（问题、解决方案、成功标准）
+- 初始实现想法
+- 可能有些冗长（AI 倾向于过度解释）
 
-### Step 3: Review and Refine
+### 步骤 3：审查和完善
 
-This is where you add value. Check for:
+这是您增加价值的地方。检查：
 
-**Context Economy violations:**
-- Is it under 300 lines? (Warning at 300, red flag at 400+)
-- Can you read it in 5-10 minutes?
-- Can you hold the structure in your head?
+**上下文经济违规**：
+- 是否在 300 行以下？（300 行警告，400+ 行红色标志）
+- 您能在 5-10 分钟内阅读吗？
+- 您能在脑海中记住结构吗？
 
-**Signal-to-Noise issues:**
-- Does every sentence inform a decision?
-- Is there obvious or inferable content that can be cut?
-- Are there "maybe future" features that should be removed?
+**信噪比问题**：
+- 每个句子都提供决策信息吗？
+- 是否有显而易见或可推断的内容可以删除？
+- 是否有应该删除的"未来可能"功能？
 
-**Missing intent:**
-- Is the "why" clear?
-- Are trade-offs explained?
-- Are success criteria measurable?
+**缺少意图**：
+- "为什么"清晰吗？
+- 权衡是否解释了？
+- 成功标准可测量吗？
 
-**Prompt for refinement:**
+**完善提示**：
 ```
-Review this spec against HarnSpec first principles:
-1. Cut anything that doesn't inform decisions (Signal-to-Noise)
-2. Ensure it's under 300 lines (Context Economy)
-3. Add missing "why" and trade-offs (Intent Over Implementation)
-4. Make success criteria measurable
+根据 HarnSpec 第一性原理审查此Spec：
+1. 删除任何不提供决策信息的内容（信噪比）
+2. 确保在 300 行以下（上下文经济）
+3. 添加缺少的"为什么"和权衡（意图优于实现）
+4. 使成功标准可测量
 ```
 
-### Step 4: Checkpoint and Commit
+### 步骤 4：检查点和提交
 
-Once refined, the spec becomes a **checkpoint** - a formalized agreement between you and AI about what to build.
+一旦完善，Spec成为 **检查点** - 您和 AI 之间关于要构建什么的正式协议。
 
-**Mark as checkpoint:**
-- Save the spec file
-- Mark status as "planned" or "in-progress"
-- Use `harnspec create` or update frontmatter
-- Reference spec in commits and PRs
+**标记为检查点**：
+- 保存Spec文件
+- 将状态标记为 "planned" 或 "in-progress"
+- 使用 `harnspec create` 或更新 frontmatter
+- 在提交和 PR 中引用Spec
 
-**The spec now serves as:**
-- Source of truth for implementation
-- Context for future conversations
-- Documentation for team alignment
-- Artifact for compliance/audit
+**Spec现在充当**：
+- 实施的真相来源
+- 未来对话的上下文
+- 团队对齐的文档
+- 合规/审计的工件
 
-### Step 5: Implement from Spec
+### 步骤 5：从Spec实施
 
-AI now implements from the refined spec, not the original conversation. The spec is the contract.
+AI 现在从完善的Spec实施，而非原始对话。Spec是契约。
 
-**Benefits:**
-- Clear scope (what's in/out)
-- Measurable success criteria
-- Preserved rationale for future reference
-- Team alignment on approach
+**好处**：
+- 清晰的范围（什么在内/外）
+- 可测量的成功标准
+- 为未来参考保留理由
+- 方法上的团队对齐
 
-## Common Patterns
+## 常见模式
 
 ```mermaid
 graph LR
     subgraph P1[" "]
         direction TB
-        P1T["<b>Pattern 1: Conversation → Formalize</b>"]
-        P1A["Explore (5-7 turns)"] --> P1B["Intent clear"]
-        P1B --> P1C["Draft spec"]
-        P1C --> P1D["Implement"]
+        P1T["模式 1: 对话 → 形式化"]
+        P1A["探索 (5-7 轮)"] --> P1B["意图清晰"]
+        P1B --> P1C["起草Spec"]
+        P1C --> P1D["实施"]
         P1T ~~~ P1A
     end
     
     subgraph P2[" "]
         direction TB
-        P2T["<b>Pattern 2: Spec-First → Iterate</b>"]
-        P2A["Write initial spec"] --> P2B["Start implementation"]
-        P2B --> P2C["Discover edge cases"]
-        P2C --> P2D["Update spec"]
+        P2T["模式 2: Spec优先 → 迭代"]
+        P2A["编写初始Spec"] --> P2B["开始实施"]
+        P2B --> P2C["发现边缘情况"]
+        P2C --> P2D["更新Spec"]
         P2D --> P2B
         P2T ~~~ P2A
     end
     
     subgraph P3[" "]
         direction TB
-        P3T["<b>Pattern 3: Rapid Draft</b>"]
-        P3A["Clear requirement"] --> P3B["AI drafts spec"]
-        P3B --> P3C["Quick review"]
-        P3C --> P3D["Implement immediately"]
+        P3T["模式 3: 快速起草"]
+        P3A["清晰需求"] --> P3B["AI 起草Spec"]
+        P3B --> P3C["快速审查"]
+        P3C --> P3D["立即实施"]
         P3T ~~~ P3A
     end
     
     subgraph P4[" "]
         direction TB
-        P4T["<b>Pattern 4: Exploratory → Summarize</b>"]
-        P4A["Long exploration"] --> P4B["Try approaches"]
-        P4B --> P4C["Summarize as spec"]
-        P4C --> P4D["Refine & implement"]
+        P4T["模式 4: 探索性 → 总结"]
+        P4A["长时间探索"] --> P4B["尝试方法"]
+        P4B --> P4C["总结为Spec"]
+        P4C --> P4D["完善与实施"]
         P4T ~~~ P4A
     end
     
@@ -222,82 +222,82 @@ graph LR
     linkStyle default stroke:#333,stroke-width:2px
 ```
 
-### Pattern 1: Conversation → Formalize → Implement
+### 模式 1：对话 → 形式化 → 实施
 
-Most common. You iterate with AI to clarify intent, then formalize into spec before implementation.
+最常见。您与 AI 迭代以澄清意图，然后在实施前形式化为Spec。
 
-**Example:**
-1. Conversation: "I want faster user onboarding"
-2. AI asks clarifying questions (current flow, bottlenecks, constraints)
-3. After 5-7 turns, intent is clear
-4. Formalize: "Draft a spec for 2-screen onboarding with deferred profile enrichment"
-5. Implement from refined spec
+**示例**：
+1. 对话："我想要更快的用户入职"
+2. AI 提出澄清问题（当前流程、瓶颈、约束）
+3. 5-7 轮后，意图清晰
+4. 形式化："为 2 屏入职与延迟配置文件丰富起草Spec"
+5. 从完善的Spec实施
 
-**When to use:** Most projects. Good balance of exploration and structure.
+**何时使用**：大多数项目。探索和结构的良好平衡。
 
-### Pattern 2: Spec-First → Iterate During Implementation
+### 模式 2：Spec优先 → 实施期间迭代
 
-Write spec upfront, but evolve it as you learn during implementation (Spec-Driven Development style).
+预先编写Spec，但在实施过程中随着学习演进它（Spec驱动开发 (Spec-Driven Development, SDD)风格）。
 
-**Example:**
-1. Draft spec for new API endpoint
-2. Start implementation
-3. Discover edge cases or better approaches
-4. Update spec with learnings
-5. Continue implementation with updated context
+**示例**：
+1. 为新 API 端点起草Spec
+2. 开始实施
+3. 发现边缘情况或更好的方法
+4. 用学习更新Spec
+5. 使用更新的上下文继续实施
 
-**When to use:** When initial requirements are clear but details will emerge during work.
+**何时使用**：当初始需求清晰但细节将在工作期间出现时。
 
-### Pattern 3: Rapid Draft → Immediate Implementation
+### 模式 3：快速起草 → 立即实施
 
-AI drafts spec and implements in one flow. Spec serves as snapshot of decisions made.
+AI 起草Spec并在一个流程中实施。Spec作为所做决策的快照。
 
-**Example:**
-1. "Build rate limiting for API - 100 req/min per user"
-2. AI drafts minimal spec (Problem, Solution, Success Criteria)
-3. You approve or tweak
-4. AI implements immediately
-5. Spec exists for future reference
+**示例**：
+1. "为 API 构建速率限制 - 每用户 100 req/min"
+2. AI 起草最小Spec（问题、解决方案、成功标准）
+3. 您批准或调整
+4. AI 立即实施
+5. Spec存在以供未来参考
 
-**When to use:** Simple features with clear requirements and minimal ambiguity.
+**何时使用**：具有清晰需求和最小歧义的简单功能。
 
-### Pattern 4: Exploratory → Summarize → Spec
+### 模式 4：探索性 → 总结 → Spec
 
-Explore through conversation, then summarize learnings into spec retrospectively.
+通过对话探索，然后回顾性地将学习总结为Spec。
 
-**Example:**
-1. Long exploratory conversation about authentication redesign
-2. Try multiple approaches, discuss trade-offs
-3. Once approach is clear: "Summarize our conversation as a HarnSpec"
-4. AI distills conversation into structured spec
-5. You refine and formalize
-6. Implement from spec
+**示例**：
+1. 关于认证重新设计的长时间探索性对话
+2. 尝试多种方法，讨论权衡
+3. 一旦方法清晰："将我们的对话总结为 HarnSpec"
+4. AI 将对话提炼为结构化Spec
+5. 您完善并形式化
+6. 从Spec实施
 
-**When to use:** High uncertainty work where discovery happens through conversation.
+**何时使用**：高不确定性工作，其中发现通过对话发生。
 
-## Mental Models
+## 心智模型
 
 ```mermaid
 flowchart TD
-    subgraph Checkpoint["Spec-as-Checkpoint (Primary)"]
-        C1[Conversation] --> C2[Clarify intent]
-        C2 --> C3[Crystallize spec]
-        C3 --> C4[Implement]
+    subgraph Checkpoint["Spec作为检查点（主要）"]
+        C1[对话] --> C2[澄清意图]
+        C2 --> C3[结晶Spec]
+        C3 --> C4[实施]
     end
     
-    subgraph Artifact["Spec-as-Artifact (Formal)"]
-        A1[Create spec] --> A2[Implement]
-        A2 --> A3[Persist as docs]
+    subgraph Artifact["Spec作为工件（正式）"]
+        A1[创建Spec] --> A2[实施]
+        A2 --> A3[作为文档持久存在]
     end
     
-    subgraph Context["Spec-as-Context (Living)"]
-        L1[Initial spec] --> L2[Implement]
-        L2 --> L3[Learn]
-        L3 --> L4[Update spec]
+    subgraph Context["Spec作为上下文（活文档）"]
+        L1[初始Spec] --> L2[实施]
+        L2 --> L3[学习]
+        L3 --> L4[更新Spec]
         L4 --> L2
     end
     
-    Evolution["Evolution Path"] -.-> Checkpoint
+    Evolution["演进路径"] -.-> Checkpoint
     Checkpoint -.-> Context
     Context -.-> Artifact
     
@@ -309,217 +309,217 @@ flowchart TD
     linkStyle default stroke:#666,stroke-width:2px
 ```
 
-### Spec-as-Checkpoint (Primary)
+### Spec作为检查点（主要）
 
-The most common mental model. Specs are formalized agreements/checkpoints in ongoing work.
+最常见的心智模型。Spec是正在进行的工作中的正式协议/检查点。
 
-**Flow:**
-1. Conversation with AI clarifies intent
-2. Crystallize into spec when ready
-3. Continue implementation from spec
+**流程**：
+1. 与 AI 对话澄清意图
+2. 准备好时结晶为Spec
+3. 从Spec继续实施
 
-**Use when:**
-- Intent has been clarified through conversation
-- Ready to commit to approach
-- Need formal agreement before proceeding
+**使用当**：
+- 意图已通过对话澄清
+- 准备提交到方法
+- 需要正式协议才能继续
 
-### Spec-as-Artifact (Formal)
+### Spec作为工件（正式）
 
-Specs as durable artifacts that outlive the immediate work.
+Spec作为超越即时工作的持久工件。
 
-**Flow:**
-1. Create spec for long-term reference
-2. Implement from spec
-3. Spec remains as documentation
+**流程**：
+1. 创建Spec以供长期参考
+2. 从Spec实施
+3. Spec作为文档保留
 
-**Use when:**
-- Compliance or audit trail required
-- Team onboarding documentation needed
-- Decisions must be preserved long-term
+**使用当**：
+- 需要合规或审计跟踪
+- 需要团队入职文档
+- 决策必须长期保留
 
-### Spec-as-Context (Living)
+### Spec作为上下文（活文档）
 
-Specs as evolving context that changes alongside implementation.
+Spec作为随实施变化的演进上下文。
 
-**Flow:**
-1. Create initial spec
-2. Implement while learning
-3. Update spec with discoveries
-4. Spec and code evolve together
+**流程**：
+1. 创建初始Spec
+2. 在学习的同时实施
+3. 用发现更新Spec
+4. Spec和代码一起演进
 
-**Use when:**
-- Requirements will emerge during work
-- Iterative refinement expected
-- Spec serves as working documentation
+**使用当**：
+- 需求将在工作期间出现
+- 预期迭代完善
+- Spec作为工作文档
 
-**Key insight:** These are phases, not separate approaches. Most specs start as checkpoints, evolve as context, and end as artifacts.
+**关键见解**：这些是阶段，而非单独的方法。大多数Spec从检查点开始，作为上下文演进，并作为工件结束。
 
-## Best Practices
+## 最佳实践
 
-### DO: Keep AI Focused on Principles
+### 做：保持 AI 专注于原则
 
-Explicitly remind AI to follow HarnSpec principles when drafting:
-
-```
-Draft this spec following HarnSpec principles:
-- Context Economy: Under 300 lines, readable in 10 minutes
-- Signal-to-Noise: Every sentence informs decisions
-- Intent Over Implementation: Focus on WHY and WHAT
-- Progressive Disclosure: Start minimal, add only when needed
-```
-
-### DO: Test the "Decision Test"
-
-For every section, ask: "What decision does this inform?"
-
-If you can't answer clearly, cut or clarify that section.
-
-### DO: Split at 400 Lines
-
-If AI drafts a spec over 400 lines, split it. Use sub-specs (DESIGN.md, IMPLEMENTATION.md) or multiple smaller specs.
-
-### DO: Capture Trade-offs
-
-AI may present solutions without explaining why. Always ask:
+在起草时明确提醒 AI 遵循 HarnSpec 原则：
 
 ```
-What are the trade-offs of this approach?
-What alternatives did we consider and why reject them?
+遵循 HarnSpec 原则起草此Spec：
+- 上下文经济：300 行以下，10 分钟内可读
+- 信噪比：每个句子都提供决策信息
+- 意图优于实现：专注于为什么和什么
+- 渐进式披露 (Progressive Disclosure)：从最小开始，仅在需要时添加
 ```
 
-### DON'T: Accept Verbose Drafts
+### 做：测试"决策测试"
 
-AI tends to over-explain. Ruthlessly cut:
-- Obvious statements
-- Inferable details
-- "Maybe future" features
-- Redundant explanations
+对于每个部分，问："这提供什么决策信息？"
 
-### DON'T: Skip Human Review
+如果您不能清楚回答，删除或澄清该部分。
 
-Never accept AI drafts without review. The human validates:
-- Intent is captured correctly
-- Trade-offs are clear
-- First principles are followed
-- Scope is appropriate
+### 做：在 400 行拆分
 
-### DON'T: Over-Specify Implementation
+如果 AI 起草的Spec超过 400 行，拆分它。使用子 Spec（DESIGN.md、IMPLEMENTATION.md）或多个较小的Spec。
 
-Specs should capture intent and constraints, not prescribe every implementation detail.
+### 做：捕获权衡
 
-**Good:** "Rate limit: 100 req/min per user, return 429 with Retry-After header"  
-**Bad:** "Use Redis with sliding window algorithm, store timestamps in sorted set with ZREMRANGEBYSCORE..."
+AI 可能呈现解决方案而不解释为什么。总是问：
 
-### DON'T: Forget to Update Status
-
-Use `harnspec update <spec> --status <status>` to track progress. AI can help draft, but you manage lifecycle.
-
-## Common Pitfalls
-
-### Pitfall 1: AI Verbosity
-
-**Problem:** AI drafts 800-line spec for simple feature  
-**Solution:** Set explicit constraints: "Draft in under 300 lines" or "One-page spec only"
-
-### Pitfall 2: Missing "Why"
-
-**Problem:** Spec describes what to build but not why  
-**Solution:** Always ask AI to include rationale and trade-offs
-
-### Pitfall 3: Implementation Bias
-
-**Problem:** AI jumps to specific implementation before clarifying intent  
-**Solution:** Force intent-first: "Don't suggest implementation yet. First, clarify the problem and constraints."
-
-### Pitfall 4: Scope Creep
-
-**Problem:** AI expands scope with "nice to have" features  
-**Solution:** Explicitly state out-of-scope items. Cut aggressively.
-
-### Pitfall 5: Assuming AI Knows Context
-
-**Problem:** AI drafts without understanding codebase constraints  
-**Solution:** Provide context: "Our API uses REST, not GraphQL" or "We're on PostgreSQL 14"
-
-## Example: AI-Assisted Spec Creation
-
-Here's a real example of AI-assisted spec writing:
-
-**Step 1: Initial prompt**
 ```
-We need API rate limiting. Currently we have none and are seeing abuse. 
-Target is 100 requests per minute per user.
+这种方法的权衡是什么？
+我们考虑了哪些替代方案，为什么拒绝它们？
 ```
 
-**Step 2: AI drafts spec (verbose, ~500 lines)**
+### 不要：接受冗长的草稿
 
-AI produces detailed spec with:
-- Problem statement
-- Multiple implementation approaches
-- Database schemas
-- Caching strategies
-- Monitoring plans
-- (Too detailed, violates Context Economy)
+AI 倾向于过度解释。无情地删除：
+- 显而易见的陈述
+- 可推断的细节
+- "未来可能"功能
+- 冗余解释
 
-**Step 3: Human refines**
+### 不要：跳过人类审查
+
+永远不要在没有审查的情况下接受 AI 草稿。人类验证：
+- 意图被正确捕获
+- 权衡清晰
+- 遵循第一性原则
+- 范围适当
+
+### 不要：过度指定实现
+
+Spec应该捕获意图和约束，而非规定每个实现细节。
+
+**好**："速率限制：每用户 100 req/min，返回 429 与 Retry-After 标头"  
+**不好**："使用 Redis 与滑动窗口算法，在排序集中存储时间戳，使用 ZREMRANGEBYSCORE..."
+
+### 不要：忘记更新状态
+
+使用 `harnspec update <spec> --status <status>` 跟踪进度。AI 可以帮助起草，但您管理生命周期。
+
+## 常见陷阱
+
+### 陷阱 1：AI 冗长
+
+**问题**：AI 为简单功能起草 800 行Spec  
+**解决方案**：设置明确约束："在 300 行以下起草"或"仅一页Spec"
+
+### 陷阱 2：缺少"为什么"
+
+**问题**：Spec描述要构建什么但不说明为什么  
+**解决方案**：总是要求 AI 包括理由和权衡
+
+### 陷阱 3：实现偏见
+
+**问题**：AI 在澄清意图之前跳到特定实现  
+**解决方案**：强制意图优先："不要建议实现。首先，澄清问题和约束。"
+
+### 陷阱 4：范围蔓延
+
+**问题**：AI 用"很好拥有"的功能扩展范围  
+**解决方案**：明确说明范围外项目。积极删除。
+
+### 陷阱 5：假设 AI 知道上下文
+
+**问题**：AI 在不理解代码库约束的情况下起草  
+**解决方案**：提供上下文："我们的 API 使用 REST，而非 GraphQL"或"我们使用 PostgreSQL 14"
+
+## 示例：AI 辅助的Spec创建
+
+这是 AI 辅助Spec编写的真实示例：
+
+**步骤 1：初始提示**
 ```
-This spec is too detailed. Simplify to:
-1. Problem (why rate limiting?)
-2. Solution (approach and limits)
-3. Success criteria (measurable)
-4. Trade-offs (what we're giving up)
-
-Cut all implementation details about Redis, algorithms, schemas.
-Keep under 200 lines.
+我们需要 API 速率限制。目前我们没有，正在看到滥用。
+目标是每用户每分钟 100 个请求。
 ```
 
-**Step 4: AI revises (concise, ~180 lines)**
+**步骤 2：AI 起草Spec（冗长，约 500 行）**
 
-AI produces lean spec:
-- **Problem:** API abuse, 1000 req/min from single user
-- **Solution:** Rate limit at 100 req/min per user, return 429 + Retry-After
-- **Success:** 99% of requests under limit, no legitimate users affected
-- **Trade-offs:** Adds latency (~2ms), requires state storage
+AI 产生详细Spec，包含：
+- 问题陈述
+- 多种实现方法
+- 数据库模式
+- 缓存策略
+- 监控计划
+- （太详细，违反上下文经济）
 
-**Step 5: Human approves and commits**
+**步骤 3：人类完善**
+```
+此Spec太详细。简化为：
+1. 问题（为什么速率限制？）
+2. 解决方案（方法和限制）
+3. 成功标准（可测量）
+4. 权衡（我们放弃了什么）
 
-Spec is saved, marked as "planned", and becomes checkpoint for implementation.
+删除所有关于 Redis、算法、模式的实现细节。
+保持在 200 行以下。
+```
 
-## When NOT to Use Specs {#when-not-to-use-specs}
+**步骤 4：AI 修订（简洁，约 180 行）**
 
-Even with AI assistance, some work doesn't need specs:
+AI 产生精简Spec：
+- **问题**：API 滥用，单个用户 1000 req/min
+- **解决方案**：每用户 100 req/min 速率限制，返回 429 + Retry-After
+- **成功**：99% 的请求在限制下，无合法用户受影响
+- **权衡**：增加延迟（约 2ms），需要状态存储
 
-- **Quick bug fixes** - Implementation is obvious, no decisions to document
-- **Exploratory prototypes** - Still discovering what to build
-- **Self-evident refactors** - Codebase clearly shows what needs changing
-- **One-line changes** - No ambiguity, no context needed
+**步骤 5：人类批准并提交**
 
-**Remember:** Specs add value when they provide structure, persistence, or alignment. If the work is trivial or exploratory, skip the spec and just do the work.
+Spec被保存，标记为 "planned"，并成为实施的检查点。
 
-## Summary
+## 何时不使用Spec {#when-not-to-use-specs}
 
-AI-assisted spec writing makes specs:
-- **Easier to create** (AI handles first draft)
-- **Faster to iterate** (AI refines on request)
-- **More accessible** (Lower barrier to entry)
+即使有 AI 辅助，某些工作也不需要Spec：
 
-But it doesn't change:
-- **When specs are needed** (persistence, alignment, structure)
-- **First principles** (Context Economy, Signal-to-Noise, Intent)
-- **What makes a good spec** (Clear intent, measurable success, appropriate scope)
+- **快速错误修复** - 实施显而易见，无需记录决策
+- **探索性原型** - 仍在发现要构建什么
+- **不言自明的重构** - 代码库清楚显示需要更改什么
+- **单行更改** - 无歧义，不需要上下文
 
-**The workflow is simple:**
-1. Articulate intent
-2. AI drafts spec
-3. Review against first principles
-4. Refine ruthlessly
-5. Checkpoint and implement
+**记住**：Spec在提供结构、持久性或对齐时增加价值。如果工作琐碎或探索性，跳过Spec，直接做工作。
 
-**The mindset is unchanged:**
-- Keep it lean (Context Economy)
-- Every word matters (Signal-to-Noise)
-- Capture why, not just how (Intent Over Implementation)
-- Make it work for humans AND AI (Bridge the Gap)
-- Add complexity only when needed (Progressive Disclosure)
+## 总结
 
-AI is a tool for authoring, not an excuse for verbose specs. The standards remain high.
+AI 辅助的Spec编写使Spec：
+- **更易创建**（AI 处理第一稿）
+- **更快迭代**（AI 根据请求完善）
+- **更易访问**（进入门槛更低）
+
+但它不会改变：
+- **何时需要Spec**（持久性、对齐、结构）
+- **第一性原则**（上下文经济、信噪比、意图）
+- **什么是好Spec**（清晰意图、可测量成功、适当范围）
+
+**工作流很简单**：
+1. 表达意图
+2. AI 起草Spec
+3. 根据第一性原则审查
+4. 无情地完善
+5. 检查点并实施
+
+**心态不变**：
+- 保持精简（上下文经济）
+- 每个字都重要（信噪比）
+- 捕获为什么，而非仅仅如何（意图优于实现）
+- 使其对人类和 AI 都有效（弥合差距 (Bridge the Gap)）
+- 仅在需要时添加复杂性（渐进式披露）
+
+AI 是创作的工具，而非冗长Spec的借口。标准仍然很高。

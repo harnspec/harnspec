@@ -1,323 +1,323 @@
 ---
 id: 'context-engineering'
-title: 'Context Engineering'
+title: '上下文工程'
 sidebar_position: 4
 ---
-# Context Engineering
+# 上下文工程
 
-> "Bigger context windows ≠ better results. Smart curation > raw capacity."
+> "更大的上下文窗口 ≠ 更好的结果。智能策展 > 原始容量。"
 
-Context engineering is the practice of managing AI working memory to maximize effectiveness. HarnSpec applies context engineering principles to spec management, ensuring specs fit in working memory and deliver high signal-to-noise ratio.
+上下文工程是管理 AI 工作记忆 (Working Memory)以最大化效果的实践。HarnSpec 将上下文工程原则应用于Spec管理，确保Spec适应工作记忆并提供高信噪比 (Signal-to-Noise)。
 
-## The Core Problem
+## 核心问题
 
-### Context is Finite
+### 上下文是有限的
 
-Even with 1M+ token windows:
-- **Attention degrades** with length (context rot)
-- **N² complexity** in transformer attention
-- **Training bias** toward shorter sequences
-- **Cost scales** linearly with tokens
+即使有 1M+ token 窗口：
+- **注意力随长度下降**（上下文腐烂）
+- **N^2 复杂度**在 transformer 注意力中
+- **训练偏见**偏向较短序列
+- **成本线性增长**随 tokens 数量
 
-**Key Insight**: Bigger windows don't solve the problem. Smart curation does.
+**关键见解**：更大的窗口并不能解决问题。智能策展可以。
 
-### The HarnSpec Connection
+### HarnSpec 的联系
 
-HarnSpec exists because:
-1. **Context Economy** - Specs must fit in working memory (human + AI)
-2. **Signal-to-Noise** - Every word must inform decisions
-3. **Context failures** happen when we violate these principles
+HarnSpec 存在是因为：
+1. **上下文经济 (Context Economy)** - Spec必须适应工作记忆（人类 + AI）
+2. **信噪比** - 每个字都必须提供决策信息
+3. **上下文失败**发生在我们违反这些原则时
 
-This page explains: **How to maintain Context Economy programmatically**
+本页解释：**如何以编程方式维护上下文经济**
 
-## Four Context Engineering Strategies
+## 四种上下文工程策略
 
-Based on research from [LangChain](https://blog.langchain.com/context-engineering-for-agents/) and [Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents):
+基于 [LangChain](https://blog.langchain.com/context-engineering-for-agents/) 和 [Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) 的研究：
 
-### 1. Partitioning (Write & Select)
+### 1. 分区（Partitioning，写入和选择）
 
-**What**: Split content across multiple contexts with selective loading
+**什么**：将内容分割到多个上下文中，有选择地加载
 
-**HarnSpec Application**:
+**HarnSpec 应用**：
 ```markdown
-# Instead of one 11K-token spec:
-specs/045/README.md          (~1,200 tokens - overview)
-specs/045/DESIGN.md          (~2,200 tokens - design)
-specs/045/IMPLEMENTATION.md  (~900 tokens - plan)
-specs/045/TESTING.md         (~1,100 tokens - tests)
+# 不是一个 11K-token 的Spec：
+specs/045/README.md          (~1,200 Token - 概述)
+specs/045/DESIGN.md          (~2,200 Token - 设计)
+specs/045/IMPLEMENTATION.md  (~900 Token - 计划)
+specs/045/TESTING.md         (~1,100 Token - 测试)
 
-# AI loads only what it needs for current task
+# AI 仅加载当前任务需要的内容
 ```
 
-**Mechanisms**:
-- **Sub-spec files** (README + DESIGN + TESTING + CONFIG)
-- **Lazy loading** (read files on demand)
-- **Progressive disclosure** (overview → details)
+**机制**：
+- **子 Spec文件**（README + DESIGN + TESTING + CONFIG）
+- **延迟加载**（按需读取文件）
+- **渐进式披露 (Progressive Disclosure)**（概述 → 细节）
 
-**When to Use**:
-- ✅ Spec >3,500 tokens
-- ✅ Multiple distinct concerns (design + testing + config)
-- ✅ Different concerns accessed independently
+**何时使用**：
+- ✅ Spec >3,500 Token
+- ✅ 多个不同关注点（设计 + 测试 + 配置）
+- ✅ 不同关注点独立访问
 
-**Benefits**:
-- ✅ Each file &lt;2,000 tokens (fits in working memory)
-- ✅ Reduce irrelevant context (only load needed sections)
-- ✅ Parallel work (edit DESIGN without affecting TESTING)
+**好处**：
+- ✅ 每个文件 &lt;2,000 Token（适应工作记忆）
+- ✅ 减少无关上下文（仅加载需要的部分）
+- ✅ 并行工作（编辑 DESIGN 不影响 TESTING）
 
-### 2. Compaction (Remove Redundancy)
+### 2. 压实（Compaction，删除冗余）
 
-**What**: Eliminate duplicate or inferable content
+**什么**：消除重复或可推断的内容
 
-**HarnSpec Application**:
+**HarnSpec 应用**：
 ```markdown
-# Before compaction (verbose):
-## Authentication
-The authentication system uses JWT tokens. JWT tokens are 
-industry-standard and provide stateless authentication. The 
-benefit of JWT tokens is that they don't require server-side 
-session storage...
+# 压实前（冗长）：
+## 认证
+认证系统使用 JWT tokens。JWT tokens 是
+行业标准，提供无状态认证。
+JWT tokens 的好处是它们不需要服务器端
+会话存储...
 
-## Implementation
-We'll implement JWT authentication. JWT was chosen because...
-[repeats same rationale]
+## 实现
+我们将实现 JWT 认证。选择 JWT 是因为...
+[重复相同理由]
 
-# After compaction (concise):
-## Authentication
-Uses JWT tokens (stateless, no session storage).
+# 压实后（简洁）：
+## 认证
+使用 JWT tokens（无状态，无会话存储）。
 
-## Implementation
-[links to Authentication section for rationale]
+## 实现
+[链接到认证部分以获取理由]
 ```
 
-**Mechanisms**:
-- **Duplicate detection** (same content in multiple places)
-- **Inference removal** (obvious from context)
-- **Reference consolidation** (one canonical source, others link)
+**机制**：
+- **重复检测**（多处相同内容）
+- **推断删除**（从上下文显而易见）
+- **引用合并**（一个Spec来源，其他引用）
 
-**When to Use**:
-- ✅ Repeated explanations across sections
-- ✅ Obvious/inferable information stated explicitly
-- ✅ "For completeness" sections with little decision value
+**何时使用**：
+- ✅ 跨部分重复解释
+- ✅ 明确说明显而易见/可推断的信息
+- ✅ "为了完整性"部分但决策价值很小
 
-**Benefits**:
-- ✅ Fewer tokens = faster processing
-- ✅ Less distraction = better attention
-- ✅ Easier maintenance = single source of truth
+**好处**：
+- ✅ 更少 tokens = 更快处理
+- ✅ 更少分心 = 更好注意力
+- ✅ 更易维护 = 单一真相来源
 
-### 3. Compression (Summarize)
+### 3. 压缩（Compression，总结）
 
-**What**: Condense while preserving essential information
+**什么**：在保留基本信息的同时进行压缩
 
-**HarnSpec Application**:
+**HarnSpec 应用**：
 ```markdown
-# Before compression:
-## Phase 1: Infrastructure Setup
-Set up project structure:
-- Create src/ directory
-- Create tests/ directory
-- Configure TypeScript with tsconfig.json
-- Set up ESLint with .eslintrc
-- Configure Prettier with .prettierrc
-- Add npm scripts for build, test, lint
-- Set up CI pipeline with GitHub Actions
-[~1,000 tokens of detailed steps...]
+# 压缩前：
+## 阶段 1：基础设施设置
+设置项目结构：
+- 创建 src/ 目录
+- 创建 tests/ 目录
+- 使用 tsconfig.json 配置 TypeScript
+- 使用 .eslintrc 设置 ESLint
+- 使用 .prettierrc 配置 Prettier
+- 添加 npm 脚本用于构建、测试、检查
+- 使用 GitHub Actions 设置 CI 管道
+[约 1,000 Token 的详细步骤...]
 
-# After compression (completed phase):
-## ✅ Phase 1: Infrastructure Setup (Completed 2025-10-15)
-Project structure established with TypeScript, testing, and CI.
-See git commit abc123 for implementation details.
+# 压缩后（已完成阶段）：
+## ✅ 阶段 1：基础设施设置（已完成 2025-10-15）
+项目结构已建立，包含 TypeScript、测试和 CI。
+查看 git 提交 abc123 以获取实现细节。
 ```
 
-**Mechanisms**:
-- **Historical summarization** (completed work → summary)
-- **Phase rollup** (detailed steps → outcomes)
-- **Selective detail** (keep decisions, summarize execution)
+**机制**：
+- **历史总结**（已完成工作 → 摘要）
+- **阶段汇总**（详细步骤 → 结果）
+- **选择性细节**（保留决策，总结执行）
 
-**When to Use**:
-- ✅ Completed phases (outcomes matter, details don't)
-- ✅ Historical context (need to know it happened, not how)
-- ✅ Approaching token thresholds (preserve signal, reduce noise)
+**何时使用**：
+- ✅ 已完成阶段（结果重要，细节不重要）
+- ✅ 历史背景（需要知道发生了，不需要知道如何）
+- ✅ 接近 token 阈值（保留信号，减少噪音）
 
-**Benefits**:
-- ✅ Maintain project history without bloat
-- ✅ Focus on active work, not past details
-- ✅ Easy to expand if details needed later
+**好处**：
+- ✅ 保持项目历史而不膨胀
+- ✅ 专注于活跃工作，而非过去细节
+- ✅ 需要时易于扩展
 
-### 4. Isolation (Move to Separate Context)
+### 4. 隔离（Isolation，移至单独上下文）
 
-**What**: Split unrelated concerns into separate specs
+**什么**：将不相关的关注点拆分到单独的Spec中
 
-**HarnSpec Application**:
+**HarnSpec 应用**：
 ```markdown
-# Before isolation (one spec):
+# 隔离前（一个Spec）：
 specs/045-unified-dashboard/README.md
-  - Dashboard implementation
-  - Velocity tracking algorithm
-  - Health scoring system
-  - Chart library evaluation
-  - API design for metrics endpoint
-  [~11K tokens covering 5 distinct concerns]
+  - 仪表板实现
+  - 速度跟踪算法
+  - 健康评分系统
+  - 图表库评估
+  - 指标端点的 API 设计
+  [约 11K tokens 涵盖 5 个不同关注点]
 
-# After isolation (multiple specs):
-specs/045-unified-dashboard/       # Dashboard UI
-specs/060-velocity-algorithm/      # Velocity tracking
-specs/061-health-scoring/          # Health metrics
-specs/062-metrics-api/             # API endpoint
-  [Each spec &lt;2,000 tokens, independent lifecycle]
+# 隔离后（多个Spec）：
+specs/045-unified-dashboard/       # 仪表板 UI
+specs/060-velocity-algorithm/      # 速度跟踪
+specs/061-health-scoring/          # 健康指标
+specs/062-metrics-api/             # API 端点
+  [每个Spec <2,000 Token，独立生命周期]
 ```
 
-**Mechanisms**:
-- **Concern extraction** (identify unrelated topics)
-- **Dependency analysis** (what must stay together?)
-- **Spec creation** (move to new spec with cross-references)
+**机制**：
+- **关注点提取**（识别不相关主题）
+- **依赖关系分析**（什么必须保持在一起？）
+- **Spec创建**（移至新Spec并交叉引用）
 
-**When to Use**:
-- ✅ Multiple concerns with different lifecycles
-- ✅ Sections could be standalone features
-- ✅ Parts updated by different people/teams
-- ✅ Spec still >3,500 tokens after partitioning
+**何时使用**：
+- ✅ 多个关注点具有不同生命周期
+- ✅ 部分可以是独立功能
+- ✅ 部分由不同人/团队更新
+- ✅ 分区后Spec仍 >3,500 Token
 
-**Benefits**:
-- ✅ Independent evolution (algorithms change ≠ UI changes)
-- ✅ Clear ownership (different concerns, different owners)
-- ✅ Easier review (focused scope per spec)
+**好处**：
+- ✅ 独立演进（算法更改 ≠ UI 更改）
+- ✅ 清晰所有权（不同关注点，不同所有者）
+- ✅ 更易审查（每个Spec聚焦范围）
 
-## Four Context Failure Modes
+## 四种上下文失败模式
 
-Based on research from [Drew Breunig](https://www.dbreunig.com/2025/06/22/how-contexts-fail-and-how-to-fix-them.html):
+基于 [Drew Breunig](https://www.dbreunig.com/2025/06/22/how-contexts-fail-and-how-to-fix-them.html) 的研究：
 
-### 1. Context Poisoning
+### 1. 上下文中毒（Context Poisoning）
 
-**Definition**: Hallucinated or erroneous content makes it into context and gets repeatedly referenced
+**定义**：幻觉或错误内容进入上下文并被反复引用
 
-**Symptoms in HarnSpec**:
+**HarnSpec 中的症状**：
 ```markdown
-# AI hallucinates during edit:
-"The authentication module uses Redis for session storage"
-  (Reality: We use JWT tokens, not Redis sessions)
+# AI 在编辑时产生幻觉：
+"认证模块使用 Redis 进行会话存储"
+  （现实：我们使用 JWT tokens，而非 Redis 会话）
 
-# Hallucination gets saved to spec
+# 幻觉被保存到Spec
 
-# Later, AI reads the spec and builds on the hallucination:
-"Redis configuration should use cluster mode for HA"
-  (Building on the original error)
+# 稍后，AI 读取Spec并建立在幻觉之上：
+"Redis 配置应使用集群模式实现高可用性"
+  （建立在原始错误之上）
 
-# Context is now poisoned - wrong info compounds
+# 上下文现在被中毒 - 错误信息复合
 ```
 
-**Mitigation**:
-- ✅ Programmatic validation (catch before save)
-- ✅ Regular spec-code sync checks
-- ✅ Remove corrupted sections immediately
+**缓解措施**：
+- ✅ 编程验证（保存前捕获）
+- ✅ 定期Spec-代码同步检查
+- ✅ 立即删除损坏的部分
 
-### 2. Context Distraction
+### 2. 上下文分心（Context Distraction）
 
-**Definition**: Context grows so large the model ignores training and repeats history
+**定义**：上下文增长得太大，模型忽略训练并重复历史
 
-**Symptoms in HarnSpec**:
+**HarnSpec 中的症状**：
 ```markdown
-# Spec grows beyond 4,000 tokens with extensive history
+# Spec增长超过 4,000 Token，包含大量历史
 
-# AI behavior changes:
-- Repeats past actions from spec history
-- Ignores training knowledge
-- Suggests outdated approaches documented in spec
-- Fails to synthesize new solutions
+# AI 行为改变：
+- 重复Spec历史中的过去操作
+- 忽略训练知识
+- 建议Spec中记录的过时方法
+- 无法综合新解决方案
 ```
 
-**Mitigation**:
-- ✅ Split before 3,500 tokens (Context Economy)
-- ✅ Compress historical sections
-- ✅ Partition by concern
+**缓解措施**：
+- ✅ 在 3,500 Token 之前拆分（上下文经济）
+- ✅ 压缩历史部分
+- ✅ 按关注点分区
 
-**Research**: Databricks found degradation starts ~32k tokens for Llama 3.1 405b, earlier for smaller models
+**研究**：Databricks 发现 Llama 3.1 405b 在约 32k tokens 时开始下降，较小模型更早
 
-### 3. Context Confusion
+### 3. 上下文混淆（Context Confusion）
 
-**Definition**: Superfluous content influences model to make wrong decisions
+**定义**：多余内容影响模型做出错误决策
 
-**Symptoms in HarnSpec**:
+**HarnSpec 中的症状**：
 ```markdown
-# Spec includes MCP tool definitions for 20 integrations
+# Spec包含 20 个集成的 MCP 工具定义
 # (GitHub, Jira, Slack, Linear, Notion, Asana, ...)
 
-# Task: "Update the GitHub issue status"
+# 任务："更新 GitHub issue 状态"
 
-# AI behavior:
-- Confused about which tool to use
-- Sometimes calls wrong tool (Jira instead of GitHub)
-- Slower processing (evaluating irrelevant options)
-- Lower accuracy
+# AI 行为：
+- 对使用哪个工具感到困惑
+- 有时调用错误工具（Jira 而非 GitHub）
+- 处理速度较慢（评估无关选项）
+- 准确性降低
 ```
 
-**Mitigation**:
-- ✅ Remove irrelevant sections before AI processing
-- ✅ Use selective loading (only relevant sub-specs)
-- ✅ Clear separation of concerns
+**缓解措施**：
+- ✅ AI 处理前删除无关部分
+- ✅ 使用选择性加载（仅相关子 Spec）
+- ✅ 清晰的关注点分离
 
-**Research**: Berkeley Function-Calling Leaderboard confirms ALL models perform worse with >1 tool
+**研究**：Berkeley Function-Calling Leaderboard 确认所有模型在 >1 个工具时性能更差
 
-### 4. Context Clash
+### 4. 上下文冲突（Context Clash）
 
-**Definition**: Conflicting information within same context
+**定义**：同一上下文中的冲突信息
 
-**Symptoms in HarnSpec**:
+**HarnSpec 中的症状**：
 ```markdown
-# Early in spec:
-"We'll use PostgreSQL for data storage"
+# Spec早期：
+"我们将使用 PostgreSQL 进行数据存储"
 
-# Middle of spec (after discussion):
-"Actually, MongoDB is better for this use case"
+# Spec中间（讨论后）：
+"实际上，MongoDB 对这个用例更好"
 
-# Later in spec (forgot to update):
-"PostgreSQL schema design: ..."
+# Spec后期（忘记更新）：
+"PostgreSQL 模式设计：..."
 
-# AI sees conflicting info - may mix approaches
+# AI 看到冲突信息 - 可能混合方法
 ```
 
-**Mitigation**:
-- ✅ Single source of truth per decision
-- ✅ Mark superseded decisions clearly
-- ✅ Use compaction to remove outdated info
+**缓解措施**：
+- ✅ 每个决策单一真相来源
+- ✅ 明确标记被取代的决策
+- ✅ 使用压实删除过时信息
 
-**Research**: Microsoft/Salesforce paper showed 39% performance drop when information gathered across multiple turns
+**研究**：Microsoft/Salesforce 论文显示当信息跨多个回合收集时性能下降 39%
 
-## Strategy Selection Framework
+## 策略选择框架
 
-| Situation | Primary Strategy | Secondary | Why |
+| 情况 | 主要策略 | 次要 | 原因 |
 |-----------|-----------------|-----------|-----|
-| Spec >3,500 tokens, multiple concerns | Partition | Compaction | Separate concerns, remove redundancy |
-| Spec verbose but single concern | Compaction | Compression | Remove redundancy, summarize if still long |
-| Historical phases bloating spec | Compression | - | Keep outcomes, drop details |
-| Unrelated concerns in same spec | Isolation | Partition | Move to separate spec, then partition |
-| Spec approaching 3,500 tokens | Compaction | - | Proactive cleanup before hitting limit |
+| Spec >3,500 Token，多个关注点 | 分区 | 压实 | 分离关注点，删除冗余 |
+| Spec冗长但单一关注点 | 压实 | 压缩 | 删除冗余，仍长则总结 |
+| 历史阶段膨胀Spec | 压缩 | - | 保留结果，删除细节 |
+| 同一Spec中的不相关关注点 | 隔离 | 分区 | 移至单独Spec，然后分区 |
+| Spec接近 3,500 Token | 压实 | - | 达到限制前主动清理 |
 
-### Combining Strategies
+### 组合策略
 
-Often multiple strategies apply together:
+通常多种策略一起应用：
 
-**Example: Large spec (~11K tokens)**:
-1. **Partition**: Split into README + DESIGN + IMPLEMENTATION + TESTING
-2. **Compaction**: Remove redundancy within each file
-3. **Compression**: Summarize completed research phase
-4. **Isolation**: Consider moving algorithms to separate specs
+**示例：大型Spec（约 11K tokens）**：
+1. **分区**：拆分为 README + DESIGN + IMPLEMENTATION + TESTING
+2. **压实**：删除每个文件中的冗余
+3. **压缩**：总结已完成的研究阶段
+4. **隔离**：考虑将算法移至单独Spec
 
-**Result**: 
-- Before: ~11K tokens (3x limit)
-- After: Largest file ~2,200 tokens (within limit)
+**结果**：
+- 之前：约 11K tokens（3 倍限制）
+- 之后：最大文件约 2,200 Token（在限制内）
 
-## The Bottom Line
+## 底线
 
-Context engineering is **the #1 job** when building with AI. These aren't just optimization techniques—they're fundamental to making AI-assisted spec management work.
+上下文工程是 **使用 AI 构建时的 #1 工作**。这些不仅仅是优化技术——它们是使 AI 辅助的Spec管理工作的基础。
 
-**Key Insight**: HarnSpec is a context engineering methodology for human-AI collaboration on software specs.
+**关键见解**：HarnSpec 是用于软件Spec人机协作的上下文工程方法论。
 
-**Remember**:
-- Bigger context windows don't solve the problem
-- Smart curation (partitioning, compaction, compression, isolation) does
-- Apply strategies proactively to prevent context failures
-- Monitor for warning signs (>3,500 tokens, repetition, confusion, conflicts)
+**记住**：
+- 更大的上下文窗口并不能解决问题
+- 智能策展（分区、压实、压缩、隔离）可以
+- 主动应用策略以防止上下文失败
+- 监控警告信号（>3,500 Token、重复、混淆、冲突）
 
 ---
 
-**Related**: See [First Principles](/docs/advanced/first-principles) for the foundational constraints, or explore [Sub-Spec Files](/docs/guide/usage/spec-structure#sub-spec-files) for practical implementation of partitioning.
+**相关**：查看 [第一性原理](/docs/advanced/first-principles) 了解基础约束，或探索 [子 Spec文件](/docs/guide/usage/spec-structure#sub-spec-files) 了解分区的实际实现。

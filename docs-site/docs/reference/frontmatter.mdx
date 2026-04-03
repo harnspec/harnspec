@@ -1,84 +1,84 @@
 ---
 id: 'frontmatter'
-title: 'Frontmatter Fields'
+title: 'frontmatter字段'
 sidebar_position: 3
 ---
-# Frontmatter Reference
+# frontmatter参考
 
-Complete reference for HarnSpec frontmatter fields.
+HarnSpec frontmatter字段的完整参考。
 
-This page provides a quick reference of all available fields. For usage examples and best practices, see the main frontmatter documentation.
+本页提供所有可用字段的快速参考。有关使用示例和最佳实践，请参见主frontmatter文档。
 
-## Required Fields
+## 必需字段
 
 ### status
 
-**Type:** `string`  
-**Values:** `planned` | `in-progress` | `complete` | `archived`  
-**Description:** Current state of the spec
+**类型：** `string`  
+**值：** `planned` | `in-progress` | `complete` | `archived`  
+**描述：** Spec的当前状态
 
-**Icons:**
-- 📅 Planned
-- ⏳ In progress
-- ✅ Complete
-- 📦 Archived
+**图标：**
+- 📅 计划中
+- ⏳ 进行中
+- ✅ 已完成
+- 📦 已归档
 
 ### created
 
-**Type:** `string`  
-**Format:** `YYYY-MM-DD`  
-**Description:** Date when spec was created
+**类型：** `string`  
+**格式：** `YYYY-MM-DD`  
+**描述：** Spec创建的日期
 
-Auto-filled by `harnspec create`.
+由 `harnspec create` 自动填充。
 
-## Optional Fields
+## 可选字段
 
 ### tags
 
-**Type:** `array`  
-**Description:** Categories for organization and filtering
+**类型：** `array`  
+**描述：** 用于组织和过滤的类别
 
-**Example:**
+**示例：**
 ```yaml
 tags: [api, security, mvp]
 ```
 
 ### priority
 
-**Type:** `string`  
-**Values:** `low` | `medium` | `high` | `critical`  
-**Description:** Importance level
+**类型：** `string`  
+**值：** `low` | `medium` | `high` | `critical`  
+**描述：** 重要性级别
 
 ### depends_on
 
-**Type:** `array`  
-**Description:** Hard dependencies (directional blocking)
+**类型：** `array`  
+**描述：** 硬依赖（方向阻塞）
 
-Spec cannot start until dependencies complete. Shows directionally in `harnspec deps`.
+在依赖完成之前Spec无法开始。在 `harnspec deps` 中方向显示。
 
-**Example:**
+**示例：**
 ```yaml
 depends_on: [018-spec-validation]
 ```
 
-**Symbol:** → (depends on) or ← (blocks)
+**符号：** →（依赖于）或 ←（阻塞）
 
-**Use when:**
-- Spec truly cannot start until another completes
-- There's a clear dependency chain
-- Work must be done in specific order
+**使用时机：**
+- Spec真正无法在另一个完成之前开始
+- 有明确的依赖链
+- 工作必须按特定顺序完成
 
 ### completed
 
-**Type:** `string`  
-**Format:** `YYYY-MM-DD`  
-**Description:** Date when work was completed
+**类型：** `string`  
+**格式：** `YYYY-MM-DD`  
+**描述：** 工作完成的日期
 
-Auto-added when status is set to `complete`.
+当状态设置为 `complete` 时自动添加。
 
-## Custom Fields
+## 自定义字段
 
-Define in `.harnspec/config.json`:
+在 `.harnspec/config.json` 中定义：
 
 ```json
 {
@@ -95,13 +95,13 @@ Define in `.harnspec/config.json`:
 }
 ```
 
-**Supported types:**
-- `string` - Text values
-- `number` - Numeric values
+**支持的类型：**
+- `string` - 文本值
+- `number` - 数字值
 - `boolean` - true/false
-- `array` - Lists
+- `array` - 列表
 
-## Complete Example
+## 完整示例
 
 ```yaml
 ---
@@ -110,7 +110,6 @@ created: 2025-11-02
 completed: 
 tags: [api, authentication, security]
 priority: high
-depends_on: [037]
 assignee: alice
 reviewer: bob
 epic: PROJ-123
@@ -122,7 +121,7 @@ needs_security_review: true
 
 ---
 
-**See also:**
-- [Frontmatter Guide](/docs/guide/usage/advanced-features/frontmatter) - Usage examples
-- [Custom Fields](/docs/guide/usage/advanced-features/custom-fields) - Defining custom fields
-- [CLI Commands](/docs/reference/cli) - Managing frontmatter via CLI
+**另请参见：**
+- [frontmatter指南](/zh-Hans/docs/guide/usage/advanced-features/frontmatter) - 使用示例
+- [自定义字段](/zh-Hans/docs/guide/usage/advanced-features/custom-fields) - 定义自定义字段
+- [CLI 命令](/zh-Hans/docs/reference/cli) - 通过 CLI 管理frontmatter
