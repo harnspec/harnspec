@@ -20,13 +20,13 @@ export default function HomepageFeatures(): ReactNode {
               <div className={styles.featureIcon}>
                 <MdSpeed />
               </div>
-              <Heading as="h3">
+              <h3>
                 <Translate
                   id="homepage.feature.velocity.title"
                   description="Ship Faster feature title">
                   Ship Faster
                 </Translate>
-              </Heading>
+              </h3>
               <p>
                 <Translate
                   id="homepage.feature.velocity.description"
@@ -42,13 +42,13 @@ export default function HomepageFeatures(): ReactNode {
               <div className={styles.featureIcon}>
                 <HiOutlineLightBulb />
               </div>
-              <Heading as="h3">
+              <h3>
                 <Translate
                   id="homepage.feature.contextEconomy.title"
                   description="Context Economy feature title">
                   Context Economy
                 </Translate>
-              </Heading>
+              </h3>
               <p>
                 <Translate
                   id="homepage.feature.contextEconomy.description"
@@ -64,13 +64,13 @@ export default function HomepageFeatures(): ReactNode {
               <div className={styles.featureIcon}>
                 <TbRobotFace />
               </div>
-              <Heading as="h3">
+              <h3>
                 <Translate
                   id="homepage.feature.aiNative.title"
                   description="AI-Native feature title">
                   AI-Native Design
                 </Translate>
-              </Heading>
+              </h3>
               <p>
                 <Translate
                   id="homepage.feature.aiNative.description"
@@ -88,13 +88,13 @@ export default function HomepageFeatures(): ReactNode {
               <div className={styles.featureIcon}>
                 <BiGitBranch />
               </div>
-              <Heading as="h3">
+              <h3>
                 <Translate
                   id="homepage.feature.progressiveGrowth.title"
                   description="Progressive Growth feature title">
                   Start Simple, Scale Smart
                 </Translate>
-              </Heading>
+              </h3>
               <p>
                 <Translate
                   id="homepage.feature.progressiveGrowth.description"
@@ -110,13 +110,13 @@ export default function HomepageFeatures(): ReactNode {
               <div className={styles.featureIcon}>
                 <IoGitNetworkOutline />
               </div>
-              <Heading as="h3">
+              <h3>
                 <Translate
                   id="homepage.feature.agile.title"
                   description="Agile & Adaptive feature title">
                   Agile & Adaptive
                 </Translate>
-              </Heading>
+              </h3>
               <p>
                 <Translate
                   id="homepage.feature.agile.description"
@@ -132,13 +132,13 @@ export default function HomepageFeatures(): ReactNode {
               <div className={styles.featureIcon}>
                 <RiFileMarkedLine />
               </div>
-              <Heading as="h3">
+              <h3>
                 <Translate
                   id="homepage.feature.tooling.title"
                   description="Rich Tooling feature title">
                   Rich Tooling Ecosystem
                 </Translate>
-              </Heading>
+              </h3>
               <p>
                 <Translate
                   id="homepage.feature.tooling.description"

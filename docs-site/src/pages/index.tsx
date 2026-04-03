@@ -23,9 +23,9 @@ function HomepageHeader() {
           })}
           className={styles.heroLogo}
         />
-        <Heading as="h1" className="hero__title">
+        <h1 className="hero__title">
           {siteConfig.title}
-        </Heading>
+        </h1>
         <p className="hero__subtitle">
           <Translate
             id="homepage.tagline"
