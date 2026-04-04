@@ -64,6 +64,9 @@ jobs:
           - os: ubuntu-22.04
             target: x86_64-unknown-linux-gnu
             platform: linux-x64
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+            platform: linux-arm64
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             platform: windows-x64
@@ -380,6 +383,63 @@ jobs:
           pnpm tsx scripts/publish-main-packages.ts $TAG_ARG
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Wait for main packages to propagate
+        if: ${{ github.event_name != 'workflow_dispatch' || !inputs.dry_run }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="latest"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dev }}" = "true" ]; then
+            TAG="dev"
+          fi
+
+          packages=(
+            "@harnspec/cli"
+            "@harnspec/http-server"
+            "@harnspec/ui"
+            "@harnspec/skills"
+          )
+
+          echo "Waiting 30 seconds before checking to allow all packages to finish publishing..."
+          sleep 30
+
+          # Exponential backoff: start with short waits, increase gradually
+          wait_times=(5 5 10 10 15 15 20 20 30 30 30 30 40 40 40 40 50 50 60 60)
+          
+          for attempt in {1..20}; do
+            wait_time=${wait_times[$((attempt-1))]}
+            echo ""
+            echo "Attempt ${attempt}/20: checking npm registry..."
+            missing=0
+            missing_packages=()
+
+            for pkg in "${packages[@]}"; do
+              if npm view "$pkg@$TAG" version >/dev/null 2>&1; then
+                echo "  ✓ $pkg@$TAG available"
+              else
+                echo "  ✗ $pkg@$TAG not available"
+                missing=1
+                missing_packages+=("$pkg")
+              fi
+            done
+
+            if [ "$missing" -eq 0 ]; then
+              echo ""
+              echo "✅ All main packages available!"
+              exit 0
+            fi
+
+            echo ""
+            echo "Missing ${#missing_packages[@]} package(s): ${missing_packages[*]}"
+            echo "Waiting ${wait_time}s for npm registry propagation..."
+            sleep "$wait_time"
+          done
+
+          echo ""
+          echo "❌ Main packages not visible after 20 attempts."
+          echo "Missing packages: ${missing_packages[*]}"
+          exit 1
       
       - name: Restore packages after publish
         if: ${{ github.event_name != 'workflow_dispatch' || !inputs.dry_run }}
@@ -414,7 +474,7 @@ jobs:
           echo "✅ All packages published successfully!"
           echo ""
           echo "Published:"
-          echo "  - CLI with platform binaries (darwin-x64, darwin-arm64, linux-x64, windows-x64)"
+          echo "  - CLI with platform binaries (darwin-x64, darwin-arm64, linux-x64, linux-arm64, windows-x64)"
           echo "  - UI Components (deprecated shim)"
           echo "  - HTTP Server"
           echo "  - UI"

@@ -107,8 +107,10 @@ async function verifyPlatformPackages(): Promise<boolean> {
   const packagesToCheck = [
     '@harnspec/cli-darwin-arm64',
     '@harnspec/cli-linux-x64',
+    '@harnspec/cli-linux-arm64',
     '@harnspec/http-darwin-arm64',
     '@harnspec/http-linux-x64',
+    '@harnspec/http-linux-arm64',
   ];
 
   for (const pkg of packagesToCheck) {

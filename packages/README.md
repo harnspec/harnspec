@@ -7,7 +7,6 @@ This directory contains the HarnSpec monorepo packages.
 ```
 packages/
 ├── cli/               - harnspec: CLI wrapper for Rust binary
-├── mcp/               - @harnspec/mcp: MCP server wrapper
 └── ui/                - @harnspec/ui: Primary Vite SPA (web + desktop + shared UI library)
 ```
 
@@ -18,13 +17,9 @@ packages/
 │   Web App       │──────► HTTP ►│ Rust HTTP server       │
 │  @harnspec/ui   │              │ @harnspec/http-server  │
 └─────────────────┘              └────────────────────────┘
-
-┌─────────────────┐
-│   CLI / MCP     │──────► Rust binaries (harnspec-cli/mcp)
-└─────────────────┘
 ```
 
-- Rust provides backend for both HTTP server and CLI/MCP commands
+- Rust provides backend for both HTTP server and CLI commands
 
 ## harnspec (CLI)
 
@@ -47,18 +42,6 @@ cd rust && cargo build --release
 node scripts/copy-rust-binaries.mjs
 node bin/harnspec.mjs --version
 ```
-
-## @harnspec/mcp
-
-**MCP server integration wrapper.**
-
-Delegates to the Rust MCP binary and makes MCP setup discoverable.
-
-```bash
-npx -y @harnspec/mcp
-```
-
-See [MCP Integration docs](https://harnspec.github.io/docs/guide/usage/ai-assisted/mcp-integration).
 
 ## @harnspec/ui (Vite SPA)
 
@@ -111,7 +94,6 @@ pnpm --filter @harnspec/ui test
 Published packages:
 
 - `harnspec` - CLI (wrapper + Rust binary via optional dependencies)
-- `@harnspec/mcp` - MCP server wrapper
 - `@harnspec/ui` - Vite SPA bundle
 
 Platform-specific binary packages (published separately):
