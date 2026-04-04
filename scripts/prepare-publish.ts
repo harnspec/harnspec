@@ -15,8 +15,8 @@
  * 5. After publish, restore original package.json files
  */
 
-import { readFileSync, writeFileSync, existsSync, copyFileSync, readdirSync, statSync } from 'fs';
-import { join, dirname, relative, resolve } from 'path';
+import { readFileSync, writeFileSync, existsSync, copyFileSync } from 'fs';
+import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -26,37 +26,10 @@ const ROOT = join(__dirname, '..');
 interface PackageJson {
   name: string;
   version: string;
-  private?: boolean;
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
   optionalDependencies?: Record<string, string>;
-}
-
-function findPackageJsonFiles(dir: string, files: string[] = []): string[] {
-  const entries = readdirSync(dir, { withFileTypes: true });
-
-  for (const entry of entries) {
-    const fullPath = join(dir, entry.name);
-
-    if (
-      entry.name === 'node_modules' ||
-      entry.name === 'dist' ||
-      entry.name === 'target' ||
-      entry.name === '.turbo' ||
-      entry.name === '.git'
-    ) {
-      continue;
-    }
-
-    if (entry.isDirectory()) {
-      findPackageJsonFiles(fullPath, files);
-    } else if (entry.name === 'package.json') {
-      files.push(fullPath);
-    }
-  }
-
-  return files;
 }
 
 function readPackageJson(pkgPath: string): PackageJson {
@@ -67,21 +40,24 @@ function writePackageJson(pkgPath: string, pkg: PackageJson): void {
   writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
 }
 
-const pkgMap: Record<string, string> = {};
-
-function initPackageMap() {
-  const packagesDir = join(ROOT, 'packages');
-  const files = findPackageJsonFiles(packagesDir);
-  
-  for (const file of files) {
-    const pkg = readPackageJson(file);
-    if (pkg.name) {
-      pkgMap[pkg.name] = relative(ROOT, file);
-    }
-  }
-}
-
 function resolveWorkspaceVersion(depName: string): string | null {
+  // Map package names to their paths in the monorepo
+  const pkgMap: Record<string, string> = {
+    '@harnspec/http-server': 'packages/http-server/package.json',
+    '@harnspec/ui': 'packages/ui/package.json',
+    'harnspec': 'packages/cli/package.json',
+    // CLI platform packages
+    '@harnspec/cli-darwin-x64': 'packages/cli/binaries/darwin-x64/package.json',
+    '@harnspec/cli-darwin-arm64': 'packages/cli/binaries/darwin-arm64/package.json',
+    '@harnspec/cli-linux-x64': 'packages/cli/binaries/linux-x64/package.json',
+    '@harnspec/cli-windows-x64': 'packages/cli/binaries/windows-x64/package.json',
+    // HTTP server platform packages
+    '@harnspec/http-darwin-x64': 'packages/http-server/binaries/darwin-x64/package.json',
+    '@harnspec/http-darwin-arm64': 'packages/http-server/binaries/darwin-arm64/package.json',
+    '@harnspec/http-linux-x64': 'packages/http-server/binaries/linux-x64/package.json',
+    '@harnspec/http-windows-x64': 'packages/http-server/binaries/windows-x64/package.json',
+  };
+
   const pkgPath = pkgMap[depName];
   if (!pkgPath) {
     console.warn(`⚠️  Unknown workspace package: ${depName}`);
@@ -106,6 +82,7 @@ function replaceWorkspaceDeps(deps: Record<string, string> | undefined, depType:
     if (version.startsWith('workspace:')) {
       const resolvedVersion = resolveWorkspaceVersion(name);
       if (resolvedVersion) {
+        // Use exact versions for internal packages to ensure dev versions work correctly
         deps[name] = resolvedVersion;
         console.log(`  ✓ ${depType}.${name}: workspace:* → ${resolvedVersion}`);
         changed = true;
@@ -116,15 +93,13 @@ function replaceWorkspaceDeps(deps: Record<string, string> | undefined, depType:
 }
 
 function processPackage(pkgPath: string): boolean {
-  const pkg = readPackageJson(pkgPath);
-  
-  // Skip private packages unless they are the root ones we want to process
-  // Actually, we should process all non-private ones
-  if (pkg.private) {
-    console.log(`\n⏭️  Skipping private package ${pkg.name}`);
+  const fullPath = join(ROOT, pkgPath);
+  if (!existsSync(fullPath)) {
+    console.warn(`⚠️  Package not found: ${fullPath}`);
     return false;
   }
 
+  const pkg = readPackageJson(fullPath);
   console.log(`\n📦 Processing ${pkg.name}...`);
 
   let changed = false;
@@ -135,13 +110,13 @@ function processPackage(pkgPath: string): boolean {
 
   if (changed) {
     // Create backup
-    const backupPath = pkgPath + '.backup';
-    writeFileSync(backupPath, readFileSync(pkgPath, 'utf-8'));
-    console.log(`  💾 Backup saved to ${relative(ROOT, pkgPath)}.backup`);
+    const backupPath = fullPath + '.backup';
+    writeFileSync(backupPath, readFileSync(fullPath, 'utf-8'));
+    console.log(`  💾 Backup saved to ${pkgPath}.backup`);
 
     // Write updated package.json
-    writePackageJson(pkgPath, pkg);
-    console.log(`  ✅ Updated ${relative(ROOT, pkgPath)}`);
+    writePackageJson(fullPath, pkg);
+    console.log(`  ✅ Updated ${pkgPath}`);
     return true;
   } else {
     console.log(`  ⏭️  No workspace:* dependencies found`);
@@ -153,15 +128,16 @@ function main() {
   console.log('🚀 Preparing packages for npm publish...\n');
   console.log('This will replace workspace:* with actual versions.\n');
 
-  initPackageMap();
+  const packages = [
+    'packages/cli/package.json',
+    'packages/http-server/package.json',
+    'packages/ui/package.json',
+  ];
 
-  const packagesPath = join(ROOT, 'packages');
-  const allPackageFiles = findPackageJsonFiles(packagesPath);
-  
   const modified: string[] = [];
-  for (const pkgFile of allPackageFiles) {
-    if (processPackage(pkgFile)) {
-      modified.push(relative(ROOT, pkgFile));
+  for (const pkg of packages) {
+    if (processPackage(pkg)) {
+      modified.push(pkg);
     }
   }
 
@@ -179,7 +155,7 @@ function main() {
     console.log('\nModified packages:');
     modified.forEach(pkg => console.log(`  - ${pkg}`));
     console.log('\n⚠️  IMPORTANT: After publishing, restore original files:');
-    console.log('   pnpm restore-packages');
+    console.log('   npm run restore-packages');
     console.log('   OR manually: mv package.json.backup package.json');
   } else {
     console.log('\n✅ No workspace:* dependencies found. Ready to publish!');
@@ -187,4 +163,3 @@ function main() {
 }
 
 main();
-

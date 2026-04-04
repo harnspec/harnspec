@@ -10,7 +10,7 @@
     "typecheck": "echo 'No TypeScript source to check'"
   },
   "dependencies": {
-    "@harnspec/cli": "0.0.1"
+    "@harnspec/cli": "workspace:*"
   },
   "keywords": [
     "spec",

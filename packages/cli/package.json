@@ -10,8 +10,8 @@
     "typecheck": "echo 'No TypeScript source to check'"
   },
   "dependencies": {
-    "@harnspec/http-server": "0.0.1",
-    "@harnspec/ui": "0.0.1"
+    "@harnspec/http-server": "workspace:*",
+    "@harnspec/ui": "workspace:*"
   },
   "keywords": [
     "spec",

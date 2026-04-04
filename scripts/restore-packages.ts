@@ -16,51 +16,27 @@
  *   (replace 'star' with asterisk glob pattern)
  */
 
-import { existsSync, renameSync, unlinkSync, readdirSync, statSync } from 'fs';
-import { join, dirname, relative, resolve } from 'path';
+import { existsSync, renameSync, unlinkSync } from 'fs';
+import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const ROOT = join(__dirname, '..');
 
-function findBackupFiles(dir: string, files: string[] = []): string[] {
-  const entries = readdirSync(dir, { withFileTypes: true });
+function restorePackage(pkgPath: string): boolean {
+  const fullPath = join(ROOT, pkgPath);
+  const backupPath = fullPath + '.backup';
 
-  for (const entry of entries) {
-    const fullPath = join(dir, entry.name);
-
-    if (
-      entry.name === 'node_modules' ||
-      entry.name === 'dist' ||
-      entry.name === 'target' ||
-      entry.name === '.turbo' ||
-      entry.name === '.git'
-    ) {
-      continue;
-    }
-
-    if (entry.isDirectory()) {
-      findBackupFiles(fullPath, files);
-    } else if (entry.name.endsWith('.backup')) {
-      files.push(fullPath);
-    }
+  if (!existsSync(backupPath)) {
+    console.log(`⏭️  No backup found for ${pkgPath}`);
+    return false;
   }
 
-  return files;
-}
+  console.log(`📦 Restoring ${pkgPath}...`);
 
-function restorePackage(backupPath: string): boolean {
-  const targetPath = backupPath.replace(/\.backup$/, '');
-  const relPath = relative(ROOT, targetPath);
-
-  console.log(`📦 Restoring ${relPath}...`);
-
-  if (existsSync(targetPath)) {
-    unlinkSync(targetPath);
-  }
-  
-  renameSync(backupPath, targetPath);
+  // Replace current with backup
+  renameSync(backupPath, fullPath);
   console.log(`  ✅ Restored from backup`);
 
   return true;
@@ -69,11 +45,15 @@ function restorePackage(backupPath: string): boolean {
 function main() {
   console.log('🔄 Restoring original package.json files...\n');
 
-  const backups = findBackupFiles(join(ROOT, 'packages'));
-  
+  const packages = [
+    'packages/cli/package.json',
+    'packages/http-server/package.json',
+    'packages/ui/package.json',
+  ];
+
   let restored = 0;
-  for (const backup of backups) {
-    if (restorePackage(backup)) {
+  for (const pkg of packages) {
+    if (restorePackage(pkg)) {
       restored++;
     }
   }
@@ -93,4 +73,3 @@ function main() {
 }
 
 main();
-
