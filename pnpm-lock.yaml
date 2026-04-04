@@ -92,6 +92,12 @@ importers:
         specifier: workspace:*
         version: link:../ui
 
+  packages/harnspec:
+    dependencies:
+      '@harnspec/cli':
+        specifier: workspace:*
+        version: link:../cli
+
   packages/http-server:
     devDependencies:
       nodemon:
