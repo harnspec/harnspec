@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 import { createRequire } from 'module';
+import { pathToFileURL } from 'node:url';
+
 const require = createRequire(import.meta.url);
 
 /**
@@ -10,11 +12,16 @@ const require = createRequire(import.meta.url);
  */
 try {
   const cliPath = require.resolve('@harnspec/cli/bin/harnspec.js');
-  await import(cliPath);
+  const cliUrl = pathToFileURL(cliPath).href;
+  await import(cliUrl);
 } catch (err) {
-  console.error('Error: Failed to find @harnspec/cli. Make sure it is installed.');
-  console.error('If you installed this package globally, try:');
-  console.error('  npm install -g @harnspec/cli');
-  console.debug(err);
+  if (err.code === 'MODULE_NOT_FOUND') {
+    console.error('Error: Failed to find @harnspec/cli. Make sure it is installed.');
+    console.error('If you installed this package globally, try:');
+    console.error('  npm install -g @harnspec/cli');
+  } else {
+    console.error('Error: Failed to load @harnspec/cli.');
+    console.error(err);
+  }
   process.exit(1);
 }
