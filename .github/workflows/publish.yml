@@ -360,7 +360,7 @@ jobs:
       
       - name: Validate specs
         if: ${{ github.event_name != 'workflow_dispatch' || !inputs.dry_run }}
-        run: node bin/harnspec.js validate --warnings-only
+        run: node bin/harnspec.mjs validate --warnings-only
       
       - name: Prepare packages for npm publish
         if: ${{ github.event_name != 'workflow_dispatch' || !inputs.dry_run }}

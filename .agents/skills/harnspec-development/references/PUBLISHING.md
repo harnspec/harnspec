@@ -62,7 +62,7 @@ npm install @harnspec/ui@dev
 3. **Type check**: Run `pnpm typecheck` to catch type errors (REQUIRED before release)
 4. **Test**: Run `pnpm test:run` to ensure tests pass
 5. **Build**: Run `pnpm build` to build all packages
-6. **Validate**: Run `node bin/harnspec.js validate --warnings-only` and `cd docs-site && npm run build` to ensure everything works
+6. **Validate**: Run `node bin/harnspec.mjs validate --warnings-only` and `cd docs-site && npm run build` to ensure everything works
 7. **Commit & Tag**:
 
    ```bash

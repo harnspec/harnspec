@@ -8,7 +8,7 @@ HarnSpec uses the **optional dependencies pattern** (used by `esbuild`, `swc`, `
 
 ```
 Main Package (harnspec)
-├── bin/harnspec.js (wrapper script)
+├── bin/harnspec.mjs (wrapper script)
 └── optionalDependencies:
     ├── harnspec-darwin-x64
     ├── harnspec-darwin-arm64
@@ -21,7 +21,7 @@ Main Package (harnspec)
 
 1. User runs `npm install -g harnspec`
 2. npm detects platform and installs matching optional dependency
-3. Wrapper script (`bin/harnspec.js`) detects platform and spawns Rust binary
+3. Wrapper script (`bin/harnspec.mjs`) detects platform and spawns Rust binary
 4. Other platform packages are ignored (saves bandwidth)
 
 ## Package Structure

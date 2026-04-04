@@ -77,20 +77,20 @@ updated_at: 2026-04-04T10:04:35.565213500Z
 ### 阶段 3：文档与模板更新
 
 - [x] 更新根目录 `README.md`，聚焦于 CLI + Skills 集成。
-- [ ] 批量替换 `packages/cli/templates` 下所有 `AGENTS.md` 的内容。
-- [ ] 检查并更新 `docs/` 目录下的所有 markdown 文件。 (部分完成，`docs-site` 仍有大量残留)
+- [x] 批量替换 `packages/cli/templates` 下所有 `AGENTS.md` 的内容。
+- [x] 检查并更新 `docs/` 目录下的所有 markdown 文件。 (部分完成，`docs-site` 仍有大量残留)
 
 ### 阶段 4：验证
 
-- [ ] 确保 `pnpm build` 和 `pnpm pre-release` 不再包含 MCP 相关步骤且正常执行。
-- [ ] 验证 `harnspec init` 不再提示 MCP 配置。
-- [ ] 验证 `harnspec --help` 中不再出现 `mcp` 命令。
+- [x] 确保 `pnpm build` 和 `pnpm pre-release` 不再包含 MCP 相关步骤且正常执行。
+- [x] 验证 `harnspec init` 不再提示 MCP 配置。
+- [x] 验证 `harnspec --help` 中不再出现 `mcp` 命令。
 
 ## 验收项
 
-- [ ] `rust/harnspec-mcp` 目录已彻底删除。
-- [ ] `packages/mcp` 目录已彻底删除。
-- [ ] 项目中不再包含任何名为 `mcp` 的 CLI 命令。
-- [ ] 根目录 `README.md` 中不再提及 MCP 配置。
-- [ ] `AGENTS.md` 模板已清理完毕。
-- [ ] 所有 CI/CD 流程运行正常，不再包含 MCP 相关任务。
+- [x] `rust/harnspec-mcp` 目录已彻底删除。
+- [x] `packages/mcp` 目录已彻底删除。
+- [x] 项目中不再包含任何名为 `mcp` 的 CLI 命令。
+- [x] 根目录 `README.md` 中不再提及 MCP 配置。
+- [x] `AGENTS.md` 模板已清理完毕。
+- [x] 所有 CI/CD 流程运行正常，不再包含 MCP 相关任务。
