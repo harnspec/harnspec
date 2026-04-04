@@ -166,7 +166,6 @@ jobs:
 
           if [ "${{ runner.os }}" = "Windows" ]; then
             cp rust/target/${{ matrix.target }}/release/harnspec.exe dist/${{ matrix.platform }}/
-            cp rust/target/${{ matrix.target }}/release/harnspec-mcp.exe dist/${{ matrix.platform }}/
             cp rust/target/${{ matrix.target }}/release/harnspec-http.exe dist/${{ matrix.platform }}/
           else
             cp rust/target/${{ matrix.target }}/release/harnspec dist/${{ matrix.platform }}/
