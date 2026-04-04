@@ -46,21 +46,7 @@ const config: Config = {
           editUrl:
             'https://github.com/harnspec/harnspec/tree/main/docs-site/',
         },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/harnspec/harnspec/tree/main/docs-site/',
-          // Useful options to enforce blogging best practices
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-        },
+        blog: false,
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -94,7 +80,7 @@ const config: Config = {
           position: 'left',
           label: '参考',
         },
-        {to: '/blog', label: '博客', position: 'left'},
+
         {
           href: 'https://harnspec.github.io/',
           label: 'Web 应用',
@@ -151,10 +137,7 @@ const config: Config = {
         {
           title: '更多',
           items: [
-            {
-              label: '博客',
-              to: '/blog',
-            },
+
             {
               label: '参与贡献',
               href: 'https://github.com/harnspec/harnspec/blob/main/CONTRIBUTING.md',
