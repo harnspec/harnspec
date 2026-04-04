@@ -1,6 +1,6 @@
 {
   "name": "@harnspec/skills",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Official SDD methodology skills for HarnSpec",
   "private": false,
   "license": "MIT",

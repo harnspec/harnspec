@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.2] - 2026-04-05
+
+### Added
+
+- **UI Package & Command** — Launches a web interface for managing specifications
+  - Full-featured web UI in `@harnspec/ui`
+  - `harnspec ui` command to launch the interface
+  - Support for local development and published assets
+- **Global CLI Wrapper** — Optimized global installation experience
+  - Lightweight `@harnspec/cli-wrapper` for faster downloads
+  - Automatic delegation to the platform-specific CLI
+- **Automated Validation** — New end-to-end testing for the demo project
+  - `validate-demo` script verifies core CLI commands and workflow
+- **Improved Distribution** — New scripts for workspace dependency resolution
+  - Automated restoration of `workspace:*` protocols during publishing
+
+### Technical
+
+- **CI/CD Enhancements** — Multi-platform Rust builds and automated npm publishing
+- **Docker Support** — Automated multi-arch Docker image builds published to GHCR
+- **Monorepo Tooling** — Improved scripts for platform-specific binary distribution
+
 ## [0.0.1] - 2026-04-01
 
 ### Added
