@@ -7,7 +7,7 @@
  */
 
 import { spawn, spawnSync } from 'child_process';
-import { existsSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
@@ -32,6 +32,12 @@ if (!existsSync(DIST_DIR)) {
  * Try to resolve @harnspec/http-server from multiple locations
  */
 function resolveHttpServer() {
+  // If we're in the monorepo, try that first
+  const monorepoPath = join(__dirname, '..', '..', 'http-server', 'bin', 'harnspec-http.js');
+  if (existsSync(monorepoPath)) {
+    return monorepoPath;
+  }
+
   // Try local resolution first
   try {
     return require.resolve('@harnspec/http-server/bin/harnspec-http.js');
@@ -39,15 +45,21 @@ function resolveHttpServer() {
     // Continue to try other locations
   }
   
+  // Try resolving from the same node_modules folder where @harnspec/ui is installed
+  const parentNodeModules = join(__dirname, '..', '..', 'http-server', 'bin', 'harnspec-http.js');
+  if (existsSync(parentNodeModules)) {
+    return parentNodeModules;
+  }
+
   // Try resolving from global npm modules
   try {
-    const npmRoot = spawnSync('npm', ['root', '-g'], { 
+    const npmRootResult = spawnSync('npm', ['root', '-g'], { 
       encoding: 'utf8', 
       shell: true 
     });
-    if (npmRoot.status === 0 && npmRoot.stdout) {
+    if (npmRootResult.status === 0 && npmRootResult.stdout) {
       const globalPath = join(
-        npmRoot.stdout.trim(), 
+        npmRootResult.stdout.trim(), 
         '@harnspec', 
         'http-server', 
         'bin', 
@@ -68,36 +80,41 @@ function resolveHttpServer() {
  * Auto-install @harnspec/http-server globally using npm
  */
 function installHttpServer() {
-  console.log('📦 @harnspec/http-server not found, installing globally...');
+  console.log('📦 @harnspec/http-server not found, attempting to install globally...');
   console.log('');
   
   // Get the version of @harnspec/ui to match
-  const uiPkg = JSON.parse(
-    require('fs').readFileSync(join(__dirname, '..', 'package.json'), 'utf8')
-  );
-  const version = uiPkg.version;
-  const packageSpec = version.includes('dev') 
-    ? '@harnspec/http-server@dev' 
-    : `@harnspec/http-server@^${version}`;
-  
-  // Install globally so it persists across npx runs
-  const result = spawnSync('npm', ['install', '-g', packageSpec], {
-    stdio: 'inherit',
-    shell: true
-  });
-  
-  if (result.status !== 0) {
-    console.error('');
-    console.error('Failed to auto-install @harnspec/http-server');
-    console.error('');
-    console.error('Please install manually:');
-    console.error('  npm install -g @harnspec/http-server');
+  try {
+    const uiPkg = JSON.parse(
+      readFileSync(join(__dirname, '..', 'package.json'), 'utf8')
+    );
+    const version = uiPkg.version;
+    const packageSpec = version.includes('dev') 
+      ? '@harnspec/http-server@dev' 
+      : `@harnspec/http-server@^${version}`;
+    
+    // Install globally so it persists across npx runs
+    const result = spawnSync('npm', ['install', '-g', packageSpec], {
+      stdio: 'inherit',
+      shell: true
+    });
+    
+    if (result.status !== 0) {
+      console.error('');
+      console.error('Failed to auto-install @harnspec/http-server');
+      console.error('');
+      console.error('Please install manually:');
+      console.error('  npm install -g @harnspec/http-server');
+      process.exit(1);
+    }
+    
+    console.log('');
+    console.log('✅ @harnspec/http-server installed globally');
+    console.log('');
+  } catch (err) {
+    console.error('Failed to read package.json for auto-install:', err.message);
     process.exit(1);
   }
-  
-  console.log('');
-  console.log('✅ @harnspec/http-server installed globally');
-  console.log('');
 }
 
 // Try to resolve http-server, install if needed

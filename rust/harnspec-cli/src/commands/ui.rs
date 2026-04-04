@@ -148,10 +148,11 @@ fn run_published_ui(
     }
 
     let mut child = if cfg!(target_os = "windows") {
-        Command::new("cmd")
-            .args(["/C", &cmd])
-            .args(&args)
-            .current_dir(cwd)
+        let mut c = Command::new("cmd");
+        c.arg("/C");
+        c.arg(&cmd);
+        c.args(&args);
+        c.current_dir(cwd)
             .stdin(Stdio::inherit())
             .stdout(Stdio::inherit())
             .stderr(Stdio::inherit())
@@ -207,11 +208,27 @@ fn build_ui_command(
     match package_manager {
         "pnpm" => (
             "pnpm".to_string(),
-            [vec!["dlx".to_string()], ui_args].concat(),
+            [
+                vec![
+                    "dlx".to_string(),
+                    "--package=@harnspec/ui".to_string(),
+                    "--".to_string(),
+                ],
+                ui_args,
+            ]
+            .concat(),
         ),
         "yarn" => (
             "yarn".to_string(),
-            [vec!["dlx".to_string()], ui_args].concat(),
+            [
+                vec![
+                    "dlx".to_string(),
+                    "--package=@harnspec/ui".to_string(),
+                    "--".to_string(),
+                ],
+                ui_args,
+            ]
+            .concat(),
         ),
         _ => {
             // npm v10 removed npx; prefer npm exec with package pinning.

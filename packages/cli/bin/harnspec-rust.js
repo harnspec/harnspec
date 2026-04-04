@@ -183,6 +183,9 @@ const args = process.argv.slice(2);
 
 debug('Spawning binary:', binaryPath);
 debug('Arguments:', args);
+if (DEBUG) {
+  console.error('[harnspec debug] Full command line:', [binaryPath, ...args].join(' '));
+}
 
 const child = spawn(binaryPath, args, {
   stdio: 'inherit',

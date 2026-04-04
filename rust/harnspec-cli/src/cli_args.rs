@@ -115,6 +115,7 @@ pub(crate) enum Commands {
     Tui(Box<TuiParams>),
 
     /// Start local web UI for spec management
+    #[command(name = "ui", alias = "web")]
     Ui(Box<UiParams>),
 
     /// Update a spec's frontmatter
