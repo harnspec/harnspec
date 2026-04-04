@@ -209,7 +209,9 @@ fn test_init_installs_skills_by_default() {
     let result = init_project(cwd, true);
     assert!(result.success, "init should succeed");
     assert!(
-        result.stdout.contains("Installing agent skills"),
+        result
+            .stdout
+            .contains("Injecting HarnSpec SDD methodology skills"),
         "init should attempt skill install: {}",
         result.stdout
     );
