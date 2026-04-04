@@ -45,7 +45,7 @@ npx harnspec create my-feature
 ```bash
 cd rust && cargo build --release
 node scripts/copy-rust-binaries.mjs
-node bin/harnspec.js --version
+node bin/harnspec.mjs --version
 ```
 
 ## @harnspec/mcp

@@ -118,7 +118,7 @@ The script:
 5. Run `pnpm pre-release` to run full validation suite
    - Includes: sync-versions, typecheck, tests, build, and validate with `--warnings-only`
    - The validate step treats all issues as warnings (won't fail on complexity/token issues)
-   - For stricter validation before committing spec changes, run `node bin/harnspec.js validate` without flags
+   - For stricter validation before committing spec changes, run `node bin/harnspec.mjs validate` without flags
 6. Test package installation locally using `npm pack`
 
 **Version Bump Example:**
