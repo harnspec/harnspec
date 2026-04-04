@@ -1,0 +1,50 @@
+3459cea0 feat: initialize @harnspec/ui package and docs-site documentation project
+619b9cca feat: add UI command to CLI with support for local and published web interfaces
+eceea020 feat: add global CLI wrapper to delegate execution to @harnspec/cli
+b39ba84f chore: add pnpm-lock.yaml to docs-site directory
+9807529a feat: add scripts to resolve workspace dependencies and restore package files for npm publishing
+eb5c85e6 Revert "chore: update workspace dependencies to fixed versions and add build/restore scripts"
+b386b2ca chore: update workspace dependencies to fixed versions and add build/restore scripts
+641c3522 feat: initialize project workspace with CLI, HTTP server, documentation site, and CI/CD pipelines
+2ef80207 chore: update dependency lockfile to reflect package changes
+333f653e feat: implement UI command in CLI and add support for publishing main packages
+32261cbd feat: implement cross-platform CI/CD pipeline for building, validating, and publishing Rust-based CLI and HTTP server packages
+3885e1df feat: implement @HarnSpec/ui package, add comprehensive documentation, and introduce deployment and utility scripts
+70c87d79 docs: add documentation and CI workflow for npm distribution of Rust binaries
+5f6f8dc2 feat: add GitHub Actions workflow to automate multi-platform build and npm publishing
+8ebac0bc feat: remove publish ci mcp artifact
+84efe3c9 feat: add GitHub Actions workflow to automate multi-platform build and npm publishing
+fd23c58c ci: add GitHub Actions workflow for Node.js and Rust builds, update documentation, and initialize package README
+797ab8f6 feat: add scripts to automate platform-specific binary distribution and package manifest generation
+7054bd48 feat: add comprehensive documentation, CLI command references, and project management templates
+1b8b9ec4 test: add E2E test suite for harnspec init command scenarios
+799e0b43 feat: initialize Docusaurus documentation site with comprehensive guides and reference materials
+f55f151e feat: initialize Docusaurus project configuration and lockfile for documentation site
+a537d310 feat: implement homepage layout and features section for documentation site
+f4d56950 feat: initialize documentation site with comprehensive guides, tutorials, and i18n support
+c5a87f58 feat: add GitHub Actions workflow to publish multi-arch Docker images to GHCR
+ba2e3e4d feat: implement UI command in CLI and add launcher script for @harnspec/ui
+4e10a9b7 feat: implement Rust-based CLI architecture and add support for AI agent skill management
+1013ada6 feat: implement HarnSpec CLI foundation and SDD documentation templates
+f20af75f chore: update pnpm-lock.yaml dependencies
+66e1a427 feat: add automated validation script for HarnSpec core commands and demo project workflow
+95d14e77 feat: add platform binary verification scripts and documentation site configuration
+368954a8 feat: add scripts for managing, verifying, and publishing cross-platform Rust binaries and npm packages
+5100b2d5 feat: implement CLI argument structure and command definitions for harnspec-cli
+8adf6001 chore: update pnpm-lock.yaml dependencies
+d51895b2 feat: initialize project specifications and generate Cargo.lock for the universal skills initiative
+ab64af56 feat: initialize Rust workspace, implement CLI skill management, and establish the Universal Agent Skills framework.
+b5fb6fe9 refactor: migrate to @harnspec scope, deprecate standalone MCP package, and initialize new specification documents.
+f6a2f7f6 chore: update js-yaml override version constraint in pnpm-workspace.yaml
+9847dd37 delete others
+709593c0 feat: add Docker support, pre-push validation, and documentation styling while rebranding from leanspec to harnspec
+556a8ea5 feat: implement project Git import functionality and global quick search interface
+3703100d feat: implement chat sidebar component and add architectural specifications for chat persistence and UX improvements
+c4652aa9 feat: implement AI chat model whitelisting, smart defaults, and UI enhancements including provider icons and history persistence fixes
+f2decdb2 feat: initialize project documentation, UI components, and migration specs for HarnSpec transition
+4bfaaa15 feat: initialize cli package and add documentation pipeline specification
+6790f0f5 feat: add specification for harnspec repository migration and branding transfer
+6bb83e06 feat: add specification for harnspec repository migration and branding transfer
+d0016d2b docs: add fork attribution and license clarification to README
+d0494a33 feat: rebrand project to HarnSpec and initialize monorepo package structure
+2cd6660f feat: implement core architecture, CLI commands, MCP tools, and HTTP server infrastructure for Harnspec
