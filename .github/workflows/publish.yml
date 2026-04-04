@@ -311,8 +311,6 @@ jobs:
           packages=(
             "@harnspec/cli-darwin-arm64"
             "@harnspec/cli-linux-x64"
-            "@harnspec/mcp-darwin-arm64"
-            "@harnspec/mcp-linux-x64"
             "@harnspec/http-darwin-arm64"
             "@harnspec/http-linux-x64"
           )
