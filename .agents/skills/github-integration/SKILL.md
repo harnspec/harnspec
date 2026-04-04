@@ -114,8 +114,8 @@ Due to the sandbox proxy, `gh` may not auto-detect the repo. Use the
 `-R owner/repo` flag:
 
 ```bash
-gh pr create -R codervisor/myrepo --title "..." --body "..."
-gh issue list -R codervisor/myrepo
+gh pr create -R harnspec/myrepo --title "..." --body "..."
+gh issue list -R harnspec/myrepo
 ```
 
 ### GitHub Copilot Coding Agent
@@ -192,7 +192,7 @@ gh api repos/owner/repo/actions/runs
 ## Setup & Activation
 
 ```bash
-npx skills add codervisor/forge@github-integration -g -y
+npx skills add harnspec/forge@github-integration -g -y
 ```
 
 Auto-activates when: user mentions "gh in cloud", "github integration",

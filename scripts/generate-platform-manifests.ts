@@ -112,7 +112,7 @@ async function generateManifests(
     },
     repository: {
       type: 'git',
-      url: 'https://github.com/codervisor/harnspec.git',
+      url: 'https://github.com/harnspec/harnspec.git',
     },
     license: 'MIT',
   };

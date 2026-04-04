@@ -38,7 +38,7 @@ Umbrella spec for the Agent Skills ecosystem initiative. This groups all work re
 ### Architecture
 
 ```
-codervisor/skills (new repo)
+harnspec/skills (new repo)
 ├── skills/
 │   └── harnspec/
 │       ├── SKILL.md

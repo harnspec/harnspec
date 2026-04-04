@@ -254,7 +254,7 @@ export function Navigation({ onToggleSidebar, rightSlot, onHeaderDoubleClick }: 
                   data-tauri-drag-region="false"
                 >
                   <a
-                    href="https://github.com/codervisor/harnspec"
+                    href="https://github.com/harnspec/harnspec"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={t('navigation.githubTooltip')}

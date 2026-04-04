@@ -11,7 +11,7 @@ Poll the GitHub Actions CI pipeline for the **current HEAD commit** until all jo
 ## Environment
 
 The `gh` CLI is **not available** in the Claude VM. Use the GitHub REST API via `curl`.
-The repo is `codervisor/harnspec`.
+The repo is `harnspec/harnspec`.
 
 ## Steps
 
@@ -27,7 +27,7 @@ The repo is `codervisor/harnspec`.
 
    ```bash
    curl -sH "Accept: application/vnd.github+json" \
-     "https://api.github.com/repos/codervisor/harnspec/actions/runs?branch=$BRANCH&head_sha=$SHA&per_page=1" \
+     "https://api.github.com/repos/harnspec/harnspec/actions/runs?branch=$BRANCH&head_sha=$SHA&per_page=1" \
      | python3 -c "
    import json, sys
    data = json.load(sys.stdin)
@@ -43,7 +43,7 @@ The repo is `codervisor/harnspec`.
 
    ```bash
    curl -sH "Accept: application/vnd.github+json" \
-     "https://api.github.com/repos/codervisor/harnspec/actions/runs/$RUN_ID/jobs" \
+     "https://api.github.com/repos/harnspec/harnspec/actions/runs/$RUN_ID/jobs" \
      | python3 -c "
    import json, sys
    data = json.load(sys.stdin)
@@ -57,7 +57,7 @@ The repo is `codervisor/harnspec`.
 
    ```bash
    curl -sH "Accept: application/vnd.github+json" \
-     "https://api.github.com/repos/codervisor/harnspec/actions/runs/$RUN_ID/jobs" \
+     "https://api.github.com/repos/harnspec/harnspec/actions/runs/$RUN_ID/jobs" \
      | python3 -c "
    import json, sys
    data = json.load(sys.stdin)

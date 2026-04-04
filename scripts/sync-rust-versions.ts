@@ -22,7 +22,7 @@ const ROOT_DIR = path.resolve(__dirname, '..');
 const RUST_DIR = path.join(ROOT_DIR, 'rust');
 const RUST_CARGO_TOML = path.join(RUST_DIR, 'Cargo.toml');
 const PACKAGES_DIR = path.join(ROOT_DIR, 'packages');
-const REPOSITORY_URL = 'https://github.com/codervisor/harnspec.git';
+const REPOSITORY_URL = 'https://github.com/harnspec/harnspec.git';
 
 interface PlatformInfo {
   os: string;

@@ -143,29 +143,29 @@ mod tests {
 
     #[test]
     fn parse_owner_repo_shorthand() {
-        let r = RemoteRef::parse("codervisor/harnspec").unwrap();
-        assert_eq!(r.url, "https://github.com/codervisor/harnspec");
-        assert_eq!(r.display_name, "codervisor/harnspec");
+        let r = RemoteRef::parse("harnspec/harnspec").unwrap();
+        assert_eq!(r.url, "https://github.com/harnspec/harnspec");
+        assert_eq!(r.display_name, "harnspec/harnspec");
     }
 
     #[test]
     fn parse_https_github() {
-        let r = RemoteRef::parse("https://github.com/codervisor/harnspec").unwrap();
-        assert_eq!(r.url, "https://github.com/codervisor/harnspec");
-        assert_eq!(r.display_name, "codervisor/harnspec");
+        let r = RemoteRef::parse("https://github.com/harnspec/harnspec").unwrap();
+        assert_eq!(r.url, "https://github.com/harnspec/harnspec");
+        assert_eq!(r.display_name, "harnspec/harnspec");
     }
 
     #[test]
     fn parse_https_with_git_suffix() {
-        let r = RemoteRef::parse("https://github.com/codervisor/harnspec.git").unwrap();
-        assert_eq!(r.display_name, "codervisor/harnspec");
+        let r = RemoteRef::parse("https://github.com/harnspec/harnspec.git").unwrap();
+        assert_eq!(r.display_name, "harnspec/harnspec");
     }
 
     #[test]
     fn parse_ssh() {
-        let r = RemoteRef::parse("git@github.com:codervisor/harnspec.git").unwrap();
-        assert_eq!(r.url, "git@github.com:codervisor/harnspec.git");
-        assert_eq!(r.display_name, "codervisor/harnspec");
+        let r = RemoteRef::parse("git@github.com:harnspec/harnspec.git").unwrap();
+        assert_eq!(r.url, "git@github.com:harnspec/harnspec.git");
+        assert_eq!(r.display_name, "harnspec/harnspec");
     }
 
     #[test]

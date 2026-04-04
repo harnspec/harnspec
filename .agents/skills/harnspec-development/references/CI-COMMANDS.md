@@ -278,7 +278,7 @@ gh run list --json databaseId,name,status,conclusion --jq '.[] | "\(.databaseId)
 
 ```bash
 # Set default repo (if not in repo directory)
-export GH_REPO=codervisor/harnspec
+export GH_REPO=harnspec/harnspec
 
 # Use specific token
 export GH_TOKEN=ghp_xxxx

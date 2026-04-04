@@ -212,7 +212,7 @@ Add under `## [Unreleased]` using these categories: **Added**, **Changed**, **Fi
 ### Creating a Release
 
 1. Move entries from `[Unreleased]` to new version: `## [X.Y.Z] - YYYY-MM-DD`
-2. Add release link at bottom: `[X.Y.Z]: https://github.com/codervisor/harnspec/releases/tag/vX.Y.Z`
+2. Add release link at bottom: `[X.Y.Z]: https://github.com/harnspec/harnspec/releases/tag/vX.Y.Z`
 
 ---
 

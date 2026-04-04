@@ -160,7 +160,7 @@ pnpm sync-versions --dry-run
 ```bash
 # Pull latest docs (maintainers only)
 git subtree pull --prefix=docs-site \
-  https://github.com/codervisor/harnspec-docs.git \
+  https://github.com/harnspec/harnspec-docs.git \
   main --squash
 
 # For development, work directly in docs-site/

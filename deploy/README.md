@@ -11,7 +11,7 @@ docker run -d \
   -p 3000:3000 \
   -v harnspec-data:/home/harnspec/.harnspec \
   -e HARNSPEC_API_KEY=your-secret-key \
-  ghcr.io/codervisor/harnspec:latest
+  ghcr.io/harnspec/harnspec:latest
 ```
 
 Or use the example docker-compose file:

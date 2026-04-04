@@ -148,7 +148,7 @@ the GitHub API. This means:
 gh pr list
 
 # Use:
-gh pr list -R codervisor/myrepo
+gh pr list -R harnspec/myrepo
 ```
 
 ---
@@ -231,7 +231,7 @@ env:
 
 **Fix:** Always pass `-R owner/repo`:
 ```bash
-gh pr create -R codervisor/myrepo --title "..."
+gh pr create -R harnspec/myrepo --title "..."
 ```
 
 ### HTTP 401 Unauthorized

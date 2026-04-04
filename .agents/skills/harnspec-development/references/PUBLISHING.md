@@ -118,7 +118,7 @@ npm install @harnspec/ui@dev
    ### 🔗 Links
    - [npm: harnspec](https://www.npmjs.com/package/harnspec)
    - [Documentation](https://harnspec.github.io)
-   - [Full Changelog](https://github.com/codervisor/harnspec/blob/main/CHANGELOG.md)
+   - [Full Changelog](https://github.com/harnspec/harnspec/blob/main/CHANGELOG.md)
    EOF
    
    # Create the release
@@ -142,7 +142,7 @@ npm install @harnspec/ui@dev
 - `npm view @harnspec/ui dependencies` to ensure no `workspace:*` dependencies leaked
 - Test installation: `npm install -g harnspec@latest` in a clean environment
 - Test UI installation: `npm install -g @harnspec/ui@latest` in a clean environment
-- **Check GitHub release page**: <https://github.com/codervisor/harnspec/releases>
+- **Check GitHub release page**: <https://github.com/harnspec/harnspec/releases>
 - Verify release appears with correct title and notes
 
 ## Critical - Workspace Dependencies

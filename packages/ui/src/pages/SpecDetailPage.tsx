@@ -292,7 +292,7 @@ export function SpecDetailPage() {
             <Button variant="secondary" size="sm" className="gap-2" onClick={() => void loadSpec()}>
               <RefreshCcw className="h-4 w-4" />{t('actions.retry')}
             </Button>
-            <a href="https://github.com/codervisor/harnspec/issues" target="_blank" rel="noreferrer" className="inline-flex">
+            <a href="https://github.com/harnspec/harnspec/issues" target="_blank" rel="noreferrer" className="inline-flex">
               <Button variant="ghost" size="sm" className="gap-2">{t('specDetail.links.reportIssue')}</Button>
             </a>
           </>

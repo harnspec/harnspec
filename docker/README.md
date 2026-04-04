@@ -7,11 +7,11 @@ Run the harnspec UI in a Docker container — useful for CI/CD, team self-hostin
 ### Using Docker directly
 
 ```sh
-docker pull ghcr.io/codervisor/harnspec:latest
+docker pull ghcr.io/harnspec/harnspec:latest
 
 docker run -p 3000:3000 \
   -v harnspec-data:/home/harnspec/.harnspec \
-  ghcr.io/codervisor/harnspec:latest
+  ghcr.io/harnspec/harnspec:latest
 ```
 
 ## Mounting Project Directories
@@ -23,7 +23,7 @@ docker run -p 3000:3000 \
   -v harnspec-data:/home/harnspec/.harnspec \
   -v /path/to/project-a:/projects/project-a:ro \
   -v /path/to/project-b:/projects/project-b:ro \
-  ghcr.io/codervisor/harnspec:latest
+  ghcr.io/harnspec/harnspec:latest
 ```
 
 To auto-register a project on startup, pass `--project`:
@@ -32,7 +32,7 @@ To auto-register a project on startup, pass `--project`:
 docker run -p 3000:3000 \
   -v harnspec-data:/home/harnspec/.harnspec \
   -v /path/to/my-project:/projects/my-project:ro \
-  ghcr.io/codervisor/harnspec:latest \
+  ghcr.io/harnspec/harnspec:latest \
   --project /projects/my-project
 ```
 
@@ -65,7 +65,7 @@ Mount a volume at `/home/harnspec/.harnspec` to persist data across container re
 docker run -p 8080:8080 \
   -e PORT=8080 \
   -v harnspec-data:/home/harnspec/.harnspec \
-  ghcr.io/codervisor/harnspec:latest
+  ghcr.io/harnspec/harnspec:latest
 ```
 
 ## Security
@@ -84,8 +84,8 @@ docker run -p 3000:3000 -v harnspec-data:/home/harnspec/.harnspec harnspec
 The image is published to GitHub Container Registry:
 
 ```
-ghcr.io/codervisor/harnspec:latest
-ghcr.io/codervisor/harnspec:<version>   # e.g. 0.2.27
+ghcr.io/harnspec/harnspec:latest
+ghcr.io/harnspec/harnspec:<version>   # e.g. 0.2.27
 ```
 
 The image uses a two-stage build:

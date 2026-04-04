@@ -25,15 +25,15 @@
   },
   "link.item.label.GitHub": {
     "message": "GitHub",
-    "description": "The label of footer link with label=GitHub linking to https://github.com/codervisor/harnspec"
+    "description": "The label of footer link with label=GitHub linking to https://github.com/harnspec/harnspec"
   },
   "link.item.label.Issues": {
     "message": "Issues",
-    "description": "The label of footer link with label=Issues linking to https://github.com/codervisor/harnspec/issues"
+    "description": "The label of footer link with label=Issues linking to https://github.com/harnspec/harnspec/issues"
   },
   "link.item.label.Discussions": {
     "message": "Discussions",
-    "description": "The label of footer link with label=Discussions linking to https://github.com/codervisor/harnspec/discussions"
+    "description": "The label of footer link with label=Discussions linking to https://github.com/harnspec/harnspec/discussions"
   },
   "link.item.label.Blog": {
     "message": "Blog",
@@ -41,18 +41,18 @@
   },
   "link.item.label.Contributing": {
     "message": "Contributing",
-    "description": "The label of footer link with label=Contributing linking to https://github.com/codervisor/harnspec/blob/main/CONTRIBUTING.md"
+    "description": "The label of footer link with label=Contributing linking to https://github.com/harnspec/harnspec/blob/main/CONTRIBUTING.md"
   },
   "link.item.label.Changelog": {
     "message": "Changelog",
-    "description": "The label of footer link with label=Changelog linking to https://github.com/codervisor/harnspec/blob/main/CHANGELOG.md"
+    "description": "The label of footer link with label=Changelog linking to https://github.com/harnspec/harnspec/blob/main/CHANGELOG.md"
   },
   "link.item.label.npm Package": {
     "message": "npm Package",
     "description": "The label of footer link with label=npm Package linking to https://www.npmjs.com/package/harnspec"
   },
   "copyright": {
-    "message": "Copyright © 2025 codervisor. Built with Docusaurus.",
+    "message": "Copyright © 2025 harnspec/. Built with Docusaurus.",
     "description": "The footer copyright"
   }
 }

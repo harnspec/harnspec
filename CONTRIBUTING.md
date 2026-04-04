@@ -11,7 +11,7 @@ Thanks for your interest in contributing! HarnSpec is about keeping things lean,
 5. Commit with clear message: `git commit -m "Add feature X"`
 6. Push and open a PR
 
-> Note: The documentation site lives in the `codervisor/harnspec-docs` repository and is merged here as the `docs-site/` directory using git subtree. It's already included when you clone the repo - no additional steps needed.
+> Note: The documentation site lives in the `harnspec/harnspec-docs` repository and is merged here as the `docs-site/` directory using git subtree. It's already included when you clone the repo - no additional steps needed.
 
 ## Development Setup
 
@@ -86,7 +86,7 @@ All packages in the monorepo maintain synchronized versions automatically. The r
 - `harnspec` (CLI package - wrapper for Rust binary)
 - `@harnspec/ui` (web UI package)
 - `@harnspec/mcp` (MCP server wrapper)
-- Desktop app repository: <https://github.com/codervisor/harnspec-desktop>
+- Desktop app repository: <https://github.com/harnspec/harnspec-desktop>
 
 ### Automated Version Sync
 
@@ -149,7 +149,7 @@ git push
 
 ### Docs Site Subtree
 
-The docs are maintained in [codervisor/harnspec-docs](https://github.com/codervisor/harnspec-docs) and merged into this repo at `docs-site/` using git subtree. The docs are already included when you clone.
+The docs are maintained in [harnspec/harnspec-docs](https://github.com/harnspec/harnspec-docs) and merged into this repo at `docs-site/` using git subtree. The docs are already included when you clone.
 
 **Local development:**
 
@@ -168,14 +168,14 @@ git commit -m "docs: your changes"
 git push
 
 # Push to the separate docs repo (maintainers only)
-git subtree push --prefix=docs-site https://github.com/codervisor/harnspec-docs.git main
+git subtree push --prefix=docs-site https://github.com/harnspec/harnspec-docs.git main
 ```
 
 **Pulling docs changes from upstream:**
 
 ```bash
 # Pull latest from the separate docs repo
-git subtree pull --prefix=docs-site https://github.com/codervisor/harnspec-docs.git main --squash
+git subtree pull --prefix=docs-site https://github.com/harnspec/harnspec-docs.git main --squash
 ```
 
 ### Monorepo with Turborepo
@@ -189,10 +189,9 @@ This project uses [Turborepo](https://turbo.build/) to manage the monorepo with 
 **Packages:**
 
 - `packages/cli` - CLI wrapper for Rust binary (published as `harnspec`)
-- `packages/mcp` - MCP server wrapper (published as `@harnspec/mcp`)
 - `packages/ui` - Web UI bundle (published as `@harnspec/ui`)
-- Desktop app repository: <https://github.com/codervisor/harnspec-desktop>
-- `docs-site/` - Git subtree merged from `codervisor/harnspec-docs` (Docusaurus)
+- Desktop app repository: <https://github.com/harnspec/harnspec-desktop>
+- `docs-site/` - Git subtree merged from `harnspec/harnspec-docs` (Docusaurus)
 
 **Key files:**
 

@@ -80,7 +80,7 @@ pnpm --filter @harnspec/ui preview   # preview production build
 
 The desktop application now lives in a dedicated repository:
 
-- <https://github.com/codervisor/harnspec-desktop>
+- <https://github.com/harnspec/harnspec-desktop>
 
 ## Building
 

@@ -6,7 +6,7 @@ services:
     name: harnspec
     runtime: image
     image:
-      url: ghcr.io/codervisor/harnspec:latest
+      url: ghcr.io/harnspec/harnspec:latest
     envVars:
       - key: HARNSPEC_DATA_DIR
         value: /data

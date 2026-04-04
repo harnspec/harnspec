@@ -6,7 +6,7 @@ app = "harnspec"
 primary_region = "iad"
 
 [build]
-  image = "ghcr.io/codervisor/harnspec:latest"
+  image = "ghcr.io/harnspec/harnspec:latest"
 
 [env]
   HARNSPEC_DATA_DIR = "/data"

@@ -13,11 +13,11 @@
   ],
   "homepage": "https://harnspec.github.io",
   "bugs": {
-    "url": "https://github.com/codervisor/harnspec/issues"
+    "url": "https://github.com/harnspec/harnspec/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/codervisor/harnspec.git"
+    "url": "https://github.com/harnspec/harnspec.git"
   },
   "license": "MIT",
   "author": "Marvin Zhang",

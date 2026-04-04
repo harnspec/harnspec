@@ -1,6 +1,6 @@
 services:
   harnspec:
-    image: ghcr.io/codervisor/harnspec:latest
+    image: ghcr.io/harnspec/harnspec:latest
     ports:
       - "3000:3000"
     volumes:
