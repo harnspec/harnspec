@@ -33,6 +33,7 @@
     "vscode-languageserver-types": "^3.17.5"
   },
   "devDependencies": {
+    "@chevrotain/regexp-to-ast": "11.0.3",
     "@docusaurus/module-type-aliases": "3.9.2",
     "@docusaurus/tsconfig": "3.9.2",
     "@docusaurus/types": "3.9.2",
