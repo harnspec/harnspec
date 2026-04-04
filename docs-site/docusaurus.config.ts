@@ -165,7 +165,27 @@ const config: Config = {
     mermaid: true,
   },
 
+
   themes: ['@docusaurus/theme-mermaid'],
+
+  plugins: [
+    function webpackPlugin(context, options) {
+      return {
+        name: 'webpack-plugin',
+        configureWebpack(config, isServer, utils) {
+          return {
+            resolve: {
+              fallback: {
+                'vscode-languageserver-types': false,
+                'vscode-jsonrpc': false,
+                'vscode-languageserver-textdocument': false,
+              },
+            },
+          };
+        },
+      };
+    },
+  ],
 };
 
 export default config;

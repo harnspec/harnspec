@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@chevrotain/regexp-to-ast':
-        specifier: 11.0.3
-        version: 11.0.3
       '@docusaurus/core':
         specifier: 3.9.2
         version: 3.9.2(@mdx-js/react@3.1.1(@types/react@19.2.5)(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(typescript@5.6.3)
@@ -41,12 +38,6 @@ importers:
       react-icons:
         specifier: ^5.3.0
         version: 5.5.0(react@19.2.0)
-      vscode-jsonrpc:
-        specifier: 8.2.0
-        version: 8.2.0
-      vscode-languageserver-types:
-        specifier: 3.17.5
-        version: 3.17.5
     devDependencies:
       '@docusaurus/module-type-aliases':
         specifier: 3.9.2

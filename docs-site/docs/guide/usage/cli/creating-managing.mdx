@@ -44,7 +44,7 @@ harnspec create my-feature --tags api,backend
 harnspec create my-feature --priority high
 ```
 
-**另见**：[CLI 参考：create](/zh-Hans/docs/reference/cli#harnspec-create) 获取所有选项
+**另见**：[CLI 参考：create](/docs/reference/cli#harnspec-create) 获取所有选项
 
 ## 更新Spec
 
@@ -80,7 +80,7 @@ harnspec update 042 --assignee alice
 
 **重要**：始终使用 `harnspec update` 更新系统管理的字段。手动编辑会损坏元数据。
 
-**另见**：[CLI 参考：update](/zh-Hans/docs/reference/cli#harnspec-update)
+**另见**：[CLI 参考：update](/docs/reference/cli#harnspec-update)
 
 ## 查看Spec
 
@@ -114,7 +114,7 @@ harnspec open 042
 harnspec open 042/TESTING.md
 ```
 
-**另见**：[CLI 参考：view](/zh-Hans/docs/reference/cli#harnspec-view)
+**另见**：[CLI 参考：view](/docs/reference/cli#harnspec-view)
 
 ## 列出Spec
 
@@ -140,7 +140,7 @@ harnspec board
 
 显示按状态分组的Spec及项目健康指标。
 
-**另见**：[看板和统计](/zh-Hans/docs/guide/usage/cli/project-management#board-stats)
+**另见**：[看板和统计](/docs/guide/usage/cli/project-management#board-stats)
 
 ## 管理Spec文件
 
@@ -162,7 +162,7 @@ harnspec files 042
 
 **为什么？**保持每个文件在 400 行以下（上下文经济 (Context Economy)原则）。
 
-**另见**：[子 Spec文件](/zh-Hans/docs/guide/usage/spec-structure#sub-spec-files)
+**另见**：[子 Spec文件](/docs/guide/usage/spec-structure#sub-spec-files)
 
 ### 查看文件列表
 
@@ -231,7 +231,7 @@ harnspec deps 042
   ⟷ 044-api-refactor [planned]
 ```
 
-**另见**：[依赖](/zh-Hans/docs/guide/usage/cli/project-management#dependencies)
+**另见**：[依赖](/docs/guide/usage/cli/project-management#dependencies)
 
 ## 验证
 
@@ -251,7 +251,7 @@ harnspec validate 042
 - 依赖循环
 - Token 计数警告（>5,000 Token 降低 AI 有效性）
 
-**另见**：[验证](/zh-Hans/docs/guide/usage/cli/validation)
+**另见**：[验证](/docs/guide/usage/cli/validation)
 
 ## 搜索
 
@@ -265,7 +265,7 @@ harnspec search "authentication"
 harnspec search "API" --status in-progress --tag backend
 ```
 
-**另见**：[查找Spec](/zh-Hans/docs/guide/usage/cli/finding-specs)
+**另见**：[查找Spec](/docs/guide/usage/cli/finding-specs)
 
 ## 常见工作流
 
@@ -325,10 +325,10 @@ harnspec files 042
 
 ## 下一步
 
-- [查找Spec](/zh-Hans/docs/guide/usage/cli/finding-specs) - 搜索和发现
-- [Spec结构](/zh-Hans/docs/guide/usage/spec-structure) - 理解Spec结构
-- [项目管理](/zh-Hans/docs/guide/usage/cli/project-management#board-stats) - 看板视图和健康跟踪
+- [查找Spec](/docs/guide/usage/cli/finding-specs) - 搜索和发现
+- [Spec结构](/docs/guide/usage/spec-structure) - 理解Spec结构
+- [项目管理](/docs/guide/usage/cli/project-management#board-stats) - 看板视图和健康跟踪
 
 ---
 
-**参考**：[CLI 文档](/zh-Hans/docs/reference/cli) 获取完整命令参考
+**参考**：[CLI 文档](/docs/reference/cli) 获取完整命令参考
