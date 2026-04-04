@@ -14,21 +14,21 @@
 
 ## 🔧 Managing Specs
 
-### MCP Tools (Preferred) with CLI Fallback
+### CLI Commands with Agent Skills
 
-| Action | MCP Tool | CLI Fallback |
-|--------|----------|--------------|
-| Project status | `board` | `harnspec board` |
-| List specs | `list` | `harnspec list` |
-| Search specs | `search` | `harnspec search "query"` |
-| View spec | `view` | `harnspec view <spec>` |
-| Create spec | `create` | `harnspec create <name>` |
-| Update spec | `update` | `harnspec update <spec> --status <status>` |
-| Link specs | `link` | `harnspec link <spec> --depends-on <other>` |
-| Unlink specs | `unlink` | `harnspec unlink <spec> --depends-on <other>` |
-| Dependencies | `deps` | `harnspec deps <spec>` |
-| Token count | `tokens` | `harnspec tokens <spec>` |
-| Validate specs | `validate` | `harnspec validate` |
+| Action | Command |
+|--------|---------|
+| Project status | `harnspec board` |
+| List specs | `harnspec list` |
+| Search specs | `harnspec search "query"` |
+| View spec | `harnspec view <spec>` |
+| Create spec | `harnspec create <name>` |
+| Update spec | `harnspec update <spec> --status <status>` |
+| Link specs | `harnspec rel add <spec> --depends-on <other>` |
+| Unlink specs | `harnspec rel rm <spec> --depends-on <other>` |
+| Dependencies | `harnspec deps <spec>` |
+| Token count | `harnspec tokens <spec>` |
+| Validate specs | `harnspec validate` |
 
 ## ⚠️ Core Rules
 

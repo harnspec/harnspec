@@ -170,7 +170,7 @@ Or copy from: [AGENTS.md template](https://github.com/codervisor/harnspec/blob/m
 
 AI tools have different ways of loading project files:
 - **VS Code Copilot**: Add `@workspace` to include project files
-- **Claude Code**: Auto-loads AGENTS.md via MCP
+- **Claude Code**: Auto-loads AGENTS.md via Agent Skills
 - **Cursor**: Uses `.cursorrules` (copy AGENTS.md content there)
 
 **3. Instructions too long**
@@ -182,7 +182,7 @@ If AGENTS.md is too long, AI may ignore parts. Keep it under 2,000 tokens.
 Check for other instruction files that might conflict:
 - `.github/copilot-instructions.md`
 - `.cursorrules`
-- System prompts in MCP config
+- System prompts in Agent Skills config
 
 **5. AI doesn't have CLI access**
 

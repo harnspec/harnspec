@@ -2,7 +2,7 @@
 /**
  * copy-rust-binaries.mjs
  * 
- * Copies Rust binaries from rust/target/{release,debug} to packages/{cli,mcp}/binaries/{platform}/
+ * Copies Rust binaries from rust/target/{release,debug} to packages/{cli,http-server}/binaries/{platform}/
  * Automatically detects current platform and copies the appropriate binary.
  * 
  * Usage:

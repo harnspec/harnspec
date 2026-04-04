@@ -54,18 +54,14 @@ harnspec ui       # Web UI 在 localhost:3000
 | **🔗 依赖关系** | 使用 \`depends_on\` 和 \`related\` 跟踪 Spec 关系 |
 | **🎨 Web UI** | \`harnspec ui\` - 基于浏览器的仪表板 |
 | **📈 项目统计** | \`harnspec stats\` - 健康指标和瓶颈检测 |
-| **🤖 AI 原生** | MCP 服务器 + CLI 用于 AI 助手 |
+| **🤖 AI 原生** | CLI + Agent Skills 用于 AI 助手 |
 
 ## AI 集成
 
-通过 MCP 或 CLI 与任何 AI 编码助手配合使用：
+通过 CLI + Agent Skills 与任何 AI 编码助手（Claude Code, Cursor, Windsurf, GitHub Copilot 等）配合使用：
 
-```json
-{
-  "mcpServers": {
-    "harnspec": { "command": "npx", "args": ["@HarnSpec/mcp"] }
-  }
-}
+```bash
+harnspec skill install
 ```
 
 **兼容：** VS Code Copilot、Cursor、Windsurf、Claude Code、Gemini CLI 等。
@@ -75,7 +71,7 @@ harnspec ui       # Web UI 在 localhost:3000
 ## 你将获得什么
 
 *   [**核心 CLI**](/docs/guide/usage/cli/creating-managing)：管理 Spec、跟踪状态并可视化依赖关系。
-*   [**MCP 服务器**](/docs/guide/usage/advanced-features/agent-configuration)：让 AI 代理直接访问和搜索你的 Spec。
+*   [**Agent Skills**](https://github.com/harnspec/harnspec/blob/main/.agents/skills/harnspec/SKILL.md)：教导 AI 助手如何运行 SDD 方法论。
 *   [**可视化模式**](/docs/guide/visual-mode)：用于浏览项目 Spec 图的精美 Web 界面。
 
 ## 一个简单示例

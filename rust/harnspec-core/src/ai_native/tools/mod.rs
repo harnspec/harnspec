@@ -1,7 +1,7 @@
 //! HarnSpec AI tools (native)
 //!
-//! Tool names and schemas mirror the MCP server tools exactly.
-//! The AI chat uses HTTP API calls while MCP operates on the filesystem directly.
+//! Tool names and schemas mirror the standard HarnSpec CLI tools.
+//! The AI chat uses HTTP API calls to interact with the HarnSpec server.
 //! `run_subagent` is the only AI-chat-specific tool.
 
 mod helpers;
@@ -147,12 +147,12 @@ mod tests {
         let registry = build_tools(context);
         assert!(registry.is_ok());
         let reg = registry.unwrap();
-        // 10 MCP-aligned tools + 1 AI-chat-only (run_subagent) = 11
+        // 10 standard tools + 1 AI-chat-only (run_subagent) = 11
         assert_eq!(reg.tools().len(), 11);
     }
 
     #[test]
-    fn test_tool_names_match_mcp() {
+    fn test_tool_names_match_standard() {
         let context = ToolContext {
             base_url: "http://localhost:3000".to_string(),
             project_id: None,
@@ -170,7 +170,7 @@ mod tests {
             })
             .collect();
 
-        // MCP tools
+        // Standard tools
         assert!(tool_names.contains(&"list".to_string()));
         assert!(tool_names.contains(&"view".to_string()));
         assert!(tool_names.contains(&"create".to_string()));

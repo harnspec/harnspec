@@ -7,7 +7,7 @@
 - **Simplicity** - Start with one file, grow as needed
 - **Agility** - Direct editing, no multi-step workflows
 - **Adaptivity** - Works with any editor, AI tool, team size, or organizational culture
-- **Comprehensive tooling** - CLI, MCP server, validation
+- **Comprehensive tooling** - CLI, Agent Skills, validation
 
 **Why this drives development velocity:** Our first principles (Context Economy, Signal-to-Noise, Intent Over Implementation) lead to high human-AI alignment, low context rot, and low cognitive load. **Result: Better quality → Less rework → Higher velocity.**
 
@@ -19,10 +19,10 @@
 | **Spec Structure** | ✅ Flexible | ⚠️ Rigid format | ⚠️ Rigid templates | ✅ Built-in | ❌ Task-based | ❌ None |
 | **AI Optimization** | ✅ Controlled length | ⚠️ Longer context | ⚠️ Long system prompt | ✅ Native | ❌ Rich text | ✅ Chat |
 | **Workflow** | Flexible | 5-step process | Proposal→Archive | Autonomous | Tickets/sprints | Prompt |
-| **Access Latency** | ✅ Instant (local) | ✅ Instant (local) | ✅ Instant (local) | ✅ IDE-native | ❌ API/MCP config | ✅ Chat |
+| **Access Latency** | ✅ Instant (local) | ✅ Instant (local) | ✅ Instant (local) | ✅ IDE-native | ❌ External API | ✅ Chat |
 | **Numbering** | ✅ Yes | ✅ Yes | ❌ No | ⚠️ IDE-managed | ✅ Ticket IDs | ❌ None |
 | **CLI Tools** | ✅ Full-featured | ✅ Slash commands | ✅ Slash commands | ✅ Built-in | ❌ Web UI | ❌ None |
-| **MCP Server** | ✅ Yes | ❌ No | ❌ No | ⚠️ Varies | ⚠️ Requires config | ❌ No |
+| **Agent Skills** | ✅ Yes | ❌ No | ❌ No | ⚠️ Varies | ⚠️ Requires config | ❌ No |
 | **Visual Mode (UI)** | ✅ Yes | ❌ CLI only | ❌ CLI only | ✅ Built-in | ✅ Web UI | ❌ None |
 | **Editor** | Any | Any | Any | Locked (Kiro) | Web/any | Any |
 | **Cognitive Load** | ✅ Low | ⚠️ Higher | ⚠️ Higher | ⚠️ New IDE | ⚠️ Varies | ✅ Very Low |
@@ -122,14 +122,14 @@ Traditional approaches for documenting technical decisions.
 - Inconsistent structure across teams
 - Not AI-optimized (often 1000+ lines)
 
-**HarnSpec's advantage**: RFC/ADR philosophy + modern tooling. CLI/MCP tools, consistent structure, AI-optimized (&lt;2,000 tokens), search and validation.
+**HarnSpec's advantage**: RFC/ADR philosophy + modern tooling. CLI/Skills tools, consistent structure, AI-optimized (&lt;2,000 tokens), search and validation.
 
 ### vs. Project Management Tools (Jira, Linear)
 
 PM tools excel at task tracking and team coordination.
 
 **Trade-offs for technical specs:**
-- Higher latency (API/MCP configuration needed)
+- Higher latency (External API configuration needed)
 - Rich text editors can't fit in AI context windows  
 - Not version controlled with code
 - Wrong abstraction (tickets vs. technical specs)

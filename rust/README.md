@@ -1,6 +1,6 @@
 # HarnSpec Rust Implementation
 
-This directory contains the Rust implementation of HarnSpec's core functionality, CLI, and MCP server.
+This directory contains the Rust implementation of HarnSpec's core functionality, CLI, and HTTP server.
 
 ## Architecture
 
@@ -17,14 +17,12 @@ rust/
 │   └── src/
 │       ├── main.rs         # CLI entry point
 │       └── commands/       # Command implementations
-├── harnspec-mcp/           # MCP server binary crate
+├── harnspec-http/          # HTTP server binary crate
 │   └── src/
-│       ├── main.rs         # MCP server entry point
-│       ├── protocol.rs     # JSON-RPC protocol handling
-│       └── tools.rs        # MCP tool implementations
+│       ├── main.rs         # HTTP server entry point
+│       └── ...
 └── npm-dist/               # npm distribution helpers
-    ├── binary-wrapper.js   # CLI binary wrapper for npm
-    └── mcp-wrapper.js      # MCP binary wrapper for npm
+    └── binary-wrapper.js   # CLI binary wrapper for npm
 ```
 
 ## Building
@@ -47,7 +45,7 @@ cargo clippy
 
 The release binaries are optimized for size:
 - CLI binary: ~4.1MB
-- MCP binary: ~3.9MB
+- HTTP binary: ~4.5MB
 
 These are well under the 15MB target and significantly smaller than the Node.js alternatives (~50MB with dependencies).
 
@@ -76,9 +74,10 @@ Estimated performance improvements over TypeScript implementation:
 - `dialoguer` - Interactive prompts
 - `indicatif` - Progress bars
 
-### MCP Crate
+### HTTP Crate
 - `tokio` - Async runtime
-- JSON-RPC protocol implementation
+- `sqlx` - SQLite database
+- `axum` - Web framework (if used)
 
 ## Cross-Compilation
 

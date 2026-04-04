@@ -1,8 +1,8 @@
 #!/usr/bin/env tsx
 /**
- * Publish main packages (harnspec and @harnspec/mcp)
+ * Publish main packages (harnspec, @harnspec/http-server, @harnspec/ui, @harnspec/skills)
  * 
- * This script publishes the main CLI and MCP packages that have 
+ * This script publishes the main CLI and supporting packages that have 
  * optional dependencies on the platform-specific binary packages.
  * 
  * IMPORTANT: Run publish-platform-packages.ts FIRST!
@@ -107,8 +107,6 @@ async function verifyPlatformPackages(): Promise<boolean> {
   const packagesToCheck = [
     '@harnspec/cli-darwin-arm64',
     '@harnspec/cli-linux-x64',
-    '@harnspec/mcp-darwin-arm64',
-    '@harnspec/mcp-linux-x64',
     '@harnspec/http-darwin-arm64',
     '@harnspec/http-linux-x64',
   ];
@@ -155,13 +153,6 @@ async function publishMainPackages(dryRun: boolean, tag?: string): Promise<void>
     console.log(`  ✗ ${cliResult.package}: ${cliResult.error}`);
   }
 
-  const mcpResult = await publishPackage(path.join(PACKAGES_DIR, 'mcp'), dryRun, tag);
-  results.push(mcpResult);
-  if (mcpResult.success) {
-    console.log(`  ✓ ${mcpResult.package}`);
-  } else {
-    console.log(`  ✗ ${mcpResult.package}: ${mcpResult.error}`);
-  }
 
   const httpServerResult = await publishPackage(path.join(PACKAGES_DIR, 'http-server'), dryRun, tag);
   results.push(httpServerResult);
@@ -206,9 +197,8 @@ async function publishMainPackages(dryRun: boolean, tag?: string): Promise<void>
 
   if (!dryRun && successful.length > 0) {
     console.log('\n✅ Main packages published successfully!');
-    console.log('\n🎉 Release complete! Users can now install with:');
+    console.log('🎉 Release complete! Users can now install with:');
     console.log('   npm install -g harnspec');
-    console.log('   npm install -g @harnspec/mcp');
   }
 }
 

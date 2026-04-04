@@ -35,7 +35,7 @@ AI 代理面临一个基本挑战：**工作记忆 (Working Memory)是短暂的*
 ### 语义记忆（持久）
 - **什么**：长期知识、事实、决策、理由
 - **生命周期**：跨会话和任务持久
-- **存储**：HarnSpec Spec + MCP 检索
+- **存储**：HarnSpec Spec + Agent Skills 检索
 - **大小**：无限制（外部存储）
 
 **HarnSpec Spec = AI 代理的语义记忆**
@@ -84,8 +84,8 @@ API 被大量请求攻击，40% 的请求来自 2% 的用户。
 
 AI 代理通过以下方式访问Spec记忆：
 
-1. **MCP 服务器集成**：HarnSpec MCP 服务器提供Spec搜索/检索
-2. **语义搜索**：代理按主题、状态、标签查询Spec
+1. **Agent Skills 集成**：Agent Skills 提供Spec搜索/检索指引
+2. **命令搜索**：代理通过 `harnspec search` 按主题、状态、标签查询Spec
 3. **选择性加载**：仅将相关Spec加载到工作记忆中
 4. **交叉引用**：遵循 `depends_on` 和 `related` 链接
 
@@ -94,7 +94,7 @@ AI 代理通过以下方式访问Spec记忆：
 人类："我们为什么选择 PostgreSQL 而不是 MongoDB？"
 
 AI Agent：
-1. 查询 HarnSpec MCP：search_specs("database decision")
+1. 运行：harnspec search "database decision"
 2. 检索Spec 023：数据库选择
 3. 从语义记忆读取决策理由
 4. 回应："根据Spec 023，选择 PostgreSQL 是因为..."
@@ -110,7 +110,7 @@ Spec弥合以下差距：
 ```mermaid
 flowchart LR
     Human[人类意图] -->|编写| Spec[HarnSpec Spec]
-    Spec -->|MCP 检索| AI[AI Agent]
+    Spec -->|Skills 检索| AI[AI Agent]
     AI -->|实施| Code[代码库]
     Code -->|验证| Spec
     
@@ -175,7 +175,7 @@ flowchart LR
 - 压缩历史阶段
 
 ### 检索练习（验证访问）
-- 测试 MCP 搜索检索相关Spec
+- 使用 `harnspec search` 检索相关Spec
 - 验证交叉引用（depends_on、related）
 - 检查关键决策是否可找到
 
@@ -184,7 +184,7 @@ flowchart LR
 **应该做：**
 - ✅ 捕获"为什么"和权衡（稳定的语义记忆）
 - ✅ 随着现实变化更新Spec（保持记忆准确）
-- ✅ 在询问人类之前使用 MCP 搜索检索
+- ✅ 在询问人类之前使用 `harnspec search` 检索
 - ✅ 交叉引用相关Spec（记忆关联）
 - ✅ 归档已完成的工作（释放工作记忆）
 
@@ -200,11 +200,11 @@ flowchart LR
 
 - **工作记忆**（聊天历史）是短暂且有限的
 - **语义记忆**（Spec）是持久且可扩展的
-- **MCP 集成** 实现可靠的记忆检索
+- **Agent Skills** 实现可靠的记忆检索指引
 - **上下文工程** 保持记忆可管理
 
 当 AI 代理可以可靠地访问过去的决策、理解理由并建立在先前工作的基础上时，它们成为 **真正的协作者** 而不是受会话限制的助手。
 
 ---
 
-**相关**：了解 [上下文工程](/docs/advanced/context-engineering) 以管理记忆大小，或探索 [MCP 集成](/docs/reference/cli) 以了解记忆检索的技术实现。
+**相关**：了解 [上下文工程](/docs/advanced/context-engineering) 以管理记忆大小，或探索 [CLI 参考](/docs/reference/cli) 以了解记忆检索的技术实现。

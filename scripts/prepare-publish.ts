@@ -45,18 +45,12 @@ function resolveWorkspaceVersion(depName: string): string | null {
   const pkgMap: Record<string, string> = {
     '@harnspec/http-server': 'packages/http-server/package.json',
     '@harnspec/ui': 'packages/ui/package.json',
-    '@harnspec/mcp': 'packages/mcp/package.json',
     'harnspec': 'packages/cli/package.json',
     // CLI platform packages
     '@harnspec/cli-darwin-x64': 'packages/cli/binaries/darwin-x64/package.json',
     '@harnspec/cli-darwin-arm64': 'packages/cli/binaries/darwin-arm64/package.json',
     '@harnspec/cli-linux-x64': 'packages/cli/binaries/linux-x64/package.json',
     '@harnspec/cli-windows-x64': 'packages/cli/binaries/windows-x64/package.json',
-    // MCP platform packages
-    '@harnspec/mcp-darwin-x64': 'packages/mcp/binaries/darwin-x64/package.json',
-    '@harnspec/mcp-darwin-arm64': 'packages/mcp/binaries/darwin-arm64/package.json',
-    '@harnspec/mcp-linux-x64': 'packages/mcp/binaries/linux-x64/package.json',
-    '@harnspec/mcp-windows-x64': 'packages/mcp/binaries/windows-x64/package.json',
     // HTTP server platform packages
     '@harnspec/http-darwin-x64': 'packages/http-server/binaries/darwin-x64/package.json',
     '@harnspec/http-darwin-arm64': 'packages/http-server/binaries/darwin-arm64/package.json',
@@ -136,7 +130,6 @@ function main() {
 
   const packages = [
     'packages/cli/package.json',
-    'packages/mcp/package.json',
     'packages/http-server/package.json',
     'packages/ui/package.json',
   ];

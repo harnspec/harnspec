@@ -62,8 +62,8 @@
 | 英文 | 中文 | 说明 |
 |------|------|------|
 | CLI | CLI | 保持英文（Command Line Interface） |
-| MCP | MCP | 保持英文（Model Context Protocol） |
-| MCP Server | MCP 服务器 | - |
+| Agent Skills | Agent Skills | 保持英文 |
+| Agent Skill | AI 代理技能 | - |
 | Web App | Web 应用 | - |
 | Docs Site | 文档站点 | - |
 | Board View | 看板视图 | 项目管理术语 |

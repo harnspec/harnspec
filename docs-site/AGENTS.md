@@ -34,7 +34,7 @@ Every English `.mdx` file needs a Chinese translation in `i18n/zh-Hans/docusauru
 
 Never translate these terms - they are technical concepts with established English usage:
 
-- **Core terms**: Spec, HarnSpec, CLI, Token, README, frontmatter, MCP
+- **Core terms**: Spec, HarnSpec, CLI, Token, README, frontmatter
 - **Commands**: `harnspec create`, `harnspec update`, `harnspec board`, etc.
 - **Status values**: `draft`, `planned`, `in-progress`, `complete`, `archived`
 - **File types**: `.md`, `.mdx`, `.json`, `.yaml`
@@ -116,7 +116,6 @@ Balance readability with precision:
 | Token | ❌ 令牌/标记 | "Token 数量" ✅ |
 | README | ❌ 说明文件 | "README.md 文件" ✅ |
 | frontmatter | ❌ 前置元数据 | "frontmatter 配置" ✅ |
-| MCP | ❌ 模型上下文协议 | "MCP 服务器" ✅ |
 
 **Translate with English Reference (First Use):**
 

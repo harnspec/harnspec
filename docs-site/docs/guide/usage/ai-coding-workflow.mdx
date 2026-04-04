@@ -169,7 +169,7 @@ Implement rate limiting according to spec 042.
 Use the approach and limits defined in the spec.
 ```
 
-AI reads the spec via MCP and implements:
+AI reads the spec and implements:
 - Rate limiting middleware
 - Response headers (X-RateLimit-*)
 - 429 error handling
@@ -203,20 +203,12 @@ $ harnspec validate
 
 ## Working with AI Assistants
 
-### MCP Integration (Recommended)
+### Agent Skills (Recommended)
 
-Connect HarnSpec to Claude, Cursor, or other MCP-compatible AI:
+Connect HarnSpec to Claude, Cursor, or other AI agents using Agent Skills:
 
 ```bash
-# Add to MCP settings
-{
-  "mcpServers": {
-    "harnspec": {
-      "command": "npx",
-      "args": ["-y", "@HarnSpec/mcp"]
-    }
-  }
-}
+harnspec skill install
 ```
 
 Now AI can:
@@ -224,11 +216,11 @@ Now AI can:
 - **Read specs:** "Implement according to spec 042"
 - **List specs:** "What work is in-progress?"
 
-**See also:** [MCP Integration Guide](/docs/guide/usage/advanced-features/agent-configuration)
+**See also:** [Agent Skills Guide](/docs/guide/usage/advanced-features/agent-configuration)
 
 ### Direct Spec References
 
-Even without MCP, you can reference specs:
+Even without Agent Skills, you can reference specs:
 
 ```
 Read specs/042-api-rate-limiting/README.md and implement the rate limiting middleware.
@@ -432,7 +424,7 @@ harnspec tokens 042
 **Problem:** AI doesn't have access to spec.
 
 **Solutions:**
-1. Use MCP integration (automatic access)
+1. Use Agent Skills (automatic access/methodology guidance)
 2. Explicitly reference: "Read spec file at specs/042-..."
 3. Copy relevant spec sections into prompt
 
@@ -463,7 +455,7 @@ harnspec open 042
 ## Next Steps
 
 - **[CLI Usage](/docs/guide/usage/cli/creating-managing)** - Master CLI commands
-- **[MCP Integration](/docs/guide/usage/advanced-features/agent-configuration)** - Set up AI access
+- **[Agent Skills](/docs/guide/usage/advanced-features/agent-configuration)** - Set up AI access
 - **[AI Assisted Spec Writing](/docs/advanced/ai-assisted-spec-writing)** - Advanced patterns
 - **[Visual Mode](/docs/guide/visual-mode)** - Browse specs visually
 

@@ -1,16 +1,16 @@
 ---
-status: planned
+status: in-progress
 created: 2026-04-01
 priority: high
-parent: 4-integrated-skills-management
 tags:
 - repository
 - refactor
 - mcp
 - cli
 - cleanup
+parent: 4-integrated-skills-management
 created_at: 2026-04-01T23:30:00Z
-updated_at: 2026-04-01T23:30:00Z
+updated_at: 2026-04-04T10:04:35.565213500Z
 ---
 
 # Spec 6: 去除 MCP 集成，全面转向 CLI + Skills 驱动
@@ -63,22 +63,22 @@ updated_at: 2026-04-01T23:30:00Z
 
 ### 阶段 1：清理源码 (清理)
 
-- [ ] 删除 `rust/harnspec-mcp/` 目录。
-- [ ] 删除 `packages/mcp/` 目录。
-- [ ] 修改 `rust/harnspec-cli/src/commands/mod.rs`（或相关入口），移除 `mcp` 命令。
-- [ ] 删除 `rust/harnspec-cli/src/commands/mcp.rs` 和 `rust/harnspec-cli/src/commands/init/mcp_config.rs`。
+- [x] 删除 `rust/harnspec-mcp/` 目录。
+- [x] 删除 `packages/mcp/` 目录。
+- [x] 修改 `rust/harnspec-cli/src/commands/mod.rs`（或相关入口），移除 `mcp` 命令。
+- [x] 删除 `rust/harnspec-cli/src/commands/mcp.rs` 和 `rust/harnspec-cli/src/commands/init/mcp_config.rs`。
 
 ### 阶段 2：清理构建与分发配置
 
-- [ ] 从 `rust/Cargo.toml` 的 workspace 中移除 `harnspec-mcp`。
-- [ ] 从 `pnpm-workspace.yaml` 中移除 `packages/mcp`。
-- [ ] 更新 `scripts/` 下的所有发布和构建脚本（如 `publish-platform-packages.ts`, `copy-rust-binaries.mjs` 等），移除对 MCP 的处理逻辑。
+- [x] 从 `rust/Cargo.toml` 的 workspace 中移除 `harnspec-mcp`。
+- [x] 从 `pnpm-workspace.yaml` 中移除 `packages/mcp`。
+- [ ] 更新 `scripts/` 下的所有发布和构建脚本（如 `publish-platform-packages.ts`, `copy-rust-binaries.mjs` 等），移除对 MCP 的处理逻辑。 (部分完成，仍需清理 `prepare-publish.ts`, `restore-packages.ts`, `sync-rust-versions.ts`)
 
 ### 阶段 3：文档与模板更新
 
-- [ ] 更新根目录 `README.md`，聚焦于 CLI + Skills 集成。
+- [x] 更新根目录 `README.md`，聚焦于 CLI + Skills 集成。
 - [ ] 批量替换 `packages/cli/templates` 下所有 `AGENTS.md` 的内容。
-- [ ] 检查并更新 `docs/` 目录下的所有 markdown 文件。
+- [ ] 检查并更新 `docs/` 目录下的所有 markdown 文件。 (部分完成，`docs-site` 仍有大量残留)
 
 ### 阶段 4：验证
 

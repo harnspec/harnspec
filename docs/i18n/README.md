@@ -138,7 +138,6 @@ Following the terminology glossary in `docs-site/i18n/zh-Hans/TERMINOLOGY_GLOSSA
   - Token
   - README
   - frontmatter
-  - MCP
   - Status values: `draft`, `planned`, `in-progress`, `complete`, `archived`
   - File extensions: `.md`, `.json`, `.yaml`
 

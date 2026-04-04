@@ -175,7 +175,7 @@ fn update_relationships(
             if parent.is_empty() {
                 return Err("Parent spec is required for add".into());
             }
-            // Resolve parent to its full canonical path via fuzzy matching (same as MCP)
+            // Resolve parent to its full canonical path via fuzzy matching
             let parent_info = loader
                 .load(&parent)?
                 .ok_or_else(|| format!("Parent spec not found: {}", parent))?;

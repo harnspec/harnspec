@@ -149,7 +149,7 @@ harnspec list --tags v0.3.0
 ```
 
 **真实的 HarnSpec 标签：**
-- `web`、`cli`、`mcp`、`docs` - 组件领域
+- `web`、`cli`、`http`、`docs` - 组件领域
 - `ux`、`dx`、`performance` - 质量属性
 - `v0.2.0`、`v0.3.0` - 发布里程碑
 
@@ -209,7 +209,7 @@ HarnSpec 使用数字范围来分组相关工作：
 
 ```bash
 # 组件标签
-web, cli, mcp, docs
+web, cli, http, docs
 
 # 质量属性标签
 ux, dx, performance, security
@@ -264,7 +264,7 @@ harnspec unlink A --related C       # 移除软引用
 您将看到：
 - 按状态组织的 100 多个Spec
 - 真实的依赖网络（例如，Spec 114 依赖于 113）
-- 实际的标签模式（`docs`、`cli`、`mcp`、`web`）
+- 实际的标签模式（`docs`、`cli`、`http`、`web`）
 - 项目中的优先级分布
 - 编号约定在实践中的工作方式
 

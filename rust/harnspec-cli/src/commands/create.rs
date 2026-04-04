@@ -315,7 +315,7 @@ struct MergeFrontmatterInput<'a> {
     now: chrono::DateTime<Utc>,
 }
 
-/// Merge frontmatter into content, mirroring MCP's merge_frontmatter behavior.
+/// Merge frontmatter into content, ensuring consistent metadata and formatting.
 ///
 /// When content already has frontmatter, only explicitly-set CLI flags override.
 /// When content has no frontmatter, a default frontmatter block is generated.

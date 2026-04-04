@@ -1,7 +1,7 @@
 /**
  * Tool Icon Registry
  *
- * Maps MCP tool names to Lucide icons for display in the tool call UI.
+ * Maps agent tool names to Lucide icons for display in the tool call UI.
  * Follows the keyword-matching PATTERNS array pattern from sub-spec-utils.ts.
  */
 
@@ -27,7 +27,7 @@ import {
 import type { ToolPart } from "./tool";
 
 /**
- * Direct mapping of known MCP tool names to Lucide icons.
+ * Direct mapping of known agent tool names to Lucide icons.
  */
 const TOOL_ICON_MAP: Record<string, LucideIcon> = {
   search: SearchIcon,

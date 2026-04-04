@@ -5,7 +5,6 @@
  * This script ensures all Rust packages use the same version as the root package.json. It updates:
  * - Rust workspace version in rust/Cargo.toml
  * - CLI platform packages (harnspec-darwin-x64, etc.)
- * - MCP platform packages (@harnspec/mcp-darwin-x64, etc.)
  * - HTTP server platform packages (@harnspec/http-darwin-x64, etc.)
  * 
  * Usage:
@@ -57,14 +56,6 @@ const PACKAGE_FAMILIES: PackageFamily[] = [
     packagePrefix: '@harnspec/cli',
     binaryName: 'harnspec',
     description: 'HarnSpec CLI binary'
-  },
-  {
-    key: 'mcp',
-    label: 'MCP',
-    packageDir: path.join(PACKAGES_DIR, 'mcp', 'binaries'),
-    packagePrefix: '@harnspec/mcp',
-    binaryName: 'harnspec-mcp',
-    description: 'HarnSpec MCP server binary'
   },
   {
     key: 'http',
