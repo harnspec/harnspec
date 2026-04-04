@@ -72,7 +72,7 @@ updated_at: 2026-04-04T10:04:35.565213500Z
 
 - [x] 从 `rust/Cargo.toml` 的 workspace 中移除 `harnspec-mcp`。
 - [x] 从 `pnpm-workspace.yaml` 中移除 `packages/mcp`。
-- [ ] 更新 `scripts/` 下的所有发布和构建脚本（如 `publish-platform-packages.ts`, `copy-rust-binaries.mjs` 等），移除对 MCP 的处理逻辑。 (部分完成，仍需清理 `prepare-publish.ts`, `restore-packages.ts`, `sync-rust-versions.ts`)
+- [x] 更新 `scripts/` 下的所有发布和构建脚本（如 `publish-platform-packages.ts`, `copy-rust-binaries.mjs` 等），移除对 MCP 的处理逻辑。
 
 ### 阶段 3：文档与模板更新
 

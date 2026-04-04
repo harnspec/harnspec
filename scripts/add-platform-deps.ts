@@ -26,7 +26,6 @@ interface PackageConfig {
 
 const PACKAGES: PackageConfig[] = [
   { packagePath: 'packages/cli', packagePrefix: '@harnspec/cli' },
-  { packagePath: 'packages/mcp', packagePrefix: '@harnspec/mcp' },
   { packagePath: 'packages/http-server', packagePrefix: '@harnspec/http' },
 ];
 

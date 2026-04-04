@@ -35,11 +35,6 @@ const BINARY_CONFIG: Record<string, BinaryConfig> = {
     description: 'HarnSpec CLI',
     packagePath: 'cli',
   },
-  'harnspec-mcp': {
-    packagePrefix: '@harnspec/mcp',
-    description: 'HarnSpec MCP Server',
-    packagePath: 'mcp',
-  },
   'harnspec-http': {
     packagePrefix: '@harnspec/http',
     description: 'HarnSpec HTTP Server',
@@ -163,7 +158,7 @@ async function main() {
   const version = await resolveTargetVersion();
   console.log(`Version: ${version}\n`);
 
-  const binaries = ['harnspec', 'harnspec-mcp', 'harnspec-http'];
+  const binaries = ['harnspec', 'harnspec-http'];
 
   for (const platformKey of PLATFORMS) {
     console.log(`Platform: ${platformKey}`);

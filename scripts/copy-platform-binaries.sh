@@ -33,15 +33,7 @@ for platform in $PLATFORMS; do
     echo "  ⚠ WARNING: Missing artifacts/binaries-$platform"
   fi
   
-  # MCP binaries
-  if [ -d "$ARTIFACTS_DIR/binaries-$platform" ]; then
-    mkdir -p "packages/mcp/binaries/$platform"
-    cp "$ARTIFACTS_DIR/binaries-$platform/harnspec-mcp"* "packages/mcp/binaries/$platform/" || true
-    echo "  ✓ Copied MCP binaries"
-  else
-    echo "  ⚠ WARNING: Missing MCP binaries for $platform"
-  fi
-  
+
   # HTTP server binaries
   if [ -d "$ARTIFACTS_DIR/binaries-$platform" ]; then
     mkdir -p "packages/http-server/binaries/$platform"
@@ -56,4 +48,4 @@ echo ""
 echo "✅ Binary copying complete"
 echo ""
 echo "Copied binaries:"
-find packages/cli/binaries packages/mcp/binaries packages/http-server/binaries -type f \( -name "harnspec*" -o -name "harnspec-mcp*" -o -name "harnspec-http*" \) | sort
+find packages/cli/binaries packages/http-server/binaries -type f \( -name "harnspec*" -o -name "harnspec-http*" \) | sort
