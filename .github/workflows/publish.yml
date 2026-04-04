@@ -134,10 +134,6 @@ jobs:
         working-directory: rust
         run: cargo build --release --target ${{ matrix.target }} --package harnspec-cli
 
-      - name: Build MCP binary
-        working-directory: rust
-        run: cargo build --release --target ${{ matrix.target }} --package harnspec-mcp
-
       - name: Build HTTP server binary
         working-directory: rust
         run: cargo build --release --target ${{ matrix.target }} --package harnspec-http
@@ -174,7 +170,6 @@ jobs:
             cp rust/target/${{ matrix.target }}/release/harnspec-http.exe dist/${{ matrix.platform }}/
           else
             cp rust/target/${{ matrix.target }}/release/harnspec dist/${{ matrix.platform }}/
-            cp rust/target/${{ matrix.target }}/release/harnspec-mcp dist/${{ matrix.platform }}/
             cp rust/target/${{ matrix.target }}/release/harnspec-http dist/${{ matrix.platform }}/
           fi
 
@@ -423,7 +418,6 @@ jobs:
           echo ""
           echo "Published:"
           echo "  - CLI with platform binaries (darwin-x64, darwin-arm64, linux-x64, windows-x64)"
-          echo "  - MCP with platform binaries"
           echo "  - UI Components (deprecated shim)"
           echo "  - HTTP Server"
           echo "  - UI"
