@@ -189,7 +189,7 @@ fn build_ui_command(
     port: &str,
     open_browser: bool,
 ) -> (String, Vec<String>) {
-    let mut ui_args = vec!["@harnspec/ui".to_string()];
+    let mut ui_args = vec!["harnspec-ui".to_string()];
 
     // Pass project root directory to HTTP server using --project flag.
     // The HTTP server discovers the specs subdirectory automatically from
@@ -251,7 +251,7 @@ mod tests {
         assert_eq!(args[1], "--yes");
         assert_eq!(args[2], "--package=@harnspec/ui");
         assert_eq!(args[3], "--");
-        assert!(args.contains(&"@harnspec/ui".to_string()));
+        assert!(args.contains(&"harnspec-ui".to_string()));
         assert!(args.contains(&"--project".to_string()));
     }
 
@@ -260,6 +260,6 @@ mod tests {
         let (cmd, args) = build_ui_command("pnpm", Path::new("/tmp/project"), "3000", true);
         assert_eq!(cmd, "pnpm");
         assert_eq!(args[0], "dlx");
-        assert!(args.contains(&"@harnspec/ui".to_string()));
+        assert!(args.contains(&"harnspec-ui".to_string()));
     }
 }

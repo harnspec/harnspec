@@ -180,6 +180,15 @@ async function publishMainPackages(dryRun: boolean, tag?: string): Promise<void>
     console.log(`  ✗ ${skillsResult.package}: ${skillsResult.error}`);
   }
 
+  // Jumper package (unscoped harnspec)
+  const jumperResult = await publishPackage(path.join(PACKAGES_DIR, 'harnspec'), dryRun, tag);
+  results.push(jumperResult);
+  if (jumperResult.success) {
+    console.log(`  ✓ ${jumperResult.package}`);
+  } else {
+    console.log(`  ✗ ${jumperResult.package}: ${jumperResult.error}`);
+  }
+
   // Summary
   const successful = results.filter(r => r.success);
   const failed = results.filter(r => !r.success);
