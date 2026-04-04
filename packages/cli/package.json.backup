@@ -1,7 +1,7 @@
 {
-  "name": "harnspec",
+  "name": "@harnspec/cli",
   "version": "0.0.1",
-  "description": "Specification-driven development made simple (Main entry for HarnSpec CLI)",
+  "description": "Specification-driven development made simple",
   "type": "module",
   "bin": {
     "harnspec": "./bin/harnspec.js"
@@ -10,7 +10,8 @@
     "typecheck": "echo 'No TypeScript source to check'"
   },
   "dependencies": {
-    "@harnspec/cli": "0.0.1"
+    "@harnspec/http-server": "workspace:*",
+    "@harnspec/ui": "workspace:*"
   },
   "keywords": [
     "spec",
@@ -32,8 +33,11 @@
   },
   "files": [
     "bin/",
+    "binaries/",
+    "templates/",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "engines": {
     "node": ">=24"
