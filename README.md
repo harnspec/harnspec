@@ -13,7 +13,7 @@
 <p align="center">
   <a href="https://harnspec.github.io"><strong>Documentation</strong></a>
   •
-  <a href="https://harnspec.github.io/zh-Hans/docs/guide/"><strong>中文文档</strong></a>
+  <a href="https://harnspec.github.io"><strong>中文文档</strong></a>
   •
   <a href="https://harnspec.github.io"><strong>Live Examples</strong></a>
   •
