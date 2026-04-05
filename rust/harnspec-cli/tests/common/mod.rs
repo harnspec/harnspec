@@ -216,7 +216,8 @@ pub fn list_dir(path: &Path) -> Vec<String> {
 
 /// Parse YAML frontmatter from markdown content
 pub fn parse_frontmatter(content: &str) -> std::collections::HashMap<String, serde_yaml::Value> {
-    let re = regex::Regex::new(r"^---\n([\s\S]*?)\n---").unwrap();
+    let content = content.trim_start();
+    let re = regex::Regex::new(r"^---\r?\n([\s\S]*?)\r?\n---").unwrap();
     if let Some(captures) = re.captures(content) {
         if let Some(yaml_str) = captures.get(1) {
             if let Ok(serde_yaml::Value::Mapping(map)) =

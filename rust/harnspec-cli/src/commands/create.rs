@@ -151,12 +151,39 @@ pub fn run(params: CreateParams) -> Result<(), Box<dyn Error>> {
 
         // Inject --description into the template body after the title heading
         if let Some(desc) = &description {
-            if let Some(pos) = content.find("\n\n## ") {
-                // Insert description between title and first section
-                content.insert_str(pos + 1, &format!("\n{}\n", desc));
-            } else if let Some(pos) = content.find("\n\n") {
-                // Insert after first blank line (after title)
-                content.insert_str(pos + 1, &format!("\n{}\n", desc));
+            let newline = if content.contains("\r\n") {
+                "\r\n"
+            } else {
+                "\n"
+            };
+            let double_newline = format!("{}{}", newline, newline);
+            let section_marker = format!("{}## ", double_newline);
+
+            if let Some(pos) = content.find(&section_marker) {
+                // Insert description between title/metadata and first section
+                let insert_pos = pos + newline.len();
+                content.insert_str(insert_pos, &format!("{}{}{}", newline, desc, newline));
+            } else if let Some(pos) = content.find(&double_newline) {
+                // We want to skip the first double newline (between frontmatter and title)
+                // if it exists, and find the one after the title.
+                let search_pos = pos + double_newline.len();
+                if let Some(next_pos) = content[search_pos..].find(&double_newline) {
+                    let insert_pos = search_pos + next_pos + newline.len();
+                    content.insert_str(insert_pos, &format!("{}{}{}", newline, desc, newline));
+                } else {
+                    // Only one double newline found, might be after title or between fm/title
+                    // Fall back to after title if it has a title
+                    if content.contains("# ") {
+                        // Simple append to the end for now if we can't find a good spot
+                        // but let's try to be a bit smarter
+                        content.push_str(&format!("{}{}{}", double_newline, desc, newline));
+                    } else {
+                        content.insert_str(
+                            pos + newline.len(),
+                            &format!("{}{}{}", newline, desc, newline),
+                        );
+                    }
+                }
             }
         }
 

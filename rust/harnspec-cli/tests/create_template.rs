@@ -109,7 +109,7 @@ fn test_create_generates_frontmatter_correctly() {
 
     // Check frontmatter format
     assert!(
-        content.starts_with("---\n"),
+        content.starts_with("---\n") || content.starts_with("---\r\n"),
         "should start with frontmatter delimiter"
     );
 
