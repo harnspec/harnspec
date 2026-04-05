@@ -53,11 +53,17 @@ pub struct AppState {
 
     /// Runner model discovery cache (keyed by "<project_path>:<runner_id>")
     pub runner_models_cache: RunnerModelsCache,
+
+    /// Channel to signal server shutdown
+    pub shutdown_tx: tokio::sync::mpsc::UnboundedSender<()>,
 }
 
 impl AppState {
     /// Create new application state (async for database initialization)
-    pub async fn new(config: ServerConfig) -> Result<Self, ServerError> {
+    pub async fn new(
+        config: ServerConfig,
+        shutdown_tx: tokio::sync::mpsc::UnboundedSender<()>,
+    ) -> Result<Self, ServerError> {
         let mut registry = ProjectRegistry::new()?;
 
         // Auto-register a project when none are configured
@@ -136,11 +142,16 @@ impl AppState {
             file_watcher,
             sse_connections,
             runner_models_cache: Arc::new(RwLock::new(HashMap::new())),
+            shutdown_tx,
         })
     }
 
     /// Create state with an existing registry (for testing)
-    pub async fn with_registry(config: ServerConfig, registry: ProjectRegistry) -> Self {
+    pub async fn with_registry(
+        config: ServerConfig,
+        registry: ProjectRegistry,
+        shutdown_tx: tokio::sync::mpsc::UnboundedSender<()>,
+    ) -> Self {
         let database = Database::connect_in_memory()
             .await
             .expect("Failed to initialize in-memory database");
@@ -168,6 +179,7 @@ impl AppState {
             file_watcher,
             sse_connections,
             runner_models_cache: Arc::new(RwLock::new(HashMap::new())),
+            shutdown_tx,
         }
     }
 }

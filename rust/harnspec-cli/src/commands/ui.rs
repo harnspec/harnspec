@@ -17,6 +17,7 @@ pub fn run(
     _multi_project: bool,
     dev: bool,
     dry_run: bool,
+    quit: bool,
 ) -> Result<(), Box<dyn Error>> {
     // Validate port - parse to check if it's a valid number
     let _port_num: u16 = port
@@ -42,11 +43,11 @@ pub fn run(
             return Err("Development mode only works in the HarnSpec monorepo.\nRemove --dev flag to use production mode.".into());
         }
 
-        return run_dev_mode(&ui_dir, specs_dir, port, !no_open, dry_run);
+        return run_dev_mode(&ui_dir, specs_dir, port, !no_open, dry_run, quit);
     }
 
     // Production mode: use published @harnspec/ui
-    run_published_ui(&cwd, specs_dir, port, !no_open, dry_run)
+    run_published_ui(&cwd, specs_dir, port, !no_open, dry_run, quit)
 }
 
 fn run_dev_mode(
@@ -55,6 +56,7 @@ fn run_dev_mode(
     port: &str,
     open_browser: bool,
     dry_run: bool,
+    quit: bool,
 ) -> Result<(), Box<dyn Error>> {
     println!(
         "{}\n",
@@ -68,19 +70,29 @@ fn run_dev_mode(
         println!("{}", "Would run:".cyan());
         println!("  cd {}", ui_dir.display().to_string().dimmed());
         println!(
-            "  SPECS_DIR={} PORT={} {} run dev",
-            specs_dir, port, package_manager
+            "  SPECS_DIR={} PORT={} {} run dev{}",
+            specs_dir,
+            port,
+            package_manager,
+            if quit { " -- --quit" } else { "" }
         );
-        if open_browser {
+        if open_browser && !quit {
             println!("  open http://localhost:{}", port);
         }
         return Ok(());
     }
 
     // Start the web UI
+    let mut args = vec!["run", "dev"];
+    if quit {
+        args.push("--");
+        args.push("--quit");
+    }
+
     let mut child = if cfg!(target_os = "windows") {
         Command::new("cmd")
-            .args(["/C", &package_manager, "run", "dev"])
+            .args(["/C", &package_manager])
+            .args(args)
             .current_dir(ui_dir)
             .env("SPECS_DIR", specs_dir)
             .env("PORT", port)
@@ -90,7 +102,7 @@ fn run_dev_mode(
             .spawn()?
     } else {
         Command::new(&package_manager)
-            .args(["run", "dev"])
+            .args(args)
             .current_dir(ui_dir)
             .env("SPECS_DIR", specs_dir)
             .env("PORT", port)
@@ -100,20 +112,22 @@ fn run_dev_mode(
             .spawn()?
     };
 
-    println!();
-    println!(
-        "{}",
-        format!("🚀 HarnSpec UI (Dev Mode): http://localhost:{}", port).green()
-    );
-    println!(
-        "{}",
-        "   Proxying /api to http://localhost:3000 (Make sure backend is running!)".dimmed()
-    );
-    println!();
-    println!("{}", "Press Ctrl+C to stop".dimmed());
+    if !quit {
+        println!();
+        println!(
+            "{}",
+            format!("🚀 HarnSpec UI (Dev Mode): http://localhost:{}", port).green()
+        );
+        println!(
+            "{}",
+            "   Proxying /api to http://localhost:3000 (Make sure backend is running!)".dimmed()
+        );
+        println!();
+        println!("{}", "Press Ctrl+C to stop".dimmed());
 
-    if open_browser {
-        open_url(&format!("http://localhost:{}", port));
+        if open_browser {
+            open_url(&format!("http://localhost:{}", port));
+        }
     }
 
     // Wait for the process
@@ -132,14 +146,17 @@ fn run_published_ui(
     port: &str,
     open_browser: bool,
     dry_run: bool,
+    quit: bool,
 ) -> Result<(), Box<dyn Error>> {
-    println!("{}\n", "→ Starting HarnSpec UI...".cyan());
+    if !quit {
+        println!("{}\n", "→ Starting HarnSpec UI...".cyan());
+    }
 
     // Detect package manager
     let package_manager = detect_package_manager(cwd)?;
 
     // Build command - pass the project root (cwd), not the specs subdirectory
-    let (cmd, args) = build_ui_command(&package_manager, cwd, port, open_browser);
+    let (cmd, args) = build_ui_command(&package_manager, cwd, port, open_browser, quit);
 
     if dry_run {
         println!("{}", "Would run:".cyan());
@@ -172,12 +189,14 @@ fn run_published_ui(
 
     if !status.success() {
         let code = status.code().unwrap_or(1);
-        eprintln!();
-        eprintln!(
-            "{}",
-            format!("@harnspec/ui exited with code {}", code).red()
-        );
-        eprintln!("{}", "Make sure @harnspec/ui is available.".dimmed());
+        if !quit {
+            eprintln!();
+            eprintln!(
+                "{}",
+                format!("@harnspec/ui exited with code {}", code).red()
+            );
+            eprintln!("{}", "Make sure @harnspec/ui is available.".dimmed());
+        }
         return Err("Web UI process exited with error".into());
     }
 
@@ -189,6 +208,7 @@ fn build_ui_command(
     project_dir: &Path,
     port: &str,
     open_browser: bool,
+    quit: bool,
 ) -> (String, Vec<String>) {
     let mut ui_args = vec!["harnspec-ui".to_string()];
 
@@ -201,8 +221,12 @@ fn build_ui_command(
     ui_args.push("--port".to_string());
     ui_args.push(port.to_string());
 
-    if !open_browser {
+    if !open_browser || quit {
         ui_args.push("--no-open".to_string());
+    }
+
+    if quit {
+        ui_args.push("--quit".to_string());
     }
 
     match package_manager {
@@ -262,7 +286,7 @@ mod tests {
 
     #[test]
     fn test_build_ui_command_npm_exec() {
-        let (cmd, args) = build_ui_command("npm", Path::new("/tmp/project"), "3000", false);
+        let (cmd, args) = build_ui_command("npm", Path::new("/tmp/project"), "3000", false, false);
         assert_eq!(cmd, "npm");
         assert_eq!(args[0], "exec");
         assert_eq!(args[1], "--yes");
@@ -274,7 +298,7 @@ mod tests {
 
     #[test]
     fn test_build_ui_command_pnpm() {
-        let (cmd, args) = build_ui_command("pnpm", Path::new("/tmp/project"), "3000", true);
+        let (cmd, args) = build_ui_command("pnpm", Path::new("/tmp/project"), "3000", true, false);
         assert_eq!(cmd, "pnpm");
         assert_eq!(args[0], "dlx");
         assert!(args.contains(&"harnspec-ui".to_string()));

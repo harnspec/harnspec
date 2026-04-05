@@ -219,6 +219,7 @@ fn main() -> ExitCode {
             true,
             params.dev,
             params.dry_run,
+            params.quit,
         ),
         Commands::Update(params) => commands::update::run(
             &specs_dir,

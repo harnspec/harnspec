@@ -61,6 +61,7 @@ pub fn create_router(state: AppState) -> Router {
         .route("/health/ready", get(handlers::health_ready))
         // Server capabilities
         .route("/api/capabilities", get(handlers::get_capabilities))
+        .route("/api/server/shutdown", post(handlers::shutdown))
         .route("/api/chat/config", get(handlers::get_chat_config))
         .route("/api/chat/config", put(handlers::update_chat_config))
         .route("/api/chat/sessions", get(handlers::list_chat_sessions))
@@ -427,8 +428,9 @@ async fn readonly_guard(
     let path = request.uri().path();
 
     let is_safe_method = matches!(*method, Method::GET | Method::HEAD | Method::OPTIONS);
+    let is_shutdown = path == "/api/server/shutdown";
 
-    if path.starts_with("/api") && !is_safe_method {
+    if path.starts_with("/api") && !is_safe_method && !is_shutdown {
         return (StatusCode::FORBIDDEN, "Server is in read-only mode").into_response();
     }
 
@@ -443,9 +445,13 @@ mod tests {
     #[tokio::test]
     async fn test_router_creation() {
         let config = ServerConfig::default();
+        let (shutdown_tx, _) = tokio::sync::mpsc::unbounded_channel();
         // This will fail without a valid filesystem, but tests router building
-        let _state =
-            AppState::with_registry(config, crate::project_registry::ProjectRegistry::default())
-                .await;
+        let _state = AppState::with_registry(
+            config,
+            crate::project_registry::ProjectRegistry::default(),
+            shutdown_tx,
+        )
+        .await;
     }
 }

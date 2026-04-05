@@ -514,16 +514,29 @@ pub(crate) struct TuiParams {
 
 #[derive(Parser)]
 pub(crate) struct UiParams {
+    /// Port to listen on
     #[arg(short, long, default_value = "3000")]
     pub(crate) port: String,
+
+    /// Do not auto-open browser
     #[arg(long)]
     pub(crate) no_open: bool,
+
+    /// Enable multi-project mode
     #[arg(long)]
     pub(crate) multi_project: bool,
+
+    /// Development mode (monorepo only)
     #[arg(long)]
     pub(crate) dev: bool,
+
+    /// Preview command without running
     #[arg(long)]
     pub(crate) dry_run: bool,
+
+    /// Shut down the running UI server
+    #[arg(short, long)]
+    pub(crate) quit: bool,
 }
 
 #[derive(Parser)]

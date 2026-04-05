@@ -51,7 +51,8 @@ pub use state::AppState;
 /// Start the HTTP server on the given host and port
 pub async fn start_server(host: &str, port: u16) -> Result<(), ServerError> {
     let config = load_config()?;
-    let state = AppState::new(config).await?;
+    let (shutdown_tx, shutdown_rx) = tokio::sync::mpsc::unbounded_channel();
+    let state = AppState::new(config, shutdown_tx).await?;
     let app = create_router(state);
 
     let listener = tokio::net::TcpListener::bind(format!("{}:{}", host, port))
@@ -61,7 +62,7 @@ pub async fn start_server(host: &str, port: u16) -> Result<(), ServerError> {
     tracing::info!("HarnSpec HTTP server listening on {}:{}", host, port);
 
     axum::serve(listener, app)
-        .with_graceful_shutdown(shutdown_signal())
+        .with_graceful_shutdown(shutdown_signal(shutdown_rx))
         .await
         .map_err(|e| ServerError::ServerError(e.to_string()))?;
 
@@ -74,7 +75,8 @@ pub async fn start_server_with_config(
     port: u16,
     config: ServerConfig,
 ) -> Result<(), ServerError> {
-    let state = AppState::new(config).await?;
+    let (shutdown_tx, shutdown_rx) = tokio::sync::mpsc::unbounded_channel();
+    let state = AppState::new(config, shutdown_tx).await?;
     let app = create_router(state);
 
     let listener = tokio::net::TcpListener::bind(format!("{}:{}", host, port))
@@ -84,7 +86,7 @@ pub async fn start_server_with_config(
     tracing::info!("HarnSpec HTTP server listening on {}:{}", host, port);
 
     axum::serve(listener, app)
-        .with_graceful_shutdown(shutdown_signal())
+        .with_graceful_shutdown(shutdown_signal(shutdown_rx))
         .await
         .map_err(|e| ServerError::ServerError(e.to_string()))?;
 
@@ -92,8 +94,8 @@ pub async fn start_server_with_config(
     Ok(())
 }
 
-/// Listen for SIGTERM/SIGINT for graceful shutdown in cloud environments.
-async fn shutdown_signal() {
+/// Listen for SIGTERM/SIGINT/API-request for graceful shutdown.
+async fn shutdown_signal(mut shutdown_rx: tokio::sync::mpsc::UnboundedReceiver<()>) {
     let ctrl_c = async {
         tokio::signal::ctrl_c()
             .await
@@ -114,5 +116,6 @@ async fn shutdown_signal() {
     tokio::select! {
         _ = ctrl_c => { tracing::info!("Received Ctrl+C, starting graceful shutdown"); },
         _ = terminate => { tracing::info!("Received SIGTERM, starting graceful shutdown"); },
+        _ = shutdown_rx.recv() => { tracing::info!("Received shutdown request via API, starting graceful shutdown"); }
     }
 }

@@ -15,6 +15,7 @@ mod local_projects;
 #[cfg(feature = "ai")]
 mod models_registry;
 mod projects;
+mod server;
 mod sessions;
 mod specs;
 mod sync;
@@ -32,6 +33,7 @@ pub use local_projects::*;
 #[cfg(feature = "ai")]
 pub use models_registry::*;
 pub use projects::*;
+pub use server::*;
 pub use sessions::*;
 pub use specs::*;
 pub use sync::*;

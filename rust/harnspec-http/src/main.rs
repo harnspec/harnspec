@@ -80,6 +80,10 @@ struct Args {
     /// Force UI locale (en, zh-CN)
     #[arg(long)]
     locale: Option<String>,
+
+    /// Shut down the server running on the specified port
+    #[arg(short, long)]
+    quit: bool,
 }
 
 #[tokio::main]
@@ -156,6 +160,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .with(fmt_layer)
             .init();
     };
+
+    if args.quit {
+        return handle_quit(&args.host, args.port).await;
+    }
 
     // Load config
     let mut config = load_server_config(&args);
@@ -272,4 +280,24 @@ fn open_browser(url: &str, browser: Option<&str>) {
     }
 
     let _ = webbrowser::open(url);
+}
+
+async fn handle_quit(host: &str, port: u16) -> Result<(), Box<dyn std::error::Error>> {
+    let client = reqwest::Client::new();
+    let url = format!("http://{}:{}/api/server/shutdown", host, port);
+
+    println!("🛑 Sending shutdown request to {}...", url);
+
+    match client.post(&url).send().await {
+        Ok(res) if res.status().is_success() => {
+            println!("✅ Server shutdown initiated successfully.");
+            Ok(())
+        }
+        Ok(res) => {
+            let status = res.status();
+            let body = res.text().await.unwrap_or_default();
+            Err(format!("Failed to shut down server: {} - {}", status, body).into())
+        }
+        Err(err) => Err(format!("Could not connect to server at {}: {}", url, err).into()),
+    }
 }
