@@ -180,9 +180,10 @@ pub fn create_empty_project(dir: &Path) {
 pub async fn create_test_state(temp_dir: &TempDir) -> AppState {
     create_test_project(temp_dir.path());
 
+    let (shutdown_tx, _) = tokio::sync::mpsc::unbounded_channel();
     let config = ServerConfig::default();
     let registry = ProjectRegistry::new_with_file_path(test_registry_file(temp_dir)).unwrap();
-    let state = AppState::with_registry(config, registry).await;
+    let state = AppState::with_registry(config, registry, shutdown_tx).await;
 
     // Add project via the registry
     {
@@ -195,7 +196,8 @@ pub async fn create_test_state(temp_dir: &TempDir) -> AppState {
 
 /// Create a test state without any project
 pub async fn create_empty_state(temp_dir: &TempDir) -> AppState {
+    let (shutdown_tx, _) = tokio::sync::mpsc::unbounded_channel();
     let config = ServerConfig::default();
     let registry = ProjectRegistry::new_with_file_path(test_registry_file(temp_dir)).unwrap();
-    AppState::with_registry(config, registry).await
+    AppState::with_registry(config, registry, shutdown_tx).await
 }

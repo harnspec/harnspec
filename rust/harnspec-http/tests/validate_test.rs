@@ -48,7 +48,8 @@ async fn test_validate_detects_invalid_frontmatter() {
 
     let config = harnspec_http::ServerConfig::default();
     let registry = harnspec_http::ProjectRegistry::new_with_file_path(registry_file).unwrap();
-    let state = harnspec_http::AppState::with_registry(config, registry).await;
+    let (shutdown_tx, _) = tokio::sync::mpsc::unbounded_channel();
+    let state = harnspec_http::AppState::with_registry(config, registry, shutdown_tx).await;
     {
         let mut reg = state.registry.write().await;
         let _ = reg.add(temp_dir.path());
