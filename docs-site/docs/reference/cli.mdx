@@ -124,50 +124,6 @@ harnspec create user-auth --field epic=PROJ-123 --field sprint=42
 
 ---
 
-### `harnspec proposal`
-
-交互式动议模式，将模糊的想法转化为结构化的 Spec。
-
-```bash
-harnspec proposal [idea] [options]
-# 或使用别名
-harnspec propose [idea] [options]
-```
-
-**参数：**
-- `[idea]` - 初始想法或目标词句（可选位置参数）
-
-**选项：**
-- `-f, --file <file>` - 从文件读取动议内容
-- `--non-interactive` - 非交互模式（适用于 AI agent）
-- `-p, --priority <priority>` - 为生成的 Spec 设置优先级（默认：`medium`）
-- `--tags <tags>` - 为生成的 Spec 设置标签（逗号分隔）
-
-**示例：**
-
-```bash
-# 启动交互模式
-harnspec proposal
-
-# 附带初始想法
-harnspec proposal "我想添加实时协作功能"
-
-# 从文件读取
-harnspec proposal --file proposal.md
-
-# 非交互模式（AI agent使用）
-harnspec proposal --non-interactive --file doc.md --tags "feature,v2"
-```
-
-**工作流阶段：**
-1. **Propose（提出）** - 用自然语言描述想法
-2. **Clarify（澄清）** - 回答针对性问题细化范围
-3. **Design（设计）** - 分解为具体的可实现特性
-4. **Confirm（确认）** - 审查和修改计划
-5. **Generate（生成）** - 自动生成并链接父（伞形）Spec 和子 Spec
-6. **Panorama（全景）** - 预览创建的 Spec 层级结构
-
----
 
 ### `harnspec list`
 

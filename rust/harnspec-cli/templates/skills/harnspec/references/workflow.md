@@ -11,18 +11,17 @@ Comprehensive guide to the Spec-Driven Development (SDD) process in HarnSpec pro
 - `harnspec search "query"`: Find related specs (avoid duplication).
 - `harnspec stats`: Check project health.
 
-### 1b. Proposal Mode (Optional)
+### 1b. Proposal Mode (AI Cognitive Workflow)
 **Goal**: Transform a vague idea into structured specs.
 
-When you don't know how to decompose your idea into specs, use Proposal Mode:
+When dealing with a vague or uncertain idea, act as the "Proposal Engine" using this flow:
 
-- `harnspec proposal`: Interactive mode with 6 phases.
-- `harnspec proposal "your idea"`: Start with an initial idea.
-- `harnspec proposal --file doc.md`: From a written document.
+1. **Brainstorm & Clarify**: Propose a breakdown and approach to the user and resolve uncertainties.
+2. **Ask Confirmation**: Wait for the user to confirm the proposed plan.
+3. **Generate Parent Spec**: Use `harnspec create` to form an Umbrella Spec outlining the intent and the feature decomposition list.
+4. **Loop Create Children**: Based on the decomposition list in the parent spec, loop through and run `harnspec create` for each sub-feature, linking them to the parent (`harnspec rel add <child> --parent <parent>`).
 
-Phases: **Propose → Clarify → Design → Confirm → Generate → Panorama**.
-
-Outcome: An umbrella (parent) spec + linked child specs, all auto-generated.
+*(Skip this mode if the user's intent is already clear and exact. Use `harnspec create` directly instead.)*
 
 ### 2. Specification
 **Goal**: Define clear, actionable requirements.

@@ -43,7 +43,6 @@ npm install -g harnspec && harnspec init
 
 ```bash
 harnspec board    # Kanban view
-harnspec propose  # AI-assisted idea proposal & generation
 harnspec stats    # Project metrics
 harnspec ui       # auto Web UI for multi project
 ```
@@ -108,7 +107,6 @@ This installs the **harnspec** skill which teaches AI agents:
 
 | Feature             | Description                                                                                       |
 | ------------------- | ------------------------------------------------------------------------------------------------- |
-| **💡 Proposal Mode** | `harnspec propose` - AI-assisted idea generation and refinement                                  |
 | **📊 Kanban Board**  | `harnspec board` - visual project tracking                                                       |
 | **🔍 Smart Search**  | `harnspec search` - find specs by content or metadata                                            |
 | **🔗 Dependencies**  | Track spec relationships with `depends_on` and `related`                                          |
@@ -186,7 +184,6 @@ pnpm rust:fmt            # Format Rust code
 pnpm cli board           # Show spec board
 pnpm cli list            # List specs
 pnpm cli create my-feat  # Create new spec
-pnpm cli propose         # Propose new features via AI
 pnpm cli validate        # Validate specs
 
 # Documentation

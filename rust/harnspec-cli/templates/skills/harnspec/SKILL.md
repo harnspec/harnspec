@@ -27,25 +27,25 @@ Before creating or modifying anything:
 - Run `search "relevant keywords"` to find related specs
 - If similar spec exists, consider extending it or linking as dependency
 
-### 1b. Proposal Mode (Optional)
+### 1b. Proposal Mode (AI Cognitive Workflow)
 
-When you have a **vague idea** or **high-level goal** but don't know how to decompose it into specs, use Proposal Mode instead of manually creating specs:
+When the user presents a **vague idea** or an **uncertain goal**, enter **Proposal Mode** instead of directly building specs. Proposal Mode is an AI-driven methodology, not a CLI command.
 
-- `harnspec proposal` — interactive mode guides you through structured phases
-- `harnspec proposal "description"` — start with an initial idea
-- `harnspec proposal --file proposal.md` — from a written document
-- `harnspec proposal --non-interactive --file doc.md` — for AI agents
+Follow these explicit steps to act as the "Proposal Engine":
+1. **Brainstorm & Clarify**: First, conduct a brainstorming session with the user. Propose technical approaches, feature breakdowns, and clarify constraints.
+2. **Seek Confirmation**: Wait for the user to explicitly confirm your proposed breakdown and approach.
+3. **Generate Parent**: Once confirmed, use `harnspec create <parent-name>` to generate the Parent (Umbrella) Spec. Inside this spec, document the overall intent and explicitly list the agreed-upon decomposed child features.
+4. **Loop for Children**: Based on the breakdown created in the Parent Spec, loop through each identified sub-feature and run `harnspec create <child-name>`. 
+5. **Link Relationships**: Ensure every child is linked back to the parent using `harnspec rel add <child> --parent <parent>`.
 
-Proposal Mode walks through 6 phases: **Propose → Clarify → Design → Confirm → Generate → Panorama**. It automatically creates an umbrella (parent) spec and linked child specs.
+**Clear Intent vs. Vague Idea:**
 
-**When to use proposal vs. manual create:**
-
-| Scenario | Use |
-|----------|-----|
-| You know the exact feature to build | `harnspec create` |
-| You have a vague idea, many possible features | `harnspec proposal` |
-| You need to decompose a large initiative | `harnspec proposal` |
-| Adding a single bug fix or small task | `harnspec create` |
+| Scenario | Action |
+|----------|--------|
+| Clear Intent (e.g., "Add OAuth2 login") | Skip brainstorming; execute `harnspec create` directly |
+| Vague Idea (e.g., "Make app secure") | Enter Proposal Mode: Brainstorm -> Confirm -> Parent -> Loop |
+| Needs decomposition | Enter Proposal Mode |
+| Single bug fix / standard task | Use `harnspec create` directly |
 
 ### 2. Create Spec
 
@@ -258,7 +258,6 @@ All operations use the `harnspec` CLI. Run commands via shell/Bash.
 | Search specs | `harnspec search "query"` |
 | View spec | `harnspec view <spec>` |
 | Create spec | `harnspec create <name>` |
-| Proposal mode | `harnspec proposal` |
 | Update status | `harnspec update <spec> --status <status>` |
 | View relationships | `harnspec rel <spec>` |
 | Set parent | `harnspec rel add <child> --parent <parent>` |
