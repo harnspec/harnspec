@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Publish main packages (harnspec, @harnspec/http-server, @harnspec/ui, @harnspec/skills)
+ * Publish main packages (harnspec, @harnspec/http-server, @harnspec/ui)
  * 
  * This script publishes the main CLI and supporting packages that have 
  * optional dependencies on the platform-specific binary packages.
@@ -170,14 +170,6 @@ async function publishMainPackages(dryRun: boolean, tag?: string): Promise<void>
     console.log(`  ✓ ${uiResult.package}`);
   } else {
     console.log(`  ✗ ${uiResult.package}: ${uiResult.error}`);
-  }
-
-  const skillsResult = await publishPackage(path.join(PACKAGES_DIR, 'skills'), dryRun, tag);
-  results.push(skillsResult);
-  if (skillsResult.success) {
-    console.log(`  ✓ ${skillsResult.package}`);
-  } else {
-    console.log(`  ✗ ${skillsResult.package}: ${skillsResult.error}`);
   }
 
   // Jumper package (unscoped harnspec)

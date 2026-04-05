@@ -1,0 +1,15 @@
+ff552111 feat: implement interactive proposal mode for idea-to-spec generation and update documentation
+5925b1df feat: implement CLI structure and proposal mode command for HarnSpec
+82ac66f6 feat: add README for proposal mode specification
+906f317c docs: add README.md to define HarnSpec structure and usage guidelines
+15366a78 docs: add specification documents for monorepo skills integration, documentation pipeline, and skill distribution strategy
+25c02a3f chore: generate Cargo.lock file for dependency management
+3459cea0 feat: initialize @harnspec/ui package and docs-site documentation project
+619b9cca feat: add UI command to CLI with support for local and published web interfaces
+eceea020 feat: add global CLI wrapper to delegate execution to @harnspec/cli
+b39ba84f chore: add pnpm-lock.yaml to docs-site directory
+9807529a feat: add scripts to resolve workspace dependencies and restore package files for npm publishing
+eb5c85e6 Revert "chore: update workspace dependencies to fixed versions and add build/restore scripts"
+b386b2ca chore: update workspace dependencies to fixed versions and add build/restore scripts
+641c3522 feat: initialize project workspace with CLI, HTTP server, documentation site, and CI/CD pipelines
+2ef80207 chore: update dependency lockfile to reflect package changes

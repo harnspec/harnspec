@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.3] - 2026-04-05
+
+### Added
+
+- **Proposal Mode** — Interactive ideation for specification generation
+  - `harnspec proposal` command to launch the flow
+  - Built-in spec conversion capabilities
+
+### Fixed
+
+- **Docusaurus Build** — Added missing `@chevrotain/regexp-to-ast` dependency in `docs-site`
+- **CLI Subcommands** — Resolved parsing issues preventing `harnspec ui` from launching
+- **Global Installation** — Fixed path resolution errors and unsupported ESM URL schemes on Windows for `@harnspec/cli-wrapper`
+
+### Technical
+
+- **GitHub Actions Runners** — Migrated CI/CD workflows to Node.js 24 compatibility
+- **Documentation Strategy** — Added specifications for monorepo skills integration and documentation pipeline
+
 ## [0.0.2] - 2026-04-05
 
 ### Added
@@ -65,3 +84,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **CI Speed-Up** — Removes `--test-threads=1` constraint and skips session tests for faster builds
 - **MCP Test Cleanup** — Ignores MCP config test (feature deprecated)
 - Adds specs 372–377 covering project management, UX defaults, real-time file watch, spec editing, and testing infrastructure
+
+[Unreleased]: https://github.com/harnspec/harnspec/compare/v0.0.3...HEAD
+[0.0.3]: https://github.com/harnspec/harnspec/releases/tag/v0.0.3
+[0.0.2]: https://github.com/harnspec/harnspec/releases/tag/v0.0.2
+[0.0.1]: https://github.com/harnspec/harnspec/releases/tag/v0.0.1
