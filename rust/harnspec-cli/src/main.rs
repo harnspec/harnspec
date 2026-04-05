@@ -178,14 +178,6 @@ fn main() -> ExitCode {
         Commands::Open(params) => {
             commands::open::run(&specs_dir, &params.spec, params.editor.clone())
         }
-        Commands::Proposal(params) => commands::proposal::run(commands::proposal::ProposalParams {
-            specs_dir: specs_dir.clone(),
-            idea: params.idea.clone(),
-            file: params.file.clone(),
-            non_interactive: params.non_interactive,
-            priority: params.priority.clone(),
-            tags: params.tags.clone(),
-        }),
         Commands::Search(params) => {
             commands::search::run(&specs_dir, &params.query, params.limit, &cli.output)
         }
