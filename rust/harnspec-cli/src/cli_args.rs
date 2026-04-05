@@ -93,6 +93,10 @@ pub(crate) enum Commands {
     /// Open spec in editor
     Open(Box<OpenParams>),
 
+    /// Start proposal mode: transform a vague idea into structured specs
+    #[command(alias = "propose")]
+    Proposal(Box<ProposalParams>),
+
     /// Search specs
     Search(Box<SearchParams>),
 
@@ -456,6 +460,24 @@ pub(crate) struct OpenParams {
     /// Editor to use (default: $EDITOR or platform default)
     #[arg(short, long)]
     pub(crate) editor: Option<String>,
+}
+
+#[derive(Parser)]
+pub(crate) struct ProposalParams {
+    /// Initial idea or goal (optional positional argument)
+    pub(crate) idea: Option<String>,
+    /// Read proposal content from a file
+    #[arg(short, long)]
+    pub(crate) file: Option<String>,
+    /// Non-interactive mode (for AI agent use)
+    #[arg(long)]
+    pub(crate) non_interactive: bool,
+    /// Priority for generated specs
+    #[arg(short, long, default_value = "medium")]
+    pub(crate) priority: String,
+    /// Tags for generated specs (comma-separated)
+    #[arg(long)]
+    pub(crate) tags: Option<String>,
 }
 
 #[derive(Parser)]

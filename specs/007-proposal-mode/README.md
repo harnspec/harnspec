@@ -1,5 +1,5 @@
 ---
-status: planned
+status: in-progress
 created: 2026-04-05
 priority: high
 tags:
@@ -9,9 +9,11 @@ tags:
 - umbrella
 - proposal
 created_at: 2026-04-05T04:52:27.177146800Z
-updated_at: 2026-04-05T04:52:27.177146800Z
+updated_at: 2026-04-05T05:16:51.954266Z
+transitions:
+- status: in-progress
+  at: 2026-04-05T05:16:51.954266Z
 ---
-
 # Proposal Mode - Interactive Idea-to-Specs Workflow
 
 ## Overview
@@ -39,17 +41,17 @@ A new `harnspec proposal` command (or `harnspec propose`) that launches **Propos
 
 ## Requirements
 
-- [ ] Add `harnspec proposal` (alias: `propose`) CLI command
-- [ ] Implement interactive proposal intake — accept natural language idea/goal description
-- [ ] Implement clarification phase — ask targeted questions to disambiguate intent, scope, and constraints
-- [ ] Implement design phase — generate feature decomposition from refined intent
-- [ ] Display proposed plan in structured format for user review (panorama view)
-- [ ] Allow user to modify/approve the proposed plan before spec generation
-- [ ] Auto-generate parent (umbrella) spec capturing the original intent
-- [ ] Auto-generate child specs for each decomposed feature, linked to parent
-- [ ] Generate spec panorama showing full hierarchy after creation
-- [ ] Support non-interactive mode with pre-written proposal document (--file flag)
-- [ ] Integrate with existing harnspec create/rel commands for spec generation
+- [x] Add `harnspec proposal` (alias: `propose`) CLI command
+- [x] Implement interactive proposal intake — accept natural language idea/goal description
+- [x] Implement clarification phase — ask targeted questions to disambiguate intent, scope, and constraints
+- [x] Implement design phase — generate feature decomposition from refined intent
+- [x] Display proposed plan in structured format for user review (panorama view)
+- [x] Allow user to modify/approve the proposed plan before spec generation
+- [x] Auto-generate parent (umbrella) spec capturing the original intent
+- [x] Auto-generate child specs for each decomposed feature, linked to parent
+- [x] Generate spec panorama showing full hierarchy after creation
+- [x] Support non-interactive mode with pre-written proposal document (--file flag)
+- [x] Integrate with existing harnspec create/rel commands for spec generation
 - [ ] Add i18n support for all user-facing strings (en + zh-CN)
 
 ## Non-Goals
