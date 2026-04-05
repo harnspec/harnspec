@@ -27,6 +27,26 @@ Before creating or modifying anything:
 - Run `search "relevant keywords"` to find related specs
 - If similar spec exists, consider extending it or linking as dependency
 
+### 1b. Proposal Mode (Optional)
+
+When you have a **vague idea** or **high-level goal** but don't know how to decompose it into specs, use Proposal Mode instead of manually creating specs:
+
+- `harnspec proposal` — interactive mode guides you through structured phases
+- `harnspec proposal "description"` — start with an initial idea
+- `harnspec proposal --file proposal.md` — from a written document
+- `harnspec proposal --non-interactive --file doc.md` — for AI agents
+
+Proposal Mode walks through 6 phases: **Propose → Clarify → Design → Confirm → Generate → Panorama**. It automatically creates an umbrella (parent) spec and linked child specs.
+
+**When to use proposal vs. manual create:**
+
+| Scenario | Use |
+|----------|-----|
+| You know the exact feature to build | `harnspec create` |
+| You have a vague idea, many possible features | `harnspec proposal` |
+| You need to decompose a large initiative | `harnspec proposal` |
+| Adding a single bug fix or small task | `harnspec create` |
+
 ### 2. Create Spec
 
 Use `harnspec create "spec-name"`.
@@ -238,6 +258,7 @@ All operations use the `harnspec` CLI. Run commands via shell/Bash.
 | Search specs | `harnspec search "query"` |
 | View spec | `harnspec view <spec>` |
 | Create spec | `harnspec create <name>` |
+| Proposal mode | `harnspec proposal` |
 | Update status | `harnspec update <spec> --status <status>` |
 | View relationships | `harnspec rel <spec>` |
 | Set parent | `harnspec rel add <child> --parent <parent>` |
@@ -302,6 +323,7 @@ Use when a spec **cannot start** until another independent spec is done first.
 ## Best Practices
 
 - Never create spec files manually; use `harnspec create`.
+- **Use `harnspec proposal` when you have a vague idea** — it creates the full spec hierarchy for you.
 - **Always pass all known fields in the `create` call** — never create empty then edit.
 - Keep specs short and focused; split when >2000 tokens.
 - **Search first** — never create duplicates; link related specs instead.

@@ -42,6 +42,33 @@ When building a large feature, break it into smaller pieces.
 
 ---
 
+## Example 1b: Specifying a Vague Idea (Proposal Mode)
+
+When you don't know how to break down a feature, let Proposal Mode do it for you.
+
+1. **Start with an idea**:
+   ```bash
+   harnspec proposal "I want offline support for the dashboard"
+   ```
+
+2. **Follow the interactive phases**:
+   - **Clarify**: Answer questions about syncing strategy and conflict resolution.
+   - **Design**: The system generates a feature breakdown (e.g., IndexedDB storage, sync queue, UI indicators).
+   - **Confirm**: Review the proposed breakdown and approve it.
+
+3. **Generation**:
+   The system automatically creates:
+   - 1 Parent (Umbrella) spec: "Offline Dashboard Support"
+   - 3 Child specs: "Local Storage Layer", "Background Sync Queue", "Offline Status UI"
+
+4. **Review the result**:
+   ```bash
+   # Visual panorama of the generated specs
+   harnspec board
+   ```
+
+---
+
 ## Example 2: Bug Fix (Simple Approach)
 
 For smaller units of work, keep it lean.

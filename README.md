@@ -1,7 +1,7 @@
 # HarnSpec
 
 <p align="center">
-  <img src="https://github.com/harnspec/harnspec-docs/blob/main/static/img/logo-with-bg.svg" alt="HarnSpec Logo" width="120" height="120">
+  <img src="favicon.ico" alt="HarnSpec Logo" width="120" height="120">
 </p>
 
 <p align="center">
@@ -34,21 +34,18 @@ HarnSpec brings agile principles to SDD (Spec-Driven Development)—small, focus
 ## Quick Start
 
 ```bash
-# Try with a tutorial project
-npx harnspec init --example dark-theme
-cd dark-theme && npm install && npm start
-
-# Or add to your existing project
-# Install with the @harnspec scope
-npm install -g @harnspec/cli && harnspec init
+# suggest :
+# install and init your project
+npm install -g harnspec && harnspec init
 ```
 
-**Visualize your project:**
+**Manage your project:**
 
 ```bash
 harnspec board    # Kanban view
+harnspec propose  # AI-assisted idea proposal & generation
 harnspec stats    # Project metrics
-harnspec ui       # Web UI at localhost:3000
+harnspec ui       # auto Web UI for multi project
 ```
 
 **Next:** [Your First Spec with AI](https://harnspec.github.io/docs/tutorials/first-spec-with-ai) (10 min tutorial)
@@ -87,11 +84,11 @@ AI agents can then use `harnspec` CLI tools directly to manage your project boar
 Teach your AI assistant the Spec-Driven Development methodology:
 
 ```bash
-# Recommended (uses skills.sh)
-harnspec skill install
+# Recommended (init auto inject)
+harnspec init -y
 
-# Or directly via skills.sh
-npx skills add harnspec/skills@harnspec -y
+#Or
+harnspec skill install
 ```
 
 This installs the **harnspec** skill which teaches AI agents:
@@ -111,6 +108,7 @@ This installs the **harnspec** skill which teaches AI agents:
 
 | Feature             | Description                                                                                       |
 | ------------------- | ------------------------------------------------------------------------------------------------- |
+| **💡 Proposal Mode** | `harnspec propose` - AI-assisted idea generation and refinement                                  |
 | **📊 Kanban Board**  | `harnspec board` - visual project tracking                                                       |
 | **🔍 Smart Search**  | `harnspec search` - find specs by content or metadata                                            |
 | **🔗 Dependencies**  | Track spec relationships with `depends_on` and `related`                                          |
@@ -129,19 +127,19 @@ This installs the **harnspec** skill which teaches AI agents:
 
 ### Runtime
 
-- **Node.js**: `>= 20.0.0`
+- **Node.js**: `>= 24.0.0`
 - **pnpm**: `>= 10.0.0` (preferred package manager)
 
 ### Development
 
-- **Node.js**: `>= 20.0.0`
+- **Node.js**: `>= 24.0.0`
 - **Rust**: `>= 1.70` (for building CLI/HTTP binaries)
 - **pnpm**: `>= 10.0.0`
 
 **Quick Check:**
 
 ```bash
-node --version   # Should be v20.0.0 or higher
+node --version   # Should be v24.0.0 or higher
 pnpm --version   # Should be 10.0.0 or higher
 rustc --version  # Should be 1.70 or higher (dev only)
 ```
@@ -188,6 +186,7 @@ pnpm rust:fmt            # Format Rust code
 pnpm cli board           # Show spec board
 pnpm cli list            # List specs
 pnpm cli create my-feat  # Create new spec
+pnpm cli propose         # Propose new features via AI
 pnpm cli validate        # Validate specs
 
 # Documentation
@@ -211,15 +210,3 @@ See [package.json](package.json) for all available scripts.
 ## Community
 
 💬 [Discussions](https://github.com/harnspec/harnspec/discussions) · 🐛 [Issues](https://github.com/harnspec/harnspec/issues) · 🤝 [Contributing](CONTRIBUTING.md) · 📋 [Changelog](CHANGELOG.md) · 📄 [LICENSE](LICENSE)
-
----
-
-### Contact Me | 联系我
-
-If you find HarnSpec helpful, feel free to add me on WeChat (note "HarnSpec") to join the discussion group.
-
-如果您觉得 HarnSpec 对您有帮助，欢迎添加微信（备注 "HarnSpec"）加入交流群。
-
-<p align="center">
-  <img src="https://github.com/harnspec/harnspec-docs/blob/main/static/img/qr-code.png" alt="WeChat Contact | 微信联系" height="280">
-</p>
