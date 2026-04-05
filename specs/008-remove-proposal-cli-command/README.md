@@ -1,13 +1,13 @@
 ---
-status: planned
+status: in-progress
 created: 2026-04-05
 priority: high
 tags:
 - cli
 - cleanup
 - methodology
+updated_at: 2026-04-05T11:48:50.838466400Z
 ---
-
 # Remove Proposal Mode CLI Commands and Shift to AI Methodology
 
 ## Overview

@@ -1479,7 +1479,7 @@ dependencies = [
 
 [[package]]
 name = "harnspec-cli"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "assert_cmd",
  "chrono",
@@ -1504,7 +1504,7 @@ dependencies = [
 
 [[package]]
 name = "harnspec-core"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "anthropic",
  "async-openai",
@@ -1538,7 +1538,7 @@ dependencies = [
 
 [[package]]
 name = "harnspec-http"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "async-stream",
  "axum",
