@@ -1,17 +1,16 @@
 ---
-status: in-progress
+status: complete
 created: 2026-03-25
 priority: high
-parent: 3-universal-skills-initiative
 tags:
 - repository
 - agent-skills
 - distribution
 - breaking-change
+parent: 3-universal-skills-initiative
 created_at: 2026-03-25T00:00:00Z
-updated_at: 2026-04-01T22:27:00Z
+updated_at: 2026-04-05T04:26:24.759999800Z
 ---
-
 # Reorganize Skills Distribution via harnspec/skills
 
 ## Overview

@@ -1,5 +1,5 @@
 ---
-status: in-progress
+status: complete
 created: 2026-04-01
 priority: high
 tags:
@@ -10,9 +10,8 @@ tags:
 - cleanup
 parent: 4-integrated-skills-management
 created_at: 2026-04-01T23:30:00Z
-updated_at: 2026-04-04T10:04:35.565213500Z
+updated_at: 2026-04-05T04:26:17.472528Z
 ---
-
 # Spec 6: 去除 MCP 集成，全面转向 CLI + Skills 驱动
 
 ## 概述
