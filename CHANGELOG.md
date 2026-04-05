@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-04-05
+
+### Added
+
+- **Chinese Documentation Links** — Improved accessibility by updating SKILL.md templates with direct Chinese documentation links
+- **CLI Argument Parsing** — Enhanced command processing logic in the Rust CLI
+
 ## [0.0.3] - 2026-04-05
 
 ### Added
@@ -85,7 +92,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **MCP Test Cleanup** — Ignores MCP config test (feature deprecated)
 - Adds specs 372–377 covering project management, UX defaults, real-time file watch, spec editing, and testing infrastructure
 
-[Unreleased]: https://github.com/harnspec/harnspec/compare/v0.0.3...HEAD
+[Unreleased]: https://github.com/harnspec/harnspec/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/harnspec/harnspec/releases/tag/v0.1.0
 [0.0.3]: https://github.com/harnspec/harnspec/releases/tag/v0.0.3
 [0.0.2]: https://github.com/harnspec/harnspec/releases/tag/v0.0.2
 [0.0.1]: https://github.com/harnspec/harnspec/releases/tag/v0.0.1
