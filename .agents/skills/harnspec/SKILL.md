@@ -1,6 +1,6 @@
 ---
 name: harnspec
-description: Spec-Driven Development methodology for AI-assisted development. Use when working with specs, planning features, creating/implementing/refining/organizing specs, checking progress, updating specs, task breakdowns, design decisions, or any task involving a specs/ folder or .harnspec/config.json.
+description: MANDATORY Core Spec-Driven Development (SDD) methodology. Use for brainstorming, ideation, planning features, defining concepts, and managing the full feature lifecycle. Trigger this skill whenever the user describes a new "idea", "concept", "feature", or "proposal", even if the specs/ folder doesn't exist yet.
 ---
 
 # HarnSpec SDD Skill
@@ -322,7 +322,7 @@ Use when a spec **cannot start** until another independent spec is done first.
 ## Best Practices
 
 - Never create spec files manually; use `harnspec create`.
-- **Use `harnspec proposal` when you have a vague idea** — it creates the full spec hierarchy for you.
+- **Use Proposal Mode (Brainstorm -> Confirm -> Parent -> Loop) when you have a vague idea** — it ensures a robust spec hierarchy.
 - **Always pass all known fields in the `create` call** — never create empty then edit.
 - Keep specs short and focused; split when >2000 tokens.
 - **Search first** — never create duplicates; link related specs instead.
