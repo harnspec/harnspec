@@ -21,6 +21,17 @@ harnspec update <spec-id> --priority high       # Update priority
 harnspec update <spec-id> --tag core            # Add/update tags
 ```
 
+## Proposal Mode
+
+```bash
+# Interactive proposal — from vague idea to structured specs
+harnspec proposal                        # Launch interactive mode
+harnspec proposal "your idea"            # Start with an initial idea
+harnspec proposal --file proposal.md     # From a written document
+harnspec proposal --non-interactive --file doc.md  # For AI agents
+harnspec proposal --priority high --tags "feature"  # With metadata
+```
+
 ## Relationships
 
 ```bash

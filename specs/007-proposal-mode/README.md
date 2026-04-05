@@ -53,6 +53,8 @@ A new `harnspec proposal` command (or `harnspec propose`) that launches **Propos
 - [x] Support non-interactive mode with pre-written proposal document (--file flag)
 - [x] Integrate with existing harnspec create/rel commands for spec generation
 - [ ] Add i18n support for all user-facing strings (en + zh-CN)
+- [x] Update SDD methodology skills (SKILL.md, workflow.md, commands.md) to document proposal workflow
+- [x] Add proposal command reference to docs-site CLI documentation (cli.mdx)
 
 ## Non-Goals
 
