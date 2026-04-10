@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-04-10
+
+### Added
+
+- **AI Session Lifecycle Management** — Implemented backend for managing AI coding sessions with support for various runners.
+- **Session Management Documentation** — Added comprehensive documentation for HarnSpec SDD methodology and CLI usage.
+- **Agent Skills** — Introduced `harnspec` and `harnspec-development` skills to standardize agent-led development workflows.
+
 ## [0.1.1] - 2026-04-05
 
 ### Added
@@ -106,7 +114,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **MCP Test Cleanup** — Ignores MCP config test (feature deprecated)
 - Adds specs 372–377 covering project management, UX defaults, real-time file watch, spec editing, and testing infrastructure
 
-[Unreleased]: https://github.com/harnspec/harnspec/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/harnspec/harnspec/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/harnspec/harnspec/releases/tag/v0.1.2
 [0.1.1]: https://github.com/harnspec/harnspec/releases/tag/v0.1.1
 [0.1.0]: https://github.com/harnspec/harnspec/releases/tag/v0.1.0
 [0.0.3]: https://github.com/harnspec/harnspec/releases/tag/v0.0.3
