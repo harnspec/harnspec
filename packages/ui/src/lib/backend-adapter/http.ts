@@ -444,8 +444,8 @@ export class HttpBackendAdapter implements BackendAdapter {
     const session = await this.fetchAPI<RawSession>('/api/sessions', {
       method: 'POST',
       body: JSON.stringify({
-        project_path: payload.projectPath,
-        spec_ids: specIds,
+        projectPath: payload.projectPath,
+        specIds: specIds,
         prompt: payload.prompt ?? null,
         runner: payload.runner,
         mode: payload.mode,

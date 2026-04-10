@@ -13,15 +13,7 @@ use crate::watcher::{sse_keepalive_interval, sse_min_interval, SpecChangeEvent};
 
 /// GET /api/events/specs - server-sent events for spec changes
 pub async fn spec_events(State(state): State<AppState>) -> ApiResult<Response> {
-    let watcher = state.file_watcher.clone().ok_or_else(|| {
-        (
-            StatusCode::SERVICE_UNAVAILABLE,
-            axum::Json(ApiError::new(
-                "FILE_WATCH_DISABLED",
-                "File watching is disabled",
-            )),
-        )
-    })?;
+    let watcher = state.file_watcher.clone();
 
     let permit = state
         .sse_connections
@@ -34,7 +26,6 @@ pub async fn spec_events(State(state): State<AppState>) -> ApiResult<Response> {
             )
         })?;
 
-    let mut rx = watcher.subscribe();
     let keepalive_interval = sse_keepalive_interval();
     let min_interval = sse_min_interval();
 
@@ -43,12 +34,23 @@ pub async fn spec_events(State(state): State<AppState>) -> ApiResult<Response> {
         let mut keepalive = tokio::time::interval(keepalive_interval);
         let mut last_sent = std::time::Instant::now() - min_interval;
 
+        // If watcher is disabled, we just send keep-alives to keep the connection open
+        // without reporting an error. This avoids constant 503s in UI/logs.
+        let mut rx = watcher.map(|w| w.subscribe());
+
         loop {
             tokio::select! {
                 _ = keepalive.tick() => {
                     yield Ok::<Bytes, std::convert::Infallible>(Bytes::from(": keep-alive\n\n"));
                 }
-                result = rx.recv() => {
+                result = async {
+                    if let Some(ref mut rx) = rx {
+                        rx.recv().await
+                    } else {
+                        // Sleep forever if no watcher
+                        std::future::pending().await
+                    }
+                } => {
                     match result {
                         Ok(event) => {
                             let elapsed = last_sent.elapsed();
