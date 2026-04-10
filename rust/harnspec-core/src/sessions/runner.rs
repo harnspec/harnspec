@@ -341,7 +341,7 @@ impl RunnerRegistry {
                     extensions: Vec::new(),
                 }),
                 symlink_file: Some("CLAUDE.md".to_string()),
-                prompt_flag: Some("--print".to_string()),
+                prompt_flag: Some("-p".to_string()),
                 protocol: None,
             },
         );

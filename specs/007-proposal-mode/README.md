@@ -1,5 +1,5 @@
 ---
-status: archived
+status: complete
 created: 2026-04-05
 priority: high
 tags:
@@ -9,7 +9,7 @@ tags:
 - umbrella
 - proposal
 created_at: 2026-04-05T04:52:27.177146800Z
-updated_at: 2026-04-05T11:49:07.367305700Z
+updated_at: 2026-04-06T13:32:33.315595500Z
 transitions:
 - status: in-progress
   at: 2026-04-05T05:16:51.954266Z

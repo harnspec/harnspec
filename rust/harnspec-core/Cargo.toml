@@ -33,6 +33,7 @@ tiktoken-rs.workspace = true
 ts-rs = {version = "10.1", features = ["chrono-impl", "no-serde-warnings"]}
 urlencoding = {version = "2.1", optional = true}
 walkdir.workspace = true
+dunce = "1.0"
 
 # Optional dependencies for infrastructure features
 async-trait = {version = "0.1", optional = true}

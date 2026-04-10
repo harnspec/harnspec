@@ -4,7 +4,9 @@ use crate::sessions::{Session, SessionEvent, SessionLog, SessionMode, SessionSta
 use serde::{Deserialize, Serialize};
 
 /// Request to create a new session
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
 pub struct CreateRunnerSessionRequest {
     pub project_path: String,
     #[serde(default)]
@@ -17,7 +19,9 @@ pub struct CreateRunnerSessionRequest {
 }
 
 /// Response for session creation
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
 pub struct SessionResponse {
     pub id: String,
     pub project_path: String,
@@ -35,34 +39,44 @@ pub struct SessionResponse {
     pub plan_progress: Option<PlanProgressResponse>,
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
 pub struct ActiveToolCallResponse {
     pub id: Option<String>,
     pub tool: String,
     pub status: String,
 }
 
-#[derive(Debug, Serialize, Clone)]
+#[derive(Debug, Serialize, Clone, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
 pub struct PlanProgressResponse {
     pub completed: usize,
     pub total: usize,
 }
 
 /// Request to archive session logs
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
 pub struct ArchiveSessionRequest {
     #[serde(default)]
     pub compress: bool,
 }
 
 /// Response for session archive
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
 pub struct ArchiveSessionResponse {
     pub path: String,
 }
 
 /// Request to rotate logs
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
 pub struct RotateLogsRequest {
     #[serde(default = "default_rotate_keep")]
     pub keep: usize,
@@ -73,24 +87,32 @@ fn default_rotate_keep() -> usize {
 }
 
 /// Response for log rotation
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
 pub struct RotateLogsResponse {
     pub deleted: usize,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
 pub struct PromptSessionRequest {
     pub message: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
 pub struct RespondPermissionRequest {
     pub permission_id: String,
     pub option: String,
 }
 
 /// List sessions with optional filters
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
 pub struct ListSessionsRequest {
     pub project_id: Option<String>,
     pub spec_id: Option<String>,
@@ -99,7 +121,9 @@ pub struct ListSessionsRequest {
 }
 
 /// DTO for session logs
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
 pub struct SessionLogDto {
     pub id: i64,
     pub timestamp: String,
@@ -119,7 +143,9 @@ impl From<SessionLog> for SessionLogDto {
 }
 
 /// DTO for session events
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, TS)]
+#[ts(export, export_to = "../../../../packages/ui/src/types/generated/")]
+#[serde(rename_all = "camelCase")]
 pub struct SessionEventDto {
     pub id: i64,
     pub timestamp: String,

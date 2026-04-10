@@ -8,6 +8,21 @@ use colored::Colorize;
 use std::process::ExitCode;
 
 use crate::cli_args::{Cli, Commands, GitSubcommand, RunnerSubcommand, SessionSubcommand};
+use std::error::Error;
+use std::path::PathBuf;
+
+fn resolve_project_path(path: Option<String>) -> Result<String, Box<dyn Error>> {
+    let path_buf = match path {
+        Some(p) => PathBuf::from(p),
+        None => std::env::current_dir()?,
+    };
+    let absolute = if path_buf.exists() {
+        dunce::canonicalize(&path_buf)?
+    } else {
+        path_buf
+    };
+    Ok(absolute.to_string_lossy().to_string())
+}
 
 fn main() -> ExitCode {
     let cli = Cli::parse();
@@ -133,23 +148,22 @@ fn main() -> ExitCode {
             },
         ),
         Commands::Run(params) => {
-            let project_path = std::env::current_dir()
-                .map_err(|e| Box::<dyn std::error::Error>::from(e.to_string()))
-                .and_then(|path| {
-                    commands::session::run_direct(commands::session::RunDirectRequest {
-                        project_path: path.to_string_lossy().into_owned(),
-                        specs: params.spec.clone(),
-                        prompt: params.prompt.clone(),
-                        runner: params.runner.clone(),
-                        model: params.model.clone(),
-                        dry_run: params.dry_run,
-                        acp: params.acp,
-                        worktree: params.worktree,
-                        parallel: params.parallel,
-                        merge_strategy: params.merge_strategy.clone(),
-                    })
-                });
-            project_path
+            let result = (|| {
+                let project_path = resolve_project_path(params.project_path.clone())?;
+                commands::session::run_direct(commands::session::RunDirectRequest {
+                    project_path,
+                    specs: params.spec.clone(),
+                    prompt: params.prompt.clone(),
+                    runner: params.runner.clone(),
+                    model: params.model.clone(),
+                    dry_run: params.dry_run,
+                    acp: params.acp,
+                    worktree: params.worktree,
+                    parallel: params.parallel,
+                    merge_strategy: params.merge_strategy.clone(),
+                })
+            })();
+            result
         }
         Commands::List(params) => commands::list::run(commands::list::ListParams {
             specs_dir: specs_dir.clone(),
@@ -252,117 +266,119 @@ fn main() -> ExitCode {
         ),
         Commands::Session { action } => {
             use commands::session::SessionCommand as Cmd;
-            let cmd = match *action {
-                SessionSubcommand::Create {
-                    ref project_path,
-                    ref spec,
-                    ref prompt,
-                    ref runner,
-                    ref model,
-                    acp,
-                    worktree,
-                    ref merge_strategy,
-                    ref mode,
-                } => Cmd::Create {
-                    project_path: project_path.clone(),
-                    specs: spec.clone(),
-                    prompt: prompt.clone(),
-                    runner: runner.clone(),
-                    model: model.clone(),
-                    acp,
-                    worktree,
-                    merge_strategy: merge_strategy.clone(),
-                    mode: mode.clone(),
-                },
-                SessionSubcommand::Run {
-                    ref project_path,
-                    ref spec,
-                    ref prompt,
-                    ref runner,
-                    ref model,
-                    acp,
-                    worktree,
-                    parallel,
-                    ref merge_strategy,
-                    ref mode,
-                } => Cmd::Run {
-                    project_path: project_path.clone(),
-                    specs: spec.clone(),
-                    prompt: prompt.clone(),
-                    runner: runner.clone(),
-                    model: model.clone(),
-                    acp,
-                    worktree,
-                    parallel,
-                    merge_strategy: merge_strategy.clone(),
-                    mode: mode.clone(),
-                },
-                SessionSubcommand::Start { ref session_id } => Cmd::Start {
-                    session_id: session_id.clone(),
-                },
-                SessionSubcommand::Pause { ref session_id } => Cmd::Pause {
-                    session_id: session_id.clone(),
-                },
-                SessionSubcommand::Resume { ref session_id } => Cmd::Resume {
-                    session_id: session_id.clone(),
-                },
-                SessionSubcommand::Stop { ref session_id } => Cmd::Stop {
-                    session_id: session_id.clone(),
-                },
-                SessionSubcommand::Archive {
-                    ref session_id,
-                    ref output_dir,
-                    compress,
-                } => Cmd::Archive {
-                    session_id: session_id.clone(),
-                    output_dir: output_dir.clone(),
-                    compress,
-                },
-                SessionSubcommand::RotateLogs {
-                    ref session_id,
-                    keep,
-                } => Cmd::RotateLogs {
-                    session_id: session_id.clone(),
-                    keep,
-                },
-                SessionSubcommand::Delete { ref session_id } => Cmd::Delete {
-                    session_id: session_id.clone(),
-                },
-                SessionSubcommand::View { ref session_id } => Cmd::View {
-                    session_id: session_id.clone(),
-                },
-                SessionSubcommand::List {
-                    ref spec,
-                    ref status,
-                    ref runner,
-                } => Cmd::List {
-                    spec: spec.clone(),
-                    status: status.clone(),
-                    runner: runner.clone(),
-                },
-                SessionSubcommand::Logs { ref session_id } => Cmd::Logs {
-                    session_id: session_id.clone(),
-                },
-                SessionSubcommand::Worktrees { all } => Cmd::Worktrees { all },
-                SessionSubcommand::Merge {
-                    ref session_id,
-                    ref strategy,
-                    resolve,
-                } => Cmd::Merge {
-                    session_id: session_id.clone(),
-                    strategy: strategy.clone(),
-                    resolve,
-                },
-                SessionSubcommand::Cleanup {
-                    ref session_id,
-                    ref keep_branch,
-                } => Cmd::Cleanup {
-                    session_id: session_id.clone(),
-                    keep_branch: *keep_branch,
-                },
-                SessionSubcommand::Gc => Cmd::Gc,
-            };
-            commands::session::run(cmd)
+            (|| {
+                let cmd = match *action {
+                    SessionSubcommand::Create {
+                        project_path,
+                        spec,
+                        prompt,
+                        runner,
+                        model,
+                        acp,
+                        worktree,
+                        merge_strategy,
+                        mode,
+                    } => Cmd::Create {
+                        project_path: resolve_project_path(project_path)?,
+                        specs: spec,
+                        prompt,
+                        runner,
+                        model,
+                        acp,
+                        worktree,
+                        merge_strategy,
+                        mode,
+                    },
+                    SessionSubcommand::Run {
+                        project_path,
+                        spec,
+                        prompt,
+                        runner,
+                        model,
+                        acp,
+                        worktree,
+                        parallel,
+                        merge_strategy,
+                        mode,
+                    } => Cmd::Run {
+                        project_path: resolve_project_path(project_path)?,
+                        specs: spec,
+                        prompt,
+                        runner,
+                        model,
+                        acp,
+                        worktree,
+                        parallel,
+                        merge_strategy,
+                        mode,
+                    },
+                    SessionSubcommand::Start { ref session_id } => Cmd::Start {
+                        session_id: session_id.clone(),
+                    },
+                    SessionSubcommand::Pause { ref session_id } => Cmd::Pause {
+                        session_id: session_id.clone(),
+                    },
+                    SessionSubcommand::Resume { ref session_id } => Cmd::Resume {
+                        session_id: session_id.clone(),
+                    },
+                    SessionSubcommand::Stop { ref session_id } => Cmd::Stop {
+                        session_id: session_id.clone(),
+                    },
+                    SessionSubcommand::Archive {
+                        ref session_id,
+                        ref output_dir,
+                        compress,
+                    } => Cmd::Archive {
+                        session_id: session_id.clone(),
+                        output_dir: output_dir.clone(),
+                        compress,
+                    },
+                    SessionSubcommand::RotateLogs {
+                        ref session_id,
+                        keep,
+                    } => Cmd::RotateLogs {
+                        session_id: session_id.clone(),
+                        keep,
+                    },
+                    SessionSubcommand::Delete { ref session_id } => Cmd::Delete {
+                        session_id: session_id.clone(),
+                    },
+                    SessionSubcommand::View { ref session_id } => Cmd::View {
+                        session_id: session_id.clone(),
+                    },
+                    SessionSubcommand::List {
+                        ref spec,
+                        ref status,
+                        ref runner,
+                    } => Cmd::List {
+                        spec: spec.clone(),
+                        status: status.clone(),
+                        runner: runner.clone(),
+                    },
+                    SessionSubcommand::Logs { ref session_id } => Cmd::Logs {
+                        session_id: session_id.clone(),
+                    },
+                    SessionSubcommand::Worktrees { all } => Cmd::Worktrees { all },
+                    SessionSubcommand::Merge {
+                        ref session_id,
+                        ref strategy,
+                        resolve,
+                    } => Cmd::Merge {
+                        session_id: session_id.clone(),
+                        strategy: strategy.clone(),
+                        resolve,
+                    },
+                    SessionSubcommand::Cleanup {
+                        ref session_id,
+                        ref keep_branch,
+                    } => Cmd::Cleanup {
+                        session_id: session_id.clone(),
+                        keep_branch: *keep_branch,
+                    },
+                    SessionSubcommand::Gc => Cmd::Gc,
+                };
+                commands::session::run(cmd)
+            })()
         }
         Commands::Runner { action } => {
             use commands::runner::RunnerCommand as Cmd;

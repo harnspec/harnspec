@@ -352,6 +352,10 @@ pub(crate) struct InitParams {
 
 #[derive(Parser)]
 pub(crate) struct RunParams {
+    /// Optional project path (defaults to current directory)
+    #[arg(long)]
+    pub(crate) project_path: Option<String>,
+
     /// Inline prompt to send to the runner
     #[arg(short = 'p', long)]
     pub(crate) prompt: Option<String>,
@@ -660,7 +664,7 @@ pub(crate) enum GitSubcommand {
 pub(crate) enum SessionSubcommand {
     Create {
         #[arg(long)]
-        project_path: String,
+        project_path: Option<String>,
 
         /// Spec IDs to attach as context (repeatable: --spec 028 --spec 320)
         #[arg(long, action = clap::ArgAction::Append)]
@@ -690,7 +694,7 @@ pub(crate) enum SessionSubcommand {
     },
     Run {
         #[arg(long)]
-        project_path: String,
+        project_path: Option<String>,
 
         /// Spec IDs to attach as context (repeatable: --spec 028 --spec 320)
         #[arg(long, action = clap::ArgAction::Append)]

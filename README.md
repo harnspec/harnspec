@@ -35,8 +35,8 @@ HarnSpec brings agile principles to SDD (Spec-Driven Development)—small, focus
 
 ```bash
 # suggest :
-# install and init your project
-npm install -g harnspec && harnspec init
+# install and init any of your project
+npm install -g harnspec && harnspec init -y
 ```
 
 **Manage your project:**

@@ -28,6 +28,7 @@ serde_yaml.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
 walkdir.workspace = true
+dunce = "1.0"
 
 [dev-dependencies]
 assert_cmd = "2.0"

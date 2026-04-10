@@ -280,14 +280,20 @@ pub async fn start_session(
     let bg_session_id = session_id.clone();
     tokio::spawn(async move {
         if let Err(e) = bg_manager.start_session(&bg_session_id).await {
+            let error_msg = format!("Background session start failed: {}", e);
             // Mark the session as failed so the UI can reflect the error
             if let Ok(Some(mut s)) = bg_manager.get_session(&bg_session_id).await {
                 s.status = SessionStatus::Failed;
                 s.ended_at = Some(chrono::Utc::now());
                 s.touch();
                 let _ = bg_manager.update_session(&s).await;
+                // Also log the error to session logs so user can see it in UI
+                let _ = bg_manager
+                    .db
+                    .log_message(&bg_session_id, LogLevel::Error, &error_msg)
+                    .await;
             }
-            tracing::error!(session_id = %bg_session_id, error = %e, "Background session start failed");
+            tracing::error!(session_id = %bg_session_id, error = %e, "{}", error_msg);
         }
     });
 

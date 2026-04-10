@@ -59,6 +59,63 @@ fn test_session_create_pending() {
 
 #[test]
 #[ignore = "AI session feature — not critical for CI"]
+fn test_session_create_no_project_path() {
+    let ctx = TestContext::new();
+    let cwd = ctx.path();
+    let home = isolated_home();
+
+    init_project(cwd, true);
+    write_test_runner(cwd, "test-echo");
+
+    // Run from the project directory without --project-path
+    let result = exec_cli_env(
+        &[
+            "session",
+            "create",
+            "--runner",
+            "test-echo",
+            "--prompt",
+            "hello",
+        ],
+        cwd,
+        &[("HOME", home.path().to_str().unwrap())],
+    );
+
+    assert!(
+        result.success,
+        "session create without project-path should succeed\nstdout: {}\nstderr: {}",
+        result.stdout, result.stderr
+    );
+    assert!(
+        result.stdout.contains("Created session"),
+        "output should confirm creation: {}",
+        result.stdout
+    );
+
+    // Verify it used the current directory (absolute)
+    let id = parse_session_id(&result.stdout).unwrap();
+    let view_result = exec_cli_env(
+        &["session", "view", &id],
+        cwd,
+        &[("HOME", home.path().to_str().unwrap())],
+    );
+
+    // Check if Project Path in view output is absolute and matches cwd
+    // Note: canonicalize might add UNC prefix on Windows, so we check if it contains the path
+    let expected_path = std::fs::canonicalize(cwd)
+        .unwrap()
+        .to_string_lossy()
+        .to_string();
+    assert!(
+        view_result.stdout.contains(&expected_path),
+        "view output should contain absolute project path: {}\noutput: {}",
+        expected_path,
+        view_result.stdout
+    );
+}
+
+#[test]
+#[ignore = "AI session feature — not critical for CI"]
 fn test_session_create_with_spec_and_prompt() {
     let ctx = TestContext::new();
     let cwd = ctx.path();

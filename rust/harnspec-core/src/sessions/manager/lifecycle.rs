@@ -205,7 +205,7 @@ impl SessionManager {
         options: CreateSessionOptions,
     ) -> CoreResult<Session> {
         let CreateSessionOptions {
-            project_path,
+            mut project_path,
             spec_ids,
             prompt,
             runner,
@@ -216,6 +216,12 @@ impl SessionManager {
             merge_strategy,
             auto_merge_on_completion,
         } = options;
+
+        // Ensure project_path is absolute
+        if let Ok(abs) = dunce::canonicalize(&project_path) {
+            project_path = abs.to_string_lossy().to_string();
+        }
+
         let registry = RunnerRegistry::load(PathBuf::from(&project_path).as_path())?;
 
         let runner_id = match runner {
