@@ -48,7 +48,7 @@ pub struct SessionManager {
 }
 
 /// Handle for an active session process
-pub(super) struct ActiveSessionHandle {
+pub struct ActiveSessionHandle {
     /// The child process
     process: Arc<Mutex<Child>>,
     /// Stdout task handle
