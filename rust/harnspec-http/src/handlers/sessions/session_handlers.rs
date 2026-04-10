@@ -14,7 +14,7 @@ use serde_json::Value;
 use tokio::sync::broadcast;
 
 use crate::error::{internal_error, ApiError, ApiResult};
-use crate::sessions::{ArchiveOptions, Session, SessionLog, SessionStatus};
+use crate::sessions::{ArchiveOptions, LogLevel, Session, SessionLog, SessionStatus};
 use crate::state::AppState;
 use crate::types::{
     ActiveToolCallResponse, ArchiveSessionRequest, ArchiveSessionResponse,

@@ -2,6 +2,7 @@
 
 use crate::sessions::{Session, SessionEvent, SessionLog, SessionMode, SessionStatus};
 use serde::{Deserialize, Serialize};
+use ts_rs::TS;
 
 /// Request to create a new session
 #[derive(Debug, Deserialize, TS)]

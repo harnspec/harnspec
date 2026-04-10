@@ -147,24 +147,21 @@ fn main() -> ExitCode {
                 no_skill: params.no_skill,
             },
         ),
-        Commands::Run(params) => {
-            let result = (|| {
-                let project_path = resolve_project_path(params.project_path.clone())?;
-                commands::session::run_direct(commands::session::RunDirectRequest {
-                    project_path,
-                    specs: params.spec.clone(),
-                    prompt: params.prompt.clone(),
-                    runner: params.runner.clone(),
-                    model: params.model.clone(),
-                    dry_run: params.dry_run,
-                    acp: params.acp,
-                    worktree: params.worktree,
-                    parallel: params.parallel,
-                    merge_strategy: params.merge_strategy.clone(),
-                })
-            })();
-            result
-        }
+        Commands::Run(params) => (|| {
+            let project_path = resolve_project_path(params.project_path.clone())?;
+            commands::session::run_direct(commands::session::RunDirectRequest {
+                project_path,
+                specs: params.spec.clone(),
+                prompt: params.prompt.clone(),
+                runner: params.runner.clone(),
+                model: params.model.clone(),
+                dry_run: params.dry_run,
+                acp: params.acp,
+                worktree: params.worktree,
+                parallel: params.parallel,
+                merge_strategy: params.merge_strategy.clone(),
+            })
+        })(),
         Commands::List(params) => commands::list::run(commands::list::ListParams {
             specs_dir: specs_dir.clone(),
             status: params.status.clone(),

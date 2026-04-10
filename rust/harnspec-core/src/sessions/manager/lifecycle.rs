@@ -40,11 +40,11 @@ use nix::unistd::Pid;
 /// Manages the lifecycle of AI coding sessions
 pub struct SessionManager {
     /// Database for session persistence
-    pub(super) db: Arc<SessionDatabase>,
+    pub db: Arc<SessionDatabase>,
     /// Active running sessions (session_id -> process handle)
-    pub(super) active_sessions: Arc<RwLock<HashMap<String, ActiveSessionHandle>>>,
+    pub active_sessions: Arc<RwLock<HashMap<String, ActiveSessionHandle>>>,
     /// Log broadcast channels (session_id -> sender)
-    pub(super) log_broadcasts: Arc<RwLock<HashMap<String, broadcast::Sender<SessionLog>>>>,
+    pub log_broadcasts: Arc<RwLock<HashMap<String, broadcast::Sender<SessionLog>>>>,
 }
 
 /// Handle for an active session process
