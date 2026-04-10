@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-04-10
+
+### Fixed
+
+- **AI Session Startup** — Resolved `missing field projectPath` error during session creation by fixing a naming mismatch between the UI (snake_case) and the Backend (camelCase).
+- **Spec Events SSE** — Resolved `503 Service Unavailable` error when file watching is disabled; the endpoint now returns a 200 OK stream with keep-alive signals.
+
+### Changed
+
+- **UI Backend Adapter** — Aligned the HTTP backend adapter with the Rust backend's `camelCase` naming convention for all session-related requests.
+
 ## [0.1.2] - 2026-04-10
 
 ### Added
@@ -114,7 +125,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **MCP Test Cleanup** — Ignores MCP config test (feature deprecated)
 - Adds specs 372–377 covering project management, UX defaults, real-time file watch, spec editing, and testing infrastructure
 
-[Unreleased]: https://github.com/harnspec/harnspec/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/harnspec/harnspec/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/harnspec/harnspec/releases/tag/v0.1.3
 [0.1.2]: https://github.com/harnspec/harnspec/releases/tag/v0.1.2
 [0.1.1]: https://github.com/harnspec/harnspec/releases/tag/v0.1.1
 [0.1.0]: https://github.com/harnspec/harnspec/releases/tag/v0.1.0
