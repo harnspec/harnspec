@@ -1,12 +1,12 @@
 ---
-status: in-progress
+status: completed
 created: 2026-04-05
 priority: high
 tags:
 - cli
 - cleanup
 - methodology
-updated_at: 2026-04-05T11:48:50.838466400Z
+updated_at: 2026-04-11T00:00:00.000Z
 ---
 # Remove Proposal Mode CLI Commands and Shift to AI Methodology
 
@@ -20,10 +20,10 @@ HarnSpec's ultimate goal is high-efficiency human-machine collaboration. A dedic
 - Enforce that "Proposal Mode" strictly refers to the AI reasoning protocol (Brainstorm -> Confirm -> Create Parent -> Loop Create Children) defined in `SKILL.md`.
 
 ## Requirements
-- [ ] Remove `rust/harnspec-cli/src/commands/proposal.rs` and unregister the command in the CLI router.
-- [ ] Ensure all references to `harnspec proposal` are purged from `docs-site`.
-- [ ] Verify that the CLI binaries compile and pass all existing tests successfully.
+- [x] Remove `rust/harnspec-cli/src/commands/proposal.rs` and unregister the command in the CLI router.
+- [x] Ensure all references to `harnspec proposal` are purged from `docs-site`.
+- [x] Verify that the CLI binaries compile and pass all existing tests successfully.
 
 ## Acceptance Criteria
-- [ ] Running `harnspec proposal` returns a "command not found" or "unrecognized subcommand" error.
-- [ ] The docs-site builds without referencing the old proposal command.
+- [x] Running `harnspec proposal` returns a "command not found" or "unrecognized subcommand" error.
+- [x] The docs-site builds without referencing the old proposal command.

@@ -9,12 +9,14 @@ tags:
 - umbrella
 - proposal
 created_at: 2026-04-05T04:52:27.177146800Z
-updated_at: 2026-04-06T13:32:33.315595500Z
+updated_at: 2026-04-11T00:00:00.000Z
 transitions:
 - status: in-progress
   at: 2026-04-05T05:16:51.954266Z
 ---
 # Proposal Mode - Interactive Idea-to-Specs Workflow
+
+> **Note**: The `harnspec proposal` CLI command described below was removed in version 0.1.1 (see [spec 008](../008-remove-proposal-cli-command/README.md)). Proposal Mode has been redefined as an AI-driven cognitive methodology within the Agent Skills.
 
 ## Overview
 

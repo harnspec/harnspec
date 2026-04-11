@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6] - 2026-04-11
+
+### Changed
+
+- **Agent Skills** — Enhanced the `harnspec` skill to mandate spec validation via `harnspec validate` after creation or updates.
+- **SDD Methodology** — Formally transitioned the "Proposal Mode" to an AI-driven cognitive methodology, deprecating the previous CLI-based approach.
+
+### Removed
+
+- **Proposal CLI Command** — Completely removed all remaining references and documentation for the `harnspec proposal` CLI command across the codebase and templates.
+
 ## [0.1.5] - 2026-04-11
 
 ### Fixed
@@ -133,7 +144,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **MCP Test Cleanup** — Ignores MCP config test (feature deprecated)
 - Adds specs 372–377 covering project management, UX defaults, real-time file watch, spec editing, and testing infrastructure
 
-[Unreleased]: https://github.com/harnspec/harnspec/compare/v0.1.5...HEAD
+[Unreleased]: https://github.com/harnspec/harnspec/compare/v0.1.6...HEAD
+[0.1.6]: https://github.com/harnspec/harnspec/releases/tag/v0.1.6
 [0.1.5]: https://github.com/harnspec/harnspec/releases/tag/v0.1.5
 [0.1.3]: https://github.com/harnspec/harnspec/releases/tag/v0.1.3
 [0.1.2]: https://github.com/harnspec/harnspec/releases/tag/v0.1.2

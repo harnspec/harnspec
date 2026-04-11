@@ -44,22 +44,24 @@ When building a large feature, break it into smaller pieces.
 
 ## Example 1b: Specifying a Vague Idea (Proposal Mode)
 
-When you don't know how to break down a feature, let Proposal Mode do it for you.
+When you don't know how to break down a feature, enter **Proposal Mode** (AI Cognitive Workflow).
 
 1. **Start with an idea**:
-   ```bash
-   harnspec proposal "I want offline support for the dashboard"
-   ```
+   User: "I want offline support for the dashboard"
 
-2. **Follow the interactive phases**:
-   - **Clarify**: Answer questions about syncing strategy and conflict resolution.
-   - **Design**: The system generates a feature breakdown (e.g., IndexedDB storage, sync queue, UI indicators).
-   - **Confirm**: Review the proposed breakdown and approve it.
+2. **Follow the AI cognitive phases**:
+   - **Brainstorm & Clarify**: The agent asks questions about syncing strategy and conflict resolution.
+   - **Seek Confirmation**: The agent proposes a feature breakdown (e.g., IndexedDB storage, sync queue, UI indicators) and waits for user approval.
+   - **Confirm**: User reviews the proposed breakdown and says "Yes, looks good."
 
 3. **Generation**:
-   The system automatically creates:
-   - 1 Parent (Umbrella) spec: "Offline Dashboard Support"
-   - 3 Child specs: "Local Storage Layer", "Background Sync Queue", "Offline Status UI"
+   The agent automatically creates the spec hierarchy:
+   ```bash
+   harnspec create "offline-dashboard-support" --title "Offline Dashboard Support" --parent ...
+   harnspec create "local-storage-layer" --title "Local Storage Layer" --parent offline-dashboard-support
+   harnspec create "background-sync-queue" --title "Background Sync Queue" --parent offline-dashboard-support
+   harnspec create "offline-status-ui" --title "Offline Status UI" --parent offline-dashboard-support
+   ```
 
 4. **Review the result**:
    ```bash

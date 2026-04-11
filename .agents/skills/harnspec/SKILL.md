@@ -53,6 +53,8 @@ Use `harnspec create "spec-name"`.
 
 **Always pass all known fields in the `create` call** — `title`, `content`, `priority`, `tags`, etc. Never create empty specs then populate with follow-up `update`.
 
+**MANDATORY: Always run `harnspec validate` after creation or updates to ensure spec validity.**
+
 **Gather requirements first:**
 
 - **Problem/Goal**: What needs to be solved?
