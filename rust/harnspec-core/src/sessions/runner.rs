@@ -139,29 +139,28 @@ impl RunnerDefinition {
 
         // Resolve absolute path to ensure command can be spawned on Windows
         // (handling node scripts like .cmd/.ps1)
-        let mut command_path = which::which(command).unwrap_or_else(|_| PathBuf::from(command));
+        let command_path = which::which(command).unwrap_or_else(|_| PathBuf::from(command));
 
         #[cfg(windows)]
-        {
+        let command_path = {
+            let mut path = command_path;
             // On Windows, if we found a .ps1 or a file with no extension,
             // try to see if a .cmd or .exe exists in the same location,
             // as these are preferred for direct execution.
-            let ext = command_path
-                .extension()
-                .and_then(|s| s.to_str())
-                .unwrap_or("");
+            let ext = path.extension().and_then(|s| s.to_str()).unwrap_or("");
             if ext == "ps1" || ext.is_empty() {
-                let cmd = command_path.with_extension("cmd");
+                let cmd = path.with_extension("cmd");
                 if cmd.exists() {
-                    command_path = cmd;
+                    path = cmd;
                 } else {
-                    let exe = command_path.with_extension("exe");
+                    let exe = path.with_extension("exe");
                     if exe.exists() {
-                        command_path = exe;
+                        path = exe;
                     }
                 }
             }
-        }
+            path
+        };
 
         #[cfg(windows)]
         let mut cmd = if command_path.extension().and_then(|s| s.to_str()) == Some("ps1") {
@@ -315,26 +314,25 @@ impl RunnerDefinition {
 
         // Try common version flags in order of preference
         let version_flags = ["--version", "-v", "version"];
-        let mut command_path = which::which(command).unwrap_or_else(|_| PathBuf::from(command));
+        let command_path = which::which(command).unwrap_or_else(|_| PathBuf::from(command));
 
         #[cfg(windows)]
-        {
-            let ext = command_path
-                .extension()
-                .and_then(|s| s.to_str())
-                .unwrap_or("");
+        let command_path = {
+            let mut path = command_path;
+            let ext = path.extension().and_then(|s| s.to_str()).unwrap_or("");
             if ext == "ps1" || ext.is_empty() {
-                let cmd = command_path.with_extension("cmd");
+                let cmd = path.with_extension("cmd");
                 if cmd.exists() {
-                    command_path = cmd;
+                    path = cmd;
                 } else {
-                    let exe = command_path.with_extension("exe");
+                    let exe = path.with_extension("exe");
                     if exe.exists() {
-                        command_path = exe;
+                        path = exe;
                     }
                 }
             }
-        }
+            path
+        };
 
         for flag in &version_flags {
             #[cfg(windows)]
