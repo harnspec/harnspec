@@ -136,7 +136,51 @@ impl RunnerDefinition {
         let command = self.command.as_ref().ok_or_else(|| {
             CoreError::ConfigError(format!("Runner '{}' is not runnable", self.id))
         })?;
-        let mut cmd = Command::new(command);
+
+        // Resolve absolute path to ensure command can be spawned on Windows
+        // (handling node scripts like .cmd/.ps1)
+        let mut command_path = which::which(command).unwrap_or_else(|_| PathBuf::from(command));
+
+        #[cfg(windows)]
+        {
+            // On Windows, if we found a .ps1 or a file with no extension,
+            // try to see if a .cmd or .exe exists in the same location,
+            // as these are preferred for direct execution.
+            let ext = command_path
+                .extension()
+                .and_then(|s| s.to_str())
+                .unwrap_or("");
+            if ext == "ps1" || ext.is_empty() {
+                let cmd = command_path.with_extension("cmd");
+                if cmd.exists() {
+                    command_path = cmd;
+                } else {
+                    let exe = command_path.with_extension("exe");
+                    if exe.exists() {
+                        command_path = exe;
+                    }
+                }
+            }
+        }
+
+        #[cfg(windows)]
+        let mut cmd = if command_path.extension().and_then(|s| s.to_str()) == Some("ps1") {
+            // Try pwsh first, then fallback to powershell (guaranteed on Windows)
+            let shell = if which::which("pwsh").is_ok() {
+                "pwsh"
+            } else {
+                "powershell"
+            };
+            let mut c = Command::new(shell);
+            c.arg("-ExecutionPolicy").arg("Bypass");
+            c.arg("-File").arg(&command_path);
+            c
+        } else {
+            Command::new(&command_path)
+        };
+
+        #[cfg(not(windows))]
+        let mut cmd = Command::new(&command_path);
 
         for arg in &self.args {
             cmd.arg(arg);
@@ -271,9 +315,47 @@ impl RunnerDefinition {
 
         // Try common version flags in order of preference
         let version_flags = ["--version", "-v", "version"];
+        let mut command_path = which::which(command).unwrap_or_else(|_| PathBuf::from(command));
+
+        #[cfg(windows)]
+        {
+            let ext = command_path
+                .extension()
+                .and_then(|s| s.to_str())
+                .unwrap_or("");
+            if ext == "ps1" || ext.is_empty() {
+                let cmd = command_path.with_extension("cmd");
+                if cmd.exists() {
+                    command_path = cmd;
+                } else {
+                    let exe = command_path.with_extension("exe");
+                    if exe.exists() {
+                        command_path = exe;
+                    }
+                }
+            }
+        }
 
         for flag in &version_flags {
-            if let Ok(output) = std::process::Command::new(command).arg(flag).output() {
+            #[cfg(windows)]
+            let mut cmd = if command_path.extension().and_then(|s| s.to_str()) == Some("ps1") {
+                let shell = if which::which("pwsh").is_ok() {
+                    "pwsh"
+                } else {
+                    "powershell"
+                };
+                let mut c = std::process::Command::new(shell);
+                c.arg("-ExecutionPolicy").arg("Bypass");
+                c.arg("-File").arg(&command_path);
+                c
+            } else {
+                std::process::Command::new(&command_path)
+            };
+
+            #[cfg(not(windows))]
+            let mut cmd = std::process::Command::new(&command_path);
+
+            if let Ok(output) = cmd.arg(flag).output() {
                 if output.status.success() || !output.stdout.is_empty() {
                     let stdout = String::from_utf8_lossy(&output.stdout);
                     let stderr = String::from_utf8_lossy(&output.stderr);
@@ -467,7 +549,7 @@ impl RunnerRegistry {
                 id: "gemini".to_string(),
                 name: Some("Gemini CLI".to_string()),
                 command: Some("gemini".to_string()),
-                args: Vec::new(),
+                args: vec!["--yolo".to_string()],
                 env: HashMap::new(),
                 model: None,
                 model_providers: Some(vec!["google".to_string()]),
