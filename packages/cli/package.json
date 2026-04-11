@@ -1,6 +1,6 @@
 {
   "name": "@harnspec/cli",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Specification-driven development made simple",
   "type": "module",
   "bin": {
