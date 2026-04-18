@@ -1,6 +1,6 @@
 {
   "name": "@harnspec/cli",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "Specification-driven development made simple",
   "type": "module",
   "bin": {
@@ -40,6 +40,6 @@
     "CHANGELOG.md"
   ],
   "engines": {
-    "node": ">=24"
+    "node": ">=22.0.0"
   }
 }

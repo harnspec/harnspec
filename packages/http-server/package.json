@@ -1,6 +1,6 @@
 {
   "name": "@harnspec/http-server",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "Rust HTTP server for HarnSpec UI",
   "type": "module",
   "bin": {
@@ -34,7 +34,7 @@
     "LICENSE"
   ],
   "engines": {
-    "node": ">=24"
+    "node": ">=22.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
