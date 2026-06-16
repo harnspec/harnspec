@@ -83,7 +83,7 @@ fn parse_removes(removes: &[String]) -> Result<Vec<RemoveSpec>, Box<dyn Error>> 
     }
 
     // Sort by start line (descending for removal)
-    parsed.sort_by(|a, b| b.start.cmp(&a.start));
+    parsed.sort_by_key(|b| std::cmp::Reverse(b.start));
 
     Ok(parsed)
 }
