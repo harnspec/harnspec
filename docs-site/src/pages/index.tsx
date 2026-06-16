@@ -15,7 +15,7 @@ function HomepageHeader() {
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
         <img 
-          src="/img/logo-with-bg.svg" 
+          src="/img/logo-512.png" 
           alt={translate({
             message: 'HarnSpec Logo',
             id: 'homepage.logo.alt',

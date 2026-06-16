@@ -20,8 +20,7 @@ function faviconPlugin(): Plugin {
       if (ctx.server || isDevBuild) {
         // Development mode or dev npm publish — use dev favicons
         return html
-          .replace('href="/favicon.ico"', 'href="/favicon-dev.ico"')
-          .replace('href="/logo.svg"', 'href="/logo-dev.svg"');
+          .replace('href="/favicon.ico"', 'href="/favicon-dev.ico"');
       }
       return html;
     },

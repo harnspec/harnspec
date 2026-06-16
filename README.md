@@ -1,7 +1,7 @@
 # HarnSpec
 
 <p align="center">
-  <img src="favicon.ico" alt="HarnSpec Logo" width="120" height="120">
+  <img src="docs-site/static/img/logo-512.png" alt="HarnSpec Logo" width="120" height="120">
 </p>
 
 <p align="center">
