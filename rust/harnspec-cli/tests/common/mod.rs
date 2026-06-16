@@ -7,6 +7,7 @@
 //! - Frontmatter parsing
 
 #![allow(dead_code)]
+#![allow(clippy::too_many_arguments)]
 
 use assert_cmd::cargo::cargo_bin_cmd;
 use std::fs;
