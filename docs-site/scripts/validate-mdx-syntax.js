@@ -17,63 +17,41 @@
 const fs = require('fs');
 const path = require('path');
 
-// Configuration
-const ZH_BLOG_DIR = path.join(__dirname, '..', 'i18n', 'zh-Hans', 'docusaurus-plugin-content-blog');
 const ZH_DOCS_DIR = path.join(__dirname, '..', 'i18n', 'zh-Hans', 'docusaurus-plugin-content-docs', 'current');
 
 // Parse command line arguments
 const args = process.argv.slice(2);
 const specificFile = args.includes('--file') ? args[args.indexOf('--file') + 1] : null;
-const contentType = args.includes('--type') ? args[args.indexOf('--type') + 1] : 'all'; // 'all', 'blog', or 'docs'
+const contentType = args.includes('--type') ? args[args.indexOf('--type') + 1] : 'docs'; // 'docs'
 const verbose = args.includes('--verbose');
 
-/**
- * Get all Chinese files (blog posts and/or docs)
- */
 function getZhFiles() {
   const results = [];
 
-  // Get blog files
-  if (contentType === 'all' || contentType === 'blog') {
-    if (fs.existsSync(ZH_BLOG_DIR)) {
-      const blogFiles = fs.readdirSync(ZH_BLOG_DIR)
-        .filter(file => file.endsWith('.mdx') || file.endsWith('.md'))
-        .filter(file => !file.includes('authors.yml'));
-      
-      blogFiles.forEach(file => {
-        if (!specificFile || file === specificFile) {
-          results.push({ type: 'blog', file, path: path.join(ZH_BLOG_DIR, file) });
-        }
-      });
-    }
-  }
-
   // Get doc files
-  if (contentType === 'all' || contentType === 'docs') {
-    if (fs.existsSync(ZH_DOCS_DIR)) {
-      const getAllMdxFiles = (dir, baseDir = dir) => {
-        const items = [];
-        const entries = fs.readdirSync(dir, { withFileTypes: true });
-        
-        for (const entry of entries) {
-          const fullPath = path.join(dir, entry.name);
-          if (entry.isDirectory()) {
-            items.push(...getAllMdxFiles(fullPath, baseDir));
-          } else if (entry.name.endsWith('.mdx') || entry.name.endsWith('.md')) {
-            const relativePath = path.relative(baseDir, fullPath);
-            items.push({ type: 'docs', file: relativePath, path: fullPath });
-          }
-        }
-        return items;
-      };
+  if (fs.existsSync(ZH_DOCS_DIR)) {
+    const getAllMdxFiles = (dir, baseDir = dir) => {
+      const items = [];
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
       
-      const docFiles = getAllMdxFiles(ZH_DOCS_DIR);
-      docFiles.forEach(item => {
-        if (!specificFile || item.file === specificFile) {
-          results.push(item);
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+          items.push(...getAllMdxFiles(fullPath, baseDir));
+        } else if (entry.name.endsWith('.mdx') || entry.name.endsWith('.md')) {
+          const relativePath = path.relative(baseDir, fullPath);
+          items.push({ type: 'docs', file: relativePath, path: fullPath });
         }
-      });
-    }
+      }
+      return items;
+    };
+    
+    const docFiles = getAllMdxFiles(ZH_DOCS_DIR);
+    docFiles.forEach(item => {
+      if (!specificFile || item.file === specificFile) {
+        results.push(item);
+      }
+    });
   }
 
   return results;
@@ -247,7 +225,7 @@ function checkSourceFile(item) {
  * Validate all Chinese content
  */
 function validateContent() {
-  const typeLabel = contentType === 'all' ? 'documentation and blog posts' : contentType === 'blog' ? 'blog posts' : 'documentation';
+  const typeLabel = 'documentation';
   console.log(`\n📝 Validating Chinese ${typeLabel} for MDX syntax issues...\n`);
 
   const items = getZhFiles();

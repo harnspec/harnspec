@@ -28,22 +28,16 @@ This command generates static content into the `build` directory and can be serv
 
 ### Validate MDX Syntax
 
-Validates source MDX files in Chinese documentation and blog posts for syntax issues that would cause build errors:
+Validates source MDX files in Chinese documentation for syntax issues that would cause build errors:
 
 ```bash
-# Validate all content (docs + blogs) - recommended
+# Validate all content - recommended
 pnpm validate:mdx
 
 # Or use the script directly with options:
 
-# Validate only blogs
-node scripts/validate-mdx-syntax.js --type blog
-
-# Validate only docs
-node scripts/validate-mdx-syntax.js --type docs
-
 # Validate specific file
-node scripts/validate-mdx-syntax.js --type docs --file guide/index.mdx
+node scripts/validate-mdx-syntax.js --file guide/index.mdx
 
 # Verbose output
 node scripts/validate-mdx-syntax.js --verbose

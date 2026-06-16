@@ -13,13 +13,10 @@ import { useChat } from '../contexts';
 import { useCurrentProject } from '../hooks/useProjectQuery';
 import { SessionsPopover } from './sessions/sessions-popover';
 
-// Injected by Vite at build time
-declare const __DEV_BUILD__: string;
-const isDevBuild = typeof __DEV_BUILD__ !== 'undefined' && __DEV_BUILD__ === 'true';
 
 // Use dev logos in dev server or when HARNSPEC_DEV_BUILD=true
-const logoLight = import.meta.env.DEV || isDevBuild ? '/logo-with-bg-dev.svg' : '/logo-with-bg.svg';
-const logoDark = import.meta.env.DEV || isDevBuild ? '/logo-dark-bg-dev.svg' : '/logo-dark-bg.svg';
+const logoLight = '/logo-512.png';
+const logoDark = '/logo-512.png';
 
 interface BreadcrumbItem {
   label: string;

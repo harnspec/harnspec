@@ -244,7 +244,7 @@ Validate source MDX files for syntax issues that cause build failures:
 cd docs-site && pnpm validate:mdx
 ```
 
-This checks Chinese docs and blogs for:
+This checks Chinese docs for:
 
 - Unescaped special characters (`<` `>` `{` `}`)
 - Bold formatting spacing issues

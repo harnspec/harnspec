@@ -56,7 +56,7 @@ const config: Config = {
 
   themeConfig: {
     // Replace with your project's social card
-    image: 'img/social-card.png',
+    image: 'img/logo-256.png',
     colorMode: {
       respectPrefersColorScheme: true,
     },
@@ -64,8 +64,8 @@ const config: Config = {
       title: 'HarnSpec',
       logo: {
         alt: 'HarnSpec Logo',
-        src: 'img/logo-with-bg.svg',
-        srcDark: 'img/logo-dark-bg.svg',
+        src: 'img/logo-128.png',
+        srcDark: 'img/logo-128.png',
       },
       items: [
         {
