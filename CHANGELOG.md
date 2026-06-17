@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.4] - 2026-06-17
+
+### Changed
+
+- **Brand Logo** ([spec 010](specs/010-update-brand-logo)) — Replaced the project logo and favicon with the new Intertwined Monogram PNG assets, updating references in the Web UI and Docusaurus configuration.
+- **Asset Cleanup** ([spec 011](specs/011-cleanup-unused-brand-assets)) — Removed unused legacy branding assets, qr-codes, blog images, and cleaned up blog validation scripts and references.
+
 ## [0.2.3] - 2026-06-16
 
 ### Fixed
@@ -169,7 +176,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **MCP Test Cleanup** — Ignores MCP config test (feature deprecated)
 - Adds specs 372–377 covering project management, UX defaults, real-time file watch, spec editing, and testing infrastructure
 
-[Unreleased]: https://github.com/harnspec/harnspec/compare/v0.2.3...HEAD
+[Unreleased]: https://github.com/harnspec/harnspec/compare/v0.2.4...HEAD
+[0.2.4]: https://github.com/harnspec/harnspec/releases/tag/v0.2.4
 [0.2.3]: https://github.com/harnspec/harnspec/releases/tag/v0.2.3
 [0.2.2]: https://github.com/harnspec/harnspec/releases/tag/v0.2.2
 [0.2.1]: https://github.com/harnspec/harnspec/releases/tag/v0.2.1
